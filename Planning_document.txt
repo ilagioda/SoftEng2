@@ -1,0 +1,30 @@
+I story:
+-environment settings: (6*1h) 
+
+-definition and creation of Model(2*1h) classes and functions
+-definition and creation of GUI(0.5 h)
+
+-creation of controller class (1 h)
+-creation main (driver class) (0.5h)
+
+-unit tests (1h)
+-system testing (E2E)(0.5h)
+-code review (6*0.5h) tutti insieme
+
+tot:14.5 h
+
+II story:
+-Modification/Adding new features in the model(1h)
+-definition and update of GUI (1h)
+-Definition and creation of Controller (0.5h)
+
+-unit tests (1h)
+-integration test(1h)
+-system testing (E2E)(0.5h)
+-code review (6*0.5h)
+
+tot: 8h
+
+
+III story:
+-
