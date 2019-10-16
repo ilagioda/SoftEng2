@@ -1,1 +1,1 @@
-# SoftEng2
+# SoftEng2 - Group E
