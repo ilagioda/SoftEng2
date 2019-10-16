@@ -3,10 +3,10 @@ As citizen I want to specify a certain type of request so that my request can be
 
 -environment settings: (6*1h) // done
 
--definition and creation of Model(2*1h) classes and functions - Walter/Marco
--definition and creation of GUI(0.5 h) - Simona
+-definition and creation of Model(2*1h) classes and functions - Gianluca/Marco
+-definition and creation of GUI(0.5 h) - Simona/Walter
 
--creation of controller class (1 h) - Gianluca
+-creation of controller class (1 h) - Ilaria
 
 -unit tests (1h) - Claudio
 -system testing (E2E)(0.5h) - Ilaria
