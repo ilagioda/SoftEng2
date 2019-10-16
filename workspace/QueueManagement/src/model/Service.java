@@ -2,31 +2,51 @@ package model;
 
 public class Service {
 	
-	Service(String name, int waitTime){
-		this.name=name;
-		this.waitTime=waitTime;
+	private String name;
+	private String code;
+	private int waitTime;
+	private int nextTicketNumber;
+	
+	
+	public Service(String name, String code, int waitTime) {
+		super();
+		this.name = name;
+		this.code = code;
+		this.waitTime = waitTime;
+		this.nextTicketNumber=1;
 	}
 	
-	private String name;
-	private int waitTime;
-	
-	
+	public String getNextTicketId() {
+		
+		String ticketId = code+nextTicketNumber;
+		nextTicketNumber++;
+		return ticketId;
+	}
+
+	public String getName() {
+		return name;
+	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public int getWaitTime() {
+		return waitTime;
 	}
 	public void setWaitTime(int waitTime) {
 		this.waitTime = waitTime;
 	}
-	public int getWaitTime() {
-		return this.waitTime;
-	}
-	public String getName() {
-		return this.name;	
-	}
+	
 	@Override
 	public String toString() {
 		return "Service [name=" + name + ", waitTime=" + waitTime + "]";
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

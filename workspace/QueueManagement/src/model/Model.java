@@ -1,5 +1,8 @@
 package model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,14 +17,15 @@ public class Model {
 	
 	public Model() {
 		super();
+		
 		counters = new ArrayList<Counter>();
 		services = new HashSet<Service>();
 		tickets = new HashMap<Service,LinkedList<Ticket>>();
 		
 		// populate services
 		Service s1,s2;
-		s1 = new Service("Shipping",10);
-		s2 = new Service("Accounting",20);
+		s1 = new Service("Shipping","S",10); // shipping
+		s2 = new Service("Accounting","A",20); // accounting
 		
 		services.add(s1);
 		services.add(s2);
@@ -35,8 +39,20 @@ public class Model {
 		// initially no tickets
 	}
 	
-	
-	
+	public String getTicket(Service s) {
+		
+		if(s==null || !services.contains(s)) // s is null or the service does not exist
+			return "";
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date d = new Date();
+		
+		// add new ticket to the queue
+		String ticketId = s.getNextTicketId();
+		tickets.get(s).add(new Ticket(ticketId,formatter.format(d))); 
+		
+		return ticketId;
+	}
 	
 	
 }
