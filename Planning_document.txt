@@ -1,16 +1,17 @@
 I story:
 As citizen I want to specify a certain type of request so that my request can be fulfilled
 
--environment settings: (6*1h) 
+-environment settings: (6*1h) // done
 
--definition and creation of Model(2*1h) classes and functions
--definition and creation of GUI(0.5 h)
+-definition and creation of Model(2*1h) classes and functions - Walter/Marco
+-definition and creation of GUI(0.5 h) - Simona
 
--creation of controller class (1 h)
+-creation of controller class (1 h) - Gianluca
 
--unit tests (1h)
--system testing (E2E)(0.5h)
--code review (6*0.5h) tutti insieme
+-unit tests (1h) - Claudio
+-system testing (E2E)(0.5h) - Ilaria
+
+-code review (6*0.5h) all together
 
 tot:14 h
 
