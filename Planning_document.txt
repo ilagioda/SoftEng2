@@ -1,19 +1,22 @@
 I story:
+As citizen I want to specify a certain type of request so that my request can be fulfilled
+
 -environment settings: (6*1h) 
 
 -definition and creation of Model(2*1h) classes and functions
 -definition and creation of GUI(0.5 h)
 
 -creation of controller class (1 h)
--creation main (driver class) (0.5h)
 
 -unit tests (1h)
 -system testing (E2E)(0.5h)
 -code review (6*0.5h) tutti insieme
 
-tot:14.5 h
+tot:14 h
 
 II story:
+As an employee I want to know who the next customer is so that I know what I have to do next
+
 -Modification/Adding new features in the model(1.5h)
 -definition and update of GUI (1h)
 -Definition and creation of Controller (0.5h)
@@ -27,6 +30,8 @@ tot: 8.5h
 
 
 III story:
+As a citizen I want to be notified when my turn comes so that I know where to go ------------ As a citizen I want to know which counter is going to serve me so that I can know where to go
+
 -Update of citizen GUI (0.5 h)
 -Update of Controller (0.5 h)
 
@@ -34,5 +39,35 @@ III story:
 -code review (6*0.5h) tutti insieme
 
 tot: 4.5h
+
+IV story:
+As a citizen I want to know how many citizens have to be served before me at any moment
+
+-Update of citizen GUI (1 h)
+-Update of Controller (0.5 h)
+
+-system testing (E2E)(0.5h)
+-code review (6*0.5h) tutti insieme
+
+tot: 5h
+
+V story:
+As a citizen I'd like to know an estimation of the waiting time
+
+-Update of citizen GUI (0.5 h)
+
+-system testing (E2E)(0.5h)
+
+tot: 1h
+
+VI story:
+As an admin I want to know how many clients have been served for each request type and for each counter so that I can compute some statistics
+
+-Update of model (3 h)
+
+-system testing (E2E)(3h)
+-code review (6*1h) tutti insieme
+
+tot: 12h
 
 
