@@ -17,8 +17,8 @@
             <Insets />
          </BorderPane.margin>
          <children>
-            <Button fx:id="TypeA_button" alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" prefHeight="77.0" prefWidth="96.0" text="Type A" />
-            <Button fx:id="TypeB_button" alignment="CENTER" mnemonicParsing="false" prefHeight="77.0" prefWidth="96.0" text="TypeB" />
+            <Button fx:id="TypeA_button" alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" onAction="#clickTypeA" prefHeight="77.0" prefWidth="96.0" text="Type A" />
+            <Button fx:id="TypeB_button" alignment="CENTER" mnemonicParsing="false" onAction="#clickTypeB" prefHeight="77.0" prefWidth="96.0" text="TypeB" />
          </children>
       </HBox>
    </center>

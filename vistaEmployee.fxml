@@ -21,7 +21,7 @@
       </Text>
    </top>
    <center>
-      <Button mnemonicParsing="false" prefHeight="83.0" prefWidth="133.0" text="Next" BorderPane.alignment="CENTER">
+      <Button fx:id="nextButton" mnemonicParsing="false" onAction="#clickNextButton" prefHeight="83.0" prefWidth="133.0" text="Next" BorderPane.alignment="CENTER">
          <font>
             <Font size="31.0" />
          </font>
@@ -35,7 +35,7 @@
                   <Font size="29.0" />
                </font>
             </Text>
-            <TextArea minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="615.0">
+            <TextArea fx:id="ticketArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="615.0">
                <VBox.margin>
                   <Insets bottom="20.0" left="200.0" right="200.0" top="20.0" />
                </VBox.margin>
