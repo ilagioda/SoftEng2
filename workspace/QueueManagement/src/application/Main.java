@@ -1,7 +1,4 @@
 package application;
-	
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -24,9 +21,6 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
-		//launch(args);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date d = new Date();
-		System.out.println(formatter.format(d));
+		launch(args);
 	}
 }
