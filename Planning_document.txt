@@ -14,7 +14,7 @@ I story:
 tot:14.5 h
 
 II story:
--Modification/Adding new features in the model(1h)
+-Modification/Adding new features in the model(1.5h)
 -definition and update of GUI (1h)
 -Definition and creation of Controller (0.5h)
 
@@ -23,8 +23,16 @@ II story:
 -system testing (E2E)(0.5h)
 -code review (6*0.5h)
 
-tot: 8h
+tot: 8.5h
 
 
 III story:
--
+-Update of citizen GUI (0.5 h)
+-Update of Controller (0.5 h)
+
+-system testing (E2E)(0.5h)
+-code review (6*0.5h) tutti insieme
+
+tot: 4.5h
+
+
