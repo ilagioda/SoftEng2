@@ -12,7 +12,7 @@ import model.Service;
 public class ServiceTests {
 	
 	@Test
-	public void getNextTicketIdTest2() {
+	public void getNextTicketIdTest() {
 		Service a = new Service("nameA", "codeA", 1);
 		assertEquals("codeA1", a.getNextTicketId());
 	}
