@@ -14,8 +14,8 @@ public class CounterTests {
 
 	@Test
 	public void getCounterIdTest() {
-		Service a = new Service("nomeA", "codiceA", 1);
-		Service b = new Service("nomeB", "codiceB", 2);
+		Service a = new Service("nameA", "codeA", 1);
+		Service b = new Service("nameB", "codeB", 2);
 		HashSet<Service> services = new HashSet<Service>();
 		services.add(a);
 		services.add(b);
@@ -25,8 +25,8 @@ public class CounterTests {
 	
 	@Test
 	public void setCounterIdTest() {
-		Service a = new Service("nomeA", "codiceA", 1);
-		Service b = new Service("nomeB", "codiceB", 2);
+		Service a = new Service("nameA", "codeA", 1);
+		Service b = new Service("nameB", "codeB", 2);
 		HashSet<Service> services = new HashSet<Service>();
 		services.add(a);
 		services.add(b);
@@ -37,8 +37,8 @@ public class CounterTests {
 	
 	@Test
 	public void getServicesTest() {
-		Service a = new Service("nomeA", "codiceA", 1);
-		Service b = new Service("nomeB", "codiceB", 2);
+		Service a = new Service("nameA", "codeA", 1);
+		Service b = new Service("nameB", "codeB", 2);
 		HashSet<Service> services = new HashSet<Service>();
 		services.add(a);
 		services.add(b);
@@ -48,22 +48,22 @@ public class CounterTests {
 	
 	@Test
 	public void setServicesTest() {
-		Service a = new Service("nomeA", "codiceA", 1);
-		Service b = new Service("nomeB", "codiceB", 2);
+		Service a = new Service("nameA", "codeA", 1);
+		Service b = new Service("nameB", "codeB", 2);
 		HashSet<Service> services = new HashSet<Service>();
 		services.add(a);
 		services.add(b);
 		Counter c = new Counter(1 , null);
-		services.add(new Service("nomeC", "codiceC", 3));
+		services.add(new Service("nameC", "codiceC", 3));
 		c.setServices(services);
 		assertEquals(c.getServices(), services);
 	}
 	
 	@Test
 	public void getTicketTest() { //THIS TEST HOLDS FOR THE SET TICKET METHOD TOO
-		Service a = new Service("nomeA", "codiceA", 1);
-		Service b = new Service("nomeB", "codiceB", 2);
-		Ticket t = new Ticket("prova1", "prova2");
+		Service a = new Service("nameA", "codeA", 1);
+		Service b = new Service("nameB", "codeB", 2);
+		Ticket t = new Ticket("try1", "try2");
 		HashSet<Service> services = new HashSet<Service>();
 		services.add(a);
 		services.add(b);
