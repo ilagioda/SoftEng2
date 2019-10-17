@@ -37,6 +37,8 @@ public class Model {
 		counters.add(new Counter(2,new HashSet<Service>(Arrays.asList(s1,s2))));
 		
 		// initially no tickets
+		tickets.put(s1, new LinkedList<Ticket>());
+		tickets.put(s2, new LinkedList<Ticket>());
 	}
 	
 	/**
