@@ -35,8 +35,8 @@ public class ControllerEmployee {
     void clickNextButton(ActionEvent event) {
 
     	/* 
-    	 * Supposing that the screen displayed is associated to Counter 2
-    	 * (the one serving both service s1 and service s2
+    	 * The screen displayed is associated to Counter 2
+    	 * (the one serving both service s1 and service s2)
     	 */
     	
     	String ticket = model.getNextTicket(2);
@@ -49,7 +49,7 @@ public class ControllerEmployee {
     			ticketArea.setText("No tickets in queue");    
     		}
     	} else {
-    		ticketArea.setText("error");
+    		ticketArea.setText("errorCOUNTER2");
     	}
     	
     }

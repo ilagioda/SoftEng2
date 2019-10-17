@@ -80,7 +80,7 @@ public class Model {
 			if (servIter.next().getServices().contains(s))
 				servCount++;
 		}
-		if(servCount <= 0) return "";
+		if(servCount <= 0) return null;
 		
 		float totTime=time*num/servCount;
 		
