@@ -37,12 +37,22 @@ public class ControllerCitizen {
 
     @FXML
     void clickTypeA(ActionEvent event) {
-
+    	String ticket = model.getNewTicket("SHIPPING");
+    	if(ticket != null) {
+    		ticketArea.setText(ticket);
+    	} else {
+    		ticketArea.setText("errorSHIPPING");
+    	}
     }
 
     @FXML
     void clickTypeB(ActionEvent event) {
-
+    	String ticket = model.getNewTicket("ACCOUNTING");	
+    	if(ticket != null) {
+    		ticketArea.setText(ticket);
+    	} else {
+    		ticketArea.setText("errorACCOUNTING");
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

@@ -6,10 +6,13 @@ package application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import model.Counter;
 import model.Model;
 
 public class ControllerEmployee {
@@ -31,6 +34,24 @@ public class ControllerEmployee {
     @FXML
     void clickNextButton(ActionEvent event) {
 
+    	/* 
+    	 * Supposing that the screen displayed is associated to Counter 2
+    	 * (the one serving both service s1 and service s2
+    	 */
+    	
+    	String ticket = model.getNextTicket(2);
+    	if(ticket != null) {
+    		if(!ticket.equals("")) {
+    			/* At least one citizen has to be served */
+    			ticketArea.setText(ticket);
+    		} else {
+    			/* No citizen has to be served */
+    			ticketArea.setText("No tickets in queue");    
+    		}
+    	} else {
+    		ticketArea.setText("error");
+    	}
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
