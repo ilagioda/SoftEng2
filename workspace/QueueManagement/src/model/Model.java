@@ -106,7 +106,7 @@ public class Model {
 	 */
 	public String getNextTicket(int counterId) {
 		
-		if(counters.size()<=counterId) 
+		if(counterId<0 || counters.size()<=counterId) 
 			// the counter does not exist
 			return null;
 
