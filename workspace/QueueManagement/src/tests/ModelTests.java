@@ -18,7 +18,7 @@ public class ModelTests {
 	public void getNewTicketTest1() {
 		Model m = new Model();
 		Service ne = new Service("non_existing_name", "non_existing_code", 4);
-		assertEquals(m.getNewTicket(ne), "");
+		assertEquals(m.getNewTicket("Non_existing_name"), null);
 	}
 	
 	@Test
@@ -26,7 +26,7 @@ public class ModelTests {
 		Model m = new Model();
 		Service s1 = new Service("Shipping", "S", 10);
 		
-		assertTrue(m.getNewTicket(s1).contains("less than 1 minute."));
+		assertTrue(m.getNewTicket("Shipping").contains("less than 1 minute."));
 		
 	}
 	
@@ -37,10 +37,10 @@ public class ModelTests {
 		Service s1 = new Service("Shipping", "S", 10);
 		
 		for(i=0; i<6; ++i)
-			m.getNewTicket(s1);
+			m.getNewTicket("Shipping");
 		
 		//should be 30 min
-		assertTrue(m.getNewTicket(s1).contains("30 minutes."));
+		assertTrue(m.getNewTicket("Shipping").contains("30 minutes."));
 		
 	}
 	
@@ -51,17 +51,17 @@ public class ModelTests {
 		Service s1 = new Service("Shipping", "S", 10);
 		
 		for(i=0; i<13; ++i)
-			m.getNewTicket(s1);
+			m.getNewTicket("Shipping");
 		
 		//should be 65 min
-		assertTrue(m.getNewTicket(s1).contains("1 hours and 5 minutes."));
+		assertTrue(m.getNewTicket("Shipping").contains("1 hours and 5 minutes."));
 	}
 	
 	@Test
 	public void getNextTicketTest1() {
 		Model m = new Model();
-		m.getNextTicket(null);
-		assertEquals(m.getNextTicket(null), null);
+		m.getNextTicket(-1);
+		assertEquals(m.getNextTicket(-1), null);
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class ModelTests {
 		Model m = new Model();
 		Service s1 = new Service("Shipping", "S", 10);
 		Counter c = new Counter(0,new HashSet<Service>(Arrays.asList(s1)));
-		assertEquals(m.getNextTicket(c), ""); //no tickets to serve for that service
+		assertEquals(m.getNextTicket(0), ""); //no tickets to serve for that service
 	}
 	
 	@Test
@@ -77,18 +77,18 @@ public class ModelTests {
 		Model m = new Model();
 		Service s1 = new Service("Shipping", "S", 10);
 		Counter c = new Counter(0,new HashSet<Service>(Arrays.asList(s1)));
-		m.getNewTicket(s1);
-		m.getNewTicket(s1);
-		assertTrue(m.getNextTicket(c).contains("Ticket S1"));
+		m.getNewTicket("Shipping");
+		m.getNewTicket("Shipping");
+		assertTrue(m.getNextTicket(0).contains("Ticket S1"));
 	}
 	
 	@Test
 	public void getNextTicketTest4() {
 		Model m = new Model();
 		Service s1 = new Service("Shipping", "S", 10);
-		Counter c = new Counter(0,new HashSet<Service>());
-		m.getNewTicket(s1);
-		assertEquals(m.getNextTicket(c), ""); //counter has no service associated
+		Counter c = new Counter(5,new HashSet<Service>());
+		m.getNewTicket("Shipping");
+		assertEquals(m.getNextTicket(5), null); //counter has no service associated
 	}
 	
 }

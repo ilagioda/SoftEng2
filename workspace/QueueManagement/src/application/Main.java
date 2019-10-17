@@ -1,11 +1,15 @@
 package application;
 
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import model.Model;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+
 
 
 public class Main extends Application {
