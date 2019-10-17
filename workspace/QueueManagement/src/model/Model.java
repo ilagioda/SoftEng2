@@ -2,12 +2,15 @@ package model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.math.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+
 
 public class Model {
 	
@@ -45,7 +48,7 @@ public class Model {
 	 * @param s Service for which a new ticket should be created. 
 	 * @return	created ticket, "" in case of errors
 	 */
-	public String getTicket(Service s) {
+	public String getNewTicket(Service s) {
 		
 		if(s==null || !services.contains(s)) 
 			// s is null or the service does not exist
@@ -58,7 +61,32 @@ public class Model {
 		Ticket t = new Ticket(s.getNextTicketId(),formatter.format(d));
 		tickets.get(s).add(t); 
 		
-		return t.toString();
+		//obtain waiting time
+		int time=s.getWaitTime();
+		int num=tickets.get(s).indexOf(t);
+		int servCount = 0;
+		
+		Iterator<Counter> servIter = counters.iterator();
+		
+		while (servIter.hasNext()) {
+			if (servIter.next().getServices().contains(s))
+				servCount++;
+		}
+		
+		float totTime=time*num/servCount;
+		
+		if(totTime<1){
+			return t.toString()+System.lineSeparator()+"Estimated waiting time: less than 1 minute.";
+		}
+		else if(totTime<60) {
+			return t.toString()+System.lineSeparator()+"Estimated waiting time: "+Math.round(totTime)+" minutes.";
+		}
+		else {
+			float hours=totTime/60;
+			return t.toString()+System.lineSeparator()+"Estimated waiting time: "+(int)hours+" hours and "+Math.round(totTime)%60+" minutes.";
+		}
+		
+		
 	}
 	
 	/**
