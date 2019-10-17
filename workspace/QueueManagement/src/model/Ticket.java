@@ -26,7 +26,12 @@ public class Ticket {
 
 	@Override
 	public String toString() {
-		return "Ticket [id=" + id + ", timestamp=" + timestamp + "]";
+		/*
+		 * Returns something like:
+		 * Ticket a19
+		 * 21-10-2019 10:22:19
+		 */
+		return "Ticket "+ id + System.lineSeparator() + timestamp;
 	}
 
 	@Override
