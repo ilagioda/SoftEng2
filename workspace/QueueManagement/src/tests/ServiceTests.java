@@ -14,7 +14,7 @@ public class ServiceTests {
 	@Test
 	public void getNextTicketIdTest2() {
 		Service a = new Service("nameA", "codeA", 1);
-		assertEquals(2, a.getNextTicketId());
+		assertEquals("codeA1", a.getNextTicketId());
 	}
 	
 	//GETTERS AND SETTERS, NO NEED TO BE TESTED
