@@ -15,23 +15,23 @@ import java.util.LinkedList;
 public class Model {
 	
 	private ArrayList<Counter> counters;
-	private HashSet<Service> services;
+	private HashMap<String, Service> services;
 	private HashMap<Service, LinkedList<Ticket>> tickets;
 	
 	public Model() {
 		super();
 		
 		counters = new ArrayList<Counter>();
-		services = new HashSet<Service>();
+		services = new HashMap<String,Service>();
 		tickets = new HashMap<Service,LinkedList<Ticket>>();
 		
 		// populate services
 		Service s1,s2;
-		s1 = new Service("Shipping","S",10); // shipping
-		s2 = new Service("Accounting","A",20); // accounting
+		s1 = new Service("SHIPPING","S",10); // shipping
+		s2 = new Service("ACCOUNTING","A",20); // accounting
 		
-		services.add(s1);
-		services.add(s2);
+		services.put(s1.getName(), s1);
+		services.put(s2.getName(), s2);
 		
 		// populate counters
 		
@@ -45,16 +45,22 @@ public class Model {
 	}
 	
 	/**
-	 * Creates a new ticket for the given service and append it on the right queue.
+	 * Creates a new ticket for the given service (example, for Accounting) and appends it on the right queue.
 	 * 
 	 * @param s Service for which a new ticket should be created. 
-	 * @return	created ticket, "" in case of errors
+	 * @return	created ticket, null in case of errors
 	 */
-	public String getNewTicket(Service s) {
+	public String getNewTicket(String serviceName) {
 		
-		if(s==null || !services.contains(s)) 
+		if(serviceName == null) return null;
+		
+		serviceName=serviceName.toUpperCase();
+		
+		Service s = services.get(serviceName);
+		
+		if(s==null) 
 			// s is null or the service does not exist
-			return "";
+			return null;
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date d = new Date();
@@ -97,12 +103,14 @@ public class Model {
 	 * @param c Counter that asks for a new ticket
 	 * @return	next ticket to be served, "" if no tickets for that counter, null in case of errors.
 	 */
-	public String getNextTicket(Counter c) {
+	public String getNextTicket(int counterId) {
 		
-		if(c==null || (counters.size()<=c.getCounterId())) 
-			// c is null or the counter does not exist
+		if(counters.size()<=counterId) 
+			// the counter does not exist
 			return null;
 
+		Counter c = counters.get(counterId);
+		
 		Service smax = null;
 		int maxSize=-1;
 
