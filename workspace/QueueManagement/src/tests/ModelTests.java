@@ -75,4 +75,22 @@ public class ModelTests {
 		assertEquals(m.getNextTicket(5), null); //counter has no service associated
 	}
 	
+	@Test
+	public void getNextTicketTest5() {
+		Model m = new Model();
+		m.getNewTicket("Accounting");
+		m.getNewTicket("Shipping");
+		m.getNewTicket("Shipping");
+		m.getNewTicket("Shipping");
+		assertTrue(m.getNextTicket(2).contains("S1")); //shortest queue first
+	}
+	
+	@Test
+	public void getNextTicketTest6() {
+		Model m = new Model();
+		m.getNewTicket("Accounting");
+		m.getNewTicket("Shipping");
+		assertTrue(m.getNextTicket(2).contains("S1")); //shortest waiting time first
+	}
+	
 }
