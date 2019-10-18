@@ -44,7 +44,7 @@ public class ControllerEmployee {
 	@FXML
 	void C1clickNextButton(ActionEvent event) {
 
-		String ticket = model.getNextTicket(2);
+		String ticket = model.getNextTicket(0);
 		if (ticket != null) {
 			if (!ticket.equals("")) {
 				/* At least one citizen has to be served */
@@ -62,7 +62,7 @@ public class ControllerEmployee {
 
 	@FXML
 	void C2clickNextButton(ActionEvent event) {
-		String ticket = model.getNextTicket(2);
+		String ticket = model.getNextTicket(1);
 		if (ticket != null) {
 			if (!ticket.equals("")) {
 				/* At least one citizen has to be served */
