@@ -1,29 +1,46 @@
 package model;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.math.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-public class Model {
+
+public class Model{
 	
 	private ArrayList<Counter> counters;
 	private HashMap<String, Service> services;
-	private HashMap<Service, LinkedList<Ticket>> tickets;
+	private HashMap<Service, ObservableList<Ticket>> tickets; 
 	
+	//lista counter 1
+	private ObservableList<Ticket> list1 = FXCollections.observableList(new LinkedList<Ticket>());
+	
+	//lista counter 2
+	private ObservableList<Ticket> list2 = FXCollections.observableList(new LinkedList<Ticket>());
+
+	
+	
+	public ObservableList<Ticket> getList1() {
+		return list1;
+	}
+
+	public ObservableList<Ticket> getList2() {
+		return list2;
+	}
+
 	public Model() {
 		super();
 		
 		counters = new ArrayList<Counter>();
 		services = new HashMap<String,Service>();
-		tickets = new HashMap<Service,LinkedList<Ticket>>();
+		tickets = new HashMap<Service,ObservableList<Ticket>>();
 		
 		// populate services
 		Service s1,s2;
@@ -40,8 +57,8 @@ public class Model {
 		counters.add(new Counter(2,new HashSet<Service>(Arrays.asList(s1,s2))));
 		
 		// initially no tickets
-		tickets.put(s1, new LinkedList<Ticket>());
-		tickets.put(s2, new LinkedList<Ticket>());
+		tickets.put(s1, list1);
+		tickets.put(s2, list2);
 	}
 	
 	/**
@@ -136,7 +153,8 @@ public class Model {
 			// 0 if no tickets
 			return ""; 
 		
-		Ticket nextTicket = tickets.get(smax).remove(); // retrieves and removes the first element
+		Ticket nextTicket = tickets.get(smax).remove(0); // retrieves and removes the first element
+		
 		
 		return nextTicket.toString();
 	}

@@ -6,10 +6,14 @@ package application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Model;
+import model.Ticket;
+
 
 public class Controller {
 	
@@ -34,8 +38,10 @@ public class Controller {
     private TextArea queueA; // Value injected by FXMLLoader
 
     @FXML // fx:id="queueB"
-    private TextArea queueB; // Value injected by FXMLLoader
-
+    private TextArea queueB; // Value injected by FXMLLoader    
+    
+  
+    
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert ticketC1 != null : "fx:id=\"ticketC1\" was not injected: check your FXML file 'Screen.fxml'.";
@@ -43,12 +49,28 @@ public class Controller {
         assert ticketC3 != null : "fx:id=\"ticketC3\" was not injected: check your FXML file 'Screen.fxml'.";
         assert queueA != null : "fx:id=\"queueA\" was not injected: check your FXML file 'Screen.fxml'.";
         assert queueB != null : "fx:id=\"queueB\" was not injected: check your FXML file 'Screen.fxml'.";
-
     }
 
 	public void setModel(Model model) {
 		this.model = model;
+		  
+		 model.getList1().addListener(new ListChangeListener() {
+	            @Override
+	            public void onChanged(ListChangeListener.Change change) {
+	            	//per ora set text deve essere modificato con un AppendText per formattare l'output meglio
+	              queueA.setText(model.getList1().toString());
+	              
+	            }
+	        });
+		 
+		 
+			 model.getList2().addListener(new ListChangeListener() {
+				 
+		            @Override
+		            public void onChanged(ListChangeListener.Change change) {
+		            	 queueB.setText(model.getList2().toString());
+		            }
+		        });
+		
 	}
-    
-    
 }

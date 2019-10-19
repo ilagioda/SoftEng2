@@ -1,14 +1,13 @@
 package application;
 
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
-import model.Model;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import model.Model;
 
 
 
@@ -16,6 +15,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			Model model = new Model();
+			
 			FXMLLoader loader1 = new FXMLLoader(getClass().getResource("Screen.fxml")) ;
 			BorderPane root = (BorderPane)loader1.load();
 			Controller controller = loader1.getController() ;
@@ -28,7 +29,7 @@ public class Main extends Application {
 			BorderPane root3 = (BorderPane)loader3.load();
 			ControllerEmployee controller3 = loader3.getController() ;
 
-			Model model = new Model();
+			
 			controller.setModel(model);
 			controller2.setModel(model);
 			controller3.setModel(model);
