@@ -53,40 +53,31 @@ public class Controller {
 		this.model = model;
 
 		model.getList1().addListener(new ListChangeListener<Ticket>() {
+
 			@Override
 			public void onChanged(ListChangeListener.Change change) {
-				if (change.wasRemoved()) {
-					int size = change.getRemovedSize();
-					for (int i = 0; i < size; i++) {
 
-						Ticket t = (Ticket) change.getRemoved().get(i);
-						int counterID = t.getC().getCounterId();
-
-						setTextCounter(counterID, t);
-
-					}
-
-					// per ora set text deve essere modificato con un AppendText per formattare
-					// l'output meglio
-					queueA.setText(model.getList1().toString());
-
-				}
-
+				queueA.setText(model.getList1().toString());
 			}
 		});
 
 		model.getList2().addListener(new ListChangeListener() {
+
 			@Override
 			public void onChanged(ListChangeListener.Change change) {
-				if (change.wasRemoved()) {
-					int size = change.getRemovedSize();
-					for (int i = 0; i < size; i++) {
-						Ticket t = (Ticket) change.getRemoved().get(i);
-						int counterID = t.getC().getCounterId();
-						setTextCounter(counterID, t);
-					}
-				}
+
 				queueB.setText(model.getList2().toString());
+
+//  QUESTO PEZZO DI CODICE SERVIREBBE PER AGGIORNARE LE SCHERMATE DEI COUNTER, IL PROBLEMA È CHE GENERA ERRORI
+				
+//				if (change.wasRemoved()) {
+//					int size = change.getRemovedSize();
+//					for (int i = 0; i < size; i++) {
+//						Ticket t = (Ticket) change.getRemoved().get(i);
+//						int counterID = t.getC().getCounterId();
+//						setTextCounter(counterID, t);
+//					}
+//				}
 			}
 		});
 

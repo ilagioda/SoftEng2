@@ -8,11 +8,11 @@ public class TryInOut {
 		// TODO Auto-generated method stub
 		Model model = new Model();
 
-		model.writeFile("Ciao");
-
-		model.writeFile("sono");
-
-		model.writeFile("PippoFranco e ho 23 anni");
+//		model.writeFile("Ciao");
+//
+//		model.writeFile("sono");
+//
+//		model.writeFile("PippoFranco e ho 23 anni");
 
 		System.out.println(model.readFile());
 

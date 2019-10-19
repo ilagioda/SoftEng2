@@ -39,7 +39,7 @@ public class Model {
 
 		if (!f.exists())
 			// SHIPPING ACCOUNTING Counter0 Counter1 Counter2
-			writeFile("0,0,0,0,0,0");
+			writeFile("0,0,0,0,0");
 
 		counters = new ArrayList<Counter>();
 		services = new HashMap<String, Service>();
@@ -91,7 +91,9 @@ public class Model {
 
 		// add new ticket to the queue
 		Ticket t = new Ticket(s.getNextTicketId(), formatter.format(d));
+
 		tickets.get(s).add(t);
+
 		// obtain waiting time
 		int time = s.getWaitTime();
 		int num = tickets.get(s).indexOf(t);
@@ -244,12 +246,8 @@ public class Model {
 
 			BufferedReader bfr = new BufferedReader(file);
 
-			String line = bfr.readLine();
-			while (line != null) {
-				textFile += line + "\n";
-				line = bfr.readLine();
-			}
-
+			textFile= bfr.readLine();
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
