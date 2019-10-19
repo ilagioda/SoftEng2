@@ -9,15 +9,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControllerCitizen">
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControllerCitizen">
    <center>
-      <HBox fx:id="TypeB" alignment="CENTER" spacing="500.0" BorderPane.alignment="TOP_CENTER">
+      <HBox fx:id="TypeB" alignment="CENTER" spacing="200.0" BorderPane.alignment="TOP_CENTER">
          <BorderPane.margin>
-            <Insets />
+            <Insets left="20.0" right="20.0" />
          </BorderPane.margin>
          <children>
-            <Button fx:id="TypeA_button" alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" onAction="#clickTypeA" prefHeight="77.0" prefWidth="96.0" text="Type A" />
-            <Button fx:id="TypeB_button" alignment="CENTER" mnemonicParsing="false" onAction="#clickTypeB" prefHeight="77.0" prefWidth="96.0" text="TypeB" />
+            <Button fx:id="TypeA_button" alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" onAction="#clickTypeA" prefHeight="77.0" prefWidth="96.0" text="Shipping" />
+            <Button fx:id="TypeB_button" alignment="CENTER" mnemonicParsing="false" onAction="#clickTypeB" prefHeight="77.0" prefWidth="96.0" text="Accounting" />
          </children>
       </HBox>
    </center>
@@ -27,7 +27,7 @@
             <Font size="40.0" />
          </font>
          <BorderPane.margin>
-            <Insets top="45.0" />
+            <Insets bottom="20.0" top="20.0" />
          </BorderPane.margin>
       </Text>
    </top>
@@ -36,18 +36,24 @@
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ticket">
                <font>
-                  <Font size="40.0" />
+                  <Font size="30.0" />
                </font>
+               <VBox.margin>
+                  <Insets bottom="14.0" top="10.0" />
+               </VBox.margin>
             </Text>
-            <TextArea fx:id="ticketArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="615.0">
+            <TextArea fx:id="ticketArea" editable="false">
                <font>
                   <Font size="14.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="20.0" left="200.0" right="200.0" />
+                  <Insets bottom="20.0" left="20.0" right="20.0" />
                </VBox.margin>
             </TextArea>
          </children>
+         <BorderPane.margin>
+            <Insets left="20.0" right="20.0" />
+         </BorderPane.margin>
       </VBox>
    </bottom>
 </BorderPane>
