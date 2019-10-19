@@ -1,8 +1,10 @@
 package model;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -13,16 +15,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-
 public class Model {
 
 	private static final String path = "./Statistics.txt";
-	
+
 	private ArrayList<Counter> counters;
 	private HashMap<String, Service> services;
 	private HashMap<Service, ObservableList<Ticket>> tickets;
@@ -34,17 +34,17 @@ public class Model {
 	private ObservableList<Ticket> list2;
 
 	public Model() {
-		
+
 		File f = new File(path);
-		
-		if(!f.exists()) 
+
+		if (!f.exists())
 			// SHIPPING ACCOUNTING Counter0 Counter1 Counter2
-			writeFile("0,0,0,0,0");		
+			writeFile("0,0,0,0,0,0");
 
 		counters = new ArrayList<Counter>();
 		services = new HashMap<String, Service>();
 		tickets = new HashMap<Service, ObservableList<Ticket>>();
-		
+
 		list1 = FXCollections.observableList(new LinkedList<Ticket>());
 		list2 = FXCollections.observableList(new LinkedList<Ticket>());
 
@@ -57,7 +57,6 @@ public class Model {
 		services.put(s2.getName(), s2);
 
 		// populate counters
-
 		counters.add(new Counter(0, new HashSet<Service>(Arrays.asList(s1))));
 		counters.add(new Counter(1, new HashSet<Service>(Arrays.asList(s2))));
 		counters.add(new Counter(2, new HashSet<Service>(Arrays.asList(s1, s2))));
@@ -93,7 +92,6 @@ public class Model {
 		// add new ticket to the queue
 		Ticket t = new Ticket(s.getNextTicketId(), formatter.format(d));
 		tickets.get(s).add(t);
-
 		// obtain waiting time
 		int time = s.getWaitTime();
 		int num = tickets.get(s).indexOf(t);
@@ -164,45 +162,46 @@ public class Model {
 			return "";
 
 		Ticket nextTicket = tickets.get(smax).remove(0); // retrieves and removes the first element
-		
+
 		// Store informations about the counter that is managing the ticket
 		c.setTicket(nextTicket);
 		nextTicket.setC(c);
-		
-		// store statistics		
+
+		// store statistics
 		String[] numbers = readFile().split(",");
-		Integer reqS,reqA,c0,c1,c2;
-		
+		Integer reqS, reqA, c0, c1, c2;
+
 		reqS = Integer.parseInt(numbers[1]);
 		reqA = Integer.parseInt(numbers[0]);
 		c0 = Integer.parseInt(numbers[2]);
 		c1 = Integer.parseInt(numbers[3]);
 		c2 = Integer.parseInt(numbers[4]);
-		
-		if(smax.getName().equals("SHIPPING")) {
+
+		if (smax.getName().equals("SHIPPING")) {
 			reqS++;
-		} else reqA++;
-		
+		} else
+			reqA++;
+
 		switch (counterId) {
-			
-			case 0:
-				c0++;
-				break;
-			case 1:
-				c1++;
-				break;
-			case 2:
-				c2++;
-				break;
-			default:
-				break;
+
+		case 0:
+			c0++;
+			break;
+		case 1:
+			c1++;
+			break;
+		case 2:
+			c2++;
+			break;
+		default:
+			break;
 		}
-		
+
 		// SHIPPING ACCOUNTING Counter0 Counter1 Counter2
 		String newData = reqS + "," + reqA + "," + c0 + "," + c1 + "," + c2;
-		
+
 		writeFile(newData);
-		
+
 		return nextTicket.toString();
 	}
 
@@ -212,13 +211,13 @@ public class Model {
 			File file = new File(path);
 
 			// FileWriter is meant for writing streams of characters
-			FileWriter fw = new FileWriter(file, false);
+			FileWriter fw = new FileWriter(file);
 
 			// Writes text to a character-output stream, buffering characters so as to
 			// provide for the efficient writing of single characters, arrays, and strings.
 			BufferedWriter bw = new BufferedWriter(fw);
 
-			bw.append(text + "\n");
+			bw.write(text + "\n");
 
 			// Flushes the stream.
 			bw.flush();
@@ -234,29 +233,34 @@ public class Model {
 	public static String readFile() {
 
 		// Creates a new File instance
-		File file = new File(path);
-
-		// Output of the file.
-		String textFile = new String();
+		FileReader file;
+		String textFile = "";
 
 		try {
-			// A Scanner breaks its input into tokens using a delimiter pattern, which by
-			// default matches whitespace
-			Scanner sc = new Scanner(file);
+			file = new FileReader(path);
 
-			while (sc.hasNext()) { // Returns true if this scanner has another token in its input
-				textFile += (" " + sc.next());
+			// Output string.
+			textFile = new String();
+
+			BufferedReader bfr = new BufferedReader(file);
+
+			String line = bfr.readLine();
+			while (line != null) {
+				textFile += line + "\n";
+				line = bfr.readLine();
 			}
-			sc.close();
 
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return textFile;
 
 	}
-	
+
 	public ObservableList<Ticket> getList1() {
 		return list1;
 	}
