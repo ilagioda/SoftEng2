@@ -44,7 +44,8 @@ public class ControllerEmployee {
 	@FXML
 	void C1clickNextButton(ActionEvent event) {
 
-		String ticket = model.getNextTicket(2);
+		/* Counter 0 serves SHIPPING tickets */
+		String ticket = model.getNextTicket(0);
 		if (ticket != null) {
 			if (!ticket.equals("")) {
 				/* At least one citizen has to be served */
@@ -55,14 +56,15 @@ public class ControllerEmployee {
 			}
 		} else {
 			C1ticketArea.setText("Error Counter C1.");
-
 		}
 
 	}
 
 	@FXML
 	void C2clickNextButton(ActionEvent event) {
-		String ticket = model.getNextTicket(2);
+		
+		/* Counter 1 serves ACCOUNTING tickets */
+		String ticket = model.getNextTicket(1);
 		if (ticket != null) {
 			if (!ticket.equals("")) {
 				/* At least one citizen has to be served */
@@ -73,13 +75,14 @@ public class ControllerEmployee {
 			}
 		} else {
 			C2ticketArea.setText("Error Counter C2.");
-
 		}
 
 	}
 
 	@FXML
 	void C3clickNextButton(ActionEvent event) {
+		
+		/* Counter 2 serves both SHIPPING and ACCOUNTING tickets */
 		String ticket = model.getNextTicket(2);
 		if (ticket != null) {
 			if (!ticket.equals("")) {
@@ -91,7 +94,6 @@ public class ControllerEmployee {
 			}
 		} else {
 			C3ticketArea.setText("Error Counter C3.");
-
 		}
 
 	}
@@ -108,7 +110,6 @@ public class ControllerEmployee {
 	}
 
 	public void setModel(Model model) {
-		// TODO Auto-generated method stub
 		this.model = model;
 	}
 }
