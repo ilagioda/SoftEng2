@@ -18,32 +18,35 @@ import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
 public class Model {
 
+	private static final String path = "./Statistics.txt";
+	
 	private ArrayList<Counter> counters;
 	private HashMap<String, Service> services;
 	private HashMap<Service, ObservableList<Ticket>> tickets;
 
 	// list of tickets Service 1
-	private ObservableList<Ticket> list1 = FXCollections.observableList(new LinkedList<Ticket>());
+	private ObservableList<Ticket> list1;
 
 	// list of tickets Service 2
-	private ObservableList<Ticket> list2 = FXCollections.observableList(new LinkedList<Ticket>());
-
-	public ObservableList<Ticket> getList1() {
-		return list1;
-	}
-
-	public ObservableList<Ticket> getList2() {
-		return list2;
-	}
+	private ObservableList<Ticket> list2;
 
 	public Model() {
-		super();
+		
+		File f = new File(path);
+		
+		if(!f.exists()) 
+			// SHIPPING ACCOUNTING Counter0 Counter1 Counter2
+			writeFile("0,0,0,0,0");		
 
 		counters = new ArrayList<Counter>();
 		services = new HashMap<String, Service>();
 		tickets = new HashMap<Service, ObservableList<Ticket>>();
+		
+		list1 = FXCollections.observableList(new LinkedList<Ticket>());
+		list2 = FXCollections.observableList(new LinkedList<Ticket>());
 
 		// populate services
 		Service s1, s2;
@@ -161,18 +164,55 @@ public class Model {
 			return "";
 
 		Ticket nextTicket = tickets.get(smax).remove(0); // retrieves and removes the first element
-
+		
+		// Store informations about the counter that is managing the ticket
+		c.setTicket(nextTicket);
+		nextTicket.setC(c);
+		
+		// store statistics		
+		String[] numbers = readFile().split(",");
+		Integer reqS,reqA,c0,c1,c2;
+		
+		reqS = Integer.parseInt(numbers[1]);
+		reqA = Integer.parseInt(numbers[0]);
+		c0 = Integer.parseInt(numbers[2]);
+		c1 = Integer.parseInt(numbers[3]);
+		c2 = Integer.parseInt(numbers[4]);
+		
+		if(smax.getName().equals("SHIPPING")) {
+			reqS++;
+		} else reqA++;
+		
+		switch (counterId) {
+			
+			case 0:
+				c0++;
+				break;
+			case 1:
+				c1++;
+				break;
+			case 2:
+				c2++;
+				break;
+			default:
+				break;
+		}
+		
+		// SHIPPING ACCOUNTING Counter0 Counter1 Counter2
+		String newData = reqS + "," + reqA + "," + c0 + "," + c1 + "," + c2;
+		
+		writeFile(newData);
+		
 		return nextTicket.toString();
 	}
 
 	public static void writeFile(String text) {
-		String path = "./Statistics.txt";
 		try {
 			// Creates a new File instance
 			File file = new File(path);
 
 			// FileWriter is meant for writing streams of characters
-			FileWriter fw = new FileWriter(file, true);
+			FileWriter fw = new FileWriter(file, false);
 
 			// Writes text to a character-output stream, buffering characters so as to
 			// provide for the efficient writing of single characters, arrays, and strings.
@@ -192,8 +232,6 @@ public class Model {
 	}
 
 	public static String readFile() {
-
-		String path = "./Statistics.txt";
 
 		// Creates a new File instance
 		File file = new File(path);
@@ -217,6 +255,14 @@ public class Model {
 		}
 		return textFile;
 
+	}
+	
+	public ObservableList<Ticket> getList1() {
+		return list1;
+	}
+
+	public ObservableList<Ticket> getList2() {
+		return list2;
 	}
 
 }

@@ -4,13 +4,23 @@ public class Ticket {
 
 	private String id;
 	private String timestamp;
+	private Counter c;
 	
 	public Ticket(String id, String timestamp) {
 		super();
 		this.id = id;
 		this.timestamp = timestamp;
+		this.c = null;
 	}
 	
+	public Counter getC() {
+		return c;
+	}
+
+	public void setC(Counter c) {
+		this.c = c;
+	}
+
 	public String getId() {
 		return id;
 	}
