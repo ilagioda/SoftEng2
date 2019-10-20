@@ -163,11 +163,13 @@ public class Model {
 			// 0 if no tickets
 			return "";
 
-		Ticket nextTicket = tickets.get(smax).remove(0); // retrieves and removes the first element
+		Ticket nextTicket = tickets.get(smax).get(0); // retrieves the first element
 
 		// Store informations about the counter that is managing the ticket
 		c.setTicket(nextTicket);
 		nextTicket.setC(c);
+		
+		tickets.get(smax).remove(0); // retrieves the first element
 
 		// store statistics
 		String[] numbers = readFile().split(",");
