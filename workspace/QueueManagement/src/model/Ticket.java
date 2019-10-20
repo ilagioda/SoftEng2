@@ -41,7 +41,7 @@ public class Ticket {
 		 * Ticket a19
 		 * 21-10-2019 10:22:19
 		 */
-		return "Ticket "+ id + System.lineSeparator() + timestamp;
+		return "Ticket "+ id + " - " + timestamp;
 	}
 
 	@Override
