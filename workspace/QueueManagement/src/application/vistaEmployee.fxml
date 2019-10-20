@@ -40,7 +40,7 @@
                         <Font size="31.0" />
                      </font>
                   </Button>
-                  <TextArea fx:id="C1ticketArea" editable="false" minWidth="-Infinity" prefHeight="178.0" prefWidth="200.0">
+                  <TextArea fx:id="C1ticketArea" editable="false" minWidth="-Infinity" prefHeight="178.0" prefWidth="240.0">
                      <VBox.margin>
                         <Insets bottom="20.0" left="200.0" right="200.0" top="20.0" />
                      </VBox.margin>
@@ -64,7 +64,7 @@
                         <Font size="31.0" />
                      </font>
                   </Button>
-                  <TextArea fx:id="C2ticketArea" editable="false" minWidth="-Infinity" prefHeight="178.0" prefWidth="200.0">
+                  <TextArea fx:id="C2ticketArea" editable="false" minWidth="-Infinity" prefHeight="178.0" prefWidth="240.0">
                      <VBox.margin>
                         <Insets bottom="20.0" left="200.0" right="200.0" top="20.0" />
                      </VBox.margin>
@@ -88,7 +88,7 @@
                         <Font size="31.0" />
                      </font>
                   </Button>
-                  <TextArea fx:id="C3ticketArea" editable="false" minWidth="-Infinity" prefHeight="178.0" prefWidth="200.0">
+                  <TextArea fx:id="C3ticketArea" editable="false" minWidth="-Infinity" prefHeight="178.0" prefWidth="240.0">
                      <VBox.margin>
                         <Insets bottom="20.0" left="200.0" right="200.0" top="20.0" />
                      </VBox.margin>

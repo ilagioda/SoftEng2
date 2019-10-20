@@ -7,8 +7,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Model;
 
-
-
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
@@ -18,7 +16,7 @@ public class Main extends Application {
 			FXMLLoader loader1 = new FXMLLoader(getClass().getResource("Screen.fxml")) ;
 			BorderPane root = (BorderPane)loader1.load();
 			Controller controller = loader1.getController() ;
-			model.setControllerWithoutInteraction(controller);
+		
 			
 			FXMLLoader loader2 = new FXMLLoader(getClass().getResource("vistaCitizen.fxml")) ;
 			BorderPane root2 = (BorderPane)loader2.load();

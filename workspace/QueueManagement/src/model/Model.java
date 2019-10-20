@@ -33,8 +33,6 @@ public class Model {
 
 	// list of tickets Service 2
 	private ObservableList<Ticket> list2;
-
-	private Controller controllerScreen;
 	public Model() {
 		
 		File f = new File(path);
@@ -170,7 +168,6 @@ public class Model {
 		// Store informations about the counter that is managing the ticket
 		c.setTicket(nextTicket);
 		nextTicket.setC(c);
-		controllerScreen.setTextCounter(counterId, nextTicket);
 
 		// store statistics
 		String[] numbers = readFile().split(",");
@@ -270,10 +267,11 @@ public class Model {
 		return list2;
 	}
 
-	public void setControllerWithoutInteraction(Controller controller) {
-		// TODO Auto-generated method stub
-		controllerScreen = controller;
-		
+	public ArrayList<Counter> getCounters() {
+		return counters;
 	}
 
+
+	
+	
 }
