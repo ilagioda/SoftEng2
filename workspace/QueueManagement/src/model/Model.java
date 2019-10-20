@@ -158,10 +158,17 @@ public class Model {
 			}
 		}
 
-		if (maxSize <= 0)
+		if (maxSize <= 0) {
 			// -1 if the counter do not have any service associated
 			// 0 if no tickets
+			c.setTicket(null);
+			
+			if(maxSize!=-1) {
+				tickets.get(smax).add(null);
+				tickets.get(smax).remove(0);
+			}
 			return "";
+		}
 
 		Ticket nextTicket = tickets.get(smax).get(0); // retrieves the first element
 

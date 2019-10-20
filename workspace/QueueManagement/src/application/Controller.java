@@ -67,7 +67,8 @@ public class Controller {
 				if (!lista1.isEmpty()) {
 					queueA.clear();
 					for (Ticket t : lista1) {
-						queueA.appendText(t.toString() + "\n");
+						if(t!=null)
+							queueA.appendText(t.toString() + "\n");
 					}
 
 				} else
@@ -89,7 +90,8 @@ public class Controller {
 				if (!lista2.isEmpty()) {
 					queueB.clear();
 					for (Ticket t : lista2) {
-						queueB.appendText(t.toString() + "\n");
+						if(t!=null)
+							queueB.appendText(t.toString() + "\n");
 					}
 				} else
 					queueB.clear();
@@ -102,24 +104,22 @@ public class Controller {
 	// Method used to update the TextArea of the Counters by printing their current
 	// ticket
 	private void setTextCounter(int counterID, Ticket t) {
+		
+		String text="Free";
+		
+		
+		if(t!= null)
+			text = t.toString().split("-")[0];
+		
 		switch (counterID) {
 		case 0:
-			if(t != null)
-			ticketC1.setText(t.toString());
-			else 
-				ticketC1.setText("");			
+			ticketC1.setText(text);	
 			break;
 		case 1:
-			if(t != null)
-			ticketC2.setText(t.toString());
-			else 
-				ticketC2.setText("");			
+			ticketC2.setText(text);		
 			break;
 		case 2:
-			if(t != null)
-			ticketC3.setText(t.toString());
-			else 
-				ticketC3.setText("");			
+			ticketC3.setText(text);			
 			break;
 		}
 
