@@ -104,13 +104,22 @@ public class Controller {
 	private void setTextCounter(int counterID, Ticket t) {
 		switch (counterID) {
 		case 0:
+			if(t != null)
 			ticketC1.setText(t.toString());
+			else 
+				ticketC1.setText("");			
 			break;
 		case 1:
+			if(t != null)
 			ticketC2.setText(t.toString());
+			else 
+				ticketC2.setText("");			
 			break;
 		case 2:
+			if(t != null)
 			ticketC3.setText(t.toString());
+			else 
+				ticketC3.setText("");			
 			break;
 		}
 
