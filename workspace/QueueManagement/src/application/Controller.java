@@ -59,7 +59,7 @@ public class Controller {
 			public void onChanged(ListChangeListener.Change change) {
 
 				ObservableList<Ticket> lista1 = model.getList1();
-				if(!lista1.isEmpty())
+				if (!lista1.isEmpty())
 					queueA.setText(lista1.toString());
 				else
 					queueA.setText(" ");
@@ -72,29 +72,16 @@ public class Controller {
 			public void onChanged(ListChangeListener.Change change) {
 
 				ObservableList<Ticket> lista2 = model.getList2();
-				if(!lista2.isEmpty())
+				if (!lista2.isEmpty())
 					queueB.setText(lista2.toString());
 				else
 					queueB.setText(" ");
-				
-			
-
-//  QUESTO PEZZO DI CODICE SERVIREBBE PER AGGIORNARE LE SCHERMATE DEI COUNTER, IL PROBLEMA È CHE GENERA ERRORI
-				
-//				if (change.wasRemoved()) {
-//					int size = change.getRemovedSize();
-//					for (int i = 0; i < size; i++) {
-//						Ticket t = (Ticket) change.getRemoved().get(i);
-//						int counterID = t.getC().getCounterId();
-//						setTextCounter(counterID, t);
-//					}
-//				}
 			}
 		});
 
 	}
 
-	private void setTextCounter(int counterID, Ticket t) {
+	public void setTextCounter(int counterID, Ticket t) {
 		switch (counterID) {
 		case 0:
 			ticketC1.setText(t.toString());

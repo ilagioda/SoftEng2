@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import application.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -33,8 +34,9 @@ public class Model {
 	// list of tickets Service 2
 	private ObservableList<Ticket> list2;
 
+	private Controller controllerScreen;
 	public Model() {
-
+		
 		File f = new File(path);
 
 		if (!f.exists())
@@ -168,13 +170,14 @@ public class Model {
 		// Store informations about the counter that is managing the ticket
 		c.setTicket(nextTicket);
 		nextTicket.setC(c);
+		controllerScreen.setTextCounter(counterId, nextTicket);
 
 		// store statistics
 		String[] numbers = readFile().split(",");
-		Integer reqS, reqA, c0, c1, c2;
+		Integer reqA, reqS, c0, c1, c2;
 
-		reqS = Integer.parseInt(numbers[1]);
 		reqA = Integer.parseInt(numbers[0]);
+		reqS = Integer.parseInt(numbers[1]);
 		c0 = Integer.parseInt(numbers[2]);
 		c1 = Integer.parseInt(numbers[3]);
 		c2 = Integer.parseInt(numbers[4]);
@@ -265,6 +268,12 @@ public class Model {
 
 	public ObservableList<Ticket> getList2() {
 		return list2;
+	}
+
+	public void setControllerWithoutInteraction(Controller controller) {
+		// TODO Auto-generated method stub
+		controllerScreen = controller;
+		
 	}
 
 }
