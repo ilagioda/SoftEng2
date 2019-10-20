@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -57,7 +58,11 @@ public class Controller {
 			@Override
 			public void onChanged(ListChangeListener.Change change) {
 
-				queueA.setText(model.getList1().toString());
+				ObservableList<Ticket> lista1 = model.getList1();
+				if(!lista1.isEmpty())
+					queueA.setText(lista1.toString());
+				else
+					queueA.setText(" ");
 			}
 		});
 
@@ -66,7 +71,13 @@ public class Controller {
 			@Override
 			public void onChanged(ListChangeListener.Change change) {
 
-				queueB.setText(model.getList2().toString());
+				ObservableList<Ticket> lista2 = model.getList2();
+				if(!lista2.isEmpty())
+					queueB.setText(lista2.toString());
+				else
+					queueB.setText(" ");
+				
+			
 
 //  QUESTO PEZZO DI CODICE SERVIREBBE PER AGGIORNARE LE SCHERMATE DEI COUNTER, IL PROBLEMA È CHE GENERA ERRORI
 				
