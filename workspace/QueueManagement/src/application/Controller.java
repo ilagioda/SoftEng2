@@ -64,15 +64,16 @@ public class Controller {
 			public void onChanged(ListChangeListener.Change change) {
 
 				ObservableList<Ticket> lista1 = model.getList1();
+				
+				queueA.clear();
+				
 				if (!lista1.isEmpty()) {
-					queueA.clear();
 					for (Ticket t : lista1) {
 						if(t!=null)
-							queueA.appendText(t.toString() + "\n");
+							queueA.appendText(t.toString() + System.lineSeparator());
 					}
-
-				} else
-					queueA.clear();
+				}
+				
 				updateCounters();
 			}
 		});
@@ -87,14 +88,15 @@ public class Controller {
 			public void onChanged(ListChangeListener.Change change) {
 
 				ObservableList<Ticket> lista2 = model.getList2();
+				queueB.clear();
+				
 				if (!lista2.isEmpty()) {
-					queueB.clear();
 					for (Ticket t : lista2) {
 						if(t!=null)
-							queueB.appendText(t.toString() + "\n");
+							queueB.appendText(t.toString() + System.lineSeparator());
 					}
-				} else
-					queueB.clear();
+				} 
+				
 				updateCounters();
 			}
 		});
@@ -112,6 +114,7 @@ public class Controller {
 			text = t.toString().split("-")[0];
 		
 		switch (counterID) {
+
 		case 0:
 			ticketC1.setText(text);	
 			break;
@@ -121,6 +124,7 @@ public class Controller {
 		case 2:
 			ticketC3.setText(text);			
 			break;
+			
 		}
 
 	}

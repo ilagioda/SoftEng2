@@ -33,6 +33,7 @@ public class Model {
 
 	// list of tickets Service 2
 	private ObservableList<Ticket> list2;
+	
 	public Model() {
 		
 		File f = new File(path);
@@ -44,9 +45,6 @@ public class Model {
 		counters = new ArrayList<Counter>();
 		services = new HashMap<String, Service>();
 		tickets = new HashMap<Service, ObservableList<Ticket>>();
-
-		list1 = FXCollections.observableList(new LinkedList<Ticket>());
-		list2 = FXCollections.observableList(new LinkedList<Ticket>());
 
 		// populate services
 		Service s1, s2;
@@ -62,6 +60,9 @@ public class Model {
 		counters.add(new Counter(2, new HashSet<Service>(Arrays.asList(s1, s2))));
 
 		// initially no tickets
+		list1 = FXCollections.observableList(new LinkedList<Ticket>());
+		list2 = FXCollections.observableList(new LinkedList<Ticket>());
+		
 		tickets.put(s1, list1);
 		tickets.put(s2, list2);
 	}
@@ -117,7 +118,7 @@ public class Model {
 					+ " minutes.";
 		} else {
 			float hours = totTime / 60;
-			return t.toString() + System.lineSeparator() + "Estimated waiting time: " + (int) hours + " hours and "
+			return t.toString() + System.lineSeparator() + "Estimated waiting time: " + (int) hours + " hour/s and "
 					+ Math.round(totTime) % 60 + " minutes.";
 		}
 
@@ -167,6 +168,7 @@ public class Model {
 				tickets.get(smax).add(null);
 				tickets.get(smax).remove(0);
 			}
+			
 			return "";
 		}
 
@@ -182,8 +184,9 @@ public class Model {
 		String[] numbers = readFile().split(",");
 		Integer reqA, reqS, c0, c1, c2;
 
-		reqA = Integer.parseInt(numbers[0]);
-		reqS = Integer.parseInt(numbers[1]);
+		// SHIPPING ACCOUNTING Counter0 Counter1 Counter2
+		reqS = Integer.parseInt(numbers[0]);
+		reqA = Integer.parseInt(numbers[1]);
 		c0 = Integer.parseInt(numbers[2]);
 		c1 = Integer.parseInt(numbers[3]);
 		c2 = Integer.parseInt(numbers[4]);
@@ -236,8 +239,8 @@ public class Model {
 			// Close the stream
 			bw.close();
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Error writing the file");
 		}
 	}
 
@@ -257,12 +260,8 @@ public class Model {
 
 			textFile= bfr.readLine();
 			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Error reading the file");
 		}
 		return textFile;
 

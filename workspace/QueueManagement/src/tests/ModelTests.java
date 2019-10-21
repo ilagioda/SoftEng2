@@ -19,7 +19,6 @@ public class ModelTests {
 	public void getNewTicketTest2() {
 		Model m = new Model();		
 		assertTrue(m.getNewTicket("Shipping").contains("less than 1 minute."));
-		
 	}
 	
 	@Test
@@ -44,7 +43,7 @@ public class ModelTests {
 			m.getNewTicket("Shipping");
 		
 		//should be 65 min
-		assertTrue(m.getNewTicket("Shipping").contains("1 hours and 5 minutes."));
+		assertTrue(m.getNewTicket("Shipping").contains("1 hour/s and 5 minutes."));
 	}
 	
 	@Test
@@ -82,7 +81,7 @@ public class ModelTests {
 		m.getNewTicket("Shipping");
 		m.getNewTicket("Shipping");
 		m.getNewTicket("Shipping");
-		assertTrue(m.getNextTicket(2).contains("S1")); //shortest queue first
+		assertTrue(m.getNextTicket(2).contains("S1")); //longest queue first
 	}
 	
 	@Test
