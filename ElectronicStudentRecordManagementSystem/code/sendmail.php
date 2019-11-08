@@ -6,7 +6,9 @@ require 'C:\xampp\composer\vendor\autoload.php';
 require_once("classphpmailer.php");
 require_once("class.smtp.php");
 
-$to_address = $_SESSION['mail'];
+$to_address = $_POST['mail'];
+
+echo "my to-address is ".$to_address;
 
 $mail = new PHPMailer(); 
 
