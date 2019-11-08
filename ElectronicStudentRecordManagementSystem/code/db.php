@@ -1,18 +1,6 @@
 <?php
 
- class db{
-    $servername = "localhost";
-    $username = "username";
-    $password = "password";
-    
-    // Create connection
-    $conn = new mysqli($servername, $username, $password);
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    
-    $conn->close();
+class db{
 
     function __construct()
     {
@@ -25,9 +13,9 @@
         $this->conn = new mysqli($servername, $username, $password,$dbname);
 
         // Check connection
-        if ($this->conn->connect_error) {
+        if ($this->conn->connect_error){
             die("Connection failed: " . $this->conn->connect_error);
-            $conn->close();
+            $this->conn->close();
         }
     }
 }
@@ -37,12 +25,14 @@ class dbAdmin extends db{
 }
 
 class dbParent extends db{
-   
 
-
-
+    public function viewChildMarks($CodFisc){
+        /* This function receives the fiscal code of a child*/
+    }
 }
 
+class dbTeacher extends db{
 
+}
 
 ?>
