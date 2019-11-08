@@ -1,5 +1,5 @@
 <?php
-require_once 'header.php';
+require_once 'basicChecks.php';
 $error = $user = $pass = "";
 
 if (isset($_POST['user'])) {
@@ -78,7 +78,7 @@ echo <<<_END
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block login" type="submit">Sign in</button>
       </form>
 
             </form>
