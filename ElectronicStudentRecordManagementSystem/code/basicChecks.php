@@ -1,6 +1,10 @@
 <?php
 require_once("redirectHTTPS.php");
 require_once("functions.php");
+
+session_name("ESRMS"); //electronic student record management system
+session_start();
+
 require_once("inactivity.php");
 
 $previous = $_SERVER['REQUEST_URI'];
@@ -14,7 +18,15 @@ _NOSCRIPT;
 ///////////////////////////////////// CHECKING COOKIES ENABLES
 echo <<<_CHKCOOKIES
 <script><!--
-areCookiesEnabled();
+try {
+    document.cookie = 'cookietest=1';
+    var cookiesEnabled = document.cookie.indexOf('cookietest=') !== -1;
+    document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
+    if (cookiesEnabled) return true;
+    else window.location="cookiesDisabled.php";
+} catch (e) {
+    window.location="cookiesDisabled.php";
+}
 //--></script>
 _CHKCOOKIES;
 /////////////////////////////////////////////////////////////

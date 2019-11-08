@@ -1,5 +1,7 @@
 <?php
 
+require_once("basicChecks.php");
+
 class db{
 
     function __construct()
@@ -27,7 +29,14 @@ class dbAdmin extends db{
 class dbParent extends db{
 
     public function viewChildMarks($CodFisc){
-        /* This function receives the fiscal code of a child*/
+        /* 
+        This function receives the fiscal code of a child, 
+        verifies if the child is actually a child of that parent
+        and then returns the marks.
+        
+        */
+
+        return "";
     }
 }
 
