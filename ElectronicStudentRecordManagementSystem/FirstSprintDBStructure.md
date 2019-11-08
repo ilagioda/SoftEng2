@@ -1,17 +1,17 @@
-Parent - **E-mail**, hashedPassword*, salt*, name, surname, CodFisc, FirstLogin
+Parents - **e-mail**, hashedPassword*, salt*, name, surname, CodFisc, FirstLogin
 
-Student - **CodFisc**, emailP1, emailP2*, ClassID*
+Students - **codFisc**, emailP1, emailP2*, ClassID*
 
-Teacher - **CodFisc**, hashedPassword
+Teachers - **codFisc**, hashedPassword
 
-Principal - **CodFisc**, hashedPassword
+Principals - **codFisc**, hashedPassword
 
-Admin - **CodFisc**, hashedPassword
+Admins - **codFisc**, hashedPassword
 
-Marks - **CodFiscStudent**, **Subject**, **Date**, **Hour**, mark
+Marks - **codFiscStudent**, **subject**, **date**, **hour**, mark
 
-Lecture - **Date**, **Hour**, **ClassID**, CodFiscTeacher, Subject, Topic
+Lectures - **date**, **hour**, **classID**, CodFiscTeacher, Subject, Topic
 
-Assignments - **Subject**, **Date**, **ClassID**, textAssignment
+Assignments - **subject**, **date**, **classID**, textAssignment
 
 
