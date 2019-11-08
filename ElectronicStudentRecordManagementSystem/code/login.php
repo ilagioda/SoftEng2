@@ -44,7 +44,7 @@ echo <<<_END
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="index.php"><img class="logo" src=logo2.png></a>
+    <a class="navbar-brand" href="index.php"><img class="logo" src=images/logo.png></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -62,7 +62,7 @@ echo <<<_END
 <div class="container">
     <div class="card card-login mx-auto text-center bg-dark">
         <div class="card-header mx-auto bg-dark">
-            <span> <img src="login_logo.png" class="w-75" alt="Logo"> </span><br/>
+            <span> <img src="images/login_logo.png" class="w-75" alt="Logo"> </span><br/>
                         <span id="msg" value=""> $msg </span>
                         <span class='error'>$error</span>
 

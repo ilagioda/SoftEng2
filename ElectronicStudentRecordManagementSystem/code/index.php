@@ -1,5 +1,6 @@
 <?php
-require_once 'header.php';
+require_once 'basicChecks.php';
+
 echo <<<_MAIN
     <body>
     <nav class="navbar navbar-inverse">
@@ -10,7 +11,7 @@ echo <<<_MAIN
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>                        
         </button>
-        <a class="navbar-brand" href="index.php"><img class="logo" src=logo2.png></a>
+        <a class="navbar-brand" href="index.php"><img class="logo" src=images/logo.png></a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">

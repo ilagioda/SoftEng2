@@ -1,28 +1,30 @@
 <?php
 
-public class db{
-    $servername = "localhost";
-    $username = "username";
-    $password = "password";
-    
-    // Create connection
-    $conn = new mysqli($servername, $username, $password);
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+class db {
+
+    function __construct()
+    {
+        $servername = "localhost";
+        $username = "username";
+        $password = "password";
+        $dbname = "school";
+
+        // Create connection
+        $this->conn = new mysqli($servername, $username, $password,$dbname);
+
+        // Check connection
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+            $conn->close();
+        }
     }
-    
-    $conn->close();
+}
 
-
+class dbAdmin extends db{
 
 }
 
-public class dbAdmin extends db{
-
-}
-
-public class dbParent extends db{
+class dbParent extends db{
    
 
 
