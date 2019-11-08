@@ -1,4 +1,4 @@
-Parent - **E-mail**, hashedPassword, salt
+Parent - **E-mail**, hashedPassword*, salt*, name, surname, CodFisc, FirstLogin
 
 Student - **CodFisc**, emailP1, emailP2*, ClassID*
 
