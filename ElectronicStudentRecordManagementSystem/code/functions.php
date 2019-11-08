@@ -27,4 +27,11 @@ function sanitizeString($var)
         $var = stripslashes($var);
         return $connection->real_escape_string($var);
 }
+
+function checkIfLogged(){
+    if(!isset($_SESSION['role'])){
+        echo "<img src='images/gandalf.jpg' class='img-responsive center-block'>";
+        die();
+    }
+}
 ?>
