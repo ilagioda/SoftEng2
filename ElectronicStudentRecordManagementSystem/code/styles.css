@@ -24,6 +24,13 @@
     line-height: 80px;
 }
 
+.td_resized_sendmail{
+    width: 20px;
+}
+.table.table-striped.sendmail{
+    font-size:20px;
+}
+
 .navbar-toggle {
 /* (80px - button height 34px) / 2 = 23px */
 margin-top: 23px;
@@ -60,6 +67,10 @@ footer {
 background-color: #555;
 color: white;
 padding: 15px;
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
