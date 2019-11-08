@@ -22,8 +22,7 @@ try {
     document.cookie = 'cookietest=1';
     var cookiesEnabled = document.cookie.indexOf('cookietest=') !== -1;
     document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
-    if (cookiesEnabled) return true;
-    else window.location="cookiesDisabled.php";
+    if (!cookiesEnabled) window.location="cookiesDisabled.php";
 } catch (e) {
     window.location="cookiesDisabled.php";
 }
@@ -43,6 +42,5 @@ _CHKCOOKIES;
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="functions.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
