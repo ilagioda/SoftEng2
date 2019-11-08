@@ -2,12 +2,11 @@ Parent - **E-mail**, hashedPassword*, salt*, name, surname, CodFisc, FirstLogin
 
 Student - **CodFisc**, emailP1, emailP2*, ClassID*
 
-Teacher - **CodFisc**, hashedPassword, salt
+Teacher - **CodFisc**, hashedPassword
 
-Principal - **CodFisc**, hashedPassword, salt
+Principal - **CodFisc**, hashedPassword
 
-Admin - **CodFisc**, hashedPassword, salt
-
+Admin - **CodFisc**, hashedPassword
 
 Marks - **CodFiscStudent**, **Subject**, **Date**, **Hour**, mark
 
