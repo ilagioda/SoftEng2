@@ -11,12 +11,24 @@ require_once("db.php");
 
 $_SESSION['db'] = new dbParent();
 $_SESSION['child'] = "FRCWTR";
+$_SESSION['childName'] = "Walter";
+$_SESSION['childSurname'] = "Forcignanò";
+$_SESSION['class'] = '1A';
 
 /* End lines to be changed*/
 
+$childName = $_SESSION['childName'];
+$childSurname = $_SESSION['childSurname'];
+
 $marks = $_SESSION['db']->viewChildMarks($_SESSION['child']);
 
+$subjects = $_SESSION['db']->getSubjectTaughtInClass($_SESSION['class']);
+
 $preprocessed_data = array();
+
+foreach ($subjects as $subject) {
+    $preprocessed_data[$subject]['mean']=0;
+}
 
 if($marks!=""){
 
@@ -39,7 +51,7 @@ if($marks!=""){
         $initialMark = $row[2];
         $mark = convertMark($initialMark);
 
-        if(!isset($preprocessed_data[$subject]['mean'])) {
+        if($preprocessed_data[$subject]['mean']==0) {
             // first iteration for that subject
 
             if($prev!=="" && $count > 0){
@@ -70,6 +82,8 @@ if($marks!=""){
 
     echo <<< STARTTABLE
 
+    <h1 class="display-1 text-center"> $childName $childSurname's marks </h1>
+
     <table class="table table-condensed" style="border-collapse:collapse;">
     <thead>
         <tr>
@@ -86,15 +100,23 @@ if($marks!=""){
 
     foreach ($preprocessed_data as $subject => $marks) {
 
-        $mean = round($preprocessed_data[$subject]['mean'],2);
+        $mean = round($preprocessed_data[$subject]['mean'],2);          
 
-        if($mean<6) 
-            // print the row with a different color in case of warning
-            $warning = "warning";
-        else $warning = "";
+        $modifier="";
+
+        if($mean==0)
+        // no marks for that subject
+            $mean = "N.C."; 
+        elseif($mean<6){
+        // print the row with a different color in case of mark lower than 6
+            if($mean < 5 ) $modifier = "danger";
+            else $modifier = "warning";
+        } else {
+            $modifier = "success";
+        }
         
         echo <<< VISIBLEROW
-            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $warning">
+            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
                 <td>$subject</td>
                 <td></td>
                 <td></td>
@@ -102,13 +124,14 @@ if($marks!=""){
             </tr>
         VISIBLEROW;
 
-        
+        if($mean=="N.C.") $subject="";
+
         echo <<< HIDDENLEGEND
 
             <tr>
                 <td></td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> <strong> Date </strong> </div> </td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> <strong> Specific marks </strong> </div> </td>
+                <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
+                <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
                 <td></td>
             </tr>
         HIDDENLEGEND;
