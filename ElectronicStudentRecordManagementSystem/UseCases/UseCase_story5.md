@@ -2,6 +2,7 @@
 
 **Use Case**: 
 - Enter the class composition in the system
+
 **Scope:** 
 - Admin's PC
 
@@ -23,7 +24,7 @@
 
 **Precondition:**
 - The system must have a database already configured
-- The system should already have the proposed class compositions 
+- The system should already have the proposed class compositions
 
 **Minimum Guarantees:** 
 - The class composition is accepted and the information saved
@@ -35,10 +36,10 @@
 - None, because it’s the administrative officer that starts the interaction
 
 **Main Success Scenario:**
-1. The admin select a particular class for which he/she wants to enter class composition
-2. The system show the class composition for that particular class
-3. The admin accept the class composition by clicking on the button 
-4. The system update all the informations related in the database
+1. The admin selects a particular class for which he/she wants to see the proposed class composition
+2. The system shows the proposed class composition for the selected class
+3. The admin accepts the class composition by simply clicking a button 
+4. The system updates all the informations related in the database
 5. The system confirms with a message that the operation has been completed successfully 
 
 The use case terminates with success
