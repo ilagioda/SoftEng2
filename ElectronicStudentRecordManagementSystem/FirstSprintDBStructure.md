@@ -1,6 +1,6 @@
 Parents - **e-mail**, hashedPassword*, salt*, name, surname, CodFisc, FirstLogin
 
-Students - **codFisc**, emailP1, emailP2*, ClassID*
+Students - **codFisc**,name,surname, emailP1, emailP2*, ClassID*
 
 Teachers - **codFisc**, hashedPassword
 
