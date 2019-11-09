@@ -1,4 +1,4 @@
-# USE CASE - STORY#4
+# USE CASE - STORY#6
 
 **Use Case**: assign a grade to a student
 
