@@ -48,6 +48,28 @@ class db
         return $stmt;
 
     }
+
+    public function getSubjectTaughtInClass($class){
+
+        $class = $this->sanitizeString($class);
+
+        $year = intval(substr($class,0,1));
+
+        if($year<1 || $year>5){
+            // year non valid
+            throw new Exception("Inserted non valid year: " . $year);
+        }
+        
+        $result = $this->query("SELECT name FROM Subjects WHERE year='$year';");
+
+        $subjects = array();
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+            array_push($subjects,$row['name']);
+        }
+
+        return $subjects;
+    }
 }
 
 class dbAdmin extends db
