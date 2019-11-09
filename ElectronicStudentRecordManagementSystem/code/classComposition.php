@@ -81,23 +81,30 @@ ROW;
       $valueString = json_encode($classComposition);
 
       echo <<<ENDOFREQUESTEDPAGE
+                    <tr>
+                    <td>
+                    <div class="form-group">
+                    <form class="form-horizontal" method="post" action="./classComposition.php">
+                      <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-default pull-left">Cancel</button>
+                      </div>
+                    </form>
+                    </td>
+                    <td>
+                    <form class="form-horizontal" method="post" action="./classComposition.php">
+                      <div class="col-sm-offset-2 col-sm-10">
+                      <input type="text" name="confirm"  hidden value='$valueString'>
+                      <button type="submit" class="btn btn-default pull-right">Confirm</button>
+                      </div>
+                    </form>
+                    </td>
+                  </div>
+                  </tr>
                     </tbody>                
                   </table>
                 </div>
-                <div class="form-group">
-                <form class="form-horizontal" method="post" action="./classComposition.php">
-                  <div class="col-sm-offset-2 col-sm-10">
-                  <input type="text" name="confirm"  hidden value='$valueString'>
-                  <button type="submit" class="btn btn-default">Confirm</button>
-                  </div>
-                </form>
-              </div>
-            </div>
+                </div>
          
-
-
-
-
             <footer class="container-fluid text-center">
               <p>Footer Text</p>
             </footer>
@@ -163,7 +170,7 @@ ENDOFREQUESTEDPAGE;
                 <h1>Welcome</h1>
                 <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
                 <hr>
-                <div class="container">
+                <div class="container col-sm-5">
                  
 NORMALPAGE;
   if (isset($classes)) {
@@ -177,13 +184,13 @@ NORMALPAGE;
         echo <<< ROW
                          
                             <tr>
-                            <td>$value</td>
-                            <td>
+                            <td class ="col-sm-4">$value</td>
+                            <td class ="col-sm-1">
                             <form class="form-horizontal" method = "post" action="./classComposition.php">
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                 <input type="text" name="$value"  hidden value="$value">
-                                  <button type="submit" name="view" class="btn btn-default">View</button>
+                                  <button type="submit" name="view" class="btn btn-default pull-right">View</button>
                                   </div>
                                   </div>
                             </form>
@@ -199,13 +206,13 @@ ROW;
                           <table class="table table-hover">
                             <tbody>
                             <tr>
-                            <td>$value</td>
-                            <td>
+                            <td class ="col-sm-4>$value</td>
+                            <td class ="col-sm-1">
                             <form class="form-horizontal" method = "post" action="./classComposition.php">
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                 <input type="text" name="$value"  hidden value="$value">
-                                  <button type="submit" name="view" class="btn btn-default">View</button>
+                                  <button type="submit" name="view" class="btn btn-default pull-right">View</button>
                                   </div>
                                   </div>
                             </form>

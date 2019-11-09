@@ -4,7 +4,6 @@ require_once("functions.php");
 
 session_name("ESRMS"); //electronic student record management system
 session_start();
-
 require_once("inactivity.php");
 
 ?>
