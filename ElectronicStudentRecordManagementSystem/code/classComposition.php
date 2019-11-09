@@ -6,9 +6,6 @@ $_SESSION['role']="admin";
 
 require_once('db.php');
 
-
-
-
 $dbAdmin = new dbAdmin();
 
 if (isset($_POST["view"])) {
@@ -17,9 +14,9 @@ if (isset($_POST["view"])) {
 
   foreach ($_POST as $key => $value) {
     if ($key != "view") {
-      //
       echo $value;
-
+      $result = $dbAdmin->readClassCompositions($value);
+      print_r($result);
 
       echo <<<REQUESTEDPAGE
         <body>
