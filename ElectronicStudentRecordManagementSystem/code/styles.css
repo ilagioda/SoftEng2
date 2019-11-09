@@ -82,3 +82,8 @@ width: 100%;
 
 .row.content {height:auto;}
 }
+
+/* View marks*/
+.hiddenRow.marks{
+    padding: 0;
+}
