@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 09, 2019 alle 14:22
+-- Creato il: Nov 09, 2019 alle 18:32
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -21,7 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
-CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+DROP DATABASE IF EXISTS `school`;
+CREATE DATABASE `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
 
 -- --------------------------------------------------------
@@ -154,6 +155,19 @@ CREATE TABLE IF NOT EXISTS `Students` (
 INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
 ('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', '1A'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '1B');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Subjects`
+--
+
+CREATE TABLE IF NOT EXISTS `Subjects` (
+  `name` varchar(50) NOT NULL,
+  `year` int(11) NOT NULL,
+  `hours` int(11) NOT NULL,
+  PRIMARY KEY (`name`,`year`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
