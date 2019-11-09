@@ -2,11 +2,11 @@
 
 require_once("basicChecks.php");
 
-checkIfLogged();
+//checkIfLogged();
 
 class db{
 
-    private $conn;
+    protected $conn;
 
     function __construct()
     {
@@ -32,13 +32,15 @@ class db{
 
 class dbAdmin extends db
 {
-
+/*
     function __construct()
     {
         if($_SESSION['role']!="admin") throw new Exception("Creating dbAdmin object for an user who is NOT logged in as an admin");
         parent::__construct();
 
     }
+*/
+
     function readClassCompositions($class)
     { }
 
