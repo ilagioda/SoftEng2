@@ -6,20 +6,20 @@ checkIfLogged();
 
 class db{
 
-    private $conn;
+    protected $conn;
 
     function __construct()
     {
         $servername = "localhost";
-        $username = "username";
-        $password = "password";
+        $username = "root";
+        $password = "";
         $dbname = "school";
 
         // Create connection
-        $this->conn = new mysqli($servername, $username, $password,$dbname);
+        $this->conn = new mysqli($servername, $username, $password, $dbname);
 
         // Check connection
-        if ($this->conn->connect_error){
+        if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
             $this->conn->close();
         }
@@ -30,7 +30,8 @@ class db{
     }
 }
 
-class dbAdmin extends db{
+class dbAdmin extends db
+{
 
     function __construct()
     {
@@ -38,9 +39,31 @@ class dbAdmin extends db{
         parent::__construct();
 
     }
+
+    function readClassCompositions($class)
+    { }
+
+    function readAllClasses()
+    {
+
+        $sql = "SELECT classID FROM ProposedClasses";
+        $resultQuery = $this->conn->query($sql);
+
+        if ($resultQuery->num_rows > 0) {
+            $resultArray = array();
+            // output data of each row
+            while ($row = $resultQuery->fetch_assoc()) {
+                array_push($resultArray,$row["classID"]);
+            }
+            return $resultArray;
+        }
+    }
 }
 
-class dbParent extends db{
+
+
+class dbParent extends db
+{
 
     function __construct()
     {

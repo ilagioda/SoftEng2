@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 08, 2019 alle 22:19
+-- Creato il: Nov 09, 2019 alle 13:07
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -114,6 +114,14 @@ CREATE TABLE `ProposedClasses` (
   `codFisc` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `ProposedClasses`
+--
+
+INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
+('1A', 'FRCWTR'),
+('1B', 'MRC');
+
 -- --------------------------------------------------------
 
 --
@@ -122,10 +130,20 @@ CREATE TABLE `ProposedClasses` (
 
 CREATE TABLE `Students` (
   `codFisc` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL,
   `emailP1` varchar(50) NOT NULL,
   `emailP2` varchar(50) NOT NULL,
   `classID` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Students`
+--
+
+INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
+('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', '1A'),
+('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '1B');
 
 -- --------------------------------------------------------
 
