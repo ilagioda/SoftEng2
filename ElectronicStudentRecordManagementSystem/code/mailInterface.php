@@ -11,14 +11,14 @@ $_SESSION['db'] = new dbAdmin();
 
 function sendMail(id, cl){
     email="";
-    $.post("sendmail.php", {'mail' : id}, 
+    $.post("sendmail.php", {'mail' : id},
     function(response){
       if(response.includes("Message has been sent.")){
-        document.getElementById("answer").innerHTML = '<div class="alert alert-success"><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent.</strong></div>';
+        document.getElementById("answer").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent.</strong></div>';
         document.getElementById(cl).className="danger";
       }
       else{
-        document.getElementById("answer").innerHTML = '<div class="alert alert-danger"><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
+        document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
       }
     });
 }
@@ -33,13 +33,17 @@ function sendMail(id, cl){
 
 <div class="container">
   <h2>Emails to be confirmed</h2>
+  <span class="label label-success pull-right">Email not sent yet</span><br>
+  <span class="label label-danger pull-right">Email sent, but still to be confirmed</span>
   <p class="text-center">Search by email address:</p>
   <input class="form-control" id="myInput" type="text" placeholder="Search..">
   <br>
   <div class="col-md-12">
   <div id="answer"> </div>
+
   
-  
+
+
   </div>
   <table class="table table-striped sendmail">
     <thead>
@@ -50,34 +54,33 @@ function sendMail(id, cl){
     </thead>
     <tbody id="myTable">
     <?php
-      $i=0;
-      $ParentsMailList = $_SESSION['db']->TakeParentsMail();
-      foreach($ParentsMailList as $tuple){
-        $email = $tuple['email'];
-        $hashedPw =  $tuple['hashedPassword'];
-        $firstLogin = $tuple['firstLogin'];
-        if($hashedPw == null && $firstLogin==true){
-          //email ancora da inviare
-          echo <<<_SUCCESS
+$i = 0;
+$ParentsMailList = $_SESSION['db']->TakeParentsMail();
+foreach ($ParentsMailList as $tuple) {
+    $email = $tuple['email'];
+    $hashedPw = $tuple['hashedPassword'];
+    $firstLogin = $tuple['firstLogin'];
+    if ($hashedPw == null && $firstLogin == true) {
+        //email ancora da inviare
+        echo <<<_SUCCESS
             <tr class="success" id="r$i">
             <td>$email</td>
             <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
           </tr>
         _SUCCESS;
-        }
-        else if ($hashedPw != null && $firstLogin==true){
-          //email già mandata, ma utente non ha ancora modificato pw (c'è quella di default)
-          echo <<<_SENT
+    } else if ($hashedPw != null && $firstLogin == true) {
+        //email già mandata, ma utente non ha ancora modificato pw (c'è quella di default)
+        echo <<<_SENT
             <tr class="danger" id="r$i">
             <td>$email</td>
             <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
             </tr>
           _SENT;
-        }
-        $i++;
-      }
+    }
+    $i++;
+}
 
-    ?>
+?>
     </tbody>
   </table>
 </div>
