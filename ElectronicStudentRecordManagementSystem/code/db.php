@@ -26,7 +26,7 @@ class db{
     }
 
     protected function query($queryToBeExecuted){
-        return $this->conn->query(sanitizeString($queryToBeExecuted));
+        return $this->conn->query($queryToBeExecuted);
     }
 }
 
@@ -120,6 +120,22 @@ class dbTeacher extends db{
 
     function insertMark($codStudent, $subject, $date, $hour, $mark){
         
+
+    }
+    
+    function getStudentsByClass($class){
+        $result = $this->query("SELECT * FROM Students WHERE classID=$class ;");
+        
+        if (!$result) 
+            die("Unable to select students.");
+
+        $students="";
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
+            $students = $marks . $row['name'] . ',' . $row['surname'] . ";";
+        }
+        
+        return $students;
 
     }
 }

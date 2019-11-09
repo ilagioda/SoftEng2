@@ -3,18 +3,23 @@
 require_once("db.php");
 
 class Teacher{
-    
+
+    private $db;
+    private $codfisc;
+
     function __construct(){
-        $codfisc=$_SESSION['user'];
-        $db = new dbTeacher;
+        $this->codfisc=$_SESSION['user'];
+        $this->db = new dbTeacher();
+        
     }
 
-    function getStudents($subject){
+    function getStudents($class){
+        return $this->db->getStudentsByClass($class);
         
     }
   
     function submitMark($codStudent, $subject, $date, $hour, $mark) {
-            $db->insertMark($codStudent, $subject, $date, $hour, $mark);
+        $this->db->insertMark($codStudent, $subject, $date, $hour, $mark);
     }
 
 

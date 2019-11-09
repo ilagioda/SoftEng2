@@ -5,12 +5,13 @@ require_once("basicchecks.php");
 $_SESSION['user']="ABCD97";
 $_SESSION['role']="teacher";
 
-include ('classTeacher.php');
+require_once("classTeacher.php");
 
-$teacher=new Teacher;
+$teacher=new Teacher();
+$class="dummy";
 
 
-$teacher->getStudents();
+$teacher->getStudents($class);
 
 
 
