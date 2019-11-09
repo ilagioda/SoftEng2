@@ -6,6 +6,7 @@ require_once "defaultNavbar.php";
 <script>
 
 function sendMail(id){
+    email="";
     $.post("sendmail.php", {'mail' : id}, 
     function(response){
       if(response.includes("Message has been sent.")){
