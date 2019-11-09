@@ -219,12 +219,12 @@ class dbParent extends db
         if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
             die("You are not authorised to see this information.");
 
-        $result = $this->query("SELECT subject,date,mark FROM Marks WHERE codFisc='$CodFisc' ORDER BY subject,date,hour DESC;");
+        $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' ORDER BY subject ASC,date DESC,hour DESC;");
 
         $marks = "";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-            $marks = $marks . $row['subject'] . ',' . $row['date'] . "," . $row['mark'] . ";";
+            $marks = $marks . $row['subject'] . ',' . $row['date'] . "," . $row['hour'] ."° hour,".$row['mark'] . ";";
         }
 
         if ($marks != "") $marks = substr($marks, 0, -1); // to remove the last ;

@@ -87,3 +87,7 @@ width: 100%;
 .hiddenRow.marks{
     padding: 0;
 }
+
+.visibleRowMarks:hover{
+    filter: brightness(90%);
+}

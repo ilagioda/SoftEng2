@@ -38,8 +38,7 @@ function convertMark($rawMark){
         // mark is of type 7/8
 
         // select the last character
-        $mark = floatval(substr($rawMark,-1));
-
+        $mark = floatval(explode('/',$rawMark)[1]);
         // remove 0.25
         $mark-=0.25;
     } elseif(strpos($rawMark,"+")){

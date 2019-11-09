@@ -48,7 +48,8 @@ if($marks!=""){
 
         $subject = $row[0];
         $date = $row[1];
-        $initialMark = $row[2];
+        $hour = $row[2];
+        $initialMark = $row[3];
         $mark = convertMark($initialMark);
 
         if($preprocessed_data[$subject]['mean']==0) {
@@ -65,7 +66,7 @@ if($marks!=""){
         }
 
         $preprocessed_data[$subject]['mean'] +=$mark;
-        $preprocessed_data[$subject][$date] = $initialMark;
+        $preprocessed_data[$subject][$date . " " . $hour] = $initialMark;
         $count++;
     }
     
@@ -76,8 +77,10 @@ if($marks!=""){
 
     /**
      * Now $preprocessed_data should be a map containing:
-     * Subject => mean
+     * Subject,mean => mean
+     * Subject,date hour => Mark
      */
+
 }
 
     echo <<<_STARTTABLE
@@ -113,7 +116,7 @@ if($marks!=""){
         }
         
         echo <<<_VISIBLEROW
-            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
+            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier visibleRowMarks">
                 <td class="col-md-3">$subject</td>
                 <td class="col-md-3"></td>
                 <td class="col-md-3"></td>
@@ -133,14 +136,14 @@ if($marks!=""){
         _HIDDENLEGEND;
         
 
-        foreach($marks as $date => $mark){
-        
-            if($date=='mean') continue;
+        foreach($marks as $dateHour => $mark){
+            
+            if($dateHour=='mean') continue;
 
             echo <<< HIDDENROWS
             <tr>
                 <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $date </div> </td>
+                <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $dateHour </div> </td>
                 <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $mark </div> </td>
                 <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
             </tr>
