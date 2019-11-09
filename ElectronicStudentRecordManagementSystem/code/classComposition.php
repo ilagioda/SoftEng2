@@ -1,11 +1,18 @@
 <?php
+
 require_once('basicChecks.php');
+
+$_SESSION['role']="admin";
+
 require_once('db.php');
+
+
+
+
 $dbAdmin = new dbAdmin();
 
 if (isset($_POST["view"])) {
   //if set it means that the user requested the composition of a class
-
   //echo sizeof($_POST);
 
   foreach ($_POST as $key => $value) {
@@ -94,7 +101,7 @@ ENDOFREQUESTEDPAGE;
 //print the normal page
   
   $classes = $dbAdmin->readAllClasses();
-  
+
   echo <<<NORMALPAGE
         <body>
           <nav class="navbar navbar-inverse">
