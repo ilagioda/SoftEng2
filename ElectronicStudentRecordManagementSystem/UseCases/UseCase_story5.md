@@ -1,16 +1,12 @@
 # USE CASE - STORY#5
 
-**Use Case**: 
-- Enter the class composition in the system
+**Use Case**: enter the class composition in the system
 
-**Scope:** 
-- Admin's PC
+**Scope:** admin's PC
 
-**Level:** 
-- User-goal
+**Level:** user-goal
 
-**Intention in context:** 
-- The administrative officer selects a class sees the composition and enters it into the system's database by simply pressing a button.
+**Intention in context:** the administrative officer selects a class, sees the composition and enters it into the system's database by simply pressing a button.
 
 **Primary actor:** administrative officer (admin)
 
@@ -26,14 +22,11 @@
 - The system must have a database already configured
 - The system should already have the proposed class compositions
 
-**Minimum Guarantees:** 
-- The class composition is accepted and the information saved
+**Minimum Guarantees:** the class composition is accepted and the information saved
 
-**Success Guarantees:** 
-- TThe students once the class composition is accepted must be enrolled in that particular class
+**Success Guarantees:** the students once the class composition is accepted must be enrolled in that particular class
 
-**Trigger:** 
-- None, because it’s the administrative officer that starts the interaction
+**Trigger:** none, because it’s the administrative officer that starts the interaction
 
 **Main Success Scenario:**
 1. The admin selects a particular class for which he/she wants to see the proposed class composition
