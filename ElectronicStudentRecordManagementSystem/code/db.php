@@ -27,7 +27,7 @@ class db
     }
 
 
-    private function sanitizeString($var)
+    protected function sanitizeString($var)
     {
         $var = strip_tags($var);
         $var = htmlentities($var);
@@ -128,12 +128,15 @@ class dbParent extends db
 
     public function viewChildMarks($CodFisc)
     {
-        /* 
-        This function receives the fiscal code of a child, 
-        verifies if the child is actually a child of that parent
-        and then returns the marks.
-
+        /** 
+         * This function receives the fiscal code of a child, 
+         * verifies if the child is actually a child of that parent
+         * and then returns the marks.    
+         * Format: Subject,Date,Mark;Subject,Date..Mark;
         */
+
+        $CodFisc = $this->sanitizeString($CodFisc);
+
         $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
 
         if (!$result)
@@ -149,12 +152,12 @@ class dbParent extends db
         if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
             die("You are not authorised to see this information.");
 
-        $result = $this->query("SELECT subject,date,hour FROM Marks WHERE codFisc=$CodFisc ;");
+        $result = $this->query("SELECT subject,date,mark FROM Marks WHERE codFisc='$CodFisc' ORDER BY subject,date,hour DESC;");
 
         $marks = "";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-            $marks = $marks . $row['subject'] . ',' . $row['date'] . "," . $row['hour'] . ";";
+            $marks = $marks . $row['subject'] . ',' . $row['date'] . "," . $row['mark'] . ";";
         }
 
         if ($marks != "") $marks = substr($marks, 0, -1); // to remove the last ;

@@ -18,12 +18,51 @@ function destroySession()
     session_destroy();  // destroy session
 }
 
-
-
 function checkIfLogged(){
-    if(!isset($_SESSION['role'])){
+    if(!isset($_SESSION['role']) || !isset($_SESSION['user'])){
         echo "<img src='images/gandalf.jpg' class='img-responsive center-block'>";
         die();
     }
+}
+
+function convertMark($rawMark){
+
+    /**
+     * Converts a literal mark (7,7+,7-,7/8,7.5) in the correspondent float value
+     * 
+     * @param rawMark is the literal mark (taken as output from the db)
+     * @return float 
+     */
+
+    if(strpos($rawMark,"/")==true){
+        // mark is of type 7/8
+
+        // select the last character
+        $mark = floatval(substr($rawMark,-1));
+
+        // remove 0.25
+        $mark-=0.25;
+    } elseif(strpos($rawMark,"+")){
+        // mark is of type 7+
+
+        // select the first character
+        $mark = floatval(substr($rawMark,0,1));
+
+        // add 0.25
+        $mark+=0.25;
+
+    } elseif(strpos($rawMark,"-")){
+        // mark is of type 7-
+
+        // select the first character
+        $mark = floatval(substr($rawMark,0,1));
+
+        // remove 0.25
+        $mark-=0.25;
+    } else {
+        // mark of type 7 or 7.5
+        $mark = floatval($rawMark);
+    }
+    return $mark;
 }
 ?>
