@@ -80,10 +80,8 @@ if($marks!=""){
      */
 }
 
-    echo <<< STARTTABLE
-
+    echo <<<_STARTTABLE
     <h1 class="display-1 text-center"> $childName $childSurname's marks </h1>
-
     <table class="table table-condensed" style="border-collapse:collapse;">
     <thead>
         <tr>
@@ -94,8 +92,7 @@ if($marks!=""){
         </tr>
     </thead>
     <tbody>
-
-    STARTTABLE;
+    _STARTTABLE;
     // print the contents
 
     foreach ($preprocessed_data as $subject => $marks) {
@@ -115,26 +112,25 @@ if($marks!=""){
             $modifier = "success";
         }
         
-        echo <<< VISIBLEROW
+        echo <<<_VISIBLEROW
             <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
                 <td class="col-md-3">$subject</td>
                 <td class="col-md-3"></td>
                 <td class="col-md-3"></td>
                 <td class="col-md-3">$mean</td>
             </tr>
-        VISIBLEROW;
+        _VISIBLEROW;
 
         if($mean=="N.C.") $subject="";
 
-        echo <<< HIDDENLEGEND
-
+        echo <<<_HIDDENLEGEND
             <tr>
                 <td></td>
                 <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
                 <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
                 <td></td>
             </tr>
-        HIDDENLEGEND;
+        _HIDDENLEGEND;
         
 
         foreach($marks as $date => $mark){
@@ -152,11 +148,10 @@ if($marks!=""){
         }
     }
     
-    echo <<< ENDTABLE
-
+    echo <<<_ENDTABLE
         </tbody>
     </table>
-    ENDTABLE;
+    _ENDTABLE;
 
 require_once("defaultFooter.php");
 
