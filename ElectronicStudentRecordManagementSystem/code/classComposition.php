@@ -1,8 +1,8 @@
 <?php
 
 require_once('basicChecks.php');
-
-$_SESSION['role']="admin";
+$_SESSION['user'] = "marcoGay";
+$_SESSION['role'] = "admin";
 
 require_once('db.php');
 
@@ -14,9 +14,9 @@ if (isset($_POST["view"])) {
 
   foreach ($_POST as $key => $value) {
     if ($key != "view") {
-      echo $value;
-      $result = $dbAdmin->readClassCompositions($value);
-      print_r($result);
+      //echo $value;
+      $classComposition = $dbAdmin->readClassCompositions($value);
+      //print_r($classComposition);
 
       echo <<<REQUESTEDPAGE
         <body>
@@ -49,37 +49,51 @@ if (isset($_POST["view"])) {
                 <p><a href="#">Link</a></p>
                 <p><a href="#">Link</a></p>
               </div>
-              <div class="col-sm-8 text-left">
+              <div class="col-sm-8 text-center">
                 <h1>Welcome</h1>
                 <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
                 <hr>
-                <div class="container">
+
+                <div class="container text-left">
                   <h2>Classes</h2>
                   <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Fiscal Code</th>
+                      <th>Name</th>
+                      <th>Surname</th>
+                      <th>Class</th>
+                    </tr>
+                </thead>
                     <tbody>
 REQUESTEDPAGE;
 
-      foreach ($classes as $value) {
+      foreach ($classComposition as $value) {
         echo <<< ROW
                             <tr>
-                            <td>$value</td>
-                            <td>
-                            <form method="post" class="form-horizontal" action="./classComposition.php">
-                              <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
-                                <input type="text" name="$value"  hidden value="$value">
-                                  <button type="submit" name="view" class="btn btn-default">View</button>
-                            </form>
-                            </td>
+                            <td>$value[0]</td>
+                            <td>$value[1]</td>
+                            <td>$value[2]</td>
+                            <td>$value[3]</td>
                             </tr>
 ROW;
       }
+      $valueString = json_encode($classComposition);
+
       echo <<<ENDOFREQUESTEDPAGE
-                    </tbody>
+                    </tbody>                
                   </table>
                 </div>
+                <div class="form-group">
+                <form class="form-horizontal" method="post" action="./classComposition.php">
+                  <div class="col-sm-offset-2 col-sm-10">
+                  <input type="text" name="confirm"  hidden value='$valueString'>
+                  <button type="submit" class="btn btn-default">Confirm</button>
+                  </div>
+                </form>
               </div>
             </div>
+         
 
 
 
@@ -95,9 +109,22 @@ ENDOFREQUESTEDPAGE;
     }
   }
 } else {
-//print the normal page
-  
+  if (isset($_POST["confirm"])) {
+    // The user has accepted the composition of a class
+    // The db should be updated
+    //print($_POST["confirm"]);
+
+
+
+    $parameters = json_decode($_POST["confirm"]);
+
+    $dbAdmin->updateStudentsClass($parameters);
+  }
+
+  //print the normal page
+
   $classes = $dbAdmin->readAllClasses();
+
 
   echo <<<NORMALPAGE
         <body>
@@ -135,17 +162,20 @@ ENDOFREQUESTEDPAGE;
                 <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
                 <hr>
                 <div class="container">
-                  <h2>Classes</h2>
-                  <table class="table table-hover">
-                    <tbody>
+                 
 NORMALPAGE;
+  if (isset($classes)) {
+    if (is_array($classes)) {
 
-  foreach ($classes as $value) {
-    echo <<< ROW
+      foreach ($classes as $value) {
+        echo <<< ROW
+                          <h2>Classes</h2>
+                          <table class="table table-hover">
+                            <tbody>
                             <tr>
                             <td>$value</td>
                             <td>
-                            <form method="post" class="form-horizontal" action="./classComposition.php">
+                            <form class="form-horizontal" method = "post" action="./classComposition.php">
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                 <input type="text" name="$value"  hidden value="$value">
@@ -154,17 +184,35 @@ NORMALPAGE;
                             </td>
                             </tr>
 ROW;
+      }
+    } else {
+      echo <<< ROW1
+                          <h2>Classes</h2>
+                          <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                            <td>$value</td>
+                            <td>
+                            <form class="form-horizontal" method = "post" action="./classComposition.php">
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                <input type="text" name="$value"  hidden value="$value">
+                                  <button type="submit" name="view" class="btn btn-default">View</button>
+                            </form>
+                            </td>
+                            </tr>
+ROW1;
+    }
+  } else {
+    echo "<h2> There is not any proposed class composition.</h2>";
   }
+
   echo <<<ENDOFNORMALPAGE
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-
-
-
-
             <footer class="container-fluid text-center">
               <p>Footer Text</p>
             </footer>

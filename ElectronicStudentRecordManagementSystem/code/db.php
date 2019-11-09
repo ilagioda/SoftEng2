@@ -33,7 +33,7 @@ class db
         $var = htmlentities($var);
         if (get_magic_quotes_gpc())
             $var = stripslashes($var);
-            return $this->conn->real_escape_string($var);
+        return $this->conn->real_escape_string($var);
     }
 
     protected function query($queryToBeExecuted)
@@ -46,7 +46,6 @@ class db
         if (!$stmt = $this->conn->prepare($preparedStatement))
             die("Prepare phase Failed in the Transaction.");
         return $stmt;
-
     }
 }
 
@@ -61,6 +60,7 @@ class dbAdmin extends db
 
     function readClassCompositions($classID)
     {
+        $codFisc = "";
         $name = "";
         $surname = "";
         $class = "";
@@ -68,24 +68,26 @@ class dbAdmin extends db
         $compositionVector = array();
 
         $stmt = $this->prepareStatement(
-        "SELECT `name`,`surname`,p.`classID` 
+            "SELECT s.`codFisc`,`name`,`surname`,p.`classID` 
         FROM `Students` as s , `ProposedClasses` as p 
-        WHERE s.codFisc = p.codFisc AND p.classID = ?");
+        WHERE s.codFisc = p.codFisc AND p.classID = ?"
+        );
 
         if (!$stmt->bind_param("s", $classID))
             die("Binding Failed in the Transaction.");
 
 
-        if (!$stmt->bind_result($name, $surname, $class))
+        if (!$stmt->bind_result($codFisc, $name, $surname, $class))
             die("Binding result Failed in the Transaction.");
 
         try {
             if (!$stmt->execute())
                 throw new Exception("Select Failed.");
-
+            $i = 0;
             while ($row = $stmt->fetch()) {
-                $nameSurname = array($name, $surname);
-                $compositionVector[$class] = $nameSurname;
+                $codFiscnameSurnameClass = array($codFisc, $name, $surname, $class);
+                $compositionVector[$i] = $codFiscnameSurnameClass;
+                $i++;
             }
 
             /* close statement */
@@ -94,14 +96,13 @@ class dbAdmin extends db
             return $compositionVector;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
-            $$this->conn->rollback();
         }
     }
 
     function readAllClasses()
     {
 
-        $sql = "SELECT classID FROM ProposedClasses";
+        $sql = "SELECT DISTINCT classID FROM ProposedClasses";
         $resultQuery = $this->query($sql);
 
         if ($resultQuery->num_rows > 0) {
@@ -111,6 +112,43 @@ class dbAdmin extends db
                 array_push($resultArray, $row["classID"]);
             }
             return $resultArray;
+        }
+    }
+
+    function updateStudentsClass($vectorCodFiscNameSurnameClass)
+    {
+
+        $stmt = $this->prepareStatement("UPDATE `Students` SET `classID`= ? WHERE `codFisc` = ? ");
+
+        foreach ($vectorCodFiscNameSurnameClass as $value) {
+            $codFisc = $value[0];
+            $classID = $value[3];
+
+            if (!$stmt->bind_param("ss", $classID, $codFisc))
+                die("Binding Failed the update statement.");
+
+            if (!$stmt->execute())
+                die("Update Failed.");
+
+            if (($stmt->affected_rows) != 1) {
+                die("Update Failed.");
+            }
+        }
+
+        /* close statement */
+        $stmt->close();
+
+
+
+        $stmt = $this->prepareStatement("DELETE FROM `ProposedClasses` WHERE `classID` = ?");
+        if (!$stmt->bind_param("s", $classID))
+            die("Binding Failed the delete statement.");
+
+        if (!$stmt->execute())
+            die("Delete Failed.");
+
+        if (($stmt->affected_rows) == 0) {
+            die("Delete Failed.");
         }
     }
 }
@@ -133,7 +171,7 @@ class dbParent extends db
          * verifies if the child is actually a child of that parent
          * and then returns the marks.    
          * Format: Subject,Date,Mark;Subject,Date..Mark;
-        */
+         */
 
         $CodFisc = $this->sanitizeString($CodFisc);
 
@@ -175,27 +213,25 @@ class dbTeacher extends db
         parent::__construct();
     }
 
-    function insertMark($codStudent, $subject, $date, $hour, $mark){
-        
+    function insertMark($codStudent, $subject, $date, $hour, $mark)
+    { }
 
-    }
-    
-    function getStudentsByClass($class){
+    function getStudentsByClass($class)
+    {
 
-        $class = $this -> sanitizeString($class);
-        
+        $class = $this->sanitizeString($class);
+
         $result = $this->query("SELECT * FROM students WHERE classId='$class'");
-        
-        if (!$result) 
+
+        if (!$result)
             die("Unable to select students from $class.");
 
-        $students="<th>Nome</th><th>Cognome</th>";
+        $students = "<th>Nome</th><th>Cognome</th>";
 
-        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $students = $students . "<tr id=" . $row['codFisc'] . "><td>" . $row['name'] . "</th><td>" . $row['surname'] . "</td></tr>";
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+            $students = $students . "<tr id=" . $row['codFisc'] . "><td>" . $row['name'] . "</th><td>" . $row['surname'] . "</td></tr>";
         }
-        
-        return $students;
 
+        return $students;
     }
 }
