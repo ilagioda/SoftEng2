@@ -179,15 +179,17 @@ class dbTeacher extends db
     }
     
     function getStudentsByClass($class){
-        $result = $this->query("SELECT * FROM Students WHERE classID=$class ;");
+        
+        $result = $this->query("SELECT * FROM students");
         
         if (!$result) 
-            die("Unable to select students.");
+            die("Unable to select students from $class.");
 
-        $students="";
+        $students="<th>Nome</th><th>Cognome</th>";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-            $students = $marks . $row['name'] . ',' . $row['surname'] . ";";
+            if($row['classID']==$class)
+                $students = $students . "<tr id=" . $row['codFisc'] . "><td>" . $row['name'] . "</th><td>" . $row['surname'] . "</td></tr>";
         }
         
         return $students;
