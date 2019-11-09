@@ -27,18 +27,18 @@ class db
     }
 
 
-private function sanitizeString($var)
-{
-    $var = strip_tags($var);
-    $var = htmlentities($var);
-    if (get_magic_quotes_gpc())
-        $var = stripslashes($var);
-        return $this->conn->real_escape_string($var);
-}
+    private function sanitizeString($var)
+    {
+        $var = strip_tags($var);
+        $var = htmlentities($var);
+        if (get_magic_quotes_gpc())
+            $var = stripslashes($var);
+            return $this->conn->real_escape_string($var);
+    }
 
     protected function query($queryToBeExecuted)
     {
-        return $this->conn->query($this->sanitizeString($queryToBeExecuted));
+        return $this->conn->query($queryToBeExecuted);
     }
 
     protected function prepareStatement($preparedStatement)
@@ -134,8 +134,7 @@ class dbParent extends db
         and then returns the marks.
 
         */
-
-        $result = queryMysql("SELECT * FROM Students WHERE codFisc=$CodFisc ;");
+        $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
 
         if (!$result)
             die("Unable to select student $CodFisc");
@@ -150,7 +149,7 @@ class dbParent extends db
         if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
             die("You are not authorised to see this information.");
 
-        $result = queryMysql("SELECT subject,date,hour FROM Marks WHERE codFisc=$CodFisc ;");
+        $result = $this->query("SELECT subject,date,hour FROM Marks WHERE codFisc=$CodFisc ;");
 
         $marks = "";
 
