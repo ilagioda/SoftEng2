@@ -7,29 +7,6 @@ session_start();
 
 require_once("inactivity.php");
 
-$previous = $_SERVER['REQUEST_URI'];
-////////////////////////////////////// CHECKING NO SCRIPT ENABLED
-echo <<<_NOSCRIPT
-<noscript>
-    <meta HTTP-EQUIV="refresh" content="0;url=JSorCookiesDisabled.php?prev=$previous"></noscript>
-_NOSCRIPT;
-/////////////////////////////////////////////////////////////////
-
-///////////////////////////////////// CHECKING COOKIES ENABLES
-echo <<<_CHKCOOKIES
-<script><!--
-try {
-    document.cookie = 'cookietest=1';
-    var cookiesEnabled = document.cookie.indexOf('cookietest=') !== -1;
-    document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
-    if (!cookiesEnabled) window.location="cookiesDisabled.php";
-} catch (e) {
-    window.location="cookiesDisabled.php";
-}
-//--></script>
-_CHKCOOKIES;
-/////////////////////////////////////////////////////////////
-
 ?>
 
 <!DOCTYPE html>
@@ -43,4 +20,21 @@ _CHKCOOKIES;
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- CHECKING JAVASCRIPT ENABLED -->
+    <noscript>
+        <meta HTTP-EQUIV="refresh" content="0;url=JavaScriptDisabled.html">
+    </noscript>
+
+    <!-- CHECKING COOKIES ENABLED -->
+    <script><!--
+        try {
+            document.cookie = 'cookietest=1';
+            var cookiesEnabled = document.cookie.indexOf('cookietest=') !== -1;
+            document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
+            if (!cookiesEnabled) window.location="cookiesDisabled.php";
+        } catch (e) {
+            window.location="cookiesDisabled.php";
+        }
+    //--></script>
 </head>
