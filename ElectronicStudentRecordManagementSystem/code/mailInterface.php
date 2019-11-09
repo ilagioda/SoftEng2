@@ -1,7 +1,10 @@
 <?php
 require_once "basicChecks.php";
 require_once "defaultNavbar.php";
+$_SESSION['user'] = "ueue";
+$_SESSION['role'] = "admin";
 require_once "db.php";
+$_SESSION['db'] = new dbAdmin();
 ?>
 
 <script>
@@ -15,8 +18,7 @@ function sendMail(id, cl){
         document.getElementById(cl).className="danger";
       }
       else{
-        document.getElementById("answer").innerHTML = response;
-        //document.getElementById("answer").innerHTML = '<div class="alert alert-danger"><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
+        document.getElementById("answer").innerHTML = '<div class="alert alert-danger"><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
       }
     });
 }
@@ -49,8 +51,7 @@ function sendMail(id, cl){
     <tbody id="myTable">
     <?php
       $i=0;
-      $admin = new dbAdmin();
-      $ParentsMailList = $admin->TakeParentsMail();
+      $ParentsMailList = $_SESSION['db']->TakeParentsMail();
       foreach($ParentsMailList as $tuple){
         $email = $tuple['email'];
         $hashedPw =  $tuple['hashedPassword'];

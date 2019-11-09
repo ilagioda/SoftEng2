@@ -1,11 +1,14 @@
 <?php
 require_once("basicChecks.php");
+$_SESSION['user'] = "ueue";
+$_SESSION['role'] = "admin";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require 'C:\xampp\composer\vendor\autoload.php';
 require_once("classphpmailer.php");
 require_once("class.smtp.php");
 require_once "db.php";
+$_SESSION['db'] = new dbAdmin();
 
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -34,8 +37,7 @@ $pw = generateRandomString();
 //echo "PW vale: $pw";
 $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 //echo "hashedPW vale: $hashed_pw";
-$admin = new dbAdmin();
-$admin->ChangePassword($to_address, $hashed_pw);
+$_SESSION['db']->ChangePassword($to_address, $hashed_pw);
 
 $mail->SMTPAuth = true; // turn on SMTP authentication
 $mail->SMTPSecure = "tls"; // tls
@@ -52,7 +54,8 @@ $mail->IsHTML(true);
 
 $mail->Subject  = "ElectronicStudentRecordManagementSystem Credentials";
 //$mail->Body     = "Hi! \n\n Your credentials are the following. \n USER: $to_address \n PASSWORD: $pw\n ";
-$mail->Body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$mail->Body = 'The credentials you asked for are the following:
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -60,8 +63,7 @@ $mail->Body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "h
 <body>
 
 <div>
-        <p> The credentials you asked for are the following: </p>
-        <p> USER: ' .$to_address .' <br> PASSWORD: '. $pw .' <br>
+        <p> USER: ' .$to_address .' <br> PASSWORD: '. $pw .' <br></p>
         <p>Please click <a href ="https://localhost/Softeng2/SoftEng2/ElectronicStudentRecordManagementSystem/code/login.php">HERE </a> to access your login page</p>
 </div>
 </body>
