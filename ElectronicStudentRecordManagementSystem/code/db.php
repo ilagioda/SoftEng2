@@ -170,4 +170,9 @@ class dbTeacher extends db
         if ($_SESSION['role'] != "teacher") throw new Exception("Creating DbTeacher object for an user who is NOT logged in as a teacher");
         parent::__construct();
     }
+
+    function insertMark($codStudent, $subject, $date, $hour, $mark){
+        
+
+    }
 }
