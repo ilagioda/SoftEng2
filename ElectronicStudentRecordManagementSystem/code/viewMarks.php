@@ -117,10 +117,10 @@ if($marks!=""){
         
         echo <<< VISIBLEROW
             <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
-                <td>$subject</td>
-                <td></td>
-                <td></td>
-                <td>$mean</td>
+                <td class="col-md-3">$subject</td>
+                <td class="col-md-3"></td>
+                <td class="col-md-3"></td>
+                <td class="col-md-3">$mean</td>
             </tr>
         VISIBLEROW;
 
