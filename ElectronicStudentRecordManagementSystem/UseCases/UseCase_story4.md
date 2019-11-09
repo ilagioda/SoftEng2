@@ -2,7 +2,7 @@
 
 **Use Case**: enroll a student
 
-**Scope:** admin's PC?? <----------??---------->  
+**Scope:** admin's PC
 
 **Level:** user-goal
 
@@ -10,7 +10,7 @@
 
 **Primary actor:** administrative officer (admin)
 
-**Secondary/Support actor(s):** principal?? none?? <----------??----------> 
+**Secondary/Support actor(s):** none
 
 **Stakeholders' Interests:**
 - Parent: wants his/her child to be enrolled so that he/she can monitor everything concerning his/her school performance
