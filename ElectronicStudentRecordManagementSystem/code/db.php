@@ -94,6 +94,11 @@ class dbTeacher extends db{
         parent::__construct();
 
     }
+
+    function insertMark($codStudent, $subject, $date, $hour, $mark){
+        
+
+    }
 }
 
 ?>
