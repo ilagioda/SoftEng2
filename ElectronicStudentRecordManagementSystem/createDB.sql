@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 09, 2019 alle 18:32
+-- Creato il: Nov 09, 2019 alle 18:40
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -22,7 +22,7 @@ SET time_zone = "+00:00";
 -- Database: `school`
 --
 DROP DATABASE IF EXISTS `school`;
-CREATE DATABASE `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
 
 -- --------------------------------------------------------
@@ -31,10 +31,9 @@ USE `school`;
 -- Struttura della tabella `Admins`
 --
 
-CREATE TABLE IF NOT EXISTS `Admins` (
+CREATE TABLE `Admins` (
   `codFisc` varchar(50) NOT NULL,
-  `hashedPassword` varchar(50) NOT NULL,
-  PRIMARY KEY (`codFisc`)
+  `hashedPassword` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -43,12 +42,11 @@ CREATE TABLE IF NOT EXISTS `Admins` (
 -- Struttura della tabella `Assignments`
 --
 
-CREATE TABLE IF NOT EXISTS `Assignments` (
+CREATE TABLE `Assignments` (
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `classID` varchar(50) NOT NULL,
-  `textAssignment` varchar(50) NOT NULL,
-  PRIMARY KEY (`subject`,`date`,`classID`)
+  `textAssignment` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -57,14 +55,13 @@ CREATE TABLE IF NOT EXISTS `Assignments` (
 -- Struttura della tabella `Lectures`
 --
 
-CREATE TABLE IF NOT EXISTS `Lectures` (
+CREATE TABLE `Lectures` (
   `date` date NOT NULL,
   `hour` int(11) NOT NULL,
   `classID` varchar(5) NOT NULL,
   `codFiscTeacher` varchar(50) NOT NULL,
   `subject` varchar(50) NOT NULL,
-  `topic` varchar(50) NOT NULL,
-  PRIMARY KEY (`date`,`hour`,`classID`)
+  `topic` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -73,14 +70,22 @@ CREATE TABLE IF NOT EXISTS `Lectures` (
 -- Struttura della tabella `Marks`
 --
 
-CREATE TABLE IF NOT EXISTS `Marks` (
+CREATE TABLE `Marks` (
   `codFisc` varchar(50) NOT NULL,
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `hour` int(11) NOT NULL,
-  `mark` varchar(50) NOT NULL,
-  PRIMARY KEY (`codFisc`,`subject`,`date`,`hour`)
+  `mark` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Marks`
+--
+
+INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
+('FRCWTR', 'Italiano', '2019-10-01', 1, '10'),
+('FRCWTR', 'Italiano', '2019-10-02', 1, '4'),
+('FRCWTR', 'Matematica', '2019-10-01', 1, '10');
 
 -- --------------------------------------------------------
 
@@ -88,14 +93,13 @@ CREATE TABLE IF NOT EXISTS `Marks` (
 -- Struttura della tabella `Parents`
 --
 
-CREATE TABLE IF NOT EXISTS `Parents` (
+CREATE TABLE `Parents` (
   `email` varchar(50) NOT NULL,
   `hashedPassword` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
   `codFisc` varchar(50) NOT NULL,
-  `firstLogin` tinyint(1) NOT NULL,
-  PRIMARY KEY (`email`)
+  `firstLogin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -104,12 +108,11 @@ CREATE TABLE IF NOT EXISTS `Parents` (
 -- Struttura della tabella `Principals`
 --
 
-CREATE TABLE IF NOT EXISTS `Principals` (
+CREATE TABLE `Principals` (
   `codFisc` varchar(50) NOT NULL,
   `hashedPassword` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
-  PRIMARY KEY (`codFisc`)
+  `surname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -118,10 +121,9 @@ CREATE TABLE IF NOT EXISTS `Principals` (
 -- Struttura della tabella `ProposedClasses`
 --
 
-CREATE TABLE IF NOT EXISTS `ProposedClasses` (
+CREATE TABLE `ProposedClasses` (
   `classID` varchar(5) NOT NULL,
-  `codFisc` varchar(50) NOT NULL,
-  KEY `studentIDForeignKey` (`codFisc`)
+  `codFisc` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -138,14 +140,13 @@ INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
 -- Struttura della tabella `Students`
 --
 
-CREATE TABLE IF NOT EXISTS `Students` (
+CREATE TABLE `Students` (
   `codFisc` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
   `emailP1` varchar(50) NOT NULL,
   `emailP2` varchar(50) NOT NULL,
-  `classID` varchar(50) NOT NULL,
-  PRIMARY KEY (`codFisc`)
+  `classID` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -162,11 +163,10 @@ INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `cla
 -- Struttura della tabella `Subjects`
 --
 
-CREATE TABLE IF NOT EXISTS `Subjects` (
+CREATE TABLE `Subjects` (
   `name` varchar(50) NOT NULL,
   `year` int(11) NOT NULL,
-  `hours` int(11) NOT NULL,
-  PRIMARY KEY (`name`,`year`)
+  `hours` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -175,13 +175,76 @@ CREATE TABLE IF NOT EXISTS `Subjects` (
 -- Struttura della tabella `Teachers`
 --
 
-CREATE TABLE IF NOT EXISTS `Teachers` (
+CREATE TABLE `Teachers` (
   `codFisc` varchar(50) NOT NULL,
   `hashedPassword` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
-  PRIMARY KEY (`codFisc`)
+  `surname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indici per le tabelle scaricate
+--
+
+--
+-- Indici per le tabelle `Admins`
+--
+ALTER TABLE `Admins`
+  ADD PRIMARY KEY (`codFisc`);
+
+--
+-- Indici per le tabelle `Assignments`
+--
+ALTER TABLE `Assignments`
+  ADD PRIMARY KEY (`subject`,`date`,`classID`);
+
+--
+-- Indici per le tabelle `Lectures`
+--
+ALTER TABLE `Lectures`
+  ADD PRIMARY KEY (`date`,`hour`,`classID`);
+
+--
+-- Indici per le tabelle `Marks`
+--
+ALTER TABLE `Marks`
+  ADD PRIMARY KEY (`codFisc`,`subject`,`date`,`hour`);
+
+--
+-- Indici per le tabelle `Parents`
+--
+ALTER TABLE `Parents`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indici per le tabelle `Principals`
+--
+ALTER TABLE `Principals`
+  ADD PRIMARY KEY (`codFisc`);
+
+--
+-- Indici per le tabelle `ProposedClasses`
+--
+ALTER TABLE `ProposedClasses`
+  ADD KEY `studentIDForeignKey` (`codFisc`);
+
+--
+-- Indici per le tabelle `Students`
+--
+ALTER TABLE `Students`
+  ADD PRIMARY KEY (`codFisc`);
+
+--
+-- Indici per le tabelle `Subjects`
+--
+ALTER TABLE `Subjects`
+  ADD PRIMARY KEY (`name`,`year`);
+
+--
+-- Indici per le tabelle `Teachers`
+--
+ALTER TABLE `Teachers`
+  ADD PRIMARY KEY (`codFisc`);
 
 --
 -- Limiti per le tabelle scaricate
