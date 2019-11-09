@@ -1,16 +1,18 @@
 <?php
 require_once "basicChecks.php";
 require_once "defaultNavbar.php";
+require_once "db.php";
 ?>
 
 <script>
 
-function sendMail(id){
+function sendMail(id, cl){
     email="";
     $.post("sendmail.php", {'mail' : id}, 
     function(response){
       if(response.includes("Message has been sent.")){
         document.getElementById("answer").innerHTML = '<div class="alert alert-success"><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent.</strong></div>';
+        document.getElementById(cl).className="danger";
       }
       else{
         document.getElementById("answer").innerHTML = response;
@@ -45,22 +47,36 @@ function sendMail(id){
       </tr>
     </thead>
     <tbody id="myTable">
-      <tr class="danger">
-        <td>john@example.com</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg">SEND</td>
-      </tr>
-      <tr class="info">
-      <td>mary@mail.com</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg">SEND</td>
-      </tr>
-      <tr class="success">
-        <td>july@greatstuff.com</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg">SEND</td>
-      </tr>
-      <tr class="info">
-        <td>cla_9_6@hotmail.it</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="cla_9_6@hotmail.it" onclick="sendMail(id)">SEND</td>
-      </tr>
+    <?php
+      $i=0;
+      $admin = new dbAdmin();
+      $ParentsMailList = $admin->TakeParentsMail();
+      foreach($ParentsMailList as $tuple){
+        $email = $tuple['email'];
+        $hashedPw =  $tuple['hashedPassword'];
+        $firstLogin = $tuple['firstLogin'];
+        if($hashedPw == null && $firstLogin==true){
+          //email ancora da inviare
+          echo <<<_SUCCESS
+            <tr class="success" id="r$i">
+            <td>$email</td>
+            <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
+          </tr>
+        _SUCCESS;
+        }
+        else if ($hashedPw != null && $firstLogin==true){
+          //email già mandata, ma utente non ha ancora modificato pw (c'è quella di default)
+          echo <<<_SENT
+            <tr class="danger" id="r$i">
+            <td>$email</td>
+            <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
+            </tr>
+          _SENT;
+        }
+        $i++;
+      }
+
+    ?>
     </tbody>
   </table>
 </div>
