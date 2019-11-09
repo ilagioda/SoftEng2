@@ -28,7 +28,7 @@ if (isset($_POST["view"])) {
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php"><img class="logo" src=images/logo.png> </a> </div> <div class="collapse navbar-collapse" id="myNavbar">
+                <a class="navbar-brand" href="index.php"><img class="logo"  alt="logo" src=images/logo.png> </a> </div> <div class="collapse navbar-collapse" id="myNavbar">
                   <ul class="nav navbar-nav">
                     <li class="active"><a href="index.php">Home</a></li>
                     <li><a href="#">About</a></li>
@@ -101,6 +101,8 @@ ROW;
             <footer class="container-fluid text-center">
               <p>Footer Text</p>
             </footer>
+            </div>
+            </div>
 
         </body>
 
@@ -136,7 +138,7 @@ ENDOFREQUESTEDPAGE;
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php"><img class="logo" src=images/logo.png> </a> </div> <div class="collapse navbar-collapse" id="myNavbar">
+                <a class="navbar-brand" href="index.php"><img class="logo" alt="logo" src=images/logo.png> </a> </div> <div class="collapse navbar-collapse" id="myNavbar">
                   <ul class="nav navbar-nav">
                     <li class="active"><a href="index.php">Home</a></li>
                     <li><a href="#">About</a></li>
@@ -167,11 +169,13 @@ NORMALPAGE;
   if (isset($classes)) {
     if (is_array($classes)) {
 
+      echo ' <h2>Classes</h2>
+      <table class="table table-hover">
+        <tbody>';
+
       foreach ($classes as $value) {
         echo <<< ROW
-                          <h2>Classes</h2>
-                          <table class="table table-hover">
-                            <tbody>
+                         
                             <tr>
                             <td>$value</td>
                             <td>
@@ -180,11 +184,15 @@ NORMALPAGE;
                                 <div class="col-sm-offset-2 col-sm-10">
                                 <input type="text" name="$value"  hidden value="$value">
                                   <button type="submit" name="view" class="btn btn-default">View</button>
+                                  </div>
+                                  </div>
                             </form>
                             </td>
                             </tr>
 ROW;
       }
+      echo ' </tbody>
+      </table>';
     } else {
       echo <<< ROW1
                           <h2>Classes</h2>
@@ -198,9 +206,13 @@ ROW;
                                 <div class="col-sm-offset-2 col-sm-10">
                                 <input type="text" name="$value"  hidden value="$value">
                                   <button type="submit" name="view" class="btn btn-default">View</button>
+                                  </div>
+                                  </div>
                             </form>
                             </td>
                             </tr>
+                            </tbody>
+                            </table>
 ROW1;
     }
   } else {
@@ -208,14 +220,13 @@ ROW1;
   }
 
   echo <<<ENDOFNORMALPAGE
-                    </tbody>
-                  </table>
                 </div>
               </div>
             </div>
             <footer class="container-fluid text-center">
               <p>Footer Text</p>
             </footer>
+            </div>
 
         </body>
 

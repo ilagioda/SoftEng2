@@ -23,7 +23,7 @@ require_once("inactivity.php");
 
     <!-- CHECKING JAVASCRIPT ENABLED -->
     <noscript>
-        <meta HTTP-EQUIV="refresh" content="0;url=JavaScriptDisabled.html">
+        <meta HTTP-EQUIV="refresh" content="0; url=JavaScriptDisabled.html">
     </noscript>
 
     <!-- CHECKING COOKIES ENABLED -->
