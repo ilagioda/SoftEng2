@@ -24,10 +24,12 @@ table, th, td {
 
 <body>
 
-<h2> Lista studenti per la classe A1 </h2>
-<br>
-
 <?php
+echo "<h2> List of student of class " . $class ."</h2>";
+
+echo "<h3> Select a student: </h3>";
+
+
 $studentList=$teacher->getStudents($class);
 
 echo "<table class=\"students\">";

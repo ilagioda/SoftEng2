@@ -178,6 +178,8 @@ class dbTeacher extends db
     }
     
     function getStudentsByClass($class){
+
+        $class = $this -> sanitizeString($class);
         
         $result = $this->query("SELECT * FROM students WHERE classId='$class'");
         

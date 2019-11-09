@@ -19,6 +19,7 @@ class Teacher{
     }
   
     function submitMark($codStudent, $subject, $date, $hour, $mark) {
+        
         $this->db->insertMark($codStudent, $subject, $date, $hour, $mark);
     }
 
