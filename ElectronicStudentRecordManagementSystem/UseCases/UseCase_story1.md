@@ -4,7 +4,7 @@
 View the marks of their child.
 
 ##### Scope: 
-WebServer and Database. All the system is needed to perform this use case.
+Parent pc/smartphone.
 
 ##### Level: 
 User-goal.
