@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 09, 2019 alle 18:40
+-- Creato il: Nov 09, 2019 alle 23:52
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -78,15 +78,6 @@ CREATE TABLE `Marks` (
   `mark` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dump dei dati per la tabella `Marks`
---
-
-INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
-('FRCWTR', 'Italiano', '2019-10-01', 1, '10'),
-('FRCWTR', 'Italiano', '2019-10-02', 1, '4'),
-('FRCWTR', 'Matematica', '2019-10-01', 1, '10');
-
 -- --------------------------------------------------------
 
 --
@@ -131,6 +122,7 @@ CREATE TABLE `ProposedClasses` (
 --
 
 INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
+('1A', 'CLDFLCM'),
 ('1A', 'FRCWTR'),
 ('1B', 'MRC');
 
@@ -154,6 +146,7 @@ CREATE TABLE `Students` (
 --
 
 INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
+('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', '1A'),
 ('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', '1A'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '1B');
 
@@ -168,6 +161,21 @@ CREATE TABLE `Subjects` (
   `year` int(11) NOT NULL,
   `hours` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Subjects`
+--
+
+INSERT INTO `Subjects` (`name`, `year`, `hours`) VALUES
+('Biology and Chemistry', 1, 4),
+('English', 1, 3),
+('Geography', 1, 2),
+('History', 1, 3),
+('Italian', 1, 3),
+('Latin', 1, 4),
+('Maths', 1, 5),
+('Philosophy', 1, 3),
+('Physics', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -208,7 +216,8 @@ ALTER TABLE `Lectures`
 -- Indici per le tabelle `Marks`
 --
 ALTER TABLE `Marks`
-  ADD PRIMARY KEY (`codFisc`,`subject`,`date`,`hour`);
+  ADD PRIMARY KEY (`codFisc`,`subject`,`date`,`hour`),
+  ADD KEY `subjectForeignKey` (`subject`);
 
 --
 -- Indici per le tabelle `Parents`
@@ -254,7 +263,8 @@ ALTER TABLE `Teachers`
 -- Limiti per la tabella `Marks`
 --
 ALTER TABLE `Marks`
-  ADD CONSTRAINT `codFiscForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`);
+  ADD CONSTRAINT `codFiscForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`),
+  ADD CONSTRAINT `subjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
 
 --
 -- Limiti per la tabella `ProposedClasses`

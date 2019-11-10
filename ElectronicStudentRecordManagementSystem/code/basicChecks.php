@@ -4,7 +4,6 @@ require_once("functions.php");
 
 session_name("ESRMS"); //electronic student record management system
 session_start();
-
 require_once("inactivity.php");
 
 ?>
@@ -23,7 +22,7 @@ require_once("inactivity.php");
 
     <!-- CHECKING JAVASCRIPT ENABLED -->
     <noscript>
-        <meta HTTP-EQUIV="refresh" content="0;url=JavaScriptDisabled.html">
+        <meta HTTP-EQUIV="refresh" content="0; url=JavaScriptDisabled.html">
     </noscript>
 
     <!-- CHECKING COOKIES ENABLED -->

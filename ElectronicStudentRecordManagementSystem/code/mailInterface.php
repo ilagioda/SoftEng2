@@ -1,41 +1,43 @@
 <?php
 require_once "basicChecks.php";
 require_once "defaultNavbar.php";
+$_SESSION['user'] = "ueue";
+$_SESSION['role'] = "admin";
+require_once "db.php";
+$_SESSION['db'] = new dbAdmin();
 ?>
 
 <script>
 
-function sendMail(id){
+function sendMail(id, cl){
     email="";
-    $.post("sendmail.php", {'mail' : id}, 
+    $.post("sendmail.php", {'mail' : id},
     function(response){
       if(response.includes("Message has been sent.")){
-        document.getElementById("answer").innerHTML = '<div class="alert alert-success"><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent.</strong></div>';
+        document.getElementById("answer").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Success! Message sent.</strong></div>';
+        document.getElementById(cl).className="danger";
       }
       else{
-        document.getElementById("answer").innerHTML = response;
-        //document.getElementById("answer").innerHTML = '<div class="alert alert-danger"><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
+        document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
       }
     });
 }
 
 </script>
 
-    <head><style>
-    body {
-        padding-top:20px;
-    }
-    </style></head>
-
 <div class="container">
   <h2>Emails to be confirmed</h2>
+  <span class="label label-success col-md-3 col-md-push-9">Email not sent yet</span><br>
+  <span class="label label-danger col-md-3 col-md-push-9">Email sent, but still to be confirmed</span>
   <p class="text-center">Search by email address:</p>
   <input class="form-control" id="myInput" type="text" placeholder="Search..">
   <br>
   <div class="col-md-12">
   <div id="answer"> </div>
+
   
-  
+
+
   </div>
   <table class="table table-striped sendmail">
     <thead>
@@ -45,25 +47,40 @@ function sendMail(id){
       </tr>
     </thead>
     <tbody id="myTable">
-      <tr class="danger">
-        <td>john@example.com</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg">SEND</td>
-      </tr>
-      <tr class="info">
-      <td>mary@mail.com</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg">SEND</td>
-      </tr>
-      <tr class="success">
-        <td>july@greatstuff.com</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg">SEND</td>
-      </tr>
-      <tr class="info">
-        <td>cla_9_6@hotmail.it</td>
-        <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="cla_9_6@hotmail.it" onclick="sendMail(id)">SEND</td>
-      </tr>
+    <?php
+$i = 0;
+$ParentsMailList = $_SESSION['db']->TakeParentsMail();
+foreach ($ParentsMailList as $tuple) {
+    $email = $tuple['email'];
+    $hashedPw = $tuple['hashedPassword'];
+    $firstLogin = $tuple['firstLogin'];
+    if ($hashedPw == null && $firstLogin == true) {
+        //email ancora da inviare
+        echo <<<_SUCCESS
+            <tr class="success" id="r$i">
+            <td>$email</td>
+            <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
+          </tr>
+        _SUCCESS;
+    } else if ($hashedPw != null && $firstLogin == true) {
+        //email già mandata, ma utente non ha ancora modificato pw (c'è quella di default)
+        echo <<<_SENT
+            <tr class="danger" id="r$i">
+            <td>$email</td>
+            <td class="td_resized_sendmail"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
+            </tr>
+          _SENT;
+    }
+    $i++;
+}
+
+?>
     </tbody>
   </table>
-</div>
+  </div>
+  <?php
+require_once "defaultFooter.php";
+?>
 
 <script>
 $(document).ready(function(){
@@ -85,7 +102,3 @@ $(document).ready(function(){
 </div>
 
 //TO SAY THAT A CERTAIN INPUT IS GOOD WITH JS ADD A <i> glyphoon </i> between <span class="input-group-addon"> and </span> -->
-
-<?php
-require_once "defaultFooter.php";
-?>
