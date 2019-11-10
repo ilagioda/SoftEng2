@@ -94,6 +94,7 @@ margin-top:auto;
     padding: 0;
 }
 
+/*to be checked*/
 .visibleRowMarks:hover{
     filter: brightness(90%);
     cursor: pointer;
