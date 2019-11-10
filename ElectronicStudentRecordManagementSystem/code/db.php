@@ -245,22 +245,22 @@ class dbTeacher extends db
     function insertMark($codStudent, $subject, $date, $hour, $mark)
     { }
 
-    function getStudentsByClass($class)
-    {
+    function getStudentsByClass($class){
 
-        $class = $this->sanitizeString($class);
-
+        $class = $this -> sanitizeString($class);
+        
         $result = $this->query("SELECT * FROM students WHERE classId='$class'");
-
-        if (!$result)
+        
+        if (!$result) 
             die("Unable to select students from $class.");
 
-        $students = "<th>Nome</th><th>Cognome</th>";
+        $students="";
 
-        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-            $students = $students . "<tr id=" . $row['codFisc'] . "><td>" . $row['name'] . "</th><td>" . $row['surname'] . "</td></tr>";
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
+                $students = $students . "<tr><td>" . $row['surname'] . "</td><td>" . $row['name'] . "</td><td><form method=\"post\" action=\"studentMarks.php\"> <input type=\"hidden\" name=\"codStudent\" value=" . $row['codFisc'] . "><input type=\"submit\", id=\"" . $row['codFisc'] . "\" value=\"Add Grade\"></form></td></tr><br>";
         }
-
+        
         return $students;
+
     }
 }
