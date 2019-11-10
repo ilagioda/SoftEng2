@@ -83,77 +83,79 @@ if($marks!=""){
 
 }
 
-    echo <<<_STARTTABLE
-    <h1 class="display-1 text-center"> $childName $childSurname's marks </h1>
-    <table class="table table-condensed" style="border-collapse:collapse;">
-    <thead>
-        <tr>
-            <th>Subject</th>
-            <th></th>
-            <th></th>
-            <th>Mean</th>
-        </tr>
-    </thead>
-    <tbody>
-    _STARTTABLE;
-    // print the contents
+echo <<<_STARTTABLE
+<h1 class="display-1 text-center"> $childName $childSurname's marks </h1>
+<table class="table table-condensed" style="border-collapse:collapse;">
+<thead>
+    <tr>
+        <th>Subject</th>
+        <th></th>
+        <th></th>
+        <th>Mean</th>
+    </tr>
+</thead>
+<tbody>
+_STARTTABLE;
 
-    foreach ($preprocessed_data as $subject => $marks) {
+// print the contents
 
-        $mean = round($preprocessed_data[$subject]['mean'],2);          
+foreach ($preprocessed_data as $subject => $marks) {
 
-        if($mean==0){
-        // no marks for that subject
-            $mean = "N.C."; 
-            $modifier="";
-        } elseif($mean<6){
-        // print the row with a different color in case of mark lower than 6
-            if($mean < 5 ) $modifier = "danger visibleRowMarks";
-            else $modifier = "warning visibleRowMarks";
-        } else {
-            $modifier = "success visibleRowMarks";
-        }
-        
-        echo <<<_VISIBLEROW
-            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
-                <td class="col-md-3">$subject</td>
-                <td class="col-md-3"></td>
-                <td class="col-md-3"></td>
-                <td class="col-md-3">$mean</td>
-            </tr>
-        _VISIBLEROW;
+    $mean = round($preprocessed_data[$subject]['mean'],2);          
 
-        if($mean=="N.C.") $subject="";
-
-        echo <<<_HIDDENLEGEND
-            <tr>
-                <td></td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
-                <td></td>
-            </tr>
-        _HIDDENLEGEND;
-        
-
-        foreach($marks as $dateHour => $mark){
-            
-            if($dateHour=='mean') continue;
-
-            echo <<<_HIDDENROWS
-            <tr>
-                <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $dateHour </div> </td>
-                <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $mark </div> </td>
-                <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
-            </tr>
-            _HIDDENROWS;
-        }
+    if($mean==0){
+    // no marks for that subject
+        $mean = "N.C."; 
+        $modifier="";
+    } elseif($mean<6){
+    // print the row with a different color in case of mark lower than 6
+        if($mean < 5 ) $modifier = "danger visibleRowMarks";
+        else $modifier = "warning visibleRowMarks";
+    } else {
+        $modifier = "success visibleRowMarks";
     }
     
-    echo <<<_ENDTABLE
-        </tbody>
-    </table>
-    _ENDTABLE;
+    echo <<<_VISIBLEROW
+        <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
+            <td class="col-md-3">$subject</td>
+            <td class="col-md-3"></td>
+            <td class="col-md-3"></td>
+            <td class="col-md-3">$mean</td>
+        </tr>
+_VISIBLEROW;
+
+    if($mean=="N.C.") $subject="";
+
+    echo <<<_HIDDENLEGEND
+        <tr>
+            <td></td>
+            <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
+            <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
+            <td></td>
+        </tr>
+_HIDDENLEGEND;
+    
+
+    foreach($marks as $dateHour => $mark){
+        
+        if($dateHour=='mean') continue;
+
+        echo <<<_HIDDENROWS
+        <tr>
+            <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
+            <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $dateHour </div> </td>
+            <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $mark </div> </td>
+            <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
+        </tr>
+_HIDDENROWS;
+
+    }
+}
+
+echo <<<_ENDTABLE
+    </tbody>
+</table>
+_ENDTABLE;
 
 require_once("defaultFooter.php");
 
