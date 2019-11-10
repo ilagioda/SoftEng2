@@ -1,9 +1,15 @@
 **Use case**: record daily lecture topics
+
 **Scope**: teacher's PC
+
 **Level**: user-goal
+
 **Intention in context**: the teacher wants to record the daily lecture topics adding the information to the DB
+
 **Primary actor**: teacher
+
 **Secondary/Support actor(s)**: none
+
 **Stakeholders' Interests**:
 - Parent: wants to be informed about the daily lecture topics
 - Teacher: needs to record the daily lecture topics for institutional purposes
@@ -15,8 +21,11 @@
 - The teacher must have already taken a lesson
 
 **Minimum Guarantees**: none
+
 **Success Guarantees**: the information is correctly saved in the database
+
 **Trigger**: none, the teacher starts the interaction
+
 **Main Success Scenario**:
 1. The system asks the class, the subject, the date, the hour and the lecture topic(s) for which the teacher wants to record 
 2. The teacher selects the class, the subject, the date and the hour and inserts the lecture topic(s)
