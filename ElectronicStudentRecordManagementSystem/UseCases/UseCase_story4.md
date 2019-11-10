@@ -15,14 +15,14 @@
 **Stakeholders' Interests:**
 - Parent: wants his/her child to be enrolled so that he/she can monitor everything concerning his/her school performance
 - Teacher: needs to have a list of enrolled students who attend his/her lectures
-- Administrative officer: <----------??---------->
+- Administrative officer: needs to have a list of enrolled students in order to perform other actions in the system
 - Principal: needs to have a list of enrolled students so that he/she can form classes 
 
 **Precondition:**
 - The system must have a database already configured
 - The admin must have a list of students that have to be enrolled
 
-**Minimum Guarantees:** none?? <----------??---------->
+**Minimum Guarantees:** none
 
 **Success Guarantees:** the information about the student and his/her parents is correctly inserted in the database
 
