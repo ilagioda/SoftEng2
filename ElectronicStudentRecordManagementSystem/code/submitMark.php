@@ -16,8 +16,7 @@ $class="1A";
 
 <style>
 table, th, td {
-  padding-right: 10px;
-  padding-left: 10px;
+  border: 1px solid black;
 
 }
 </style>
@@ -32,8 +31,6 @@ echo "<h3> Select a student: </h3>";
 
 
 $studentList=$teacher->getStudents($class);
-
-
 
 echo "<table class=\"students\">";
 echo $studentList;
