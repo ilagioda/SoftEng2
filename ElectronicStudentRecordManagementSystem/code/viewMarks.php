@@ -102,21 +102,20 @@ if($marks!=""){
 
         $mean = round($preprocessed_data[$subject]['mean'],2);          
 
-        $modifier="";
-
-        if($mean==0)
+        if($mean==0){
         // no marks for that subject
             $mean = "N.C."; 
-        elseif($mean<6){
+            $modifier="";
+        } elseif($mean<6){
         // print the row with a different color in case of mark lower than 6
-            if($mean < 5 ) $modifier = "danger";
-            else $modifier = "warning";
+            if($mean < 5 ) $modifier = "danger visibleRowMarks";
+            else $modifier = "warning visibleRowMarks";
         } else {
-            $modifier = "success";
+            $modifier = "success visibleRowMarks";
         }
         
         echo <<<_VISIBLEROW
-            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier visibleRowMarks">
+            <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
                 <td class="col-md-3">$subject</td>
                 <td class="col-md-3"></td>
                 <td class="col-md-3"></td>

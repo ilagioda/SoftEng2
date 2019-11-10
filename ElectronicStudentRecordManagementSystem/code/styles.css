@@ -96,7 +96,9 @@ margin-top:auto;
 
 .visibleRowMarks:hover{
     filter: brightness(90%);
+    cursor: pointer;
 }
+
 body{
     margin:0;
 }
