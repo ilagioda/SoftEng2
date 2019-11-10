@@ -15,17 +15,15 @@
 **Stakeholders' Interestes**: 
 
 - _Parent_: Wants to access the system in order to monitor the student.
-- _Teacher_: ??
+- _Teacher_: Needs that parents have access so that he/she can inform them about their child's school performance
 - _Administrative Officer_: Needs to have an easy way to select a parent and grant him/her access.
-- _Principal_: ??
+- _Principal_: //
 
 **Precondition**:
 
 - Parent's email address should be already present in the Database and should have never accessed the website before.
 
-**Minimum Guarantees**:
-
--  ??
+**Minimum Guarantees**: None
 
 **Success Guarantees**: 
 
