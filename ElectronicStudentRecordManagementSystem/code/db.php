@@ -180,6 +180,51 @@ class dbAdmin extends db
     public function ChangePassword($to_address, $hashed_pw){
         $this->query("UPDATE Parents SET hashedPassword = '$hashed_pw' WHERE email='$to_address'");
     }
+
+    public function insertStudent($name, $surname, $SSN, $email1, $email2){
+        $this->query("INSERT INTO students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
+    }
+    
+    public function insertParent($name, $surname, $SSN, $email){
+        $this->query("INSERT INTO parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
+    }
+    
+    public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2, $surname2, $SSN2, $email2){
+        
+        $ok = 1;
+        
+        /* Sanitize parameters before inserting them into the DB */
+        $name = $this->sanitizeString($name);
+        $surname = $this->sanitizeString($surname);
+        $SSN = $this->sanitizeString($SSN);
+        $name1 = $this->sanitizeString($name1);
+        $surname1 = $this->sanitizeString($surname1);
+        $SSN1 = $this->sanitizeString($SSN1);   
+        $email1 = $this->sanitizeString($email1);
+        $name2 = $this->sanitizeString($name2);
+        $surname2 = $this->sanitizeString($surname2);
+        $SSN2 = $this->sanitizeString($SSN2);
+        $email2 = $this->sanitizeString($email2);
+        
+        /* Insert student into the DB */
+        $result = $this->insertStudent($name, $surname, $SSN, $email1, $email2);
+        if($result === FALSE)
+            $ok = 0;
+        
+        /* Insert parent 1 into the DB */
+        $result = $this->insertParent($name1, $surname1, $SSN1, $email1);
+        if($result === FALSE)
+            $ok = 0;
+        
+        if(!empty($email2)){
+            /* Insert parent 2 into the DB */
+            $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
+            if($result === FALSE)
+                $ok = 0;
+        }
+        
+        return $ok;
+    }
 }
 
 

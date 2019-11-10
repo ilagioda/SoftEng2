@@ -7,13 +7,12 @@
     $_SESSION['user'] = 'GDILRI';
     $_SESSION['role'] = 'admin';
     
-    require_once("db.php");
-    
-    $db = new dbAdmin();
+    /* End lines to be changed*/
 ?>
-<h1 id="enrollTitle" align="center"> Enroll a student</h1>
-<div id="enrollDiv">
-	<form method="POST" action="enrollstudent.php" id="enrollForm">
+
+<h1 class="enrollTitle" align="center"> Enroll a student</h1>
+<div class="enrollDiv">
+	<form method="POST" action="enrollstudentPART2.php" id="enrollForm">
 	<table id="enrollTable">
 		<tr class="info"><td><b>STUDENT INFORMATION</b></td><td></td></tr>
 		<tr><td><label for="name">Name: </label></td><td><input type="text" size="50" name="name" id="name" placeholder="Enter the student's name" autocomplete="off" title="Enter the student's name" required></td></tr>
@@ -32,7 +31,7 @@
 		<tr><td><label for="codfisc2">SSN code: </label></td><td><input type="text" size="50" name="codfisc2" id="codfisc" placeholder="Enter the parent 2's SSN code" autocomplete="off" title="Enter the student's SSN code"></td>
 		<tr><td><label for="email2">E-mail: </label></td><td><input type="email" size="50" name="email2" id="email2" placeholder="Enter the parent 2's e-mail" autocomplete="off" title="Enter the parent 2's e-mail"></td></tr>
 	</table>
-		<input type="reset" class="pulsante" name="enrollCancel" id="enrollCancel" value="Cancel"> 
+		<input type="reset" name="enrollCancel" id="enrollCancel" value="Cancel"> 
 		<input type="submit" class="pulsante" name="enrollSubmit" id="enrollSubmit" value="Enroll student">
 	</form>
 </div>
