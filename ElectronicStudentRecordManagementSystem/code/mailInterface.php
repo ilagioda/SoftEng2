@@ -27,8 +27,8 @@ function sendMail(id, cl){
 
 <div class="container">
   <h2>Emails to be confirmed</h2>
-  <span class="label label-success pull-right">Email not sent yet</span><br>
-  <span class="label label-danger pull-right">Email sent, but still to be confirmed</span>
+  <span class="label label-success col-md-3 col-md-push-9">Email not sent yet</span><br>
+  <span class="label label-danger col-md-3 col-md-push-9">Email sent, but still to be confirmed</span>
   <p class="text-center">Search by email address:</p>
   <input class="form-control" id="myInput" type="text" placeholder="Search..">
   <br>
@@ -77,7 +77,10 @@ foreach ($ParentsMailList as $tuple) {
 ?>
     </tbody>
   </table>
-</div>
+  </div>
+  <?php
+require_once "defaultFooter.php";
+?>
 
 <script>
 $(document).ready(function(){
@@ -99,7 +102,3 @@ $(document).ready(function(){
 </div>
 
 //TO SAY THAT A CERTAIN INPUT IS GOOD WITH JS ADD A <i> glyphoon </i> between <span class="input-group-addon"> and </span> -->
-
-<?php
-require_once "defaultFooter.php";
-?>
