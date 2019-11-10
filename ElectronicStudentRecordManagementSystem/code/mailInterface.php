@@ -25,12 +25,6 @@ function sendMail(id, cl){
 
 </script>
 
-    <head><style>
-    body {
-        padding-top:20px;
-    }
-    </style></head>
-
 <div class="container">
   <h2>Emails to be confirmed</h2>
   <span class="label label-success pull-right">Email not sent yet</span><br>
