@@ -16,8 +16,7 @@
 /* NAVBAR */
 .navbar {
     min-height: 80px;
-    position: -webkit-sticky;
-    position: sticky;
+    position: relative;
     top: 0;
 }
 
@@ -70,8 +69,7 @@ footer {
 background-color: #555;
 color: white;
 padding: 15px;
-position: -webkit-sticky;
-position: sticky;
+position: relative;
 bottom: 0;
 left: 0;
 width: 100%;
