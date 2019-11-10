@@ -139,14 +139,14 @@ if($marks!=""){
             
             if($dateHour=='mean') continue;
 
-            echo <<< HIDDENROWS
+            echo <<<_HIDDENROWS
             <tr>
                 <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
                 <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $dateHour </div> </td>
                 <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $mark </div> </td>
                 <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
             </tr>
-            HIDDENROWS;
+            _HIDDENROWS;
         }
     }
     
