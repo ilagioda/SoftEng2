@@ -18,37 +18,8 @@ if (isset($_POST["view"])) {
       $classComposition = $dbAdmin->readClassCompositions($value);
       //print_r($classComposition);
 
+      require_once("defaultNavbar.php");
       echo <<<REQUESTEDPAGE
-        <body>
-          <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.php"><img class="logo"  alt="logo" src=images/logo.png> </a> </div> <div class="collapse navbar-collapse" id="myNavbar">
-                  <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.php">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
-                  </ul>
-                  <ul class="nav navbar-nav navbar-right">
-                    <li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                  </ul>
-              </div>
-            </div>
-          </nav>
-
-          <div class="container-fluid text-center">
-            <div class="row content">
-              <div class="col-sm-2 sidenav">
-                <p><a href="#">Link</a></p>
-                <p><a href="#">Link</a></p>
-                <p><a href="#">Link</a></p>
-              </div>
               <div class="col-sm-8 text-center">
                 <h1>Welcome</h1>
                 <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
@@ -64,7 +35,7 @@ if (isset($_POST["view"])) {
                       <th>Surname</th>
                       <th>Class</th>
                     </tr>
-                </thead>
+                  </thead>
                     <tbody>
 REQUESTEDPAGE;
 
@@ -89,32 +60,29 @@ ROW;
                       <button type="submit" class="btn btn-default pull-left">Cancel</button>
                       </div>
                     </form>
+                    </div>
                     </td>
                     <td>
+                    </td>
+                    <td>
+                    <div class="form-group">
                     <form class="form-horizontal" method="post" action="./classComposition.php">
                       <div class="col-sm-offset-2 col-sm-10">
                       <input type="text" name="confirm"  hidden value='$valueString'>
                       <button type="submit" class="btn btn-default pull-right">Confirm</button>
                       </div>
                     </form>
+                    </div>
                     </td>
-                  </div>
+                    <td>
+                    </td>
                   </tr>
-                    </tbody>                
+                  </tbody>                
                   </table>
                 </div>
                 </div>
-         
-            <footer class="container-fluid text-center">
-              <p>Footer Text</p>
-            </footer>
-            </div>
-            </div>
-
-        </body>
-
-        </html>
 ENDOFREQUESTEDPAGE;
+      require_once("defaultFooter.php");
     }
   }
 } else {
@@ -134,43 +102,13 @@ ENDOFREQUESTEDPAGE;
 
   $classes = $dbAdmin->readAllClasses();
 
-
+  require_once("defaultNavbar.php");
   echo <<<NORMALPAGE
-        <body>
-          <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.php"><img class="logo" alt="logo" src=images/logo.png> </a> </div> <div class="collapse navbar-collapse" id="myNavbar">
-                  <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.php">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
-                  </ul>
-                  <ul class="nav navbar-nav navbar-right">
-                    <li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                  </ul>
-              </div>
-            </div>
-          </nav>
-
-          <div class="container-fluid text-center">
-            <div class="row content">
-              <div class="col-sm-2 sidenav">
-                <p><a href="#">Link</a></p>
-                <p><a href="#">Link</a></p>
-                <p><a href="#">Link</a></p>
-              </div>
-              <div class="col-sm-8 text-left">
+              <div class="col-sm-20 text-left">
                 <h1>Welcome</h1>
                 <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
                 <hr>
-                <div class="container col-sm-5">
+                <div class="container col-sm-10">
                  
 NORMALPAGE;
   if (isset($classes)) {
@@ -227,57 +165,10 @@ ROW1;
   }
 
   echo <<<ENDOFNORMALPAGE
-                </div>
               </div>
-            </div>
-            <footer class="container-fluid text-center">
-              <p>Footer Text</p>
-            </footer>
-            </div>
-
-        </body>
-
-        </html>
+              </div>
+            
 ENDOFNORMALPAGE;
+  require_once("defaultFooter.php");
 }
 ?>
-
-
-
-<!-- <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Class</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>1A</td>
-                <td>
-                  <form method="post" class="form-horizontal" action="./classComposition.php">
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default" name>View</button>
-                  </form>
-                </td>
-              </tr>
-              <tr>
-                <td>Mary</td>
-                <td>Moe</td>
-                <td>1A</td>
-                <td>
-                  <form class="form-horizontal" action="./classComposition.php">
-                    <div class="form-group">
-                      <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">View</button>
-                  </form>
-                </td>
-              </tr>
-              <tr>
-            </tbody> */
-            -->
