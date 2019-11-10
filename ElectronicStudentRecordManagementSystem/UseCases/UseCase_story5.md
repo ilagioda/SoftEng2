@@ -51,11 +51,14 @@
 
 The use case terminates with success
 
-**Extensions:**
-**1a.** The admin is inactive for more than threshold seconds: the admin is redirected to the login page.
-**2a.** The database is not reachable: the use case terminates in failure. 
-**3a.** The admin doesn't accept the class composition: the system must not change the class compositions and the info related to the students .
-**3b.** The admin has selected the wrong class: the system provides a way to go back to the first choice of the class.
+#### Extensions:
+**1a.**  The admin is inactive for more than threshold seconds: the admin is redirected to the login page.
+
+**2a.**  The database is not reachable: the use case terminates in failure.
+
+**3a.**  The admin doesn't accept the class composition: the system must not change the class compositions and the info related to the students .
+
+**3b.**  The admin has selected the wrong class: the system provides a way to go back to the first choice of the class.
 
 
 
