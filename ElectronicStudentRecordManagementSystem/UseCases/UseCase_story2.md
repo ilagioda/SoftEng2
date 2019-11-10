@@ -1,3 +1,5 @@
+# USE CASE - STORY 2
+
 **Use case**: record daily lecture topics
 
 **Scope**: teacher's PC
@@ -36,6 +38,9 @@
 The use case terminates with success
 
 **Extensions**:
+
 2a. The teacher selects the wrong date: he use case terminates in failure
+
 5a. The system is not able to connect to the database: the use case terminates in failure
+
 5b. The system is not able to execute the queries on the database: the use case terminates in failure
