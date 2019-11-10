@@ -235,9 +235,6 @@ class dbParent extends db
         $year=$year+1;
         $endingDate = $year."-07-31";
 
-        echo $beginningDate;
-        echo $endingDate;
-
         $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
 
         $marks = "";
