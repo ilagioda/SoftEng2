@@ -204,6 +204,7 @@ class dbParent extends db
 
         $CodFisc = $this->sanitizeString($CodFisc);
 
+        /* Verify if the user logged in is actually allowed to see the marks of the requested child */
         $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
 
         if (!$result)
@@ -219,7 +220,25 @@ class dbParent extends db
         if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
             die("You are not authorised to see this information.");
 
-        $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' ORDER BY subject ASC,date DESC,hour DESC;");
+        /* The user can see the marks => retrieve the marks of the current year */
+
+        $year = intval(date("Y"));
+        $month = intval(date("m"));
+
+        if($month <= 7){
+            // second semester
+            $year=$year-1;
+        }
+
+        $beginningDate = $year."-08-01";
+
+        $year=$year+1;
+        $endingDate = $year."-07-31";
+
+        echo $beginningDate;
+        echo $endingDate;
+
+        $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
 
         $marks = "";
 
