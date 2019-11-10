@@ -1,22 +1,22 @@
 # USE CASE - STORY#5
 
 **Use Case**: 
-Enter the class composition in the system
+- Enter the class composition in the system.
 
 **Scope:** 
-Web browser
+- Web browser.
 
 **Level:** 
-User-goal
+- User-goal.
 
 **Intention in context:** 
-The administrative officer wants to enter class compositions into the system.
+- The administrative officer wants to enter class compositions into the system.
 
 **Primary actor:** 
-Administrative officer(admin).
+- Administrative officer(admin).
 
 **Secondary/Support actor(s):**
-Principal: has to upload the proposed class compositions.
+- Principal: has to upload the proposed class compositions.
 
 **Stakeholders' Interests:**
 - Parent: would like to see in which class his/her child was inserted.
@@ -37,10 +37,10 @@ Principal: has to upload the proposed class compositions.
 
 **Success Guarantees:** 
 - The administrative officer enters the class compositions
--The students once the class composition is accepted must be enrolled in that particular class
+- The students once the class composition is accepted must be enrolled in that particular class
 
 **Trigger:** 
-None, because it’s the administrative officer that starts the interaction
+- None, because it’s the administrative officer that starts the interaction
 
 **Main Success Scenario:**
 1. The admin selects a particular class for which he/she wants to see the proposed class composition
@@ -52,10 +52,10 @@ None, because it’s the administrative officer that starts the interaction
 The use case terminates with success
 
 **Extensions:**
-1a. The admin is inactive for more than threshold seconds: the admin is redirected to the login page.
-2a. The database is not reachable: the use case terminates in failure 
-3a. The admin doesn't accept the class composition: the system must not change the class compositions and the info related to the students 
-3b. The admin has selected the wrong class: the system provides a way to go back to the first choice of the class
+**1a.** The admin is inactive for more than threshold seconds: the admin is redirected to the login page.
+**2a.** The database is not reachable: the use case terminates in failure. 
+**3a.** The admin doesn't accept the class composition: the system must not change the class compositions and the info related to the students .
+**3b.** The admin has selected the wrong class: the system provides a way to go back to the first choice of the class.
 
 
 
