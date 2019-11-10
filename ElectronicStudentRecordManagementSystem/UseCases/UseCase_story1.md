@@ -4,7 +4,7 @@
 View the marks of their child.
 
 ##### Scope: 
-Parent pc/smartphone.
+Parent's pc/smartphone.
 
 ##### Level: 
 User-goal.
