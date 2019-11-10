@@ -23,6 +23,10 @@ class Teacher{
         $this->db->insertMark($codStudent, $subject, $date, $hour, $mark);
     }
 
+    function getClasses(){
+        return $this->db->getClassesByTeacher($this->codfisc);
+    }
+
 
 }
 

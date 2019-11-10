@@ -279,4 +279,25 @@ class dbTeacher extends db
         return $students;
 
     }
+    
+    function getClassesByTeacher($codTeacher){
+        $codTeacher = $this -> sanitizeString($codTeacher);
+        
+        $result = $this->query("SELECT * FROM students WHERE classId='1A'");
+        
+        if (!$result) 
+            die("Unable to select classes from Teacher Id.");
+
+        $classes="";
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
+                $classes = $classes . "<tr><td>" . $row['surname'] . "</td><td>" . $row['name'] . "</td><td><form method=\"post\" action=\"studentMarks.php\"> <input type=\"hidden\" name=\"codStudent\" value=" . $row['codFisc'] . "><input type=\"submit\", id=\"" . $row['codFisc'] . "\" value=\"Add Grade\"></form></td></tr><br>";
+        }
+        
+        //TODO DA RIMUOVERE (E IMPLEMENTARE LA FUNZIONE CORRETA UNA VOLTA CHE C'E' LA TABELLA/E ADEGUATA
+        $classes = "<form method='get' action='submitMark.php'><input type='hidden' name='class' value='1A'><input type='submit' value='CICI'></form>";
+
+        return $classes;
+
+    }
 }
