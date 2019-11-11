@@ -20,9 +20,9 @@ if (isset($_POST["view"])) {
 
       require_once("defaultNavbar.php");
       echo <<<REQUESTEDPAGE
-              <div class="col-sm-8 text-center">
-                <h1>Welcome</h1>
-                <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
+              <div class="col-sm-8 text-left">
+                <h1>Composition of selected class.</h1>
+                <p>The composition is reported in the table below and you can either accept it or you can return to the previous page.</p>
                 <hr>
 
                 <div class="container text-left">
@@ -105,8 +105,8 @@ ENDOFREQUESTEDPAGE;
   require_once("defaultNavbar.php");
   echo <<<NORMALPAGE
               <div class="col-sm-20 text-left">
-                <h1>Welcome</h1>
-                <p>The purpose of this page is to select the class in order to see and accept the class composition.</p>
+                <h1>Welcome admin.</h1>
+                <p>In this page you can select the class for which you would like to see and possibly accept the class composition.</p>
                 <hr>
                 <div class="container col-sm-10">
                  

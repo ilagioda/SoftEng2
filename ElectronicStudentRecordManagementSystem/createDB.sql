@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 11, 2019 alle 18:26
+-- Creato il: Nov 11, 2019 alle 18:55
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -21,12 +21,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
-
 DROP DATABASE IF EXISTS `school`;
 CREATE DATABASE `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
-
-
 -- --------------------------------------------------------
 
 --
@@ -152,7 +149,6 @@ CREATE TABLE `ProposedClasses` (
 --
 
 INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
-('1B', 'MRC'),
 ('1A', 'CLDFLCM'),
 ('1A', 'FRCWTR'),
 ('1B', 'MRC');
@@ -278,6 +274,7 @@ ALTER TABLE `Principals`
 -- Indici per le tabelle `ProposedClasses`
 --
 ALTER TABLE `ProposedClasses`
+  ADD PRIMARY KEY (`classID`,`codFisc`),
   ADD KEY `studentIDForeignKey` (`codFisc`);
 
 --
@@ -291,6 +288,13 @@ ALTER TABLE `Students`
 --
 ALTER TABLE `Subjects`
   ADD PRIMARY KEY (`name`,`year`);
+
+--
+-- Indici per le tabelle `TeacherClassSubjectTable`
+--
+ALTER TABLE `TeacherClassSubjectTable`
+  ADD PRIMARY KEY (`codFisc`,`classID`,`subject`),
+  ADD KEY `subjectTeacherClassSubjectForeignKey` (`subject`);
 
 --
 -- Indici per le tabelle `Teachers`
@@ -314,6 +318,13 @@ ALTER TABLE `Marks`
 --
 ALTER TABLE `ProposedClasses`
   ADD CONSTRAINT `studentIDForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`);
+
+--
+-- Limiti per la tabella `TeacherClassSubjectTable`
+--
+ALTER TABLE `TeacherClassSubjectTable`
+  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Teachers` (`codFisc`),
+  ADD CONSTRAINT `subjectTeacherClassSubjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
