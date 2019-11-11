@@ -8,7 +8,7 @@ Principals - **codFisc**, hashedPassword
 
 Admins - **codFisc**, hashedPassword
 
-Marks - **codFiscStudent**, **subject**, **date**, **hour**, mark
+Marks - **codFisc**, **subject**, **date**, **hour**, mark
 
 Lectures - **date**, **hour**, **classID**, CodFiscTeacher, Subject, Topic
 
