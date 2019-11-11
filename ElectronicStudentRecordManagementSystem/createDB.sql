@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 09, 2019 alle 23:52
+-- Creato il: Nov 11, 2019 alle 18:26
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -21,9 +21,11 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
+
 DROP DATABASE IF EXISTS `school`;
-CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
+
 
 -- --------------------------------------------------------
 
@@ -78,6 +80,19 @@ CREATE TABLE `Marks` (
   `mark` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `Marks`
+--
+
+INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
+('FRCWTR', 'Italian', '2019-10-10', 1, '7+'),
+('FRCWTR', 'History', '2019-10-10', 2, '6'),
+('FRCWTR', 'Philosophy', '2019-10-10', 3, '5/6'),
+('FRCWTR', 'Maths', '2019-10-11', 1, '5-'),
+('FRCWTR', 'Physics', '2019-10-12', 1, '4+'),
+('FRCWTR', 'Italian', '2019-10-14', 2, '9/10'),
+('FRCWTR', 'Italian', '2019-10-15', 3, '9');
+
 -- --------------------------------------------------------
 
 --
@@ -92,6 +107,21 @@ CREATE TABLE `Parents` (
   `codFisc` varchar(50) NOT NULL,
   `firstLogin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Parents`
+--
+
+INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
+('cla_9_6@hotmail.it', '', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
+('fant@hotmail.it', '', 'Ugo', 'Fantozzi', 'GFNTZZ', 0),
+('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
+('hot_9_6@hotmail.it', '', 'Pippo', 'Franco', 'PPPFRNC', 1),
+('miiiimmo_9_6@hotmail.it', '', 'Mimmo', 'Secondino', 'MMMSCNDN', 1),
+('padre@hotmail.it', '', 'Pio', 'Amadeo', 'PMD', 0),
+('silv_9_6@hotmail.it', '', 'Silvia', 'Gertrude', 'SLVGRTD', 1),
+('toro_9_6@hotmail.it', '', 'Tor', 'Ino', 'TRN', 1),
+('volley.champions@hotmail.it', '', 'Mila', 'Shiro', 'MLSHR', 1);
 
 -- --------------------------------------------------------
 
@@ -122,6 +152,7 @@ CREATE TABLE `ProposedClasses` (
 --
 
 INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
+('1B', 'MRC'),
 ('1A', 'CLDFLCM'),
 ('1A', 'FRCWTR'),
 ('1B', 'MRC');
@@ -146,9 +177,9 @@ CREATE TABLE `Students` (
 --
 
 INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
-('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', '1A'),
-('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', '1A'),
-('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '1B');
+('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
+('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', ''),
+('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '');
 
 -- --------------------------------------------------------
 
@@ -176,6 +207,18 @@ INSERT INTO `Subjects` (`name`, `year`, `hours`) VALUES
 ('Maths', 1, 5),
 ('Philosophy', 1, 3),
 ('Physics', 1, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `TeacherClassSubjectTable`
+--
+
+CREATE TABLE `TeacherClassSubjectTable` (
+  `codFisc` varchar(50) NOT NULL,
+  `classID` varchar(50) NOT NULL,
+  `subject` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -216,7 +259,7 @@ ALTER TABLE `Lectures`
 -- Indici per le tabelle `Marks`
 --
 ALTER TABLE `Marks`
-  ADD PRIMARY KEY (`codFisc`,`subject`,`date`,`hour`),
+  ADD PRIMARY KEY (`codFisc`,`date`,`hour`),
   ADD KEY `subjectForeignKey` (`subject`);
 
 --
