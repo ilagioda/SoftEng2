@@ -10,8 +10,12 @@
     /* End lines to be changed*/
 ?>
 
+<form method="POST" action="homepageAdmin.php">
+	<input type="submit" name="homepageAdmin" id="homepageAdmin" value="Homepage"> 	
+</form>
+
 <h1 class="enrollTitle" align="center"> Enroll a student</h1>
-<div class="enrollDiv">
+<div class="centralDiv">
 	<form method="POST" action="enrollstudentPART2.php" id="enrollForm">
 	<table id="enrollTable">
 		<tr class="info"><td><b>STUDENT INFORMATION</b></td><td></td></tr>

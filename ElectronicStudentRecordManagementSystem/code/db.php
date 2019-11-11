@@ -182,17 +182,15 @@ class dbAdmin extends db
     }
 
     public function insertStudent($name, $surname, $SSN, $email1, $email2){
-        $this->query("INSERT INTO students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
+        return $this->query("INSERT INTO students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
     }
     
     public function insertParent($name, $surname, $SSN, $email){
-        $this->query("INSERT INTO parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
+        return $this->query("INSERT INTO parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
     
     public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2, $surname2, $SSN2, $email2){
-        
-        $ok = 1;
-        
+                
         /* Sanitize parameters before inserting them into the DB */
         $name = $this->sanitizeString($name);
         $surname = $this->sanitizeString($surname);
@@ -208,22 +206,22 @@ class dbAdmin extends db
         
         /* Insert student into the DB */
         $result = $this->insertStudent($name, $surname, $SSN, $email1, $email2);
-        if($result === FALSE)
-            $ok = 0;
+        if($result == FALSE)
+            return 0;
         
         /* Insert parent 1 into the DB */
         $result = $this->insertParent($name1, $surname1, $SSN1, $email1);
-        if($result === FALSE)
-            $ok = 0;
+        if($result == FALSE)
+            return 0;       // TOFIX -------------------------------------------------------------
         
         if(!empty($email2)){
             /* Insert parent 2 into the DB */
             $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
-            if($result === FALSE)
-                $ok = 0;
+            if($result == FALSE)
+                return 0;
         }
         
-        return $ok;
+        return 1;
     }
 }
 

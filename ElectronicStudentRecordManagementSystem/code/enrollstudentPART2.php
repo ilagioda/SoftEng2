@@ -57,7 +57,7 @@
         
 ?>
 <h1 class="enrollTitle" align="center"> Enroll a student</h1>
-<div class="enrollDiv">
+<div class="centralDiv">
 	<p id="enrollMessage">
 		<?php 
     		if($error != 0){
@@ -70,7 +70,7 @@
 	<form method="POST" action="enrollstudent.php">
 		<input type="submit" class="pulsante" name="enrollNewStudent" id="enrollNewStudent" value="Enroll new student">
 	</form>
-	<form method="POST" action="index.php">
+	<form method="POST" action="homepageAdmin.php">
 		<input type="submit" class="pulsante" name="enrollGoBackHome" id="enrollGoBackHome" value="Go back to Homepage">
 	</form>
 </div>
