@@ -90,3 +90,5 @@ echo <<<_END
   </body>
 </html>
 _END;
+
+require_once ("defaultFooter.php");
