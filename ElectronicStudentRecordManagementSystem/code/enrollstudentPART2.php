@@ -57,7 +57,7 @@
         
 ?>
 <h1 class="enrollTitle" align="center"> Enroll a student</h1>
-<div class="enrollDiv">
+<div class="centralDiv">
 	<p id="enrollMessage">
 		<?php 
     		if($error != 0){

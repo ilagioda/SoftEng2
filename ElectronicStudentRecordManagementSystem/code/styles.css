@@ -107,7 +107,7 @@ body{
 }
 
 /* Enroll students */
-div.enrollDiv {
+div.centralDiv {
     height: auto;
     width: auto;
     margin-left: 100px;
@@ -118,7 +118,7 @@ div.enrollDiv {
     background-color: #ebebeb;
 }
 
-div.enrollDiv * {
+div.centralDiv * {
     text-align: center;
 }
 
