@@ -9,7 +9,7 @@ $_SESSION['role']="teacher";
 require_once("classTeacher.php");
 
 $teacher=new Teacher();
-$class="1A";
+$_SESSION['subject']=$_POST['subject'];
 
 ?>
 
@@ -26,12 +26,14 @@ table, th, td {
 <body>
 
 <?php
-echo "<h2> List of student of class " . $class ."</h2>";
+
+echo "subject: " . $_SESSION['subject'];
+echo "<h2> List of student of class " . $_SESSION['class'] ."</h2>";
 
 echo "<h3> Select a student: </h3>";
 
 
-$studentList=$teacher->getStudents($class);
+$studentList=$teacher->getStudents($_SESSION['class']);
 
 
 

@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 require_once("basicchecks.php");
 require_once("defaultNavbar.php");
@@ -9,7 +9,10 @@ $_SESSION['role']="teacher";
 require_once("classTeacher.php");
 
 $teacher=new Teacher();
-$class="1A";
+
+$_SESSION['class']=$_POST['class'];
+
+//CHECK SU MATERIE DEL PROFESSORE
 
 ?>
 
@@ -25,18 +28,18 @@ table, th, td {
 
 <body>
 
+<h2> Select the subject for the class: 
+
+
 <?php
-echo "<h2> List of student of class " . $class ."</h2>";
 
-echo "<h3> Select a student: </h3>";
+echo $_SESSION['class'] . "</h2>";
 
-
-$studentList=$teacher->getStudents($class);
-
+$classList=$teacher->getSubjectByClass($_SESSION['class']);
 
 
 echo "<table class=\"students\">";
-echo $studentList;
+echo $classList;
 echo "</table>";
 
 ?>

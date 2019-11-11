@@ -27,6 +27,10 @@ class Teacher{
         return $this->db->getClassesByTeacher($this->codfisc);
     }
 
+    function getSubjectByClass($class){
+        return $this->db->getSubjectsByTeacherAndClass($this->codfisc, $class);
+    }
+
 
 }
 

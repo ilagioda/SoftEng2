@@ -24,7 +24,7 @@ table, th, td {
 
 <body>
 
-<h2> Select the class and subject: </h2>
+<h2> Select the class: </h2>
 
 
 

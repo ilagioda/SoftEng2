@@ -304,7 +304,9 @@ class dbTeacher extends db
     }
 
     function insertMark($codStudent, $subject, $date, $hour, $mark)
-    { }
+    { 
+
+    }
 
     function getStudentsByClass($class){
 
@@ -324,7 +326,7 @@ class dbTeacher extends db
         return $students;
 
     }
-    
+
     function getClassesByTeacher($codTeacher){
         $codTeacher = $this -> sanitizeString($codTeacher);
         
@@ -340,9 +342,30 @@ class dbTeacher extends db
         }
         
         //TODO DA RIMUOVERE (E IMPLEMENTARE LA FUNZIONE CORRETA UNA VOLTA CHE C'E' LA TABELLA/E ADEGUATA
-        $classes = "<form method='get' action='submitMark.php'><input type='hidden' name='class' value='1A'><input type='submit' value='CICI'></form>";
+        $classes = "<form method='post' action='selectSubjectForMarks.php'><input type='submit' name='class' value='1A'></form><form method='post' action='selectSubjectForMarks.php'><input type='hidden' name='class' value='1B'><input type='submit' value='Non mandare questo'></form>";
 
         return $classes;
 
+    }
+
+    function getSubjectsByTeacherAndClass($codTeacher, $class){
+        $codTeacher = $this -> sanitizeString($codTeacher);
+        $class = $this -> sanitizeString($class);
+        
+        $result = $this->query("SELECT * FROM students WHERE classId='1A'");
+        
+        if (!$result) 
+            die("Unable to select classes from Teacher Id.");
+
+        $classes="";
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
+                $classes = $classes . "<tr><td>" . $row['surname'] . "</td><td>" . $row['name'] . "</td><td><form method=\"post\" action=\"studentMarks.php\"> <input type=\"hidden\" name=\"codStudent\" value=" . $row['codFisc'] . "><input type=\"submit\", id=\"" . $row['codFisc'] . "\" value=\"Add Grade\"></form></td></tr><br>";
+        }
+        
+        //TODO DA RIMUOVERE (E IMPLEMENTARE LA FUNZIONE CORRETA UNA VOLTA CHE C'E' LA TABELLA/E ADEGUATA
+        $classes = "<form method='post' action='submitMark.php'><input type='submit' name='subject' value='Math'></form><form method='post' action='submitMark.php'><input type='hidden' name='subject' value='Science'><input type='submit' value='Science'></form>";
+
+        return $classes;
     }
 }
