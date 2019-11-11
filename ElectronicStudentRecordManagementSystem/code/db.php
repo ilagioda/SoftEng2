@@ -320,7 +320,7 @@ class dbTeacher extends db
         $students="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $students = $students . "<tr><td>" . $row['surname'] . "</td><td>" . $row['name'] . "</td><td><form method=\"post\" action=\"studentMarks.php\"> <input type=\"hidden\" name=\"codStudent\" value=" . $row['codFisc'] . "><input type=\"submit\", id=\"" . $row['codFisc'] . "\" value=\"Add Grade\"></form></td></tr><br>";
+                $students = $students . "<form method='post' action='studentMarks.php'><input type='hidden' name='student' value='" . $row['codFisc'] . "'><input type='submit', value='" . $row['name'] . " " . $row['surname'] . "'></form>";
         }
         
         return $students;

@@ -17,14 +17,6 @@ $_SESSION['class']=$_POST['class'];
 ?>
 
 
-<style>
-table, th, td {
-  padding-right: 10px;
-  padding-left: 10px;
-
-}
-</style>
-
 
 <body>
 
@@ -38,9 +30,8 @@ echo $_SESSION['class'] . "</h2>";
 $classList=$teacher->getSubjectByClass($_SESSION['class']);
 
 
-echo "<table class=\"students\">";
 echo $classList;
-echo "</table>";
+
 
 ?>
 

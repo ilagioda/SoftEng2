@@ -13,16 +13,8 @@ $teacher=new Teacher();
 ?>
 
 
-<style>
-table, th, td {
-  padding-right: 10px;
-  padding-left: 10px;
-
-}
-</style>
 
 
-<body>
 
 <h2> Select the class: </h2>
 
@@ -35,9 +27,8 @@ $classList=$teacher->getClasses();
 
 
 
-echo "<table class=\"students\">";
 echo $classList;
-echo "</table>";
+
 
 ?>
 
