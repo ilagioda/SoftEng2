@@ -27,10 +27,10 @@ $_SESSION['class']=$_POST['class'];
 
 echo $_SESSION['class'] . "</h2>";
 
-$classList=$teacher->getSubjectByClass($_SESSION['class']);
+$subjects=$teacher->getSubjectByClass($_SESSION['class']);
 
 
-echo $classList;
+echo $subjects;
 
 
 ?>

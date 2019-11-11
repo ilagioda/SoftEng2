@@ -9,37 +9,40 @@ $_SESSION['role']="teacher";
 require_once("classTeacher.php");
 
 $teacher=new Teacher();
-$class="1A";
+
+$_SESSION['student']=$_POST['student'];
 
 ?>
 
 
-<style>
-table, th, td {
-  padding-right: 10px;
-  padding-left: 10px;
-
-}
-</style>
 
 
 <body>
 
 <?php
-echo "<h2> List of student of class " . $class ."</h2>";
+
+echo "<h2> List of Marsk of " . $_SESSION['student'] .", for subject: " . $_SESSION['subject'] . "</h2>" ;
 
 echo "<h3> Select a student: </h3>";
 
 
-$studentList=$teacher->getStudents($class);
+$markList=$teacher->getStudentMarks($_SESSION['student'], $_SESSION['subject']);
 
 
-
-echo "<table class=\"students\">";
-echo $studentList;
+echo "<table>";
+echo $markList;
 echo "</table>";
 
 ?>
+
+<br><br>
+Add Mark:
+<form>
+<input type='date'>
+<input type='num' value="Hour">
+<input type='num' value="Grade">
+
+</form>
 
 
 <?php

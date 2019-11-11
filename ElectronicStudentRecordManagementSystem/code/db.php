@@ -353,7 +353,7 @@ class dbTeacher extends db
         $result = $this->query("SELECT * FROM students WHERE classId='1A'");
         
         if (!$result) 
-            die("Unable to select classes from Teacher Id.");
+            die("Unable to select subjects.");
 
         $classes="";
 
@@ -365,5 +365,24 @@ class dbTeacher extends db
         $classes = "<form method='post' action='submitMark.php'><input type='submit' name='subject' value='Math'></form><form method='post' action='submitMark.php'><input type='hidden' name='subject' value='Science'><input type='submit' value='Science'></form>";
 
         return $classes;
+    }
+
+    function getStudentSubjectMarks($student, $subject){
+        $subject = $this -> sanitizeString($subject);
+        $student = $this -> sanitizeString($student);
+
+        $result = $this->query("SELECT * FROM Marks WHERE codFisc='$student' AND subject='$subject'");
+        
+        if (!$result) 
+            die("Student has no marks for this subject.");
+
+        $marks="<tr><th>Date</th><th>Hour</th><th>Grade</th></tr>";
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
+                $marks = $marks . "<tr><td>" . $row['date'] . "</td><td>" . $row['hour'] . "</td><td>" . $row['mark'] ."</td></tr><br>";
+        }
+        
+
+        return $marks;
     }
 }
