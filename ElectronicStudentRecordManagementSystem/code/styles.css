@@ -123,17 +123,16 @@ div.centralDiv * {
     text-align: center;
 }
 
-table#enrollTable {
+table.enrollTable {
     border-collapse: collapse;
     border-spacing: 5px;
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left:auto; 
     margin-right:auto;
-    
 }
 
-table#enrollTable td {
+table.enrollTable td {
     padding: 10px;
 }
 
