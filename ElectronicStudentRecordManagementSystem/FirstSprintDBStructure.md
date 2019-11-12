@@ -14,4 +14,10 @@ Lectures - **date**, **hour**, **classID**, CodFiscTeacher, Subject, Topic
 
 Assignments - **subject**, **date**, **classID**, textAssignment
 
+ProposedClasses - **classID**, **codFisc**
+
+Subjects - **name**, **year**, hours
+
+TeacherClassSubjectTable - **codFisc**, **classID**, **subject**
+
 
