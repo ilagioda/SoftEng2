@@ -221,6 +221,11 @@ class dbAdmin extends db
         return $this->query("INSERT INTO parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
     
+    public function insertLectures($date, $hour, $classID, $codFiscTeacher, $subject, $topic) {
+		return $this->query("INSERT INTO lectures(date, hour, classID, codFiscTeacher, subject, topic) 
+								VALUES('$date', '$hour', '$classID', '$codFiscTeacher', '$subject', '$topic')");
+	}
+    
     public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2, $surname2, $SSN2, $email2){
                 
         /* Sanitize parameters before inserting them into the DB */
@@ -417,4 +422,83 @@ class dbTeacher extends db
 
         return $marks;
     }
+    
+    function insertDailyLesson($class, $subject, $date, $hour, $topics, $codFisc) {
+		$class = $this -> sanitizeString($class);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		$hour = $this -> sanitizeString($hour);
+		$topics = $this -> sanitizeString($topics);
+	
+		$result = $this->insertLectures($date, $hour, $class, $codFisc, $subject, $topics);
+		if($result == FALSE) {
+			die("ERROR: Lecture not inserted.");
+		}
+	}
+	
+	function updateDailyLesson($class, $subject, $date, $hour, $topics, $codFisc) {
+		
+	}
+	
+		
+	function getClassesByTeacher2($codTeacher){
+        $codTeacher = $this -> sanitizeString($codTeacher);
+        $result = $this->query("SELECT classID FROM teacherclasssubjecttable WHERE codFisc='$codTeacher'");
+
+		if (!$result) 
+            die("Unable to select classes.");
+
+		
+	    if ($result->num_rows > 0) {
+
+            $classes = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($classes, $row["classID"]);
+            }
+            return $classes;
+        }
+	}
+	
+	function getSubjectsByTeacherAndClass2($codTeacher, $class){
+		$codTeacher = $this -> sanitizeString($codTeacher);
+		$class = $this -> sanitizeString($class);
+        
+        $result = $this->query("SELECT subject FROM teacherclasssubjecttable WHERE (classID='$class' AND codFisc='$codTeacher')");
+
+        if (!$result) 
+            die("Unable to select subjects.");
+
+        if ($result->num_rows > 0) {
+			
+            $subjects = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($subjects, $row["subject"]);
+            }
+            return $subjects;
+        }
+    }
+	
+	function getLecturesByTeacher($codTeacher) {
+		$codTeacher = $this -> sanitizeString($codTeacher);
+
+		$result = $this->query("SELECT * FROM lectures WHERE codFiscTeacher='$codTeacher'");
+	
+		if (!$result) 
+            die("Unable to select lectures.");
+		
+        if ($result->num_rows > 0) {
+            $lectures = array();
+
+			while ($row = $result->fetch_assoc()) { 
+				array_push($lectures,  "<tr><td><label>Class: </label></td><td>". $row['classID']."</td></tr>
+										<tr><td><label>Subject: </label></td><td>". $row['subject']."</td></tr>
+										<tr><td><label>Date: </label></td><td>". $row['date'] ."</td></tr>
+										<tr><td><label>Hour: </label></td><td>".$row['hour'] ."</td></tr>
+										<tr><td><label>Topics: </label></td><td>".$row['topic']."</td></tr>");
+			}
+				return $lectures;
+
+		}
+			
+	}
 }
