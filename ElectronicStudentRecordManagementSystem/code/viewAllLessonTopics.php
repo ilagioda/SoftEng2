@@ -10,6 +10,10 @@
     
 ?>
 
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="recordLesson.php">New record</a></li>
+  <li role="presentation" class="active"><a href="#">View all records</a></li>
+</ul>
 
 	<?php 
 		$lectures = $teacher->getLectures();
