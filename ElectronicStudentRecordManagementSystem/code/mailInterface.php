@@ -22,7 +22,7 @@ function sendMail(id, cl){
         document.getElementById("td_load"+cl).innerHTML = element_before;
       }
       else{
-        document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissble"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
+        document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Error. Message has not been sent.</strong></div>';
         document.getElementById("td_load"+cl).innerHTML = element_before;
       }
     });
@@ -97,10 +97,6 @@ $(document).ready(function(){
 
     
   });
-
-  $(".alert").delay(4000).slideUp(200, function() {
-    $(this).alert('close');
-});
 
 });
 
