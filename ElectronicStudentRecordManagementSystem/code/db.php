@@ -206,7 +206,7 @@ class dbAdmin extends db
         }
     }
     public function TakeParentsMail(){
-        $result = $this->query("SELECT email, hashedPassword, firstLogin FROM Parents");
+        $result = $this->query("SELECT email, hashedPassword, firstLogin FROM Parents ORDER BY hashedPassword, email");
         return $result;
     }
     public function ChangePassword($to_address, $hashed_pw){
