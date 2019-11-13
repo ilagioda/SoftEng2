@@ -1,28 +1,16 @@
 <?php
 require_once("basicChecks.php");
 require_once("defaultNavbar.php");
-
-/* FIXME remove the next lines when login is implemented */
-
-$_SESSION['user'] = 'wlt@gmail.it';
-$_SESSION['role'] = 'parent';
-
 require_once("db.php");
-
-$_SESSION['db'] = new dbParent();
-$_SESSION['child'] = "FRCWTR";
-$_SESSION['childName'] = "Walter";
-$_SESSION['childSurname'] = "Forcignanò";
-$_SESSION['class'] = '1A';
-
-/* End lines to be changed*/
 
 $childName = $_SESSION['childName'];
 $childSurname = $_SESSION['childSurname'];
 
-$marks = $_SESSION['db']->viewChildMarks($_SESSION['child']);
+$db = new dbParent();
 
-$subjects = $_SESSION['db']->getSubjectTaughtInClass($_SESSION['class']);
+$marks = $db->viewChildMarks($_SESSION['child']);
+
+$subjects = $db->getSubjectTaughtInClass($_SESSION['class']);
 
 $preprocessed_data = array();
 
