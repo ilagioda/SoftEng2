@@ -26,15 +26,10 @@ class db
         }
     }
 
+    /**
+     * Generic methods
+     */
 
-    protected function sanitizeString($var)
-    {
-        $var = strip_tags($var);
-        $var = htmlentities($var);
-        if (get_magic_quotes_gpc())
-            $var = stripslashes($var);
-        return $this->conn->real_escape_string($var);
-    }
 
     protected function query($queryToBeExecuted)
     {
@@ -47,6 +42,26 @@ class db
             die("Prepare phase Failed in the Transaction.");
         return $stmt;
     }
+
+    /**
+     * Transaction oriented commands
+     */
+    
+    protected function begin_transaction(){
+        $this->conn->begin_transaction();
+    }
+
+    protected function commit(){
+        return $this->conn->commit();
+    }
+
+    protected function rollback(){
+        return $this->conn->rollback();
+    }
+
+    /**
+     * Problem specific methods
+     */
 
     public function getSubjectTaughtInClass($class){
 
@@ -68,6 +83,23 @@ class db
         }
 
         return $subjects;
+    }
+
+    /**
+     * Utilities
+     */
+    protected function sanitizeString($var)
+    {
+        $var = strip_tags($var);
+        $var = htmlentities($var);
+        if (get_magic_quotes_gpc())
+            $var = stripslashes($var);
+        return $this->conn->real_escape_string($var);
+    }
+
+    function __destruct()
+    {
+        $this->conn->close();
     }
 }
 
