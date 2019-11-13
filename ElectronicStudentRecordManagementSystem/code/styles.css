@@ -219,3 +219,7 @@ h1.enrollTitle {
 	padding: 20px;
 	font-size: 20px;
 }
+
+#rowParent2 {
+    cursor: pointer;
+}
