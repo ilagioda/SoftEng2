@@ -34,6 +34,10 @@ class Teacher{
     function getStudentMarks($student, $subject){
         return $this->db->getStudentSubjectMarks($student, $subject);
     }
+    
+    function getLectures() {
+		return $this->db->getLecturesByTeacher($this->codfisc);
+	}
 }
 
 
