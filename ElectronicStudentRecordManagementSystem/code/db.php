@@ -240,12 +240,13 @@ class dbAdmin extends db
         $surname2 = $this->sanitizeString($surname2);
         $SSN2 = $this->sanitizeString($SSN2);
         $email2 = $this->sanitizeString($email2);
+
         $this->begin_transaction();
 
         /* Insert student into the DB */
         $result = $this->insertStudent($name, $surname, $SSN, $email1, $email2);
         if($result == FALSE){
-            $this->conn->rollback();
+            $this->rollback();
             return 0;
         }
             
@@ -253,7 +254,7 @@ class dbAdmin extends db
         /* Insert parent 1 into the DB */
         $result = $this->insertParent($name1, $surname1, $SSN1, $email1);
         if($result == FALSE){
-            $this->conn->rollback();    // TOFIX ------------------------------------------------------
+            $this->rollback();    
             return 0;
         }
 
@@ -261,12 +262,12 @@ class dbAdmin extends db
             /* Insert parent 2 into the DB */
             $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
             if($result == FALSE){
-                $this->conn->rollback();
+                $this->rollback();
                 return 0;
             }
         }
         
-        $this->conn->commit();
+        $this->commit();
         return 1;
     }
 }
