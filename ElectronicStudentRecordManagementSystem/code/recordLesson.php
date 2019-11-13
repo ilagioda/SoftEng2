@@ -24,7 +24,7 @@
 				<tr><td><label>Class </label></td><td>
 				<select name="comboClass" style="width: 350px" required> 
 				<?php 
-					$classes=$teacher->getClasses();
+					$classes=$teacher->getClassesByTeacher();
 					foreach($classes as $value) {
 						echo "<option value=".$value.">".$value."</option>";
 					}
@@ -36,7 +36,7 @@
 					if(isset($_POST['comboClass'])) {
 						$selectedClass = $_POST['comboClass'];
 
-						$subjects=$teacher->getSubjectByClass($selectedClass);
+						$subjects=$teacher->getSubjectByClassAndTeacher($selectedClass);
 						foreach($subjects as $value) {
 							echo "<option value=".$value.">".$value."</option>";
 						}
