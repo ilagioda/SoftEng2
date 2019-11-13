@@ -4,7 +4,7 @@
     
     /* FIXME remove the next lines when login is implemented */
     
-    $_SESSION['user'] = 'GDILRI';
+    $_SESSION['user'] = 'GNV';
     $_SESSION['role'] = 'teacher';
     
     /* End lines to be changed*/    
@@ -24,7 +24,7 @@
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-		<li><a href="recordLesson_pt2.php">New record</a></li>
+		<li><a href="recordLesson.php">New record</a></li>
 		<li><a href="viewAllLessonTopics.php">View all records</a></li>
 		</ul>
 		</div>
