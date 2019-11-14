@@ -2,7 +2,7 @@
     require_once("basicChecks.php");
     require_once("defaultNavbar.php");
     
-    /* FIXME remove the next lines when login is implemented */
+	/* FIXME remove the next lines when login is implemented */
     
     $_SESSION['user'] = 'GNV';
     $_SESSION['role'] = 'teacher';

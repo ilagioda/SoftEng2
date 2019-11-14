@@ -3,36 +3,34 @@
 require_once("basicchecks.php");
 require_once("defaultNavbar.php");
 
-$_SESSION['user']="ABCD97";
-$_SESSION['role']="teacher";
-
 require_once("classTeacher.php");
 
 $teacher=new Teacher();
 
-$_SESSION['class']=$_POST['class'];
+if(!empty($_POST['class']))
+    $_SESSION['class']=$_POST['class'];
 
-//CHECK SU MATERIE DEL PROFESSORE
+if(empty($_SESSION['class'])){
+    echo "You have not selected a class.";
+    echo "<a href='selectClassForMarks.php'> Go Back </a>";
+}
+else{
 
-?>
+    //CHECK SU MATERIE DEL PROFESSORE
 
+    echo "<h2> Select the subject for the class: ";
+    echo $_SESSION['class'] . "</h2>";
 
-
-<body>
-
-<h2> Select the subject for the class: 
-
-
-<?php
-
-echo $_SESSION['class'] . "</h2>";
-
-$subjects=$teacher->getSubjectByClass($_SESSION['class']);
+    $subjects=$teacher->getSubjectByClass($_SESSION['class']);
 
 
-echo $subjects;
+    if(empty($subjects))
+        echo "You have no subject for this class. <a href='selectClassForMarks.php'> Go Back </a>";
+    else
+        echo $subjects;
 
 
+}
 ?>
 
 

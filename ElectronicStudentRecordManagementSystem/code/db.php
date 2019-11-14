@@ -356,11 +356,15 @@ class dbTeacher extends db
         $hour = $this -> sanitizeString($hour);
         $mark = $this -> sanitizeString($mark);
 
+        if($hour>=7 || $hour<=0 || $mark <0 || $mark >10)
+            return ("Insert valid parameters.");
+
         $result = $this->query("INSERT INTO Marks (codFisc, subject, date, hour, mark) VALUES ('$codStudent', '$subject', '$date', '$hour', '$mark');");
 
         if (!$result) 
-            die("Unable to insert mark.");
-        
+            return ("Unable to insert mark.");
+        else
+            return ("Mark correctly inserted.");
     }
 
     function getStudentsByClass($class){
@@ -379,6 +383,24 @@ class dbTeacher extends db
         }
         
         return $students;
+
+    }
+
+    function getStudentsName($codfisc){
+
+        $codfisc = $this -> sanitizeString($codfisc);
+        
+        $result = $this->query("SELECT * FROM students WHERE codFisc='$codfisc'");
+        
+        if (!$result) 
+            die("Unable to select student.");
+
+        $student="";
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        if($row!=NULL)
+            $student=$row['surname'] . " " . $row['name'];
+
+        return $student;
 
     }
 
@@ -427,7 +449,7 @@ class dbTeacher extends db
         if (!$result) 
             die("Unable to select marks.");
 
-        $marks="<tr><th>Date</th><th>Hour</th><th>Grade</th></tr>";
+        $marks="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
                 $marks = $marks . "<tr><td>" . $row['date'] . "</td><td>" . $row['hour'] . "</td><td>" . $row['mark'] ."</td></tr><br>";

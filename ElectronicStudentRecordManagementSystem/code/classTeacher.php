@@ -14,12 +14,15 @@ class Teacher{
     }
 
     function getStudents($class){
-        return $this->db->getStudentsByClass($class);
-        
+        return $this->db->getStudentsByClass($class); 
+    }
+
+    function getStudentByCod($codfisc){
+        return $this->db->getStudentsName($codfisc); 
     }
   
     function submitMark($codStudent, $subject, $date, $hour, $mark) {
-        $this->db->insertMark($codStudent, $subject, $date, $hour, $mark);
+        return $this->db->insertMark($codStudent, $subject, $date, $hour, $mark);
     }
 
     function getClasses(){

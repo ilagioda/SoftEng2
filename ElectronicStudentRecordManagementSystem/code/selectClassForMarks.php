@@ -3,31 +3,20 @@
 require_once("basicchecks.php");
 require_once("defaultNavbar.php");
 
-$_SESSION['user']="ABCD97";
-$_SESSION['role']="teacher";
-
 require_once("classTeacher.php");
 
 $teacher=new Teacher();
 
-?>
 
-
-
-
-
-<h2> Select the class: </h2>
-
-
-
-
-<?php
+echo "<h2> Select the class: </h2>";
 
 $classList=$teacher->getClasses();
 
 
-
-echo $classList;
+if(empty($classList))
+        echo "You have not been assigned to any class. <a href='homepageTeacher.php'> Go Back </a>";
+else
+    echo $classList;
 
 
 ?>
