@@ -57,7 +57,7 @@
         
 ?>
 <h1 class="enrollTitle" align="center"> Enroll a student</h1>
-<div class="centralDiv">
+<div class="centralDiv text-center">
 	<p id="enrollMessage">
 		<?php 
     		if($error != 0){
@@ -67,12 +67,8 @@
       		}
 		?>
 	</p>
-	<form method="POST" action="enrollstudent.php">
-		<input type="submit" class="pulsante" name="enrollNewStudent" id="enrollNewStudent" value="Enroll new student">
-	</form>
-	<form method="POST" action="homepageAdmin.php">
-		<input type="submit" class="pulsante" name="enrollGoBackHome" id="enrollGoBackHome" value="Go back to Homepage">
-	</form>
+    <a href="enrollstudent.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&emsp;Enroll new student</a> &emsp;
+    <a href="homepageAdmin.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&emsp;Go back to Homepage</a>
 </div>
 
 <?php 

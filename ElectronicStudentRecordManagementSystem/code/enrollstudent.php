@@ -45,14 +45,10 @@
 	}
 </script>
 
-<form method="POST" action="homepageAdmin.php">
-	<input type="submit" name="homepageAdmin" id="homepageAdmin" value="Homepage"> 	
-</form>
-
-<h1 class="enrollTitle" align="center"> Enroll a student</h1>
-<div class="centralDiv">
+<h1 align="center"> ENROLL A STUDENT </h1>
+<div class="centralDiv text-center">
 	<form method="POST" action="enrollstudentPART2.php" id="enrollForm">
-	<table class="enrollTable">
+	<table class="enrollTable text-center">
 		<tr class="info"><td><b>STUDENT INFORMATION</b></td><td></td></tr>
 		<tr><td class="col-md-6" ><label for="name">Name*: </label></td><td class="col-md-6"><input type="text" style="width:100%" name="name" id="name" placeholder="Enter the student's name" autocomplete="off" title="Enter the student's name" required></td></tr>
 		<tr><td class="col-md-6"><label for="surname">Surname*: </label></td><td class="col-md-6"><input type="text" style="width:100%" name="surname" id="surname" placeholder="Enter the student's surname" autocomplete="off" title="Enter the student's surname" required></td></tr>
@@ -70,8 +66,8 @@
 		<tr id="row3" style="visibility: hidden;"><td class="col-md-6"><label for="codfisc2">SSN code: </label></td><td class="col-md-6"><input type="text" style="width:100%" name="codfisc2" id="codfisc2" placeholder="Enter the parent 2's SSN code" autocomplete="off" title="Enter the student's SSN code"></td></tr>
 		<tr id="row4" style="visibility: hidden;"><td class="col-md-6"><label for="email2">E-mail: </label></td><td class="col-md-6"><input type="email" style="width:100%" name="email2" id="email2" placeholder="Enter the parent 2's e-mail" autocomplete="off" title="Enter the parent 2's e-mail"></td></tr>
 	</table>
-		<input type="reset" name="enrollCancel" id="enrollCancel" value="Cancel"> 
-		<input type="submit" class="pulsante" name="enrollSubmit" id="enrollSubmit" value="Enroll student">
+		<input type="reset" class="btn btn-primary" name="enrollCancel" id="enrollCancel" value="Cancel"> &emsp;
+		<input type="submit" class="btn btn-primary btn-lg" name="enrollSubmit" id="enrollSubmit" value="Enroll student">
 	</form>
 </div>
 

@@ -181,24 +181,7 @@ h1.enrollTitle {
     margin-right: 100px;
 }
 
-.pulsante {
-    background-color: #004e98; 
-    color: white;
-    font-size: 16px;
-    padding: 14px 40px;
-    margin: 7px;
-    border-radius: 12px;
-    -webkit-transition-duration: 0.2s;   /* Safari */
-    transition-duration: 0.2s;
-    cursor: pointer;
-}
-
-.pulsante:hover, #enrollCancel:hover, #homepageAdmin:hover {
-    background-color: #3a6ea5; 
-    color: white;
-}
-
-#enrollCancel, #homepageAdmin {
+#homepageAdmin {
     background-color: #004e98; 
     color: white;
     font-size: 14px;

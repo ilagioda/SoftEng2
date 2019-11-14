@@ -10,16 +10,16 @@
     /* End lines to be changed*/    
 ?>
 <h1 align="center"> ADMIN HOMEPAGE </h1>
-<div class="centralDiv">
+<div class="centralDiv text-center">
 	<p>
         <?php
-            echo "Welcome to your homepage ADMIN ".$_SESSION["user"]."!";
+            echo "<h2>Welcome to your homepage ADMIN ".$_SESSION["user"]."!</h2><br>";
         ?>
 		
 	</p>
-	<form method="POST" action="enrollstudent.php">
-		<input type="submit" class="pulsante" name="enrollStudent" id="enrollStudent" value="Enroll new student">
-	</form>
+    <a href="enrollstudent.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&emsp;Enroll new student</a><br><br>
+    <a href="sendmail.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&emsp;Enable access to parents</a><br><br>
+    <a href="classComposition.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&emsp;Enter class composition</a><br><br>
 </div>
 
 <?php 
