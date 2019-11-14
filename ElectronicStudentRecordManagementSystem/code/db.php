@@ -350,7 +350,17 @@ class dbTeacher extends db
 
     function insertMark($codStudent, $subject, $date, $hour, $mark)
     { 
+        $codStudent = $this -> sanitizeString($codStudent);
+        $subject = $this -> sanitizeString($subject);
+        $date = $this -> sanitizeString($date);
+        $hour = $this -> sanitizeString($hour);
+        $mark = $this -> sanitizeString($mark);
 
+        $result = $this->query("INSERT INTO Marks (codFisc, subject, date, hour, mark) VALUES ('$codStudent', '$subject', '$date', '$hour', '$mark');");
+
+        if (!$result) 
+            die("Unable to insert mark.");
+        
     }
 
     function getStudentsByClass($class){
@@ -375,7 +385,7 @@ class dbTeacher extends db
     function getClassesByTeacher($codTeacher){
         $codTeacher = $this -> sanitizeString($codTeacher);
         
-        $result = $this->query("SELECT * FROM students WHERE classId='1A'");
+        $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher'");
         
         if (!$result) 
             die("Unable to select classes from Teacher Id.");
@@ -383,11 +393,8 @@ class dbTeacher extends db
         $classes="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $classes = $classes . "<tr><td>" . $row['surname'] . "</td><td>" . $row['name'] . "</td><td><form method=\"post\" action=\"studentMarks.php\"> <input type=\"hidden\" name=\"codStudent\" value=" . $row['codFisc'] . "><input type=\"submit\", id=\"" . $row['codFisc'] . "\" value=\"Add Grade\"></form></td></tr><br>";
+            $classes = $classes . "<form method='post' action='selectSubjectForMarks.php'><input type='submit' name='class' value='" . $row['classID'] . "'></form>";
         }
-        
-        //TODO DA RIMUOVERE (E IMPLEMENTARE LA FUNZIONE CORRETA UNA VOLTA CHE C'E' LA TABELLA/E ADEGUATA
-        $classes = "<form method='post' action='selectSubjectForMarks.php'><input type='submit' name='class' value='1A'></form><form method='post' action='selectSubjectForMarks.php'><input type='hidden' name='class' value='1B'><input type='submit' value='Non mandare questo'></form>";
 
         return $classes;
 
@@ -397,7 +404,7 @@ class dbTeacher extends db
         $codTeacher = $this -> sanitizeString($codTeacher);
         $class = $this -> sanitizeString($class);
         
-        $result = $this->query("SELECT * FROM students WHERE classId='1A'");
+        $result = $this->query("SELECT subject FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
         
         if (!$result) 
             die("Unable to select subjects.");
@@ -405,11 +412,8 @@ class dbTeacher extends db
         $classes="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $classes = $classes . "<tr><td>" . $row['surname'] . "</td><td>" . $row['name'] . "</td><td><form method=\"post\" action=\"studentMarks.php\"> <input type=\"hidden\" name=\"codStudent\" value=" . $row['codFisc'] . "><input type=\"submit\", id=\"" . $row['codFisc'] . "\" value=\"Add Grade\"></form></td></tr><br>";
+                $classes = $classes . "<form method='post' action='submitMark.php'><input type='submit' name='subject' value='" . $row['subject'] . "'></form>";
         }
-        
-        //TODO DA RIMUOVERE (E IMPLEMENTARE LA FUNZIONE CORRETA UNA VOLTA CHE C'E' LA TABELLA/E ADEGUATA
-        $classes = "<form method='post' action='submitMark.php'><input type='submit' name='subject' value='Math'></form><form method='post' action='submitMark.php'><input type='hidden' name='subject' value='Science'><input type='submit' value='Science'></form>";
 
         return $classes;
     }
@@ -421,7 +425,7 @@ class dbTeacher extends db
         $result = $this->query("SELECT * FROM Marks WHERE codFisc='$student' AND subject='$subject'");
         
         if (!$result) 
-            die("Student has no marks for this subject.");
+            die("Unable to select marks.");
 
         $marks="<tr><th>Date</th><th>Hour</th><th>Grade</th></tr>";
 

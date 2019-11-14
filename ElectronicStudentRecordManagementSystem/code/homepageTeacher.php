@@ -28,7 +28,14 @@
 		<li><a href="viewAllLessonTopics.php">View all records</a></li>
 		</ul>
 		</div>
+		
 	</form>
+	<br>
+
+	<form action="selectClassForMarks.php">
+	<button type="submit" class="btn btn-primary">Add student mark</button>
+	</form>
+
 </div>
 
 <?php 
