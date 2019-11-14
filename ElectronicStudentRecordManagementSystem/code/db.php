@@ -245,7 +245,7 @@ class dbAdmin extends db
 
         /* Insert student into the DB */
         $result = $this->insertStudent($name, $surname, $SSN, $email1, $email2);
-        if($result == FALSE){
+        if(!$result){
             $this->rollback();
             return 0;
         }
@@ -253,7 +253,7 @@ class dbAdmin extends db
         
         /* Insert parent 1 into the DB */
         $result = $this->insertParent($name1, $surname1, $SSN1, $email1);
-        if($result == FALSE){
+        if(!$result){
             $this->rollback();    
             return 0;
         }
@@ -261,7 +261,7 @@ class dbAdmin extends db
         if(!empty($email2)){
             /* Insert parent 2 into the DB */
             $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
-            if($result == FALSE){
+            if(!$result){
                 $this->rollback();
                 return 0;
             }
