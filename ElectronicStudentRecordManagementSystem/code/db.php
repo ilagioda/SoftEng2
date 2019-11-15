@@ -359,6 +359,12 @@ class dbTeacher extends db
         if($hour>=7 || $hour<=0 || $mark <0 || $mark >10)
             return ("Insert valid parameters.");
 
+        $inserted = $this->query("SELECT * FROM Marks WHERE codFisc='$codStudent' AND subject='$subject' AND date='$date' AND hour='$hour'");
+        $row= $inserted->fetch_array(MYSQLI_ASSOC);
+        if($row != NULL)
+            return ("You have already inserted that mark.");
+        
+
         $result = $this->query("INSERT INTO Marks (codFisc, subject, date, hour, mark) VALUES ('$codStudent', '$subject', '$date', '$hour', '$mark');");
 
         if (!$result) 
@@ -406,8 +412,12 @@ class dbTeacher extends db
 
     function getClassesByTeacher($codTeacher){
         $codTeacher = $this -> sanitizeString($codTeacher);
+
+
+       
         
         $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher'");
+        
         
         if (!$result) 
             die("Unable to select classes from Teacher Id.");
@@ -415,7 +425,18 @@ class dbTeacher extends db
         $classes="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-            $classes = $classes . "<form method='post' action='selectSubjectForMarks.php'><input type='submit' name='class' value='" . $row['classID'] . "'></form>";
+
+            //Check if there is only one subject for this class
+            $class=$row['classID'];
+            $subjects = $this->query("SELECT COUNT(subject) FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
+            $row2 = $subjects->fetch_array(MYSQLI_ASSOC);
+            if($row2['COUNT(subject)']==1){
+                $subject = $this->query("SELECT subject FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
+                $row3 = $subject->fetch_array(MYSQLI_ASSOC);
+                $classes = $classes . "<form method='post' action='submitMark.php'><input type=hidden name='subject' value='" . $row3['subject'] . "'><input type='submit' name='class' value='" . $row['classID'] . "'></form>";
+            }
+            else
+                $classes = $classes . "<form method='post' action='selectSubjectForMarks.php'><input type='submit' name='class' value='" . $row['classID'] . "'></form>";
         }
 
         return $classes;

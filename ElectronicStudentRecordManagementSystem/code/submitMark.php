@@ -9,6 +9,9 @@ $teacher=new Teacher();
 
 if(!empty($_POST['subject']))
     $_SESSION['subject']=$_POST['subject'];
+
+if(!empty($_POST['class']))
+    $_SESSION['class']=$_POST['class']; 
     
 if(empty($_SESSION['subject']) || empty($_SESSION['class'])){
     echo "You have not selected a subject or a class.";
