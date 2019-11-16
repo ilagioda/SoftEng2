@@ -19,6 +19,7 @@
 	<form method="POST" action="dailyLessonTopics.php">
 		<div class="btn-group">
 		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&emsp;
 			Daily lesson topics <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
@@ -32,7 +33,7 @@
 	<br>
 
 	<form action="selectClassForMarks.php">
-	<button type="submit" class="btn btn-primary">Add student mark</button>
+		<button type="submit" class="btn btn-primary  btn-lg"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp; Add student mark</button>
 	</form>
 
 </div>
