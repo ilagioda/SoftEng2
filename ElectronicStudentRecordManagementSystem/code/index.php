@@ -17,7 +17,7 @@ require_once("defaultNavbar.php");
             <h3> Who are you? </h3>
             <div class="btn-group-vertical" role="group">
                 
-                <a href="notYetImplemented.html" class="btn btn-large btn-block btn-info" role="button">Principal</a>
+                <a href="homepagePrincipal.php" class="btn btn-large btn-block btn-info" role="button">Principal</a>
                 <a href="homepageTeacher.php" class="btn btn-large btn-block btn-info" role="button">Teacher</a>
                 <a href="homepageParent.php" class="btn btn-large btn-block btn-info" role="button">Parent</a>
                 <a href="homepageAdmin.php" class="btn btn-large btn-block btn-info" role="button">Admin</a>
