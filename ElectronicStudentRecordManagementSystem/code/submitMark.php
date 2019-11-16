@@ -19,17 +19,22 @@ if(empty($_SESSION['subject']) || empty($_SESSION['class'])){
 }
 else{
 
-    echo "<h2> List of student of class " . $_SESSION['class'] .", for subject: " . $_SESSION['subject'] . "</h2>" ;
+    echo "<h1 align='center'> List of student of class " . $_SESSION['class'] .", for subject: " . $_SESSION['subject'] . "</h1>" ;
 
-    echo "<h3> Select a student: </h3>";
+    echo "<h2 align='center'> Select a student: </h2>";
 
 
     $studentList=$teacher->getStudents($_SESSION['class']);
 
     if(empty($studentList))
         echo "This class has no students. <a href='selectClassForMarks.php'> Go Back </a>";
-    else
+    else{
+        echo "<div class='container-fluid text-left col-md-8'>";
+        echo "<table class='table table-striped '>";
+        echo "<tr ><th>Surname</th><th>Name</th><th></th></tr>";
         echo $studentList;
+        echo "</table></div>";
+    }
 }
 ?>
 

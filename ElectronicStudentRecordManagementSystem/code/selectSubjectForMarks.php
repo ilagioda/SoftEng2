@@ -18,17 +18,21 @@ else{
 
     //CHECK SU MATERIE DEL PROFESSORE
 
-    echo "<h2> Select the subject for the class: ";
-    echo $_SESSION['class'] . "</h2>";
+    echo "<h1 align='center'> Select the subject for the class: ";
+    echo $_SESSION['class'] . "</h1>";
 
     $subjects=$teacher->getSubjectByClass($_SESSION['class']);
 
 
     if(empty($subjects))
         echo "You have no subject for this class. <a href='selectClassForMarks.php'> Go Back </a>";
-    else
+    else{
+        echo "<div class='container-fluid text-center'>";
+        echo "<table class='table-borderless'><tr>";
         echo $subjects;
-
+        echo "</tr></table>";
+        echo "</div>";
+    }
 
 }
 ?>

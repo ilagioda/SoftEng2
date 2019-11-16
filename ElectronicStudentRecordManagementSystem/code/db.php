@@ -385,7 +385,7 @@ class dbTeacher extends db
         $students="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $students = $students . "<form method='post' action='studentMarks.php'><input type='hidden' name='student' value='" . $row['codFisc'] . "'><input type='submit', value='" . $row['name'] . " " . $row['surname'] . "'></form>";
+                $students = $students . "<tr><td class='col-md-4' style='vertical-align:middle'>" . $row['name'] . "</d><td class='col-md-4' style='vertical-align:middle'>" . $row['surname'] . "</td><td class='col-md-1'><form method='post' action='studentMarks.php'><input type='hidden' name='student' value='" . $row['codFisc'] . "'><input class='btn btn-block btn-info' text='center' type='submit' value='ADD MARK'></form></td></tr>";
         }
         
         return $students;
@@ -412,9 +412,6 @@ class dbTeacher extends db
 
     function getClassesByTeacher($codTeacher){
         $codTeacher = $this -> sanitizeString($codTeacher);
-
-
-       
         
         $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher'");
         
@@ -433,15 +430,16 @@ class dbTeacher extends db
             if($row2['COUNT(subject)']==1){
                 $subject = $this->query("SELECT subject FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
                 $row3 = $subject->fetch_array(MYSQLI_ASSOC);
-                $classes = $classes . "<form method='post' action='submitMark.php'><input type=hidden name='subject' value='" . $row3['subject'] . "'><input type='submit' name='class' value='" . $row['classID'] . "'></form>";
+                $classes = $classes . "<td style='padding:5px' ><form method='post' action='submitMark.php'><input type=hidden name='subject' value='" . $row3['subject'] . "'><input class='btn btn-large btn-block btn-lg  btn-info'text='center' type='submit' name='class' value='" . $row['classID'] . "'></form></td>";
             }
             else
-                $classes = $classes . "<form method='post' action='selectSubjectForMarks.php'><input type='submit' name='class' value='" . $row['classID'] . "'></form>";
+                $classes = $classes . "<td style='padding:5px'><form method='post' action='selectSubjectForMarks.php'><input class='btn btn-large btn-lg btn-block btn-info' text='center' type='submit' name='class' value='" . $row['classID'] . "'></form></td>";
         }
 
         return $classes;
 
     }
+
 
     function getSubjectsByTeacherAndClass($codTeacher, $class){
         $codTeacher = $this -> sanitizeString($codTeacher);
@@ -455,11 +453,12 @@ class dbTeacher extends db
         $classes="";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $classes = $classes . "<form method='post' action='submitMark.php'><input type='submit' name='subject' value='" . $row['subject'] . "'></form>";
+                $classes = $classes . "<td style='padding:5px'><form method='post' action='submitMark.php'><input  class='btn btn-large btn-lg btn-block btn-info' text='center' type='submit' name='subject' value='" . $row['subject'] . "'></form></td>";
         }
 
         return $classes;
     }
+
 
     function getStudentSubjectMarks($student, $subject){
         $subject = $this -> sanitizeString($subject);
