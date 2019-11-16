@@ -480,82 +480,112 @@ class dbTeacher extends db
         return $marks;
     }
     
-    function insertDailyLesson($class, $subject, $date, $hour, $topics, $codFisc) {
+    function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics) {
+
 		$class = $this -> sanitizeString($class);
 		$subject = $this -> sanitizeString($subject);
 		$date = $this -> sanitizeString($date);
 		$hour = $this -> sanitizeString($hour);
 		$topics = $this -> sanitizeString($topics);
+	    $codTeacher = $this -> sanitizeString($codTeacher);
+		
+		$result = $this->query("SELECT * FROM lectures WHERE (classID='$class' AND hour='$hour' AND date='$date')");
 	
-		$result = $this->insertLectures($date, $hour, $class, $codFisc, $subject, $topics);
+		if($result->num_rows > 0) {
+			return -1;
+		}
+
+		$result = $this->query("INSERT INTO lectures(date, hour, classID, codFiscTeacher, subject, topic) 
+								VALUES ('$date', '$hour', '$class', '$codTeacher', '$subject', '$topics')");
+		
 		if($result == FALSE) {
 			die("ERROR: Lecture not inserted.");
 		}
-	}
-	
-	function updateDailyLesson($class, $subject, $date, $hour, $topics, $codFisc) {
 		
 	}
 	
+	function updateDailyLesson($date, $hour, $class, $subject, $topics) {
+
+		$class = $this -> sanitizeString($class);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		$hour = $this -> sanitizeString($hour);
+		$topics = $this -> sanitizeString($topics);
+
+		
+		$result = $this->query("UPDATE lectures SET subject='$subject', topic='$topics' 
+							WHERE date='$date' AND hour='$hour' AND classID='$class'");
+		
+		if($result == FALSE) {
+			die("ERROR: Lecture not updated.");
+		}
+
+	}
+	
+	function deleteDailyLesson($date, $hour, $class) {
+		$date = $this -> sanitizeString($date);
+		$hour = $this -> sanitizeString($hour);
+		$class = $this -> sanitizeString($class);
+		
+		$result = $this->query("DELETE FROM lectures WHERE date='$date' AND hour='$hour' AND classID='$class'");
+		
+		if($result == FALSE) {
+			die("ERROR: Lecture not deleted.");
+		}
+		
+	}
 		
 	function getClassesByTeacher2($codTeacher){
         $codTeacher = $this -> sanitizeString($codTeacher);
-        $result = $this->query("SELECT classID FROM teacherclasssubjecttable WHERE codFisc='$codTeacher'");
+        $result = $this->query("SELECT DISTINCT classID FROM teacherclasssubjecttable WHERE codFisc='$codTeacher'");
 
-		if (!$result) 
+	if (!$result) 
             die("Unable to select classes.");
 
 		
 	    if ($result->num_rows > 0) {
 
-            $classes = array();
-            while ($row = $result->fetch_assoc()) {
-                array_push($classes, $row["classID"]);
+            	$classes = array();
+            	while ($row = $result->fetch_assoc()) {
+                	array_push($classes, $row["classID"]);
+            	}
+            	return $classes;
             }
-            return $classes;
-        }
 	}
 	
 	function getSubjectsByTeacherAndClass2($codTeacher, $class){
 		$codTeacher = $this -> sanitizeString($codTeacher);
 		$class = $this -> sanitizeString($class);
         
-        $result = $this->query("SELECT subject FROM teacherclasssubjecttable WHERE (classID='$class' AND codFisc='$codTeacher')");
+       		$result = $this->query("SELECT DISTINCT subject FROM teacherclasssubjecttable WHERE (classID='$class' AND codFisc='$codTeacher')");
 
-        if (!$result) 
-            die("Unable to select subjects.");
+        	if (!$result) 
+            		die("Unable to select subjects.");
 
-        if ($result->num_rows > 0) {
-			
-            $subjects = array();
-            while ($row = $result->fetch_assoc()) {
-                array_push($subjects, $row["subject"]);
-            }
-            return $subjects;
-        }
-    }
+        	if ($result->num_rows > 0) {
+	            	$subjects = array();
+            	    	while ($row = $result->fetch_assoc()) {
+                		array_push($subjects, $row["subject"]);
+            		}
+            		return $subjects;
+        	}
+    	}
 	
 	function getLecturesByTeacher($codTeacher) {
 		$codTeacher = $this -> sanitizeString($codTeacher);
 
-		$result = $this->query("SELECT * FROM lectures WHERE codFiscTeacher='$codTeacher'");
+		$result = $this->query("SELECT * FROM lectures WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC");
 	
 		if (!$result) 
-            die("Unable to select lectures.");
+            		die("Unable to select lectures.");
 		
-        if ($result->num_rows > 0) {
-            $lectures = array();
-
+        	if ($result->num_rows > 0) {
+            		$lectures = array();
 			while ($row = $result->fetch_assoc()) { 
-				array_push($lectures,  "<tr><td><label>Class: </label></td><td>". $row['classID']."</td></tr>
-										<tr><td><label>Subject: </label></td><td>". $row['subject']."</td></tr>
-										<tr><td><label>Date: </label></td><td>". $row['date'] ."</td></tr>
-										<tr><td><label>Hour: </label></td><td>".$row['hour'] ."</td></tr>
-										<tr><td><label>Topics: </label></td><td>".$row['topic']."</td></tr>");
+				array_push($lectures,  "".$row['classID'].",".$row['subject'].",".$row['date'].",".$row['hour'].",".$row['topic']."");
 			}
-				return $lectures;
-
+			return $lectures;
 		}
-			
 	}
+	
 }
