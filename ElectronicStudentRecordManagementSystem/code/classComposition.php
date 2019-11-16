@@ -26,7 +26,7 @@ if (isset($_POST["view"])) {
                 <hr>
 
                 <div class="container text-left">
-                  <h2>Classes</h2>
+                  <h2>Students</h2>
                   <table class="table table-hover">
                   <thead>
                     <tr>
@@ -57,7 +57,7 @@ ROW;
                     <div class="form-group">
                     <form class="form-horizontal" method="post" action="./classComposition.php">
                       <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" class="btn btn-default pull-left">Cancel</button>
+                      <button type="submit" class="btn btn-default pull-left">Go Back</button>
                       </div>
                     </form>
                     </div>
@@ -90,36 +90,51 @@ ENDOFREQUESTEDPAGE;
     // The user has accepted the composition of a class
     // The db should be updated
     //print($_POST["confirm"]);
-
-
-
     $parameters = json_decode($_POST["confirm"]);
-
     $dbAdmin->updateStudentsClass($parameters);
-  }
 
-  //print the normal page
 
-  $classes = $dbAdmin->readAllClasses();
+    require_once("defaultNavbar.php");
+    echo <<<CONFIRMEDPAGE
+    <div class="col-sm-20 text-left">
+                <h1>Composition of the class confirmed.</h1>
+                <hr>
+                <div class="container col-sm-10">
+                <form class="form-horizontal" method = "post" action="./classComposition.php">
+                            <div class="form-group">
+                              <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default pull-right">Go Back</button>
+                                </div>
+                                </div>
+                            </form>
+                </div>
+      </div>
+CONFIRMEDPAGE;
+require_once("defaultFooter.php");
+  } else {
+    // The user has not requested or confirmed the page.
+    //print the normal page
 
-  require_once("defaultNavbar.php");
-  echo <<<NORMALPAGE
+    $classes = $dbAdmin->readAllClasses();
+
+    require_once("defaultNavbar.php");
+    echo <<<NORMALPAGE
               <div class="col-sm-20 text-left">
-                <h1>Welcome admin.</h1>
-                <p>In this page you can select the class for which you would like to see and possibly accept the class composition.</p>
+                <h1>Class Composition.</h1>
+                <p>In this page you, as an admin, can select the class for which you would like to see and possibly accept the class composition.</p>
                 <hr>
                 <div class="container col-sm-10">
                  
 NORMALPAGE;
-  if (isset($classes)) {
-    if (is_array($classes)) {
+    if (isset($classes)) {
+      if (is_array($classes)) {
 
-      echo ' <h2>Classes</h2>
+        echo ' <h2>Classes</h2>
       <table class="table table-hover">
         <tbody>';
 
-      foreach ($classes as $value) {
-        echo <<< ROW
+        foreach ($classes as $value) {
+          echo <<< ROW
                          
                             <tr>
                             <td class ="col-sm-4">$value</td>
@@ -135,11 +150,11 @@ NORMALPAGE;
                             </td>
                             </tr>
 ROW;
-      }
-      echo ' </tbody>
+        }
+        echo ' </tbody>
       </table>';
-    } else {
-      echo <<< ROW1
+      } else {
+        echo <<< ROW1
                           <h2>Classes</h2>
                           <table class="table table-hover">
                             <tbody>
@@ -159,16 +174,17 @@ ROW;
                             </tbody>
                             </table>
 ROW1;
+      }
+    } else {
+      echo "<h2> There is not any proposed class composition.</h2>";
     }
-  } else {
-    echo "<h2> There is not any proposed class composition.</h2>";
-  }
 
-  echo <<<ENDOFNORMALPAGE
+    echo <<<ENDOFNORMALPAGE
               </div>
               </div>
             
 ENDOFNORMALPAGE;
-  require_once("defaultFooter.php");
+    require_once("defaultFooter.php");
+  }
 }
 ?>

@@ -124,7 +124,7 @@ class dbAdmin extends db
         $stmt = $this->prepareStatement(
             "SELECT s.`codFisc`,`name`,`surname`,p.`classID` 
         FROM `Students` as s , `ProposedClasses` as p 
-        WHERE s.codFisc = p.codFisc AND p.classID = ?"
+        WHERE s.codFisc = p.codFisc AND p.classID = ? ORDER BY 'CLASSID'"
         );
 
         if (!$stmt->bind_param("s", $classID))
