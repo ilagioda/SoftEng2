@@ -18,12 +18,24 @@
 			<div class="alert alert-success" role="alert">
 				<a href="#" class="alert-link"> Daily lesson successfully deleted!</a>
 			</div>
+			<div>
+			<form method="POST" action="">
+				<button type="submit" class="btn btn-primary" onClick="this.form.action='homepageTeacher.php'">Homepage</button>
+				<button type="submit" class="btn btn-primary" onClick="this.form.action='viewAllLessonTopics.php'">View all records</button>
+			</form>
+			</div>
 	<?php
 		} elseif(isset($_POST['no']) && $error == 0) {
 			$_SESSION['no']=$_POST['no'];
 	?>
 			<div class="alert alert-warning" role="alert">
 				<a href="#" class="alert-link"> Operation aborted! </a>
+			</div>
+			<div>
+			<form method="POST" action="">
+				<button type="submit" class="btn btn-primary" onClick="this.form.action='homepageTeacher.php'">Homepage</button>
+				<button type="submit" class="btn btn-primary" onClick="this.form.action='viewAllLessonTopics.php'">View all records</button>
+			</form>
 			</div>
 	<?php	
 
@@ -41,6 +53,7 @@
 				$_SESSION['lessontime'] = $_POST['lessontime'];
 				$_SESSION['comboHour'] = $_POST['comboHour'];
 				$_SESSION['topics'] = $_POST['topics'];
+			 }
 						
 	?>
 	<ul class="nav nav-tabs">
@@ -83,7 +96,6 @@
 		</div>
 
 		<?php
-			}
 		}
 	?>
 	
