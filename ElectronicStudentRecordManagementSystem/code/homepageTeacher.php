@@ -10,10 +10,10 @@
     /* End lines to be changed*/    
 ?>
 <h1 align="center"> TEACHER HOMEPAGE </h1>
-<div class="centralDiv">
+<div class="text-center">
 	<p>
         <?php
-            echo "Welcome to your homepage TEACHER ".$_SESSION["user"]."!";
+            echo "<h2>Welcome to your homepage TEACHER ".$_SESSION["user"]."!</h2><br>";
         ?>
 	</p>
 	<form method="POST" action="dailyLessonTopics.php">
