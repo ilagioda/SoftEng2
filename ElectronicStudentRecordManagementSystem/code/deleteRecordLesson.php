@@ -98,13 +98,6 @@
 		<?php
 		}
 	?>
-	
-	<div>
-	<form method="POST" action="">
-		<button type="submit" class="btn btn-primary" onClick="this.form.action='homepageTeacher.php'">Homepage</button>
-		<button type="submit" class="btn btn-primary" onClick="this.form.action='viewAllLessonTopics.php'">View all records</button>
-	</form>
-	</div>
 
 
 <?php 
