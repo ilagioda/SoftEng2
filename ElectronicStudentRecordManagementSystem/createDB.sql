@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 11, 2019 alle 18:55
+-- Creato il: Nov 16, 2019 alle 16:56
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -22,8 +22,9 @@ SET time_zone = "+00:00";
 -- Database: `school`
 --
 DROP DATABASE IF EXISTS `school`;
-CREATE DATABASE `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
+
 -- --------------------------------------------------------
 
 --
@@ -62,6 +63,14 @@ CREATE TABLE `Lectures` (
   `subject` varchar(50) NOT NULL,
   `topic` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Lectures`
+--
+
+INSERT INTO `Lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
+('2019-11-05', 1, '1A', 'GNV', 'Maths', 'arg0'),
+('2019-11-11', 1, '1A', 'GNV', 'Maths', 'arg1');
 
 -- --------------------------------------------------------
 
@@ -173,7 +182,9 @@ CREATE TABLE `Students` (
 --
 
 INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
+('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', '1B'),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
+('CRS', 'Cristian', 'Mins', 'cris@gmail.it', '', '1A'),
 ('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', ''),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '');
 
@@ -216,6 +227,16 @@ CREATE TABLE `TeacherClassSubjectTable` (
   `subject` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `TeacherClassSubjectTable`
+--
+
+INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
+('FLCM', '1A', 'Philosophy'),
+('GNV', '1A', 'Maths'),
+('GNV', '1A', 'Physics'),
+('GNV', '1B', 'Geography');
+
 -- --------------------------------------------------------
 
 --
@@ -228,6 +249,14 @@ CREATE TABLE `Teachers` (
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Teachers`
+--
+
+INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`) VALUES
+('FLCM', 'pwdflcm', 'Filocamo', 'Claudio'),
+('GNV', 'pwdgnv', 'simona', 'genovese');
 
 --
 -- Indici per le tabelle scaricate
