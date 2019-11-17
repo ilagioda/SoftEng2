@@ -283,6 +283,28 @@ class dbParent extends db
         parent::__construct();
     }
 
+    public function retrieveChildren($email){
+
+        /**
+         * This function receives the email of a parent and returns the list of children of that parent
+         */
+
+        $email=$this->sanitizeString($email);
+
+        $result = $this->query("SELECT codFisc FROM Students WHERE emailP1='$email' OR emailP2 = '$email';");
+    
+        if (!$result)
+            die("Unable to select children for $email");
+
+        $children = array();
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+            array_push($children,$row['codFisc']);
+        }
+
+        return $children;
+    }
+
     public function viewChildMarks($CodFisc)
     {
         /** 
