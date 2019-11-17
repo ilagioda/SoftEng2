@@ -130,11 +130,15 @@ bottom:0;
 }
 
 /* View marks*/
-.hiddenRow.marks{
+.hiddenRow.legend{
     padding: 0;
 }
 
-/*to be checked*/
+.hiddenRow.marks{
+    padding: 0;
+    border: 0;
+}
+
 .visibleRowMarks:hover{
     filter: brightness(90%);
     cursor: pointer;

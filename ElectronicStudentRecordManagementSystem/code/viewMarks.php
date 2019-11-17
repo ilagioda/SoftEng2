@@ -79,7 +79,7 @@ echo <<<_STARTTABLE
         <th>Subject</th>
         <th></th>
         <th></th>
-        <th>Mean</th>
+        <th>Average grade</th>
     </tr>
 </thead>
 <tbody>
@@ -95,11 +95,15 @@ foreach ($preprocessed_data as $subject => $marks) {
     // no marks for that subject
         $mean = "N.C."; 
         $modifier="";
+
     } elseif($mean<6){
+
     // print the row with a different color in case of mark lower than 6
         if($mean < 5 ) $modifier = "danger visibleRowMarks";
         else $modifier = "warning visibleRowMarks";
+
     } else {
+        // average > 6 
         $modifier = "success visibleRowMarks";
     }
     
@@ -112,31 +116,39 @@ foreach ($preprocessed_data as $subject => $marks) {
         </tr>
 _VISIBLEROW;
 
-    if($mean=="N.C.") $subject="";
+    if($mean!="N.C."){
 
-    echo <<<_HIDDENLEGEND
-        <tr>
-            <td></td>
-            <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
-            <td class="hiddenRow marks"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
-            <td></td>
-        </tr>
+        // print the hidden rows only if the student has at least one mark
+
+        echo <<<_HIDDENLEGEND
+            <tr>
+                <td class="hiddenRow legend"></td>
+                <td class="hiddenRow legend"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
+                <td class="hiddenRow legend"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
+                <td class="hiddenRow legend"></td>
+            </tr>
 _HIDDENLEGEND;
     
+        /**
+         * Unico modo per sovrascrivere style di bootstrap per le tabelle
+         * Introduco border 0 sulle righe chiuse, tranne che nella prima 
+         * (per evitare che si veda un pezzo mancante nella tabella)
+         * */
 
-    foreach($marks as $dateHour => $mark){
-        
-        if($dateHour=='mean') continue;
+        foreach($marks as $dateHour => $mark){
+            
+            if($dateHour=='mean') continue;
 
-        echo <<<_HIDDENROWS
-        <tr>
-            <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
-            <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $dateHour </div> </td>
-            <td class="hiddenRow marks"><div class="accordian-body collapse $subject"> $mark </div> </td>
-            <td class="hiddenRow marks"> <div class="accordian-body collapse $subject"></div> </td>
-        </tr>
+            echo <<<_HIDDENROWS
+            <tr>
+                <td class="hiddenRow marks" > <div class="accordian-body collapse $subject"></div> </td>
+                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $dateHour </div> </td>
+                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $mark </div> </td>
+                <td class="hiddenRow marks" > <div class="accordian-body collapse $subject "></div> </td>
+            </tr>
 _HIDDENROWS;
 
+        }
     }
 }
 
