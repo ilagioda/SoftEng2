@@ -11,22 +11,31 @@ if(!empty($_POST['student']))
     $_SESSION['student']=$_POST['student'];
 
 if (!empty($_POST["date"]) && !empty($_POST["hour"]) && !empty($_POST["grade"]) && !empty($_SESSION['student']) && !empty($_SESSION['subject'])) {
+    echo "<div class='container-fluid text-left col-md-8'>";
     echo $teacher->submitMark($_SESSION['student'], $_SESSION['subject'], $_POST["date"], $_POST["hour"], $_POST["grade"]);
+    echo "</div>";
 }
 
 if (empty($_SESSION['student']) || empty($_SESSION['subject'])) {
+    echo "<div class='container-fluid text-left col-md-8'>";
     echo "You have not selected the requested parameters.";
     echo "<a href='selectClassForMarks.php'> Go Back </a>";
+    echo "</div>";
 }
 else{
 
     echo "<h1 align='center'> List of grades of " . $teacher->getStudentByCod($_SESSION['student']) .", for subject: " . $_SESSION['subject'] . "</h1>" ;
 
 
+    echo "<div class='container-fluid text-left col-md-8'>";
     $markList=$teacher->getStudentMarks($_SESSION['student'], $_SESSION['subject']);
+    echo "</div>";
 
-    if(empty($markList))
+    if(empty($markList)){
+        echo "<div class='container-fluid text-left col-md-8'>";
         echo "This student has no grades for this subject.";
+        echo "</div>";
+    }
     else{
         echo "<div class='container-fluid text-left col-md-8'>";
         echo "<table class='table table-striped'>";
