@@ -449,7 +449,7 @@ class dbTeacher extends db
         $hour = $this -> sanitizeString($hour);
         $mark = $this -> sanitizeString($mark);
 
-        $date = strtotime($_POST['date']);
+        $dateTime = strtotime($_POST['date']);
 
         $day=date("l");
         switch ($day){
@@ -482,10 +482,10 @@ class dbTeacher extends db
         if($hour>=7 || $hour<=0 || $mark <0 || $mark >10 )
             return ("Insert valid parameters.");
         
-        if($date > strtotime(date("Y/m/d")))
+        if($dateTime > strtotime(date("Y/m/d")))
             return ("Cannot insert a future date.");
 
-        if($date < $datePast)
+        if($dateTime < $datePast)
             return ("Cannot register a vote on a week different from this one.");
 
 
