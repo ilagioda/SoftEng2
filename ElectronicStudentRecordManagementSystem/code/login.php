@@ -95,8 +95,8 @@ echo <<<_END
             </div>
             <form class="form-signin" action="login.php" method="post">
                 <h2 class="form-signin-heading">Please sign in</h2>
-                <label for="inputEmail" class="sr-only">Email address</label>
-                <input type="email" id="inputEmail" name="user" class="form-control" placeholder="Email address" required="" autofocus="">
+                <label for="inputEmail" class="sr-only">Username</label>
+                <input type="text" id="inputEmail" name="user" class="form-control" placeholder="User" required="" autofocus="">
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input type="password" id="inputPassword" class="form-control" name="pass" placeholder="Password" required="">
                 <div class="checkbox">
