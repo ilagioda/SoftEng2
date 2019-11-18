@@ -12,11 +12,9 @@
 
 <div class="text-center">
 	<h1> TEACHER HOMEPAGE </h1>
-	<p>
         <?php
             echo "<h2>Welcome to your homepage TEACHER ".$_SESSION["user"]."!</h2><br>";
         ?>
-	</p>
 	<form method="POST" action="dailyLessonTopics.php">
 		<div class="btn-group">
 		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,12 +27,15 @@
 		</ul>
 		</div>
 	</form>
-		
-	</form>
-	<br>
+			<br>
 
 	<form action="selectClassForMarks.php">
-		<button type="submit" class="btn btn-primary  btn-lg"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp; Add student mark</button>
+	<div class="btn-group">
+		<button type="submit" class="btn btn-primary btn-lg">
+		<span class="glyphicon glyphicon-pencil"></span>&emsp;
+		 Add student mark <span class="caret"></span>
+		 </button>
+	</div>
 	</form>
 
 </div>
