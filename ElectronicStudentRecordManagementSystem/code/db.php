@@ -449,8 +449,46 @@ class dbTeacher extends db
         $hour = $this -> sanitizeString($hour);
         $mark = $this -> sanitizeString($mark);
 
-        if($hour>=7 || $hour<=0 || $mark <0 || $mark >10)
+        $date = strtotime($_POST['date']);
+
+        $day=date("l");
+        switch ($day){
+            case "Monday":
+                $datePast=strtotime(date("Y/m/d"). ' - 0 days');
+                break;
+            case "Tuesday":
+                $datePast=strtotime(date("Y/m/d"). ' - 1 days');
+                break;
+            case "Wednsday":
+                $datePast=strtotime(date("Y/m/d"). ' - 2 days');
+                break;
+            case "Thursday":
+                $datePast=strtotime(date("Y/m/d"). ' - 3 days');
+                break;
+            case "Friday":
+                $datePast=strtotime(date("Y/m/d"). ' - 4 days');
+                break;
+            case "Saturday":
+                $datePast=strtotime(date("Y/m/d"). ' - 5 days');
+                break;
+            case "Sunday":
+                $datePast=strtotime(date("Y/m/d"). ' - 6 days');
+                break;
+            default:
+                $datePast="None";
+                break;
+        }
+
+        if($hour>=7 || $hour<=0 || $mark <0 || $mark >10 )
             return ("Insert valid parameters.");
+        
+        if($date > strtotime(date("Y/m/d")))
+            return ("Cannot insert a future date.");
+
+        if($date < $datePast)
+            return ("Cannot register a vote on a week different from this one.");
+
+
 
         $inserted = $this->query("SELECT * FROM Marks WHERE codFisc='$codStudent' AND subject='$subject' AND date='$date' AND hour='$hour'");
         $row= $inserted->fetch_array(MYSQLI_ASSOC);
