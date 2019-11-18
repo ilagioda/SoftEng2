@@ -24,8 +24,8 @@ if(isset($_POST['email']) /* TODO substitute when login is implemented !isset($_
      * These two will already be set from the login
      */
     
-    $_SESSION['user'] = $_POST['email'];
-    $_SESSION['role'] = "parent";
+    $_SESSION['user'] = $_POST['email']; //to be commented
+    $_SESSION['role'] = "parent"; //to be commented
 
     // end lines ot be removed
     
@@ -35,11 +35,12 @@ if(isset($_POST['email']) /* TODO substitute when login is implemented !isset($_
     switch(count($children)){
 
         case 0: 
+            $em = $_POST["email"]; //to be substituted with $_SESSION["user"]
             // no children for that email => display error
             require_once("defaultNavbar.php");
             echo<<<_ERROR
             <div class="text-center">
-            <h1> No children registered to a class and related to email $_POST[email]. Please try later to <a href=pseudoLogParent.php>login</a></h1>
+            <h1> No children registered to a class and related to email $em. Please try later to <a href=login.php>login</a></h1>
             </div>
 _ERROR;
             exit;
