@@ -2,8 +2,6 @@
 
 require_once("basicChecks.php");
 
-checkIfLogged();
-
 class db
 {
 
@@ -291,7 +289,8 @@ class dbParent extends db
 
         $email=$this->sanitizeString($email);
 
-        $result = $this->query("SELECT codFisc FROM Students WHERE emailP1='$email' OR emailP2 = '$email';");
+        $result = $this->query("SELECT codFisc,name,surname,classID FROM Students WHERE emailP1='$email' OR emailP2 = '$email' 
+                                ORDER BY name,surname;");
     
         if (!$result)
             die("Unable to select children for $email");
@@ -299,7 +298,7 @@ class dbParent extends db
         $children = array();
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-            array_push($children,$row['codFisc']);
+            array_push($children,$row);
         }
 
         return $children;

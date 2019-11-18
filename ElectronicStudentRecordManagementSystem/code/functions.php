@@ -20,6 +20,7 @@ function destroySession()
 
 function checkIfLogged(){
     if(!isset($_SESSION['role']) || !isset($_SESSION['user'])){
+        echo "<h1 class='text-center'> <a href='index.php'> HOME </a></h1>";
         echo "<img src='images/gandalf.jpg' class='img-responsive center-block'>";
         die();
     }
