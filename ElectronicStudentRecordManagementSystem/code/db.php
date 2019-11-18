@@ -308,7 +308,7 @@ class dbParent extends db
 
         $email=$this->sanitizeString($email);
 
-        $result = $this->query("SELECT codFisc,name,surname,classID FROM Students WHERE emailP1='$email' OR emailP2 = '$email' 
+        $result = $this->query("SELECT codFisc,name,surname,classID FROM Students WHERE classID!='' AND (emailP1='$email' OR emailP2 = '$email') 
                                 ORDER BY name,surname;");
     
         if (!$result)

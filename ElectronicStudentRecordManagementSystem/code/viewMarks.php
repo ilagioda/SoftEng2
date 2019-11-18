@@ -3,6 +3,8 @@ require_once("basicChecks.php");
 require_once("defaultNavbar.php");
 require_once("db.php");
 
+checkIfLogged();
+
 $childName = $_SESSION['childName'];
 $childSurname = $_SESSION['childSurname'];
 

@@ -39,7 +39,7 @@ if(isset($_POST['email']) /* TODO substitute when login is implemented !isset($_
             require_once("defaultNavbar.php");
             echo<<<_ERROR
             <div class="text-center">
-            <h1> No parent with email $_POST[email]. Please try again to <a href=pseudoLogParent.php>login</a></h1>
+            <h1> No children registered to a class and related to email $_POST[email]. Please try later to <a href=pseudoLogParent.php>login</a></h1>
             </div>
 _ERROR;
             exit;
