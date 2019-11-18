@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 16, 2019 alle 16:56
+-- Creato il: Nov 18, 2019 alle 17:44
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -33,7 +33,7 @@ USE `school`;
 
 CREATE TABLE `Admins` (
   `codFisc` varchar(50) NOT NULL,
-  `hashedPassword` varchar(50) NOT NULL
+  `hashedPassword` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -107,7 +107,7 @@ INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
 
 CREATE TABLE `Parents` (
   `email` varchar(50) NOT NULL,
-  `hashedPassword` varchar(50) NOT NULL,
+  `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
   `codFisc` varchar(50) NOT NULL,
@@ -137,7 +137,7 @@ INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, 
 
 CREATE TABLE `Principals` (
   `codFisc` varchar(50) NOT NULL,
-  `hashedPassword` varchar(50) NOT NULL,
+  `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -159,8 +159,9 @@ CREATE TABLE `ProposedClasses` (
 
 INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
 ('1A', 'CLDFLCM'),
-('1A', 'FRCWTR'),
-('1B', 'MRC');
+('1B', 'MRC'),
+('1C', 'ANDR'),
+('1C', 'SMN');
 
 -- --------------------------------------------------------
 
@@ -182,11 +183,13 @@ CREATE TABLE `Students` (
 --
 
 INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
-('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', '1B'),
+('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', ''),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
 ('CRS', 'Cristian', 'Mins', 'cris@gmail.it', '', '1A'),
-('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', ''),
-('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '');
+('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', '1A'),
+('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'wlt@gmail.it', '1C'),
+('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
+('SMN', 'Simona', 'Genovese', 'smn@gmail.it', '', '');
 
 -- --------------------------------------------------------
 
@@ -245,7 +248,7 @@ INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
 
 CREATE TABLE `Teachers` (
   `codFisc` varchar(50) NOT NULL,
-  `hashedPassword` varchar(50) NOT NULL,
+  `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

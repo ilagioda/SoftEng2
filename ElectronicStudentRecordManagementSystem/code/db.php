@@ -118,24 +118,26 @@ class dbAdmin extends db
         $class = "";
 
         $compositionVector = array();
-
+        // a prepared statement needs to be configured
         $stmt = $this->prepareStatement(
             "SELECT s.`codFisc`,`name`,`surname`,p.`classID` 
         FROM `Students` as s , `ProposedClasses` as p 
         WHERE s.codFisc = p.codFisc AND p.classID = ? ORDER BY 'CLASSID'"
         );
-
+        // the parameter is bound to the first '?' in the upper query
         if (!$stmt->bind_param("s", $classID))
             die("Binding Failed in the Transaction.");
 
-
+        // the result is characterized by four coloumns and needs to be bounded to corresponding variables
         if (!$stmt->bind_result($codFisc, $name, $surname, $class))
             die("Binding result Failed in the Transaction.");
 
         try {
+            // The statement is excecuted but the variables do not contain the results
             if (!$stmt->execute())
                 throw new Exception("Select Failed.");
             $i = 0;
+            //Once the statement is excecuted in the variables will be saved the corrisponding values only after the fetch()  
             while ($row = $stmt->fetch()) {
                 $codFiscnameSurnameClass = array($codFisc, $name, $surname, $class);
                 $compositionVector[$i] = $codFiscnameSurnameClass;
@@ -144,9 +146,11 @@ class dbAdmin extends db
 
             /* close statement */
             $stmt->close();
-
+            //the result is saved in a vector of vectors.
+            //Each row in the table corresponds to a vector in compositionVector
             return $compositionVector;
         } catch (Exception $e) {
+            // Any exception will produce an error message.
             echo "Error: " . $e->getMessage();
         }
     }
@@ -188,9 +192,7 @@ class dbAdmin extends db
 
     function updateStudentsClass($vectorCodFiscNameSurnameClass)
     {
-
         $stmt = $this->prepareStatement("UPDATE `Students` SET `classID`= ? WHERE `codFisc` = ? ");
-
         foreach ($vectorCodFiscNameSurnameClass as $value) {
             $codFisc = $value[0];
             $classID = $value[3];
@@ -205,12 +207,9 @@ class dbAdmin extends db
                 die("Update Failed.");
             }
         }
-
         /* close statement */
         $stmt->close();
-
-
-
+        
         $stmt = $this->prepareStatement("DELETE FROM `ProposedClasses` WHERE `classID` = ?");
         if (!$stmt->bind_param("s", $classID))
             die("Binding Failed the delete statement.");
@@ -222,6 +221,8 @@ class dbAdmin extends db
             die("Delete Failed.");
         }
     }
+
+    
     public function TakeParentsMail(){
         $result = $this->query("SELECT email, hashedPassword, firstLogin FROM Parents ORDER BY hashedPassword, email");
         return $result;
