@@ -1,6 +1,6 @@
 <?php
 
-require_once("basicchecks.php");
+require_once("basicChecks.php");
 require_once("defaultNavbar.php");
 
 require_once("classTeacher.php");

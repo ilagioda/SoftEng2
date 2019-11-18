@@ -2,8 +2,8 @@
 require_once("redirectHTTPS.php");
 require_once("functions.php");
 
-session_name("ESRMS"); //electronic student record management system
-session_start();
+if(!isset($_SESSION))
+    session_start();
 require_once("inactivity.php");
 
 ?>

@@ -9,8 +9,9 @@
     
     /* End lines to be changed*/    
 ?>
-<h1 align="center"> TEACHER HOMEPAGE </h1>
+
 <div class="text-center">
+	<h1> TEACHER HOMEPAGE </h1>
 	<p>
         <?php
             echo "<h2>Welcome to your homepage TEACHER ".$_SESSION["user"]."!</h2><br>";
