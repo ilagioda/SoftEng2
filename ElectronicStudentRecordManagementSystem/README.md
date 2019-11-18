@@ -18,6 +18,8 @@ Currently, we have one homepage for each of the "roles". This page should set pr
 
 ###### Parent parameters
 
+Parameters set in chooseChild.php:
+
 - $_SESSION['child'] = Fiscal code of the selected child
 
 - $_SESSION['childName'] = Name of the selected child
