@@ -86,7 +86,7 @@ class db
     /**
      * Utilities
      */
-    protected function sanitizeString($var)
+    function sanitizeString($var)
     {
         $var = strip_tags($var);
         $var = htmlentities($var);
@@ -149,6 +149,25 @@ class dbAdmin extends db
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
+    }
+
+    function SearchInParents($user, $pass){
+        $sql = "SELECT email,hashedPassword FROM parents /* Parents, Principals, Teachers, Admins*/
+        WHERE email='$user' AND hashedPassword='$pass'";
+        $resultQuery = $this->query($sql);
+        return $resultQuery;
+    }
+    function getHashedPassword($user){
+        $sql = "SELECT hashedPassword FROM Parents WHERE email='$user'";
+        $sql2 = "SELECT hashedPassword FROM Teachers WHERE codFisc='$user'";
+        $sql3 = "SELECT hashedPassword FROM Principals WHERE codFisc='$user'";
+        $sql4 = "SELECT hashedPassword FROM Admins WHERE codFisc='$user'";
+        $result = $this->query($sql);
+        $result = $result->fetch_array(MYSQLI_ASSOC);
+        if($result->num_rows==0){
+            //...
+        }
+        return $result;
     }
 
     function readAllClasses()
