@@ -1,30 +1,52 @@
 <?php
 require_once 'basicChecks.php';
+$_SESSION['user'] = "ueue";
+$_SESSION['role'] = "admin";
+require_once 'db.php';
 $error = $user = $pass = "";
 
 if (isset($_POST['user'])) {
-    $user = sanitizeString($_POST['user']);
+    $db = new dbAdmin();
+    $user = $db->sanitizeString($_POST['user']);
     $pass = $_POST['pass'];
 
     if ($user == "" || $pass == "") {
         $error = 'Not all fields were entered';
     } else {
-        $pass = md5($pass);
-        $result = queryMysql("SELECT user,pass FROM users
-        WHERE user='$user' AND pass='$pass'");
-        if (!$result) {
-            $msg = "Unable to login";
-        } else {
+        $pw = $db->getHashedPassword($user);
 
-            if ($result->num_rows == 0) {
+        $pw = $pw->fetch_array(MYSQLI_ASSOC);
+        if (!$pw) {
+            $msg = "Unable to login";
+        }
+        else {
+            if ($pw->num_rows == 0) {
                 $error = "Invalid login attempt";
+            } 
+            else{
+                $bool = password_verify($pass, $pw['hashedPassword']);
+                if($bool){
+                    
+                }
+                else{
+                    $error = "Invalid login attempt";
+                }
+                
+            }
+
+        $result = $db->SearchInParents($user, $pass);
+        //$result = queryMysql("");
+/*         if (!$result) {
+            $msg = $msg. " Unable to login";
+        } else {
+            if ($result->num_rows == 0) {
+                $error = $msg. " Invalid login attempt";
             } else {
                 $_SESSION['user'] = $user;
                 $_SESSION['time'] = time();
-                $_SESSION['seats'] = "";
                 header("Location: index.php?view=$user");
             }
-        }
+        } */
     }
 }
 
@@ -65,12 +87,12 @@ echo <<<_END
                 <span class='error'>$error</span>
 
             </div>
-            <form class="form-signin">
+            <form class="form-signin" action="login.php" method="post">
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <label for="inputEmail" class="sr-only">Email address</label>
-                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+                <input type="email" id="inputEmail" name="user" class="form-control" placeholder="Email address" required="" autofocus="">
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+                <input type="password" id="inputPassword" class="form-control" name="pass" placeholder="Password" required="">
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" value="remember-me"> Remember me
