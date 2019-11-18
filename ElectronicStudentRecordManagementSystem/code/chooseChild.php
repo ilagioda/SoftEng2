@@ -35,9 +35,13 @@ if(isset($_POST['email']) /* TODO substitute when login is implemented !isset($_
     switch(count($children)){
 
         case 0: 
-            // no children for that email => not allowed to proceed, redirect home
-            header('HTTP/1.1 307 Temporary Redirect');
-            header('Location: index.php');
+            // no children for that email => display error
+            require_once("defaultNavbar.php");
+            echo<<<_ERROR
+            <div class="text-center">
+            <h1> No parent with email $_POST[email]. Please try again to <a href=pseudoLogParent.php>login</a></h1>
+            </div>
+_ERROR;
             exit;
 
         case 1: 
