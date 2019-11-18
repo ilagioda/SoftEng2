@@ -14,25 +14,31 @@ if (isset($_POST['user'])) {
         $error = 'Not all fields were entered';
     } else {
         $pw = $db->getHashedPassword($user);
-
-        $pw = $pw->fetch_array(MYSQLI_ASSOC);
-        if (!$pw) {
-            $msg = "Unable to login";
-        }
-        else {
-            if ($pw->num_rows == 0) {
-                $error = "Invalid login attempt";
-            } 
-            else{
-                $bool = password_verify($pass, $pw['hashedPassword']);
-                if($bool){
-                    
+        if($pw === false) $error = "Invalid login attempt"; //either no email address or codFisc associated or error in query result
+        else{
+            $bool = password_verify($pass, $pw["hashedPassword"]);
+            if($bool){
+                $_SESSION['user'] = $pw['user'];
+                $_SESSION['role'] = $pw['role'];
+                //switch on role
+                if($_SESSION['role'] == "admin"){
+                    header("Location: index.php?view=$user");
                 }
-                else{
-                    $error = "Invalid login attempt";
+                if($_SESSION['role'] == "parent"){
+                    header("Location: chooseChild.php?view=$user");
                 }
-                
+                if($_SESSION['role'] == "principal"){
+                    header("Location: index.php?view=$user");
+                }
+                if($_SESSION['role'] == "teacher"){
+                    header("Location: index.php?view=$user");
+                }
             }
+            else{
+                $error = "Invalid login attempt"; //Wrong password
+            }
+        }
+                
 
         $result = $db->SearchInParents($user, $pass);
         //$result = queryMysql("");

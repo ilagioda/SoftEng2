@@ -95,6 +95,69 @@ class db
         return $this->conn->real_escape_string($var);
     }
 
+    function getHashedPassword($user){
+        $sql = "SELECT email, hashedPassword FROM Parents WHERE email='$user'";
+        $sql2 = "SELECT codFisc, hashedPassword FROM Teachers WHERE codFisc='$user'";
+        $sql3 = "SELECT codFisc, hashedPassword FROM Principals WHERE codFisc='$user'";
+        $sql4 = "SELECT codFisc, hashedPassword FROM Admins WHERE codFisc='$user'";
+        $ret_value = array();
+
+        if(preg_match('/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/', $user) ){
+            //it's a mail so I only check in parents table.
+            $result = $this->query($sql);
+            if(!$result || $result->num_rows==0) return false;
+            else{
+                //it's a parent
+                $result = $result->fetch_array(MYSQLI_ASSOC);
+                $ret_value["user"] = $result["email"];
+                $ret_value["role"] = "parent";
+                $ret_value["hashedPassword"] = $result["hashedPassword"];
+            }
+        }
+        else{
+            //check if it's a teacher, a principal or an admin
+            $result = $this->query($sql2);
+            
+            if(!$result) return false;
+            if($result->num_rows==0){
+                $result = $this->query($sql3);
+                
+                if(!$result) return false;
+                if($result->num_rows==0){
+                    $result = $this->query($sql4);
+                    
+                    if(!$result) return false;
+                    if($result->num_rows==0){
+                        return false; //neither a parent, nor a teacher, nor a principal, nor an admin
+                    }
+                    else{
+                        //it's an admin
+                        $result = $result->fetch_array(MYSQLI_ASSOC);
+                        $ret_value["user"] = $result["codFisc"];
+                        $ret_value["role"] = "admin";
+                        $ret_value["hashedPassword"] = $result["hashedPassword"];
+
+                    }
+                }
+                else{
+                    //it's a principal
+                    $result = $result->fetch_array(MYSQLI_ASSOC);
+                    $ret_value["user"] = $result["codFisc"];
+                    $ret_value["role"] = "principal";
+                    $ret_value["hashedPassword"] = $result["hashedPassword"];
+                }
+            }
+            else{
+                //it's a teacher
+                $result = $result->fetch_array(MYSQLI_ASSOC);
+                $ret_value["user"] = $result["codFisc"];
+                $ret_value["role"] = "teacher";
+                $ret_value["hashedPassword"] = $result["hashedPassword"];
+            }
+        }
+        return $ret_value;
+    }
+
     function __destruct()
     {
         $this->conn->close();
@@ -156,18 +219,6 @@ class dbAdmin extends db
         WHERE email='$user' AND hashedPassword='$pass'";
         $resultQuery = $this->query($sql);
         return $resultQuery;
-    }
-    function getHashedPassword($user){
-        $sql = "SELECT hashedPassword FROM Parents WHERE email='$user'";
-        $sql2 = "SELECT hashedPassword FROM Teachers WHERE codFisc='$user'";
-        $sql3 = "SELECT hashedPassword FROM Principals WHERE codFisc='$user'";
-        $sql4 = "SELECT hashedPassword FROM Admins WHERE codFisc='$user'";
-        $result = $this->query($sql);
-        $result = $result->fetch_array(MYSQLI_ASSOC);
-        if($result->num_rows==0){
-            //...
-        }
-        return $result;
     }
 
     function readAllClasses()
