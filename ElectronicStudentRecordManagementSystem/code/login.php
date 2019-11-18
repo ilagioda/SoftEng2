@@ -1,12 +1,10 @@
 <?php
 require_once 'basicChecks.php';
-$_SESSION['user'] = "ueue";
-$_SESSION['role'] = "admin";
 require_once 'db.php';
 $error = $user = $pass = "";
 
 if (isset($_POST['user'])) {
-    $db = new dbAdmin();
+    $db = new db();
     $user = $db->sanitizeString($_POST['user']);
     $pass = $_POST['pass'];
 
@@ -38,21 +36,6 @@ if (isset($_POST['user'])) {
                 $error = "Invalid login attempt"; //Wrong password
             }
         }
-                
-
-        $result = $db->SearchInParents($user, $pass);
-        //$result = queryMysql("");
-/*         if (!$result) {
-            $msg = $msg. " Unable to login";
-        } else {
-            if ($result->num_rows == 0) {
-                $error = $msg. " Invalid login attempt";
-            } else {
-                $_SESSION['user'] = $user;
-                $_SESSION['time'] = time();
-                header("Location: index.php?view=$user");
-            }
-        } */
     }
 }
 
