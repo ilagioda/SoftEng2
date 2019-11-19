@@ -27,17 +27,8 @@
 		</ul>
 		</div>
 	</form>
-			<br>
-
-	<form action="selectClassForMarks.php">
-	<div class="btn-group">
-		<button type="submit" class="btn btn-primary btn-lg">
-		<span class="glyphicon glyphicon-pencil"></span>&emsp;
-		 Add student mark <span class="caret"></span>
-		 </button>
-	</div>
-	</form>
-
+		<br>
+		<a href="selectClassForMarks.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp;Add student mark</a>
 </div>
 
 <?php 
