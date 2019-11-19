@@ -1,9 +1,19 @@
 <?php
 
 require_once("basicChecks.php");
-require_once("defaultNavbar.php");
 
-checkIfLogged();
+$loggedin = false;
+if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
+    $loggedin = true;
+}
+if (!$loggedin) {
+    //require_once("defaultNavbar.php");
+    header("Location: login.php");
+} else {
+    require_once "loggedNavbar.php";
+}
+
+//checkIfLogged();
 
 echo "<div class=text-center>";
 echo "<h2>Welcome to your homepage PARENT " . $_SESSION["user"] . "!</h2>";

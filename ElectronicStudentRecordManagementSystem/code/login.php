@@ -20,16 +20,16 @@ if (isset($_POST['user'])) {
                 $_SESSION['role'] = $pw['role'];
                 //switch on role
                 if($_SESSION['role'] == "admin"){
-                    header("Location: index.php?view=$user");
+                    header("Location: homepageAdmin.php?view=$user");
                 }
                 if($_SESSION['role'] == "parent"){
                     header("Location: chooseChild.php?view=$user");
                 }
                 if($_SESSION['role'] == "principal"){
-                    header("Location: index.php?view=$user");
+                    header("Location: homepagePrincipal.php?view=$user");
                 }
                 if($_SESSION['role'] == "teacher"){
-                    header("Location: index.php?view=$user");
+                    header("Location: homepageTeacher.php?view=$user");
                 }
             }
             else{

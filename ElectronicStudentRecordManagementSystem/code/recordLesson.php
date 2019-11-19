@@ -1,9 +1,16 @@
 <?php
-    require_once("basicChecks.php");
-    require_once("defaultNavbar.php");
+	require_once("basicChecks.php");
 	
-	$_SESSION['user']="GNV";
-	$_SESSION['role']="teacher";
+	$loggedin = false;
+if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
+    $loggedin = true;
+}
+if (!$loggedin) {
+    //require_once("defaultNavbar.php");
+    header("Location: login.php");
+} else {
+    require_once "loggedNavbar.php";
+}
 	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();

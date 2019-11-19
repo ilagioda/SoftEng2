@@ -1,11 +1,21 @@
 <?php
     require_once("basicChecks.php");
-    require_once("defaultNavbar.php");
+
+    $loggedin = false;
+if (isset($_SESSION['user']) && $_SESSION['role'] == "principal") {
+    $loggedin = true;
+}
+if (!$loggedin) {
+    //require_once("defaultNavbar.php");
+    header("Location: login.php");
+} else {
+    require_once "loggedNavbar.php";
+}
     
     /* FIXME remove the next lines when login is implemented */
     
-    $_SESSION['user'] = 'BigBoss';
-    $_SESSION['role'] = 'principal';
+    //$_SESSION['user'] = 'BigBoss';
+    //$_SESSION['role'] = 'principal';
     
     /* End lines to be changed*/    
 ?>

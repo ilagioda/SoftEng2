@@ -1,9 +1,20 @@
 <?php
-require_once("basicChecks.php");
-require_once("db.php");
+require_once "basicChecks.php";
 
+$loggedin = false;
+if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
+    $loggedin = true;
+}
+if (!$loggedin) {
+    //require_once("defaultNavbar.php");
+    header("Location: login.php");
+} else {
+    require_once "loggedNavbar.php";
+}
 
-if(isset($_POST['childIndex'])){
+require_once "db.php";
+
+if (isset($_POST['childIndex'])) {
     /* coming from the same page, choosing the child */
     checkIfLogged();
     $index = $_POST['childIndex'];
@@ -17,35 +28,35 @@ if(isset($_POST['childIndex'])){
     exit;
 }
 
-if(isset($_POST['email']) /* TODO substitute when login is implemented !isset($_SESSION['user']) */){
+if (isset($_SESSION['user']) /* TODO substitute when login is implemented !isset($_SESSION['user']) */) {
     // Logging in
 
     /**
      * These two will already be set from the login
      */
-    
-    $_SESSION['user'] = $_POST['email']; //to be commented
-    $_SESSION['role'] = "parent"; //to be commented
+
+    //$_SESSION['user'] = $_POST['email']; //to be commented
+    //$_SESSION['role'] = "parent"; //to be commented
 
     // end lines ot be removed
-    
+
     $db = new dbParent();
     $children = $db->retrieveChildren($_SESSION['user']);
 
-    switch(count($children)){
+    switch (count($children)) {
 
-        case 0: 
-            $em = $_POST["email"]; //to be substituted with $_SESSION["user"]
+        case 0:
+            $em = $_SESSION["user"]; //to be substituted with $_SESSION["user"]
             // no children for that email => display error
-            require_once("defaultNavbar.php");
-            echo<<<_ERROR
+            require_once "defaultNavbar.php";
+            echo <<<_ERROR
             <div class="text-center">
             <h1> No children registered to a class and related to email $em. Please try later to <a href=pseudoLogParent.php>login</a></h1>
             </div>
 _ERROR;
             exit;
 
-        case 1: 
+        case 1:
             // only one child
             $_SESSION['child'] = $children[0]['codFisc'];
             $_SESSION['childName'] = $children[0]['name'];
@@ -64,14 +75,14 @@ _ERROR;
             $_SESSION['children'] = $children;
             break;
     }
-    
+
 } else {
     header('HTTP/1.1 307 Temporary Redirect');
     header('Location: index.php');
     exit;
 }
 
-require_once("defaultNavbar.php");
+require_once "defaultNavbar.php";
 
 ?>
 
@@ -88,10 +99,10 @@ require_once("defaultNavbar.php");
             </tr>
 
 <?php
-            $i=0;
-            // print all the children, one per row
-            foreach($_SESSION['children'] as $child){
-                echo<<<_CHILDROW
+$i = 0;
+// print all the children, one per row
+foreach ($_SESSION['children'] as $child) {
+    echo <<<_CHILDROW
 
                 <tr>
                     <td>$child[name]</td>
@@ -101,8 +112,8 @@ require_once("defaultNavbar.php");
                     <td><button type="submit" class="btn btn-default btn-sm" name='childIndex' value=$i>Select</td>
                 </tr>
 _CHILDROW;
-                $i++;
-        }
+    $i++;
+}
 ?>
 
         </table>
@@ -110,5 +121,5 @@ _CHILDROW;
 </div>
 
 <?php
-require_once("defaultFooter.php")
+require_once "defaultFooter.php"
 ?>

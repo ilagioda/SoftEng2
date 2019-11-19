@@ -1,8 +1,16 @@
 <?php
 
 require_once('basicChecks.php');
-$_SESSION['user'] = "marcoGay";
-$_SESSION['role'] = "admin";
+$loggedin = false;
+if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
+    $loggedin = true;
+}
+if (!$loggedin) {
+    //require_once("defaultNavbar.php");
+    header("Location: login.php");
+} else {
+    require_once "loggedNavbar.php";
+}
 
 require_once('db.php');
 
@@ -17,8 +25,6 @@ if (isset($_POST["view"])) {
       //echo $value;
       $classComposition = $dbAdmin->readClassCompositions($value);
       //print_r($classComposition);
-
-      require_once("defaultNavbar.php");
       echo <<<REQUESTEDPAGE
               <div class="col-sm-8 text-left">
                 <h1>Composition of selected class.</h1>

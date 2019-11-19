@@ -1,6 +1,16 @@
 <?php
 require_once("basicChecks.php");
-require_once("defaultNavbar.php");
+
+$loggedin = false;
+if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
+    $loggedin = true;
+}
+if (!$loggedin) {
+    //require_once("defaultNavbar.php");
+    require_once "defaultNavbar.php";
+} else {
+    require_once "loggedNavbar.php";
+}
 /**
  *  To be removed => here until logout is implemented
  * */
