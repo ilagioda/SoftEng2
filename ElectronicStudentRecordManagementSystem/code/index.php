@@ -14,7 +14,7 @@ if (!$loggedin) {
 /**
  *  To be removed => here until logout is implemented
  * */
-$_SESSION = array();
+//$_SESSION = array();
 ?>
 
 <div class="container-fluid text-center">
