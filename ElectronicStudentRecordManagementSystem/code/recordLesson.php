@@ -76,7 +76,7 @@ $(document).ready(function(){
 				<tr><td><label>Hour</label></td><td>
 				<select name="comboHour" id="comboHour" style="width: 350px" required>
 				<?php
-					for($i=1; $i<=5; $i++) 
+					for($i=1; $i<=6; $i++) 
 						echo "<option value=" . $i . ">" . $i . "</option>";
 				?>	
 				</select></td></tr>	
