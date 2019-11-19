@@ -10,9 +10,10 @@ $_SESSION = array();
 <div class="container-fluid text-center">
     <div class="row content">
         <div class="col-sm-2 sidenav">
-            <p><a href="#">Link</a></p>
-            <p><a href="#">Link</a></p>
-            <p><a href="#">Link</a></p>
+            <p><a href="#">Rules</a></p>
+            <p><a href="#">History</a></p>
+            <p><a href="#">Calendar</a></p>
+            <p><a href="#">Language</a></p>
         </div>
         <div class="col-sm-8 text-center">
             <h1>Welcome</h1>
@@ -29,10 +30,10 @@ $_SESSION = array();
         </div>
         <div class="col-sm-2 sidenav">
             <div class="well">
-                <p>ADS</p>
+                <p>ADS</p> <!--Logo facebook -->
             </div>
             <div class="well">
-                <p>ADS</p>
+                <p>ADS</p> <!--Logo istagram -->
             </div>
         </div>
     </div>
