@@ -66,7 +66,7 @@
 		<tr id="row3" style="visibility: hidden;"><td class="col-md-6"><label for="codfisc2">SSN code: </label></td><td class="col-md-6"><input type="text" style="width:100%" name="codfisc2" id="codfisc2" placeholder="Enter the parent 2's SSN code" autocomplete="off" title="Enter the student's SSN code"></td></tr>
 		<tr id="row4" style="visibility: hidden;"><td class="col-md-6"><label for="email2">E-mail: </label></td><td class="col-md-6"><input type="email" style="width:100%" name="email2" id="email2" placeholder="Enter the parent 2's e-mail" autocomplete="off" title="Enter the parent 2's e-mail"></td></tr>
 	</table>
-		<input type="reset" class="btn btn-primary" name="enrollCancel" id="enrollCancel" value="Cancel"> &emsp;
+		<input type="reset" class="btn btn-default btn-lg" name="enrollCancel" id="enrollCancel" value="Cancel">
 		<input type="submit" class="btn btn-primary btn-lg" name="enrollSubmit" id="enrollSubmit" value="Enroll student">
 	</form>
 </div>
