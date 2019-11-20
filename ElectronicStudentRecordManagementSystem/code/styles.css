@@ -91,6 +91,13 @@ padding: 9px 10px !important;
     width: 80px;
 }
 
+.ads_logos{
+    height:7vh;
+    width:7vh;
+    margin-left:auto;
+    margin-right:auto;
+}
+
 /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
 .row.content {height: 640px}
 

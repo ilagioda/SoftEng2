@@ -32,10 +32,16 @@ if (!$loggedin) {
         </div>
         <div class="col-sm-2 sidenav">
             <div class="well">
-                <p>ADS</p> <!--Logo facebook -->
+                <p><img class="ads_logos" src="images/fb_logo.png"></p> <!--Logo facebook -->
             </div>
             <div class="well">
-                <p>ADS</p> <!--Logo instagram -->
+                <p><img class="ads_logos" src="images/instagram_logo.png"></p> <!--Logo instagram -->
+            </div>
+            <div class="well">
+                <p><img class="ads_logos" src="images/whatsapp_logo.png"></p> <!--Logo instagram -->
+            </div>
+            <div class="well">
+                <p><img class="ads_logos" src="images/twitter_logo.png"></p> <!--Logo instagram -->
             </div>
         </div>
     </div>
