@@ -58,7 +58,7 @@ if (!$loggedin) {
 <div class="container text-center">
 	<h1 class="text-center"> ENROLL A STUDENT </h1>
 	<div class="row">
-	<form class="form-horizontal">
+	<form class="form-horizontal" method="POST" action="enrollstudentPART2.php">
 		<br><h3 class="text-center">STUDENT INFORMATION</h3><br>
 		<div class="form-group">
 			<label for="name">Name*: </label>
