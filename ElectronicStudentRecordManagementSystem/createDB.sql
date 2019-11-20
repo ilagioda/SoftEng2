@@ -21,6 +21,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
+DROP DATABASE IF EXISTS `school`;
+CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `school`;
 
 -- --------------------------------------------------------
 
@@ -166,8 +169,10 @@ CREATE TABLE `proposedclasses` (
 
 INSERT INTO `proposedclasses` (`classID`, `codFisc`) VALUES
 ('1A', 'CLDFLCM'),
+('1B', 'MRC'),
 ('1C', 'ANDR'),
 ('1C', 'SMN');
+
 
 -- --------------------------------------------------------
 
@@ -190,12 +195,11 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
 ('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', ''),
-('BZRGLC96', 'Gianluca', 'Brezzo', 'gigimarzullo@genitore1.it', '', ''),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
 ('CRS', 'Cristian', 'Mins', 'cris@gmail.it', '', '1A'),
 ('FRCWTR', 'Walter', 'Forcignano', 'wlt@gmail.it', '', '1A'),
 ('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'wlt@gmail.it', '1C'),
-('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '1B'),
+('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
 ('SMN', 'Simona', 'Genovese', 'smn@gmail.it', '', '');
 
 -- --------------------------------------------------------
