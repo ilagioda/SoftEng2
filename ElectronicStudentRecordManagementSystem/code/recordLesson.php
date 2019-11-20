@@ -9,7 +9,7 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
-    require_once "loggedNavbar.php";
+    require_once "loggedTeacherNavbar.php";
 }
 	
 	require_once("classTeacher.php");
