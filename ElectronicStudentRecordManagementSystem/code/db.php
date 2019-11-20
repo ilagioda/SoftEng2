@@ -322,18 +322,18 @@ class dbAdmin extends db
         
         /* Insert parent 1 into the DB */
         $result = $this->insertParent($name1, $surname1, $SSN1, $email1);
-        if(!$result){
-            $this->rollback();    
-            return 0;
-        }
+        // if(!$result){
+        //     $this->rollback();    
+        //     return 0;
+        // }
 
         if(!empty($email2)){
             /* Insert parent 2 into the DB */
             $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
-            if(!$result){
-                $this->rollback();
-                return 0;
-            }
+            // if(!$result){
+            //     $this->rollback();
+            //     return 0;
+            // }
         }
         
         $this->commit();

@@ -92,19 +92,19 @@ if (!$loggedin) {
 		<br><h3 id="rowParent2" onclick="changeVisibility()"><span id="iconParent2" class="glyphicon glyphicon-plus" aria-hidden="true">&emsp;&emsp;</span>PARENT 2 INFORMATION</h3><br>
 		<div class="form-group" id="row1" style="visibility: hidden;">
 			<label for="name2">Name*: </label>
-			<input type="text" class="form-control enrollStudent" name="name2" id="name2" placeholder="Enter the parent 2's name" autocomplete="off" title="Enter the parent 2's name" required>
+			<input type="text" class="form-control enrollStudent" name="name2" id="name2" placeholder="Enter the parent 2's name" autocomplete="off" title="Enter the parent 2's name">
 		</div>
 		<div class="form-group" id="row2" style="visibility: hidden;">
 			<label for="surname2">Surname*: </label>
-			<input type="text" class="form-control enrollStudent" name="surname2" id="surname2" placeholder="Enter the parent 2's surname" autocomplete="off" title="Enter the parent 2's surname" required>
+			<input type="text" class="form-control enrollStudent" name="surname2" id="surname2" placeholder="Enter the parent 2's surname" autocomplete="off" title="Enter the parent 2's surname">
 		</div>
 		<div class="form-group" id="row3" style="visibility: hidden;">
 			<label for="codfisc2">SSN code*: </label>
-			<input type="text" class="form-control enrollStudent" name="codfisc2" id="codfisc2" placeholder="Enter the parent 2's SSN code" autocomplete="off" title="Enter the parent 2's SSN code" required>
+			<input type="text" class="form-control enrollStudent" name="codfisc2" id="codfisc2" placeholder="Enter the parent 2's SSN code" autocomplete="off" title="Enter the parent 2's SSN code">
 		</div>
 		<div class="form-group" id="row4" style="visibility: hidden;">
 			<label for="email2">E-mail*: </label>
-			<input type="email" class="form-control enrollStudent" name="email2" id="email2" placeholder="Enter the parent 2's e-mail" autocomplete="off" title="Enter the parent 2's e-mail" required>
+			<input type="email" class="form-control enrollStudent" name="email2" id="email2" placeholder="Enter the parent 2's e-mail" autocomplete="off" title="Enter the parent 2's e-mail">
 		</div>
 		<br>
 		<input type="reset" class="btn btn-default btn-lg" style="margin-bottom: 40px;" name="enrollCancel" id="enrollCancel" value="Cancel">
