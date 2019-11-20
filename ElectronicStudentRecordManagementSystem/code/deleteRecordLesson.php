@@ -26,7 +26,7 @@ if (!$loggedin) {
 
 	?>
 			<div class="alert alert-success" role="alert">
-				<a href="#" class="alert-link"> Daily lesson successfully deleted!</a>
+				<p class="alert-link"> Daily lesson successfully deleted!</p>
 			</div>
 			<div>
 			<form method="POST" action="">
@@ -39,7 +39,7 @@ if (!$loggedin) {
 			$_SESSION['no']=$_POST['no'];
 	?>
 			<div class="alert alert-warning" role="alert">
-				<a href="#" class="alert-link"> Operation aborted! </a>
+				<p class="alert-link"> Operation aborted! </p>
 			</div>
 			<div>
 			<form method="POST" action="">

@@ -2,7 +2,7 @@
 	require_once("basicChecks.php");
 
 	$loggedin = false;
-if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
+if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
     $loggedin = true;
 }
 if (!$loggedin) {
@@ -40,7 +40,7 @@ if (!$loggedin) {
 		if($result == -1) {
 			?>
 			<div class='alert alert-danger' role='alert'>
-				<a href="#" class="alert-link"> Lecture already inserted! </a>
+				<p class="alert-link"> Lecture already inserted! </p>
 				<p> Try to edit/delete the lecture in the section "<a href="viewAllLessonTopics.php">View all records</a>"</p>
 			</div>
 			<?php
@@ -48,13 +48,13 @@ if (!$loggedin) {
 
 			if($error != 0){ ?>
 				<div class='alert alert-danger' role='alert'>
-					<a href="#" class="alert-link"> Oh no! Something went wrong... </a>
+					<p class="alert-link"> Oh no! Something went wrong... </p>
 				</div>
 			<?php
 			} else {
 			?> 
 				<div class="alert alert-success" role="alert">
-					<a href="#" class="alert-link"> Daily lesson successfully recorded!</a>
+					<p class="alert-link"> Daily lesson successfully recorded!</p>
 				</div>
 			<?php 
 			}
