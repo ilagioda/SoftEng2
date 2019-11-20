@@ -25,7 +25,7 @@ if (isset($_POST["view"])) {
       //echo $value;
       $classComposition = $dbAdmin->readClassCompositions($value);
       //print_r($classComposition);
-      echo <<<REQUESTEDPAGE
+      echo <<<_REQUESTEDPAGE
               <div class="col-sm-8 text-left">
                 <h1>Composition of selected class.</h1>
                 <p>The composition is reported in the table below and you can either accept it or you can return to the previous page.</p>
@@ -43,21 +43,21 @@ if (isset($_POST["view"])) {
                     </tr>
                   </thead>
                     <tbody>
-REQUESTEDPAGE;
+_REQUESTEDPAGE;
 
       foreach ($classComposition as $value) {
-        echo <<< ROW
+        echo <<<_ROW
                             <tr>
                             <td>$value[0]</td>
                             <td>$value[1]</td>
                             <td>$value[2]</td>
                             <td>$value[3]</td>
                             </tr>
-ROW;
+_ROW;
       }
       $valueString = json_encode($classComposition);
 
-      echo <<<ENDOFREQUESTEDPAGE
+      echo <<<_ENDOFREQUESTEDPAGE
                     <tr>
                     <td>
                     <div class="form-group">
@@ -87,7 +87,7 @@ ROW;
                   </table>
                 </div>
                 </div>
-ENDOFREQUESTEDPAGE;
+_ENDOFREQUESTEDPAGE;
       require_once("defaultFooter.php");
     }
   }
@@ -100,8 +100,8 @@ ENDOFREQUESTEDPAGE;
     $dbAdmin->updateStudentsClass($parameters);
 
 
-    require_once("defaultNavbar.php");
-    echo <<<CONFIRMEDPAGE
+    //require_once("defaultNavbar.php");
+    echo <<<_CONFIRMEDPAGE
     <div class="col-sm-20 text-left">
                 <h1>Composition of the class confirmed.</h1>
                 <hr>
@@ -115,7 +115,7 @@ ENDOFREQUESTEDPAGE;
                             </form>
                 </div>
       </div>
-CONFIRMEDPAGE;
+_CONFIRMEDPAGE;
 require_once("defaultFooter.php");
   } else {
     // The user has not requested or confirmed the page.
@@ -123,15 +123,15 @@ require_once("defaultFooter.php");
 
     $classes = $dbAdmin->readAllClasses();
 
-    require_once("defaultNavbar.php");
-    echo <<<NORMALPAGE
+    //require_once("defaultNavbar.php");
+    echo <<<_NORMALPAGE
               <div class="col-sm-20 text-left">
                 <h1>Class Composition.</h1>
                 <p>In this page you, as an admin, can select the class for which you would like to see and possibly accept the class composition.</p>
                 <hr>
                 <div class="container col-sm-10">
                  
-NORMALPAGE;
+_NORMALPAGE;
     if (isset($classes)) {
       if (is_array($classes)) {
 
@@ -140,7 +140,7 @@ NORMALPAGE;
         <tbody>';
 
         foreach ($classes as $value) {
-          echo <<< ROW
+          echo <<<_ROW
                          
                             <tr>
                             <td class ="col-sm-4">$value</td>
@@ -155,12 +155,12 @@ NORMALPAGE;
                             </form>
                             </td>
                             </tr>
-ROW;
+_ROW;
         }
         echo ' </tbody>
       </table>';
       } else {
-        echo <<< ROW1
+        echo <<<_ROW1
                           <h2>Classes</h2>
                           <table class="table table-hover">
                             <tbody>
@@ -179,17 +179,17 @@ ROW;
                             </tr>
                             </tbody>
                             </table>
-ROW1;
+_ROW1;
       }
     } else {
       echo "<h2> There is not any proposed class composition.</h2>";
     }
 
-    echo <<<ENDOFNORMALPAGE
+    echo <<<_ENDOFNORMALPAGE
               </div>
               </div>
             
-ENDOFNORMALPAGE;
+_ENDOFNORMALPAGE;
     require_once("defaultFooter.php");
   }
 }

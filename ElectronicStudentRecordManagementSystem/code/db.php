@@ -219,7 +219,7 @@ class dbAdmin extends db
     }
 
     function SearchInParents($user, $pass){
-        $sql = "SELECT email,hashedPassword FROM parents /* Parents, Principals, Teachers, Admins*/
+        $sql = "SELECT email,hashedPassword FROM Parents /* Parents, Principals, Teachers, Admins*/
         WHERE email='$user' AND hashedPassword='$pass'";
         $resultQuery = $this->query($sql);
         return $resultQuery;
@@ -283,15 +283,15 @@ class dbAdmin extends db
     }
 
     public function insertStudent($name, $surname, $SSN, $email1, $email2){
-        return $this->query("INSERT INTO students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
+        return $this->query("INSERT INTO Students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
     }
     
     public function insertParent($name, $surname, $SSN, $email){
-        return $this->query("INSERT INTO parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
+        return $this->query("INSERT INTO Parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
     
     public function insertLectures($date, $hour, $classID, $codFiscTeacher, $subject, $topic) {
-		return $this->query("INSERT INTO lectures(date, hour, classID, codFiscTeacher, subject, topic) 
+		return $this->query("INSERT INTO Lectures(date, hour, classID, codFiscTeacher, subject, topic) 
 								VALUES('$date', '$hour', '$classID', '$codFiscTeacher', '$subject', '$topic')");
 	}
     
@@ -322,18 +322,18 @@ class dbAdmin extends db
         
         /* Insert parent 1 into the DB */
         $result = $this->insertParent($name1, $surname1, $SSN1, $email1);
-        if(!$result){
-            $this->rollback();    
-            return 0;
-        }
+        // if(!$result){
+        //     $this->rollback();    
+        //     return 0;
+        // }
 
         if(!empty($email2)){
             /* Insert parent 2 into the DB */
             $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
-            if(!$result){
-                $this->rollback();
-                return 0;
-            }
+            // if(!$result){
+            //     $this->rollback();
+            //     return 0;
+            // }
         }
         
         $this->commit();
@@ -508,7 +508,7 @@ class dbTeacher extends db
 
         $class = $this -> sanitizeString($class);
         
-        $result = $this->query("SELECT * FROM students WHERE classId='$class'");
+        $result = $this->query("SELECT * FROM Students WHERE classId='$class'");
         
         if (!$result) 
             die("Unable to select students from $class.");
@@ -527,7 +527,7 @@ class dbTeacher extends db
 
         $codfisc = $this -> sanitizeString($codfisc);
         
-        $result = $this->query("SELECT * FROM students WHERE codFisc='$codfisc'");
+        $result = $this->query("SELECT * FROM Students WHERE codFisc='$codfisc'");
         
         if (!$result) 
             die("Unable to select student.");
@@ -619,13 +619,13 @@ class dbTeacher extends db
 		$topics = $this -> sanitizeString($topics);
 	    $codTeacher = $this -> sanitizeString($codTeacher);
 		
-		$result = $this->query("SELECT * FROM lectures WHERE (classID='$class' AND hour='$hour' AND date='$date')");
+		$result = $this->query("SELECT * FROM Lectures WHERE (classID='$class' AND hour='$hour' AND date='$date')");
 	
 		if($result->num_rows > 0) {
 			return -1;
 		}
 
-		$result = $this->query("INSERT INTO lectures(date, hour, classID, codFiscTeacher, subject, topic) 
+		$result = $this->query("INSERT INTO Lectures(date, hour, classID, codFiscTeacher, subject, topic) 
 								VALUES ('$date', '$hour', '$class', '$codTeacher', '$subject', '$topics')");
 		
 		if($result == FALSE) {
@@ -643,7 +643,7 @@ class dbTeacher extends db
 		$topics = $this -> sanitizeString($topics);
 
 		
-		$result = $this->query("UPDATE lectures SET subject='$subject', topic='$topics' 
+		$result = $this->query("UPDATE Lectures SET subject='$subject', topic='$topics' 
 							WHERE date='$date' AND hour='$hour' AND classID='$class'");
 		
 		if($result == FALSE) {
@@ -657,7 +657,7 @@ class dbTeacher extends db
 		$hour = $this -> sanitizeString($hour);
 		$class = $this -> sanitizeString($class);
 		
-		$result = $this->query("DELETE FROM lectures WHERE date='$date' AND hour='$hour' AND classID='$class'");
+		$result = $this->query("DELETE FROM Lectures WHERE date='$date' AND hour='$hour' AND classID='$class'");
 		
 		if($result == FALSE) {
 			die("ERROR: Lecture not deleted.");
@@ -667,7 +667,7 @@ class dbTeacher extends db
 		
 	function getClassesByTeacher2($codTeacher){
         $codTeacher = $this -> sanitizeString($codTeacher);
-        $result = $this->query("SELECT DISTINCT classID FROM teacherclasssubjecttable WHERE codFisc='$codTeacher'");
+        $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher'");
 
 	if (!$result) 
             die("Unable to select classes.");
@@ -687,7 +687,7 @@ class dbTeacher extends db
 		$codTeacher = $this -> sanitizeString($codTeacher);
 		$class = $this -> sanitizeString($class);
         
-       		$result = $this->query("SELECT DISTINCT subject FROM teacherclasssubjecttable WHERE (classID='$class' AND codFisc='$codTeacher')");
+       		$result = $this->query("SELECT DISTINCT subject FROM TeacherClassSubjectTable WHERE (classID='$class' AND codFisc='$codTeacher')");
 
         	if (!$result) 
             		die("Unable to select subjects.");
@@ -704,7 +704,7 @@ class dbTeacher extends db
 	function getLecturesByTeacher($codTeacher) {
 		$codTeacher = $this -> sanitizeString($codTeacher);
 
-		$result = $this->query("SELECT * FROM lectures WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC");
+		$result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC");
 	
 		if (!$result) 
             		die("Unable to select lectures.");

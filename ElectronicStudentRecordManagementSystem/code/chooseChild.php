@@ -16,7 +16,7 @@ require_once "db.php";
 
 if (isset($_POST['childIndex'])) {
     /* coming from the same page, choosing the child */
-    checkIfLogged();
+    //checkIfLogged();
     $index = $_POST['childIndex'];
     $_SESSION['child'] = $_SESSION['children'][$index]['codFisc'];
     $_SESSION['childName'] = $_SESSION['children'][$index]['name'];
@@ -48,7 +48,6 @@ if (isset($_SESSION['user']) /* TODO substitute when login is implemented !isset
         case 0:
             $em = $_SESSION["user"]; //to be substituted with $_SESSION["user"]
             // no children for that email => display error
-            require_once "defaultNavbar.php";
             echo <<<_ERROR
             <div class="text-center">
             <h1> No children registered to a class and related to email $em. Please try later to <a href=pseudoLogParent.php>login</a></h1>

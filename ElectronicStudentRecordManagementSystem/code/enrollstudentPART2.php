@@ -66,8 +66,9 @@ if (!$loggedin) {
     }
         
 ?>
-<h1 class="enrollTitle" align="center"> Enroll a student</h1>
-<div class="centralDiv text-center">
+<div class="container text-center">
+	<h1 class="text-center"> ENROLL A STUDENT </h1>
+	<div class="row">
 	<p id="enrollMessage">
 		<?php 
     		if($error != 0){
@@ -79,6 +80,7 @@ if (!$loggedin) {
 	</p>
     <a href="enrollstudent.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&emsp;Enroll new student</a> &emsp;
     <a href="homepageAdmin.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&emsp;Go back to Homepage</a>
+    </div>
 </div>
 
 <?php 
