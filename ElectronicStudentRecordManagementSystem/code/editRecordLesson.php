@@ -53,7 +53,7 @@ if (!$loggedin) {
 		<form class="navbar-form navbar-left" role="class" method="POST" action="updateRecordedLesson.php">
 			<table class="table">
 				<tr><td><label>Class </label></td><td>
-				<input disabled style="width: 350px" value="
+				<input class="form-control" disabled style="width:100%" value="
 				<?php 
 					$selectedClass = $_SESSION["comboClass"];
 					echo $selectedClass;
@@ -64,7 +64,7 @@ if (!$loggedin) {
 
 				</td></tr>
 				<tr><td><label>Subject </label></td><td>
-				<select id="comboSubject" name="comboSubject" style="width: 350px">	
+				<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%">	
 				<?php 
 					$selectedSubject = $_SESSION["comboSubject"];
 				?>				
@@ -80,19 +80,19 @@ if (!$loggedin) {
 				?>
 				</select></td></tr>
 				<tr><td><label>Date</label></td><td>  
-				<input disabled type="date" value="<?php echo $_SESSION["lessontime"]; ?>"
-						style="width: 350px" required>
+				<input class="form-control" disabled type="date" value="<?php echo $_SESSION["lessontime"]; ?>"
+						style="width:100%" required>
 				<input hidden name="lessontime" value="<?php echo $_SESSION["lessontime"]; ?>"/>
 						</td></tr>
 				<tr><td><label>Hour</label></td><td>
-				<input disabled name="comboHour" style="width: 350px" value="<?php 
+				<input disabled name="comboHour" style="width:100%" value="<?php 
 					$selectedHour = $_SESSION["comboHour"];
 					echo $selectedHour;
 				?>">
 				<input hidden name="comboHour" value="<?php echo $selectedHour ?>"/>	
 				</td></tr>	
 				<tr><td><label>Topic(s)</label></td><td>
-				<textarea name="topics" rows="4" cols="50" style="width: 350px" required>
+				<textarea class="form-control" name="topics" rows="4" cols="50" style="width:100%" required>
 				<?php echo $_SESSION["topics"]; ?>
 				</textarea></td></tr>
 	

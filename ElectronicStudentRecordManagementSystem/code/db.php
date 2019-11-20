@@ -718,4 +718,73 @@ class dbTeacher extends db
 		}
 	}
 	
+	function getAssignmentsByTeacher($codTeacher) {
+		$codTeacher = $this -> sanitizeString($codTeacher);
+		
+		$result = $this->query("SELECT * FROM Assignments WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC");
+		
+		if (!$result) 
+        	die("Unable to select assignments.");
+		
+        if ($result->num_rows > 0) {
+         	$assignments = array();
+			while ($row = $result->fetch_assoc()) { 
+				array_push($assignments,  "".$row['classID'].",".$row['subject'].",".$row['date'].",".$row['textAssignment']."");
+			}
+			return $assignments;
+		}		
+	}
+	
+	function insertNewAssignments($date, $class, $codTeacher, $subject, $assignments) {
+		
+		
+		$class = $this -> sanitizeString($class);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		$assignments = $this -> sanitizeString($assignments);
+	    $codTeacher = $this -> sanitizeString($codTeacher);
+		
+		$result = $this->query("SELECT * FROM Assignments WHERE (classID='$class' AND subject='$subject' AND date='$date')");
+	
+		if($result->num_rows > 0) {
+			return -1;
+		}
+
+		$result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment, codFiscTeacher) 
+								VALUES ('$subject', '$date', '$class', '$assignments', '$codTeacher')");
+		
+		if($result == FALSE) {
+			die("ERROR: Assignments not inserted.");
+		}
+		
+	} 	
+	
+	function updateAssignments($date, $class, $subject, $assignments) { 
+	
+		$class = $this -> sanitizeString($class);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		$assignments = $this -> sanitizeString($assignments);
+		
+		$result = $this->query("UPDATE Assignments SET textAssignment='$assignments'
+							WHERE date='$date' AND subject='$subject' AND classID='$class'");
+		
+		if($result == FALSE) {
+			die("ERROR: Assignments not updated.");
+		}
+	}
+	
+	function deleteAssignments($date, $subject, $class) {
+		
+		$class = $this -> sanitizeString($class);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		
+		$result = $this->query("DELETE FROM Assignments WHERE date='$date' AND subject='$subject' AND classID='$class'");
+		
+		if($result == FALSE) {
+			die("ERROR: Assignments not deleted.");
+		}
+		
+	}
 }

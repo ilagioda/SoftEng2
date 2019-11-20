@@ -48,6 +48,10 @@ class Teacher{
     function getSubjectByClassAndTeacher($class){
         return $this->db->getSubjectsByTeacherAndClass2($this->codfisc, $class);
     }
+	
+	function getAssignments() {
+		return $this->db->getAssignmentsByTeacher($this->codfisc);
+	}
 }
 
 

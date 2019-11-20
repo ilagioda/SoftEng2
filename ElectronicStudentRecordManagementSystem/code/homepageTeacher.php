@@ -25,7 +25,7 @@ if (!$loggedin) {
         <?php
             echo "<h2>Welcome to your homepage TEACHER ".$_SESSION["user"]."!</h2><br>";
         ?>
-	<form method="POST" action="dailyLessonTopics.php">
+	<form method="POST">
 		<div class="btn-group">
 		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&emsp;
@@ -39,6 +39,20 @@ if (!$loggedin) {
 	</form>
 		<br>
 		<a href="selectClassForMarks.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&emsp;Add student mark</a>
+		<br>
+	<form method="POST">
+		<div class="btn-group">
+		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&emsp;
+			Assignments <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+		<li><a href="recordAssignments.php">New record</a></li>
+		<li><a href="viewAllAssignments.php">View all records</a></li>
+		</ul>
+		</div>
+	</form>		
+		
 </div>
 
 <?php 
