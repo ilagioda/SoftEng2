@@ -1,6 +1,6 @@
 <?php
 	require_once("basicChecks.php");
-	
+
 	$loggedin = false;
 if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
     $loggedin = true;
@@ -55,8 +55,8 @@ if (!$loggedin) {
 	}
 </script>
 
-<h1 class="text-center"> ENROLL A STUDENT </h1>
 <div class="container text-center">
+	<h1 class="text-center"> ENROLL A STUDENT </h1>
 	<div class="row">
 	<form class="form-horizontal">
 		<br><h3 class="text-center">STUDENT INFORMATION</h3><br>
