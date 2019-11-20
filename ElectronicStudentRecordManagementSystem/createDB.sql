@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Creato il: Nov 18, 2019 alle 17:44
--- Versione del server: 10.4.8-MariaDB
--- Versione PHP: 7.1.32
+-- Host: 127.0.0.1
+-- Creato il: Nov 20, 2019 alle 13:23
+-- Versione del server: 10.1.39-MariaDB
+-- Versione PHP: 7.3.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,28 +21,33 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
-DROP DATABASE IF EXISTS `school`;
-CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `school`;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Admins`
+-- Struttura della tabella `admins`
 --
 
-CREATE TABLE `Admins` (
+CREATE TABLE `admins` (
   `codFisc` varchar(50) NOT NULL,
   `hashedPassword` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `admins`
+--
+
+INSERT INTO `admins` (`codFisc`, `hashedPassword`) VALUES
+('ADM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m'),
+('FLC', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m');
+
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Assignments`
+-- Struttura della tabella `assignments`
 --
 
-CREATE TABLE `Assignments` (
+CREATE TABLE `assignments` (
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `classID` varchar(50) NOT NULL,
@@ -52,10 +57,10 @@ CREATE TABLE `Assignments` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Lectures`
+-- Struttura della tabella `lectures`
 --
 
-CREATE TABLE `Lectures` (
+CREATE TABLE `lectures` (
   `date` date NOT NULL,
   `hour` int(11) NOT NULL,
   `classID` varchar(5) NOT NULL,
@@ -65,20 +70,20 @@ CREATE TABLE `Lectures` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `Lectures`
+-- Dump dei dati per la tabella `lectures`
 --
 
-INSERT INTO `Lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
+INSERT INTO `lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
 ('2019-11-05', 1, '1A', 'GNV', 'Maths', 'arg0'),
 ('2019-11-11', 1, '1A', 'GNV', 'Maths', 'arg1');
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Marks`
+-- Struttura della tabella `marks`
 --
 
-CREATE TABLE `Marks` (
+CREATE TABLE `marks` (
   `codFisc` varchar(50) NOT NULL,
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
@@ -87,10 +92,10 @@ CREATE TABLE `Marks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `Marks`
+-- Dump dei dati per la tabella `marks`
 --
 
-INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
+INSERT INTO `marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
 ('FRCWTR', 'Italian', '2019-10-10', 1, '7+'),
 ('FRCWTR', 'History', '2019-10-10', 2, '6'),
 ('FRCWTR', 'Philosophy', '2019-10-10', 3, '5/6'),
@@ -102,10 +107,10 @@ INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Parents`
+-- Struttura della tabella `parents`
 --
 
-CREATE TABLE `Parents` (
+CREATE TABLE `parents` (
   `email` varchar(50) NOT NULL,
   `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
@@ -115,16 +120,18 @@ CREATE TABLE `Parents` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `Parents`
+-- Dump dei dati per la tabella `parents`
 --
 
-INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
-('cla_9_6@hotmail.it', '', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
+INSERT INTO `parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
+('cla_9_6@hotmail.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
 ('fant@hotmail.it', '', 'Ugo', 'Fantozzi', 'GFNTZZ', 0),
 ('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
+('gigimarzullo@genitore1.it', '', 'Gigi', 'Marzullo', 'MZRGG65', 1),
 ('hot_9_6@hotmail.it', '', 'Pippo', 'Franco', 'PPPFRNC', 1),
-('miiiimmo_9_6@hotmail.it', '', 'Mimmo', 'Secondino', 'MMMSCNDN', 1),
+('miiiimmo_9_6@hotmail.it', 'provaProvina', 'Mimmo', 'Secondino', 'MMMSCNDN', 1),
 ('padre@hotmail.it', '', 'Pio', 'Amadeo', 'PMD', 0),
+('parent@parent.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'ParentName', 'ParentSurname', 'CCCC', 0),
 ('silv_9_6@hotmail.it', '', 'Silvia', 'Gertrude', 'SLVGRTD', 1),
 ('toro_9_6@hotmail.it', '', 'Tor', 'Ino', 'TRN', 1),
 ('volley.champions@hotmail.it', '', 'Mila', 'Shiro', 'MLSHR', 1);
@@ -132,10 +139,10 @@ INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Principals`
+-- Struttura della tabella `principals`
 --
 
-CREATE TABLE `Principals` (
+CREATE TABLE `principals` (
   `codFisc` varchar(50) NOT NULL,
   `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
@@ -145,31 +152,30 @@ CREATE TABLE `Principals` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `ProposedClasses`
+-- Struttura della tabella `proposedclasses`
 --
 
-CREATE TABLE `ProposedClasses` (
+CREATE TABLE `proposedclasses` (
   `classID` varchar(5) NOT NULL,
   `codFisc` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `ProposedClasses`
+-- Dump dei dati per la tabella `proposedclasses`
 --
 
-INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
+INSERT INTO `proposedclasses` (`classID`, `codFisc`) VALUES
 ('1A', 'CLDFLCM'),
-('1B', 'MRC'),
 ('1C', 'ANDR'),
 ('1C', 'SMN');
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Students`
+-- Struttura della tabella `students`
 --
 
-CREATE TABLE `Students` (
+CREATE TABLE `students` (
   `codFisc` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
@@ -179,35 +185,36 @@ CREATE TABLE `Students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `Students`
+-- Dump dei dati per la tabella `students`
 --
 
-INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
+INSERT INTO `students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
 ('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', ''),
+('BZRGLC96', 'Gianluca', 'Brezzo', 'gigimarzullo@genitore1.it', '', ''),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
 ('CRS', 'Cristian', 'Mins', 'cris@gmail.it', '', '1A'),
-('FRCWTR', 'Walter', 'Forcignanò', 'wlt@gmail.it', '', '1A'),
+('FRCWTR', 'Walter', 'Forcignano', 'wlt@gmail.it', '', '1A'),
 ('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'wlt@gmail.it', '1C'),
-('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
+('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', '1B'),
 ('SMN', 'Simona', 'Genovese', 'smn@gmail.it', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Subjects`
+-- Struttura della tabella `subjects`
 --
 
-CREATE TABLE `Subjects` (
+CREATE TABLE `subjects` (
   `name` varchar(50) NOT NULL,
   `year` int(11) NOT NULL,
   `hours` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `Subjects`
+-- Dump dei dati per la tabella `subjects`
 --
 
-INSERT INTO `Subjects` (`name`, `year`, `hours`) VALUES
+INSERT INTO `subjects` (`name`, `year`, `hours`) VALUES
 ('Biology and Chemistry', 1, 4),
 ('English', 1, 3),
 ('Geography', 1, 2),
@@ -221,20 +228,20 @@ INSERT INTO `Subjects` (`name`, `year`, `hours`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `TeacherClassSubjectTable`
+-- Struttura della tabella `teacherclasssubjecttable`
 --
 
-CREATE TABLE `TeacherClassSubjectTable` (
+CREATE TABLE `teacherclasssubjecttable` (
   `codFisc` varchar(50) NOT NULL,
   `classID` varchar(50) NOT NULL,
   `subject` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `TeacherClassSubjectTable`
+-- Dump dei dati per la tabella `teacherclasssubjecttable`
 --
 
-INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
+INSERT INTO `teacherclasssubjecttable` (`codFisc`, `classID`, `subject`) VALUES
 ('FLCM', '1A', 'Philosophy'),
 ('GNV', '1A', 'Maths'),
 ('GNV', '1A', 'Physics'),
@@ -243,10 +250,10 @@ INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `Teachers`
+-- Struttura della tabella `teachers`
 --
 
-CREATE TABLE `Teachers` (
+CREATE TABLE `teachers` (
   `codFisc` varchar(50) NOT NULL,
   `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
@@ -254,84 +261,85 @@ CREATE TABLE `Teachers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `Teachers`
+-- Dump dei dati per la tabella `teachers`
 --
 
-INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`) VALUES
-('FLCM', 'pwdflcm', 'Filocamo', 'Claudio'),
-('GNV', 'pwdgnv', 'simona', 'genovese');
+INSERT INTO `teachers` (`codFisc`, `hashedPassword`, `name`, `surname`) VALUES
+('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio'),
+('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'simona', 'genovese'),
+('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'TeacherName', 'TeacherSurname');
 
 --
 -- Indici per le tabelle scaricate
 --
 
 --
--- Indici per le tabelle `Admins`
+-- Indici per le tabelle `admins`
 --
-ALTER TABLE `Admins`
+ALTER TABLE `admins`
   ADD PRIMARY KEY (`codFisc`);
 
 --
--- Indici per le tabelle `Assignments`
+-- Indici per le tabelle `assignments`
 --
-ALTER TABLE `Assignments`
+ALTER TABLE `assignments`
   ADD PRIMARY KEY (`subject`,`date`,`classID`);
 
 --
--- Indici per le tabelle `Lectures`
+-- Indici per le tabelle `lectures`
 --
-ALTER TABLE `Lectures`
+ALTER TABLE `lectures`
   ADD PRIMARY KEY (`date`,`hour`,`classID`);
 
 --
--- Indici per le tabelle `Marks`
+-- Indici per le tabelle `marks`
 --
-ALTER TABLE `Marks`
+ALTER TABLE `marks`
   ADD PRIMARY KEY (`codFisc`,`date`,`hour`),
   ADD KEY `subjectForeignKey` (`subject`);
 
 --
--- Indici per le tabelle `Parents`
+-- Indici per le tabelle `parents`
 --
-ALTER TABLE `Parents`
+ALTER TABLE `parents`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indici per le tabelle `Principals`
+-- Indici per le tabelle `principals`
 --
-ALTER TABLE `Principals`
+ALTER TABLE `principals`
   ADD PRIMARY KEY (`codFisc`);
 
 --
--- Indici per le tabelle `ProposedClasses`
+-- Indici per le tabelle `proposedclasses`
 --
-ALTER TABLE `ProposedClasses`
+ALTER TABLE `proposedclasses`
   ADD PRIMARY KEY (`classID`,`codFisc`),
   ADD KEY `studentIDForeignKey` (`codFisc`);
 
 --
--- Indici per le tabelle `Students`
+-- Indici per le tabelle `students`
 --
-ALTER TABLE `Students`
+ALTER TABLE `students`
   ADD PRIMARY KEY (`codFisc`);
 
 --
--- Indici per le tabelle `Subjects`
+-- Indici per le tabelle `subjects`
 --
-ALTER TABLE `Subjects`
+ALTER TABLE `subjects`
   ADD PRIMARY KEY (`name`,`year`);
 
 --
--- Indici per le tabelle `TeacherClassSubjectTable`
+-- Indici per le tabelle `teacherclasssubjecttable`
 --
-ALTER TABLE `TeacherClassSubjectTable`
+ALTER TABLE `teacherclasssubjecttable`
   ADD PRIMARY KEY (`codFisc`,`classID`,`subject`),
   ADD KEY `subjectTeacherClassSubjectForeignKey` (`subject`);
 
 --
--- Indici per le tabelle `Teachers`
+-- Indici per le tabelle `teachers`
 --
-ALTER TABLE `Teachers`
+ALTER TABLE `teachers`
   ADD PRIMARY KEY (`codFisc`);
 
 --
@@ -339,24 +347,24 @@ ALTER TABLE `Teachers`
 --
 
 --
--- Limiti per la tabella `Marks`
+-- Limiti per la tabella `marks`
 --
-ALTER TABLE `Marks`
-  ADD CONSTRAINT `codFiscForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`),
-  ADD CONSTRAINT `subjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
+ALTER TABLE `marks`
+  ADD CONSTRAINT `codFiscForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `students` (`codFisc`),
+  ADD CONSTRAINT `subjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `subjects` (`name`);
 
 --
--- Limiti per la tabella `ProposedClasses`
+-- Limiti per la tabella `proposedclasses`
 --
-ALTER TABLE `ProposedClasses`
-  ADD CONSTRAINT `studentIDForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`);
+ALTER TABLE `proposedclasses`
+  ADD CONSTRAINT `studentIDForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `students` (`codFisc`);
 
 --
--- Limiti per la tabella `TeacherClassSubjectTable`
+-- Limiti per la tabella `teacherclasssubjecttable`
 --
-ALTER TABLE `TeacherClassSubjectTable`
-  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Teachers` (`codFisc`),
-  ADD CONSTRAINT `subjectTeacherClassSubjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
+ALTER TABLE `teacherclasssubjecttable`
+  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `teachers` (`codFisc`),
+  ADD CONSTRAINT `subjectTeacherClassSubjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `subjects` (`name`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
