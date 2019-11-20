@@ -10,7 +10,7 @@ if(!$loggedin){
     header("Location: login.php");
 }
 else{
-    require_once("loggedNavbar.php");
+    require_once("loggedAdminNavbar.php");
 }
 require_once "db.php";
 $_SESSION['db'] = new dbAdmin();

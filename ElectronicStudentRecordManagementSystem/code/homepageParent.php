@@ -10,7 +10,7 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
-    require_once "loggedNavbar.php";
+    require_once "loggedParentNavbar.php";
 }
 
 //checkIfLogged();

@@ -9,7 +9,7 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
-    require_once "loggedNavbar.php";
+    require_once "loggedParentNavbar.php";
 }
 
 require_once "db.php";
@@ -81,7 +81,7 @@ _ERROR;
     exit;
 }
 
-require_once "defaultNavbar.php";
+//require_once "defaultNavbar.php";
 
 ?>
 
