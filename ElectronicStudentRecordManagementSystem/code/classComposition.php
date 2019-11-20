@@ -100,7 +100,7 @@ _ENDOFREQUESTEDPAGE;
     $dbAdmin->updateStudentsClass($parameters);
 
 
-    require_once("defaultNavbar.php");
+    //require_once("defaultNavbar.php");
     echo <<<_CONFIRMEDPAGE
     <div class="col-sm-20 text-left">
                 <h1>Composition of the class confirmed.</h1>
@@ -123,7 +123,7 @@ require_once("defaultFooter.php");
 
     $classes = $dbAdmin->readAllClasses();
 
-    require_once("defaultNavbar.php");
+    //require_once("defaultNavbar.php");
     echo <<<_NORMALPAGE
               <div class="col-sm-20 text-left">
                 <h1>Class Composition.</h1>
