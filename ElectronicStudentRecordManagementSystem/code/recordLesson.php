@@ -46,6 +46,10 @@ $(document).ready(function(){
         border-color: #ff80ff;
         box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
     }
+	#container {
+		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
+		padding:0 15px 0 15px;
+	}
 </style>
 
 
@@ -55,12 +59,13 @@ $(document).ready(function(){
   <li role="presentation"><a href="viewAllLessonTopics.php">View all records</a></li>
 </ul>
 
-<div class="panel panel-default">
-	<div class="panel-body">
+<div class="panel panel-default" id="container">
+	<div class="panel-body" >
 	<h1> Record daily lesson topics </h1>
 	<div class="form-group">
 
-		<form class="navbar-form navbar-left form-inline" role="class" method="POST" action="viewRecordedLesson.php">
+		<form class="navbar-form navbar-left form-inline" method="POST" action="viewRecordedLesson.php">
+		
 			<table class="table">
 				<tr><td><label>Class </label></td><td>
 				<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 

@@ -10,20 +10,29 @@ if (!$loggedin) {
     header("Location: login.php");
 } else {
     require_once "loggedTeacherNavbar.php";
-}
-/* 	
-	$_SESSION['user']="GNV";
-	$_SESSION['role']="teacher"; */
-	
+}	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
     
 ?>
+
+<style> 
+	#container {
+		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
+		padding:0 15px 0 15px;
+	}
+</style>
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="recordLesson.php">New record</a></li>
   <li role="presentation" class="active"><a href="#">View all records</a></li>
 </ul>
+<div class="panel panel-default" id="container">
+	<div class="panel-body">
 
+<h1> All lectures: </h1>
+	<form class="form-inline active-cyan-3 active-cyan-4">
+		<input class="form-control form-control-sm ml-3 w-75" style="width:100%" type="text" placeholder="Search" aria-label="Search">
+	</form>
 	<?php 
 		$lectures = $teacher->getLectures();
 		foreach((array)$lectures as $value) {
@@ -31,11 +40,11 @@ if (!$loggedin) {
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<form role="class" method="POST" action="">
-					<table class="table" name="lesson">
+					<table class="table">
 					<?php
 						$args = explode(",",$value);
 					?>
-						<tr><td> Class: </td><td><?php echo $args[0];?>
+						<tr><td> Class: </td><td><?php echo $args[0];?></td></tr>
 						<input type="hidden" name="comboClass" value="<?php echo $args[0];?>">
 
 						<tr><td> Subject: </td><td><?php echo $args[1];?></td></tr>
@@ -70,6 +79,10 @@ if (!$loggedin) {
 	<?php
 		}
 	?>
+				</div>
+
+			</div>
+
 <?php 
     require_once("defaultFooter.php")
 ?>
