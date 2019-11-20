@@ -128,23 +128,6 @@ CREATE TABLE `Parents` (
 --
 
 INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
-('cla_9_6@hotmail.it', '', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
-('fant@hotmail.it', '', 'Ugo', 'Fantozzi', 'GFNTZZ', 0),
-('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
-('hot_9_6@hotmail.it', '', 'Pippo', 'Franco', 'PPPFRNC', 1),
-('miiiimmo_9_6@hotmail.it', '', 'Mimmo', 'Secondino', 'MMMSCNDN', 1),
-('padre@hotmail.it', '', 'Pio', 'Amadeo', 'PMD', 0),
-('silv_9_6@hotmail.it', '', 'Silvia', 'Gertrude', 'SLVGRTD', 1),
-('toro_9_6@hotmail.it', '', 'Tor', 'Ino', 'TRN', 1),
-('volley.champions@hotmail.it', '', 'Mila', 'Shiro', 'MLSHR', 1);
-
--- --------------------------------------------------------
-
---
--- Dump dei dati per la tabella `parents`
---
-
-INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
 ('cla_9_6@hotmail.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
 ('fant@hotmail.it', '', 'Ugo', 'Fantozzi', 'GFNTZZ', 0),
 ('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
