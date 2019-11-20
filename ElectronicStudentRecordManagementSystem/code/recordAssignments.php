@@ -37,6 +37,19 @@ $(document).ready(function(){
 						}
 		});
 	});
+	
+	var warning = $('<p class="text-danger">').text('Error you cannot select a weekend')
+	$('#assignmentstime').change(function(e) {
+
+      var d = new Date(e.target.value)
+      if(d.getDay() === 6 || d.getDay() === 0) {
+        $('#confirm').attr('disabled',true)
+        $('#assignmentstime').after(warning);
+      } else {
+        warning.remove()
+       $('#confirm').attr('disabled',false);
+    }
+})
 });
 
 </script>
@@ -46,6 +59,10 @@ $(document).ready(function(){
         border-color: #ff80ff;
         box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
     }
+	#container {
+		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
+		padding:0 15px 0 15px;
+	}
 </style>
 
 
@@ -55,7 +72,7 @@ $(document).ready(function(){
   <li role="presentation"><a href="viewAllAssignments.php">View all records</a></li>
 </ul>
 
-<div class="panel panel-default">
+<div class="panel panel-default" id="container">
 	<div class="panel-body">
 	<h1> Record assignments </h1>
 	<div class="form-group">
@@ -79,13 +96,13 @@ $(document).ready(function(){
 				</td></tr>
 				</select><tr><td><label>Date</label></td><td>  
 				<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
-						min="<?php echo date("Y-m-d");  ?>" 
+						min="<?php echo date("Y-m-d");  ?>" max="<?php echo date("Y-m-d", strtotime('2020-06-10')); ?>"
 						style="width:100%" required> </td></tr>
 				<tr><td><label>Assignments</label></td><td>
 				<textarea class="form-control" name="assignments" rows="4" cols="50" placeholder="Assignments..." style="width:100%" required></textarea></td></tr>
 	
 				<tr><td></td><td><button type="reset" class = "btn btn-default">Reset</button>
-				<button type="submit" class="btn btn-success">Confirm</button></td></tr>
+				<button type="submit" id="confirm" class="btn btn-success">Confirm</button></td></tr>
 			</table>
 		</form>
 		</div>
