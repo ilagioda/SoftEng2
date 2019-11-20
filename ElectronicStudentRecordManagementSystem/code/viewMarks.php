@@ -2,21 +2,21 @@
 require_once("basicChecks.php");
 
 $loggedin = false;
-if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
+if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
     $loggedin = true;
 }
 if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
-    require_once "loggedNavbar.php";
+    require_once "loggedParentNavbar.php";
 }
 require_once("db.php");
 
 //checkIfLogged();
 
-/* $childName = $_SESSION['childName'];
-$childSurname = $_SESSION['childSurname']; */
+$childName = $_SESSION['childName'];
+$childSurname = $_SESSION['childSurname']; 
 
 $db = new dbParent();
 

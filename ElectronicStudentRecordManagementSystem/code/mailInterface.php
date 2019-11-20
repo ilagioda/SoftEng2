@@ -75,7 +75,7 @@ foreach ($ParentsMailList as $tuple) {
             <td>$email</td>
             <td class="td_resized_sendmail" id="td_loadr$i"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
           </tr>
-        _SUCCESS;
+_SUCCESS;
     } else if ($hashedPw != null && $firstLogin == true) {
         //email già mandata, ma utente non ha ancora modificato pw (c'è quella di default)
         echo <<<_SENT
@@ -83,7 +83,7 @@ foreach ($ParentsMailList as $tuple) {
             <td>$email</td>
             <td class="td_resized_sendmail" id="td_loadr$i"><button type="button" class="btn btn-success primary btn-lg" id="$email" onclick="sendMail(id, 'r$i')">SEND</td>
             </tr>
-          _SENT;
+_SENT;
     }
     $i++;
 }
