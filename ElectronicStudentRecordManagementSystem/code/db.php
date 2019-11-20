@@ -218,6 +218,12 @@ class dbAdmin extends db
         }
     }
 
+    function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname){
+        $sql = "INSERT INTO $who VALUES('$SSN', '$hashedPw', '$name', '$surname')";
+        $res = $this->query($sql);
+        return $res;
+    }
+
     function SearchInParents($user, $pass){
         $sql = "SELECT email,hashedPassword FROM Parents /* Parents, Principals, Teachers, Admins*/
         WHERE email='$user' AND hashedPassword='$pass'";

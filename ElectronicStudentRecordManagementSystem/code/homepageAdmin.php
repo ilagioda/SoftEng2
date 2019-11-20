@@ -30,6 +30,7 @@ echo "<h2>Welcome to your homepage ADMIN " . $_SESSION["user"] . "!</h2><br>";
     <a href="enrollstudent.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&emsp;Enroll new student</a><br><br>
     <a href="mailInterface.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&emsp;Enable access to parents</a><br><br>
     <a href="classComposition.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>&emsp;Enter class composition</a><br><br>
+    <a href="setupAccounts.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&emsp;Setup official accounts</a><br><br>
 </div>
 
 <?php
