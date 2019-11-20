@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Creato il: Nov 20, 2019 alle 13:23
--- Versione del server: 10.1.39-MariaDB
--- Versione PHP: 7.3.5
+-- Host: localhost
+-- Creato il: Nov 20, 2019 alle 14:01
+-- Versione del server: 10.4.8-MariaDB
+-- Versione PHP: 7.1.32
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -24,7 +24,6 @@ SET time_zone = "+00:00";
 DROP DATABASE IF EXISTS `school`;
 CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
-
 -- --------------------------------------------------------
 
 --
@@ -173,7 +172,6 @@ INSERT INTO `proposedclasses` (`classID`, `codFisc`) VALUES
 ('1C', 'ANDR'),
 ('1C', 'SMN');
 
-
 -- --------------------------------------------------------
 
 --
@@ -196,11 +194,11 @@ CREATE TABLE `students` (
 INSERT INTO `students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
 ('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', ''),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
-('CRS', 'Cristian', 'Mins', 'cris@gmail.it', '', '1A'),
-('FRCWTR', 'Walter', 'Forcignano', 'wlt@gmail.it', '', '1A'),
+('CRS', 'Cristian', 'Mins', 'cris@gmail.it', 'parent@parent.it', '1D'),
+('FRCWTR', 'Walter', 'Forcignano', 'wlt@gmail.it', 'parent@parent.it', '1A'),
 ('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'wlt@gmail.it', '1C'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
-('SMN', 'Simona', 'Genovese', 'smn@gmail.it', '', '');
+('SMN', 'Simona', 'Genovese', 'smn@gmail.it', 'parent@parent.it', '');
 
 -- --------------------------------------------------------
 
@@ -249,7 +247,9 @@ INSERT INTO `teacherclasssubjecttable` (`codFisc`, `classID`, `subject`) VALUES
 ('FLCM', '1A', 'Philosophy'),
 ('GNV', '1A', 'Maths'),
 ('GNV', '1A', 'Physics'),
-('GNV', '1B', 'Geography');
+('GNV', '1B', 'Geography'),
+('TEA', '1A', 'History'),
+('TEA', '1B', 'Italian');
 
 -- --------------------------------------------------------
 
