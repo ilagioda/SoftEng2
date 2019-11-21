@@ -147,7 +147,7 @@ class db
     }
 
     function getAnnouncements(){
-        $sql = "SELECT * FROM Announcements ORDER BY 'Timestamp'";
+        $sql = "SELECT * FROM Announcements ORDER BY Timestamp DESC";
         $res = $this->query($sql);
         return $res;
     }
