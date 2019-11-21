@@ -65,13 +65,24 @@ if (!$loggedin) {
 		}
 						
 	?>
+	
+	<style>
+    .form-control:focus {
+        border-color: #ff80ff;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
+    }
+	#container {
+		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
+		padding:0 15px 0 15px;
+	}
+</style>
 	<ul class="nav nav-tabs">
 		<li role="presentation"><a href="recordAssignemnts.php">New record</a></li>
 		<li role="presentation"><a href="viewAllAssignments.php">View all records</a></li>
 		<li role="presentation" class="active"><a href="#">Delete record</a></li>
 
 	</ul>
-	<div class="panel panel-default" align="center">
+	<div class="panel panel-default" align="center" id="container">
 			<div class="panel-body">
 
 				<form role="class" method="POST" action="deleteAssignments.php">

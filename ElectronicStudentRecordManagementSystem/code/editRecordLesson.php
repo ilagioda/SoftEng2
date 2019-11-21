@@ -39,6 +39,17 @@ if (!$loggedin) {
     
 ?>
 
+<style>
+    .form-control:focus {
+        border-color: #ff80ff;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
+    }
+	#container {
+		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
+		padding:0 15px 0 15px;
+	}
+</style>
+
 <ul class="nav nav-tabs">
 
   <li role="presentation"><a href="recordLesson.php">New record</a></li>
@@ -47,7 +58,7 @@ if (!$loggedin) {
 
 </ul>
 
-<div class="panel panel-default">
+<div class="panel panel-default" id="container">
 	<div class="panel-body">
 	<h1> Update daily lesson topics </h1>
 		<form class="navbar-form navbar-left" role="class" method="POST" action="updateRecordedLesson.php">
