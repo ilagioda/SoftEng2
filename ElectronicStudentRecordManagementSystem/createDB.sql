@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 21, 2019 alle 18:21
+-- Creato il: Nov 21, 2019 alle 19:24
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -45,6 +45,27 @@ CREATE TABLE `Admins` (
 INSERT INTO `Admins` (`codFisc`, `hashedPassword`, `name`, `surname`) VALUES
 ('ADM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Adamo', 'Eva'),
 ('FLC', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Nino', 'Frassica');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Announcements`
+--
+
+CREATE TABLE `Announcements` (
+  `ID` int(11) NOT NULL,
+  `Timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `Title` varchar(100) NOT NULL,
+  `Text` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Announcements`
+--
+
+INSERT INTO `Announcements` (`ID`, `Timestamp`, `Title`, `Text`) VALUES
+(1, '2019-11-21 17:07:25', 'First Announcement', 'This is the first announcement of the poliTO school. For the real slim shady please stand up!'),
+(2, '2019-11-21 17:09:18', 'Second official announcement', 'Just gonna stand there and watch me burn\r\nBut that\'s alright, because I like the way it hurts\r\nJust gonna stand there and hear me cry\r\nBut that\'s alright, because I love the way you lie\r\nI love the way you lie');
 
 -- --------------------------------------------------------
 
