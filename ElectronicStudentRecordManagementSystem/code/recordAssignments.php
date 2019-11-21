@@ -19,6 +19,28 @@ if (!$loggedin) {
 
 <script type="text/javascript">
 
+function checkIfHoliday(day) {
+	
+	var holidays = ["2019-12-23","2019-12-24", "2019-12-25", "2019-12-26",
+					"2019-12-27", "2019-12-28", "2019-12-29", "2019-12-30",
+					"2019-12-31", "2020-01-01", "2020-01-02", "2020-01-03",
+					"2020-01-04", "2020-02-22", "2020-02-23", "2020-02-24",
+					"2020-02-25", "2020-02-26", "2020-04-09", "2020-04-10",
+					"2020-04-11", "2020-04-12", "2020-04-13", "2020-04-14",
+					"2020-05-02", "2020-05-02"];
+						
+						
+	for(var i=0; i<holidays.length; i++) {
+		var temp = new Date(holidays[i]);
+		if(day.getTime() == temp.getTime()) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
 $(document).ready(function(){
 	$("#comboClass").change(function() {
 		var comboClass = $("option:selected", this).val();
@@ -38,18 +60,19 @@ $(document).ready(function(){
 		});
 	});
 	
-	var warning = $('<p class="text-danger">').text('Error you cannot select a weekend')
+	var warning = $('<p class="text-danger">').text('Error: you must select a working day!')
 	$('#assignmentstime').change(function(e) {
 
-      var d = new Date(e.target.value)
-      if(d.getDay() === 6 || d.getDay() === 0) {
-        $('#confirm').attr('disabled',true)
-        $('#assignmentstime').after(warning);
-      } else {
-        warning.remove()
-       $('#confirm').attr('disabled',false);
-    }
-})
+		var d = new Date(e.target.value)
+		if(d.getDay() === 6 || d.getDay() === 0 || checkIfHoliday(d)) {
+			$('#confirm').attr('disabled',true)
+			$('#assignmentstime').after(warning);
+		} else {
+			warning.remove()
+			$('#confirm').attr('disabled',false);
+		}
+	});
+	
 });
 
 </script>
