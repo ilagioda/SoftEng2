@@ -15,6 +15,8 @@ if (!$loggedin) {
  *  To be removed => here until logout is implemented
  * */
 //$_SESSION = array();
+require_once "db.php";
+$db = new db();
 ?>
 
 <div class="container-fluid text-center">
@@ -25,23 +27,68 @@ if (!$loggedin) {
             <p><a href="#">Calendar</a></p>
             <p><a href="#">Language</a></p>
         </div>
-        <div class="col-sm-8 text-center">
+        <div class="col-md-8 text-center">
             <h1>Welcome</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
             <img id="central_image" src="images/school_logo.png">
+            <div class="overflow-auto">
+                <?php
+                $res = $db->getAnnouncements();
+                if(!$res) echo "<p>Some problem occurred. We're sorry.</p>";
+                else{
+                    if($res->num_rows == 0) 
+                        echo <<<_NOANNOUNCEMENT
+                        <div class="card">
+                        <div class="card-header text-left">
+                            NONE
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"><strong> NONE </strong></h5>
+                            <p>No announcement to be shown.</p>
+                        </div>
+                    </div>
+_NOANNOUNCEMENT;
+                    else{
+                        foreach($res as $tuple){
+                            $timestamp = $tuple['Timestamp'];
+                            $text = $tuple['Text'];
+                            $title = $tuple['Title'];
+
+                            echo <<<_ANNOUNCEMENT
+                            <div class="card">
+                            <div class="card-header text-left">
+                                $timestamp
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"><strong> $title </strong></h5>
+                                <p>$text</p>
+                            </div>
+                        </div>
+_ANNOUNCEMENT;
+                        }
+                    }
+                }
+
+
+                ?>
+            </div>
+
         </div>
         <div class="col-sm-2 sidenav">
             <div class="well">
-                <p><img class="ads_logos" src="images/fb_logo.png"></p> <!--Logo facebook -->
+                <p><img class="ads_logos" src="images/fb_logo.png"></p>
+                <!--Logo facebook -->
             </div>
             <div class="well">
-                <p><img class="ads_logos" src="images/instagram_logo.png"></p> <!--Logo instagram -->
+                <p><img class="ads_logos" src="images/instagram_logo.png"></p>
+                <!--Logo instagram -->
             </div>
             <div class="well">
-                <p><img class="ads_logos" src="images/whatsapp_logo.png"></p> <!--Logo instagram -->
+                <p><img class="ads_logos" src="images/whatsapp_logo.png"></p>
+                <!--Logo instagram -->
             </div>
             <div class="well">
-                <p><img class="ads_logos" src="images/twitter_logo.png"></p> <!--Logo instagram -->
+                <p><img class="ads_logos" src="images/twitter_logo.png"></p>
+                <!--Logo instagram -->
             </div>
         </div>
     </div>

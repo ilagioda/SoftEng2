@@ -83,18 +83,6 @@ class db
         return $subjects;
     }
 
-    /**
-     * Utilities
-     */
-    function sanitizeString($var)
-    {
-        $var = strip_tags($var);
-        $var = htmlentities($var);
-        if (get_magic_quotes_gpc())
-            $var = stripslashes($var);
-        return $this->conn->real_escape_string($var);
-    }
-
     function getHashedPassword($user){
         $sql = "SELECT email, hashedPassword FROM Parents WHERE email='$user'";
         $sql2 = "SELECT codFisc, hashedPassword FROM Teachers WHERE codFisc='$user'";
@@ -156,6 +144,24 @@ class db
             }
         }
         return $ret_value;
+    }
+
+    function getAnnouncements(){
+        $sql = "SELECT * FROM Announcements ORDER BY 'Timestamp'";
+        $res = $this->query($sql);
+        return $res;
+    }
+
+    /**
+     * Utilities
+     */
+    function sanitizeString($var)
+    {
+        $var = strip_tags($var);
+        $var = htmlentities($var);
+        if (get_magic_quotes_gpc())
+            $var = stripslashes($var);
+        return $this->conn->real_escape_string($var);
     }
 
     function __destruct()
