@@ -36,10 +36,7 @@ if (!$loggedin) {
 	<div class="panel-body">
 
 	<h1> All assignments: </h1>
-	<form class="form-inline active-cyan-3 active-cyan-4">
-		<input class="form-control form-control-sm ml-3 w-75" style="width:100%" type="text" placeholder="Search" aria-label="Search">
-	</form>
-	
+
 	<?php 
 		$assignments = $teacher->getAssignments();
 		foreach((array)$assignments as $value) {
