@@ -52,6 +52,10 @@ class Teacher{
 	function getAssignments() {
 		return $this->db->getAssignmentsByTeacher($this->codfisc);
 	}
+	
+	   function getStudents2($class){
+        return $this->db->getStudentsByClass2($class); 
+    }
 }
 
 

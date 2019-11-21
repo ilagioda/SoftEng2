@@ -793,4 +793,50 @@ class dbTeacher extends db
 		}
 		
 	}
+	
+	function getStudentsByClass2($class){
+
+        $class = $this -> sanitizeString($class);
+        
+        $result = $this->query("SELECT * FROM Students WHERE classID='$class'");
+        
+        if (!$result) 
+            die("Unable to select students");
+
+   	    if ($result->num_rows > 0) {
+
+            $students = array();
+            while ($row = $result->fetch_assoc()) {
+               	array_push($students, "".$row['name'].",".$row['surname'].",".$row['codFisc']."");
+            }
+            return $students;
+        }
+	
+    }
+	
+	function insertAbsenceNote($date, $hour, $student, $class, $codTeacher, $subject, $absencenote) {
+		
+		$class = $this -> sanitizeString($class);
+		$subject = $this -> sanitizeString($subject);
+		$student = $this -> sanitizeString($student);
+		$codTeacher = $this -> sanitizeString($codTeacher);
+		$date = $this -> sanitizeString($date);
+		$hour = $this -> sanitizeString($hour);
+		$absencenote = $this -> sanitizeString($absencenote);
+
+		$result = $this->query("SELECT * FROM Assignments WHERE (classID='$class' AND subject='$subject' AND date='$date')");
+	
+		if($result->num_rows > 0) {
+			return -1;
+		}
+
+		$result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment, codFiscTeacher) 
+								VALUES ('$subject', '$date', '$class', '$assignments', '$codTeacher')");
+		
+		if($result == FALSE) {
+			die("ERROR: Assignments not inserted.");
+		}
+		
+		
+	}
 }

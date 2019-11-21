@@ -26,7 +26,7 @@ function checkIfHoliday(day) {
 					"2020-01-04", "2020-02-22", "2020-02-23", "2020-02-24",
 					"2020-02-25", "2020-02-26", "2020-04-09", "2020-04-10",
 					"2020-04-11", "2020-04-12", "2020-04-13", "2020-04-14",
-					"2020-05-02", "2020-05-02"];
+					"2020-05-02", "2020-05-02", "2019-11-01"];
 						
 						
 	for(var i=0; i<holidays.length; i++) {
@@ -108,7 +108,7 @@ $(document).ready(function(){
 	<h1> Record absence note: </h1>
 	<div class="form-group">
 
-		<form class="navbar-form navbar-left form-inline" method="POST" action="viewAbsenceNote.php">
+		<form class="navbar-form navbar-left form-inline" method="POST" action="viewRecordedAbsenceNote.php">
 		
 			<table class="table">
 				<tr><td><label>Class </label></td><td>
@@ -139,17 +139,11 @@ $(document).ready(function(){
 				<input class="form-control" type="date" name="absencetime" id="absencetime"
 						min="<?php echo date("Y-m-d", strtotime('2019-09-09')); ?>" max="<?php echo date("Y-m-d");  ?>" 
 						style="width:100%" required> </td></tr>
-				<tr><td><label>Hour</label></td><td>
-				<select class="form-control" name="comboHour" id="comboHour" style="width:100%" required>
-				<?php
-					for($i=1; $i<=6; $i++) 
-						echo "<option value=" . $i . ">" . $i . "</option>";
-				?>	
-				</select></td></tr>	
+	
 				<tr><td><label>Absence note</label></td><td>
 				<textarea class="form-control" name="absencenote" rows="4" cols="50" placeholder="Absence note..." style="width:100%" required></textarea></td></tr>
 	
-				<tr><td></td><td><button type="reset" class = "btn btn-default">Reset</button>
+				<tr><td></td><td><button type="reset" class="btn btn-default">Reset</button>
 				<button type="submit" class="btn btn-success">Confirm</button></td></tr>
 			</table>
 		</form>
