@@ -7,17 +7,19 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
 }
 if (!$loggedin) {
     //require_once("defaultNavbar.php");
-    header("Location: login.php");
+    echo $_SESSION['user'] ;
+    echo $_SESSION['role'];
+   // header("Location: login.php");
 } else {
     require_once "loggedParentNavbar.php";
 }
 
 require_once "db.php";
 
-if (isset($_POST['childIndex'])) {
+if (isset($_REQUEST['childIndex'])) {
     /* coming from the same page, choosing the child */
     //checkIfLogged();
-    $index = $_POST['childIndex'];
+    $index = $_REQUEST['childIndex'];
     $_SESSION['child'] = $_SESSION['children'][$index]['codFisc'];
     $_SESSION['childName'] = $_SESSION['children'][$index]['name'];
     $_SESSION['childSurname'] = $_SESSION['children'][$index]['surname'];

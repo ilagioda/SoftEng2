@@ -10,6 +10,9 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+if(!isset($_SESSION['childName'])){
+    header("Location: chooseChild.php");
+}
     require_once "loggedParentNavbar.php";
 }
 
@@ -17,7 +20,7 @@ if (!$loggedin) {
 
 echo "<div class=text-center>";
 echo "<h2>Welcome to your homepage PARENT " . $_SESSION["user"] . "!</h2>";
-echo "<h3>You can:<h3>";
+echo "<h3>You can:</h3>";
 
 echo <<< _OPLIST
 <div class="btn-group-vertical" role="group">

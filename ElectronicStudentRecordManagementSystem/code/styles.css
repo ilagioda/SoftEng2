@@ -236,8 +236,8 @@ h1.enrollTitle {
 
 /*  Default Navbar */
 .dropdown {
-    border-radius:4px;   
-    width:135px;
+    border-radius:4px;
+    width:130px;
 }
 .dropdown-menu>li>a {
     color:black;/*#428bca*/
@@ -246,7 +246,8 @@ h1.enrollTitle {
     border-radius:4px;
     box-shadow:none;
     margin-top:20px;
-    width:100px;
+    min-width:90px;
+    width:135px;
 }
 .dropdown ul.dropdown-menu:before {
     content: "";
