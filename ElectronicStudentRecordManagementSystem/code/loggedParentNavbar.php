@@ -15,11 +15,44 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="homepageParent.php">Home</a></li>
-                    <li><a href="chooseChild.php">Choose child</a>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-                </ul>
+                    <?php
+                    if (isset($_SESSION['children'])) {
+
+                        if (count($_SESSION['children']) == 1) {
+                            //One child
+                            echo "
+                                <li><a href='chooseChild?childIndex=$i'>".$_SESSION['childName']." ".$_SESSION['childSurname']."</a></li> 
+                                </ul> 
+                            </div>";
+                        } else {
+                            //More than one child
+                            echo '                
+                                <li role="presentation" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Choose Child <span class="caret"></span> </a>
+                                    <ul class="dropdown-menu">';
+                            $i = 0;
+                            foreach ($_SESSION['children'] as $child) {
+
+                                echo <<<_ROW
+                                        <li class="nav-item dropdown">
+                                        <a class="dropdown-item" href="chooseChild.php?childIndex=$i">$child[name] $child[surname]</a>
+                                        </li>
+_ROW;
+                                $i++;
+                            }
+                            echo '
+                                    </ul>
+                                </li>
+                                ';
+                        }
+                    }
+                    ?>
+                    
+                        <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
             </div>
         </div>
     </nav>
