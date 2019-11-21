@@ -292,7 +292,7 @@ h1.enrollTitle {
     box-shadow:none;
     margin-top:20px;
     min-width:90px;
-    width:135px;
+    width:150px;
 }
 .dropdown ul.dropdown-menu:before {
     content: "";
@@ -366,6 +366,11 @@ h1.enrollTitle {
     display: inline-block;
   
   }
-
-
 /*****************************/
+
+/*Button Teacher Homepage*/
+.btn-primary{
+margin-top: 5px;
+min-width: 250px;
+}
+/*Button Teacher Homepage*/

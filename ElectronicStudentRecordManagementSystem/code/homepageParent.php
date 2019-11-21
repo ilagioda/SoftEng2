@@ -24,8 +24,8 @@ echo "<h3>You can:</h3>";
 
 echo <<< _OPLIST
 <div class="btn-group-vertical" role="group">
-    <a href="viewMarks.php" class="btn btn-large btn-block btn-info" role="button">View $_SESSION[childName]'s marks</a>
-    <a href="" class="btn btn-large btn-block btn-info" role="button">To be implemented...</a>
+    <a href="viewMarks.php" class="btn btn-primary btn-lg" role="button">View $_SESSION[childName]'s marks</a>
+    <a href="" class="btn btn-primary btn-lg" role="button">To be implemented...</a>
 </div>
 _OPLIST;
 

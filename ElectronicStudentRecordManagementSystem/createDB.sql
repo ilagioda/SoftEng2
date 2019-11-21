@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 18, 2019 alle 17:44
+-- Creato il: Nov 21, 2019 alle 18:21
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -33,17 +33,18 @@ USE `school`;
 
 CREATE TABLE `Admins` (
   `codFisc` varchar(50) NOT NULL,
-  `hashedPassword` varchar(512) DEFAULT NULL
+  `hashedPassword` varchar(512) DEFAULT NULL,
+  `name` varchar(50) NOT NULL,
+  `surname` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dump dei dati per la tabella `admins`
+-- Dump dei dati per la tabella `Admins`
 --
 
-INSERT INTO `Admins` (`codFisc`, `hashedPassword`) VALUES
-('ADM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m'),
-('FLC', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m');
-
+INSERT INTO `Admins` (`codFisc`, `hashedPassword`, `name`, `surname`) VALUES
+('ADM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Adamo', 'Eva'),
+('FLC', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Nino', 'Frassica');
 
 -- --------------------------------------------------------
 
@@ -56,6 +57,21 @@ CREATE TABLE `Assignments` (
   `date` date NOT NULL,
   `classID` varchar(50) NOT NULL,
   `textAssignment` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Attendance`
+--
+
+CREATE TABLE `Attendance` (
+  `date` date NOT NULL,
+  `hour` int(11) NOT NULL,
+  `codFisc` varchar(50) NOT NULL,
+  `presence` tinyint(1) NOT NULL,
+  `earlyExit` int(11) NOT NULL,
+  `lateEntry` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -140,11 +156,11 @@ INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, 
 ('toro_9_6@hotmail.it', '', 'Tor', 'Ino', 'TRN', 1),
 ('volley.champions@hotmail.it', '', 'Mila', 'Shiro', 'MLSHR', 1);
 
+-- --------------------------------------------------------
+
 --
 -- Struttura della tabella `Principals`
 --
-
--- --------------------------------------------------------
 
 CREATE TABLE `Principals` (
   `codFisc` varchar(50) NOT NULL,
@@ -201,6 +217,7 @@ INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `cla
 ('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'wlt@gmail.it', '1C'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
 ('SMN', 'Simona', 'Genovese', 'smn@gmail.it', 'parent@parent.it', '');
+
 -- --------------------------------------------------------
 
 --
@@ -248,7 +265,7 @@ INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
 ('FLCM', '1A', 'Philosophy'),
 ('GNV', '1A', 'Maths'),
 ('GNV', '1A', 'Physics'),
-('GNV', '1B', 'Geography'),
+('GNV', '1D', 'Geography'),
 ('TEA', '1A', 'History'),
 ('TEA', '1B', 'Italian');
 
