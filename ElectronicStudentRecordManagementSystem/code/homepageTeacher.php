@@ -37,7 +37,14 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-		<a href="selectClassForMarks.php" class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-pencil pull-left" aria-hidden="true"></span>&emsp;Add student mark</a>
+		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
+			Insert mark <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li><a href="submitMarks.php">New mark</a></li>
+			<li><a href="viewAllMarks.php">View all marks</a></li>
+		</ul>
 	</div>
 	<br>
 

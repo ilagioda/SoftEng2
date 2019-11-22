@@ -453,88 +453,6 @@ class dbTeacher extends db
         parent::__construct();
     }
 
-    function insertMark($codStudent, $subject, $date, $hour, $mark)
-    { 
-        $codStudent = $this -> sanitizeString($codStudent);
-        $subject = $this -> sanitizeString($subject);
-        $date = $this -> sanitizeString($date);
-        $hour = $this -> sanitizeString($hour);
-        $mark = $this -> sanitizeString($mark);
-
-        $dateTime = strtotime($_POST['date']);
-
-        $day=date("l");
-        switch ($day){
-            case "Monday":
-                $datePast=strtotime(date("Y/m/d"). ' - 0 days');
-                break;
-            case "Tuesday":
-                $datePast=strtotime(date("Y/m/d"). ' - 1 days');
-                break;
-            case "Wednsday":
-                $datePast=strtotime(date("Y/m/d"). ' - 2 days');
-                break;
-            case "Thursday":
-                $datePast=strtotime(date("Y/m/d"). ' - 3 days');
-                break;
-            case "Friday":
-                $datePast=strtotime(date("Y/m/d"). ' - 4 days');
-                break;
-            case "Saturday":
-                $datePast=strtotime(date("Y/m/d"). ' - 5 days');
-                break;
-            case "Sunday":
-                $datePast=strtotime(date("Y/m/d"). ' - 6 days');
-                break;
-            default:
-                $datePast="None";
-                break;
-        }
-
-        if($hour>=7 || $hour<=0 || $mark <0 || $mark >10 )
-            return ("Insert valid parameters.");
-        
-        if($dateTime > strtotime(date("Y/m/d")))
-            return ("Cannot insert a future date.");
-
-        if($dateTime < $datePast)
-            return ("Cannot register a vote on a week different from this one.");
-
-
-
-        $inserted = $this->query("SELECT * FROM Marks WHERE codFisc='$codStudent' AND subject='$subject' AND date='$date' AND hour='$hour'");
-        $row= $inserted->fetch_array(MYSQLI_ASSOC);
-        if($row != NULL)
-            return ("You have already inserted that mark.");
-        
-
-        $result = $this->query("INSERT INTO Marks (codFisc, subject, date, hour, mark) VALUES ('$codStudent', '$subject', '$date', '$hour', '$mark');");
-
-        if (!$result) 
-            return ("Unable to insert mark.");
-        else
-            return ("Mark correctly inserted.");
-    }
-
-    function getStudentsByClass($class){
-
-        $class = $this -> sanitizeString($class);
-        
-        $result = $this->query("SELECT * FROM Students WHERE classId='$class'");
-        
-        if (!$result) 
-            die("Unable to select students from $class.");
-
-        $students="";
-
-        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $students = $students . "<tr><td class='col-md-4' style='vertical-align:middle'>" . $row['name'] . "</d><td class='col-md-4' style='vertical-align:middle'>" . $row['surname'] . "</td><td class='col-md-1'><form method='post' action='studentMarks.php'><input type='hidden' name='student' value='" . $row['codFisc'] . "'><input class='btn btn-block btn-info' text='center' type='submit' value='ADD MARK'></form></td></tr>";
-        }
-        
-        return $students;
-
-    }
-
     function getStudentsName($codfisc){
 
         $codfisc = $this -> sanitizeString($codfisc);
@@ -553,76 +471,50 @@ class dbTeacher extends db
 
     }
 
-    function getClassesByTeacher($codTeacher){
-        $codTeacher = $this -> sanitizeString($codTeacher);
-        
-        $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher'");
-        
-        
-        if (!$result) 
-            die("Unable to select classes from Teacher Id.");
+    function insertGrade($date, $hour, $student, $subject, $grade){
 
-        $classes="";
-
-        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-
-            //Check if there is only one subject for this class
-            $class=$row['classID'];
-            $subjects = $this->query("SELECT COUNT(subject) FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
-            $row2 = $subjects->fetch_array(MYSQLI_ASSOC);
-            if($row2['COUNT(subject)']==1){
-                $subject = $this->query("SELECT subject FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
-                $row3 = $subject->fetch_array(MYSQLI_ASSOC);
-                $classes = $classes . "<td style='padding:5px' ><form method='post' action='submitMark.php'><input type=hidden name='subject' value='" . $row3['subject'] . "'><input class='btn btn-large btn-block btn-lg  btn-info'text='center' type='submit' name='class' value='" . $row['classID'] . "'></form></td>";
-            }
-            else
-                $classes = $classes . "<td style='padding:5px'><form method='post' action='selectSubjectForMarks.php'><input class='btn btn-large btn-lg btn-block btn-info' text='center' type='submit' name='class' value='" . $row['classID'] . "'></form></td>";
-        }
-
-        return $classes;
-
-    }
-
-
-    function getSubjectsByTeacherAndClass($codTeacher, $class){
-        $codTeacher = $this -> sanitizeString($codTeacher);
-        $class = $this -> sanitizeString($class);
-        
-        $result = $this->query("SELECT subject FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' AND classID='$class'");
-        
-        if (!$result) 
-            die("Unable to select subjects.");
-
-        $classes="";
-
-        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $classes = $classes . "<td style='padding:5px'><form method='post' action='submitMark.php'><input  class='btn btn-large btn-lg btn-block btn-info' text='center' type='submit' name='subject' value='" . $row['subject'] . "'></form></td>";
-        }
-
-        return $classes;
-    }
-
-
-    function getStudentSubjectMarks($student, $subject){
-        $subject = $this -> sanitizeString($subject);
         $student = $this -> sanitizeString($student);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		$hour = $this -> sanitizeString($hour);
+		$grade = $this -> sanitizeString($grade);
+		
+		$result = $this->query("SELECT * FROM marks WHERE (codFisc='$student' AND hour='$hour' AND date='$date')");
+	
+		if($result->num_rows > 0) {
+			return -1;
+		}
 
-        $result = $this->query("SELECT * FROM Marks WHERE codFisc='$student' AND subject='$subject'");
-        
-        if (!$result) 
-            die("Unable to select marks.");
-
-        $marks="";
-
-        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL){
-                $marks = $marks . "<tr><td>" . $row['date'] . "</td><td>" . $row['hour'] . "</td><td>" . $row['mark'] ."</td></tr><br>";
-        }
-        
-
-        return $marks;
+		$result = $this->query("INSERT INTO marks(codFisc, subject, date, hour, mark) 
+								VALUES ('$student', '$subject', '$date', '$hour', '$grade')");
+		
+		if($result == FALSE) {
+			die("ERROR: Mark not inserted.");
+		}
     }
-    
-    function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics) {
+
+
+    function getGradesByTeacher($codfisc){
+        $codfisc= $this->sanitizeString($codfisc);
+
+        $result = $this -> query("SELECT s.classId, s.codFisc, s.name, s.surname, m.subject, m.date, m.hour, m.mark 
+        FROM Marks m, TeacherClassSubjectTable tcs, Students s 
+        WHERE tcs.codFisc = '$codfisc' AND tcs.subject = m.subject AND s.codFisc = m.codFisc AND tcs.classID = s.classID");
+
+        if(!$result)
+            die("Unable to load marks.");
+
+        if($result->num_rows > 0) {
+            $marks = array();
+			while ($row = $result->fetch_assoc()) { 
+				array_push($marks,  "".$row['classId'].",".$row['codFisc'].",".$row['surname'].",".$row['name'].",".$row['subject'].",".$row['date'].",".$row['hour'].",".$row['mark']."");
+			}
+			return $marks;
+		}
+
+    }
+
+    function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $grade) {
 
 		$class = $this -> sanitizeString($class);
 		$subject = $this -> sanitizeString($subject);
