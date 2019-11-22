@@ -64,7 +64,7 @@ if (!$loggedin) {
 						$dateAssignments = $args[2];
 						if($dateAssignments >= date("Y-m-d")) { 
 					?>
-					<button type="submit" class="btn btn-primary" onClick="this.form.action='editAssignments.php'">Edit</button>
+					<button type="submit" class="btn btn-default" onClick="this.form.action='editAssignments.php'">Edit</button>
 					<button type="submit" class="btn btn-danger" onClick="this.form.action='deleteAssignments.php'">Delete</button>
 					<?php	
 						} else { ?>

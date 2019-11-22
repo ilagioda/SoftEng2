@@ -61,7 +61,7 @@ if (!$loggedin) {
 						$dateLesson = $args[2];
 						if($dateLesson >= date("Y-m-d", strtotime('monday this week')) && $dateLesson <= date("Y-m-d", strtotime('sunday this week'))) { 
 					?>
-							<button type="submit" class="btn btn-primary" onClick="this.form.action='editRecordLesson.php'">Edit</button>
+							<button type="submit" class="btn btn-default" onClick="this.form.action='editRecordLesson.php'">Edit</button>
 							<button type="submit" class="btn btn-danger" onClick="this.form.action='deleteRecordLesson.php'">Delete</button>
 					<?php	
 						} else { ?>
