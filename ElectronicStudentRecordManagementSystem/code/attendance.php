@@ -91,10 +91,10 @@ echo "<h1>ATTENDANCE</h1>";
                 <td>$fields[1]</td>
                 <td>$fields[2]</td>
                 <td></td>
-                <td><button type="button" class="btn btn-primary open-AddDialog" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
-                <td><button type="button" class="btn btn-primary open-AddDialog" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
 _ROW;
