@@ -1,3 +1,33 @@
+<script type='text/javascript'>
+
+    /*
+        data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass"
+        <p id="modal-name"><p>
+        <p id="modal-surname"><p>
+        <p id="modal-ssn"><p>
+        <p id="modal-c"><p>
+     */
+
+    var ATTRIBUTES = ['name', 'surname', 'ssn', 'c'];
+    $('[data-toggle="modal"]').on('click', function (e) {
+        // convert target (e.g. the button) to jquery object
+        var $target = $(e.target);
+        // modal targeted by the button
+        var modalSelector = $target.data('target');
+        // iterate over each possible data-* attribute
+        ATTRIBUTES.forEach(function (attributeName) {
+            // retrieve the dom element corresponding to current attribute
+            var $modalAttribute = $(modalSelector + ' #modal-' + attributeName);
+            var dataValue = $target.data(attributeName);
+            // if the attribute value is empty, $target.data() will return undefined.
+            // In JS boolean expressions return operands and are not coerced into
+            // booleans. That way is dataValue is undefined, the left part of the following
+            // Boolean expression evaluate to false and the empty string will be returned
+            $modalAttribute.text(dataValue || '');
+        });
+    });
+</script>
+
 <?php
 
 require_once("basicChecks.php");
@@ -52,42 +82,49 @@ echo "<h1>ATTENDANCE</h1>";
             echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>Late entrance</b><td><b>Early exit</b></td></tr>";
             foreach($students as $stud){
                 $fields = explode(",", $stud);
+                // $fields[0] --> name
+                // $fields[1] --> surname
+                // $fields[2] --> SSN
                 echo<<<_ROW
                 <tr>
                 <td>$fields[0]</td>
                 <td>$fields[1]</td>
                 <td>$fields[2]</td>
                 <td></td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance">
+                <td><button type="button" class="btn btn-primary open-AddDialog" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit">
+                <td><button type="button" class="btn btn-primary open-AddDialog" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
 _ROW;
             }
-
             echo "</table>";
             echo "</div>";
 
-            // ILA STA LAVORANDO NEL SEGUENTE DIV
-            echo "<div class=\"modal fade\" id=\"myEntrance\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">
-            <div class=\"modal-dialog\" role=\"document\">
-              <div class=\"modal-content\">
-                <div class=\"modal-header\">
-                  <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-                  <h4 class=\"modal-title\" id=\"myModalLabel\">Modal title</h4>
+            echo<<<_MODALENTRANCE
+            <div class="modal fade" id="myEntrance" tabindex="-1" role="dialog" aria-labelledby="myEntrancelabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myEntrancelabel">Record LATE ENTRANCE</h4>
+                        </div>
+                        <div class="modal-body">
+                            <span id="modal-name"></span>
+                            <span id="modal-surname"></span>
+                            <span id="modal-ssn"></span>
+                            <span id="modal-c"></span>
+                            <span>TENDINA CON HOUR (1..6)</span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
                 </div>
-                <div class=\"modal-body\">
-                  
-                </div>
-                <div class=\"modal-footer\">
-                  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-                  <button type=\"button\" class=\"btn btn-primary\">Save changes</button>
-                </div>
-              </div>
             </div>
-          </div>";
+            _MODALENTRANCE;
         }
         
 
