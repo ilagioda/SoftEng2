@@ -28,8 +28,8 @@ $db = new db();
             <p><a href="#">Language</a></p>
         </div>
         <div class="col-md-8 text-center">
-            <h1>Welcome</h1>
-            <img id="central_image" src="images/school_logo.png">
+            <h1>Welcome!!</h1>
+            <img id="central_image" src="images/NEWlogo.png">
             <div class="overflow-auto">
                 <?php
                 $res = $db->getAnnouncements();
