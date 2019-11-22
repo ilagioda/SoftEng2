@@ -49,18 +49,45 @@ echo "<h1>ATTENDANCE</h1>";
             // The class has at least one student
             echo "<div class=\"table-responsive\">";
             echo "<table class=\"table table-striped table-bordered\">";
-            echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>ENTRATA</b><td><b>USCITA</b></td></tr>";
+            echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>Late entrance</b><td><b>Early exit</b></td></tr>";
             foreach($students as $stud){
                 $fields = explode(",", $stud);
                 echo<<<_ROW
-                <tr><td>$fields[0]</td><td>$fields[1]</td><td>$fields[2]</td><td></td><td></td><td></td></tr>
+                <tr>
+                <td>$fields[0]</td>
+                <td>$fields[1]</td>
+                <td>$fields[2]</td>
+                <td></td>
+                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance">
+                Click
+                </button></td>
+                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit">
+                Click
+                </button></td>
                 _ROW;
             }
 
-           // array_push($students, "".$row['name'].",".$row['surname'].",".$row['codFisc']."");
-        
             echo "</table>";
             echo "</div>";
+
+            // ILA STA LAVORANDO NEL SEGUENTE DIV
+            echo "<div class=\"modal fade\" id=\"myEntrance\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">
+            <div class=\"modal-dialog\" role=\"document\">
+              <div class=\"modal-content\">
+                <div class=\"modal-header\">
+                  <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+                  <h4 class=\"modal-title\" id=\"myModalLabel\">Modal title</h4>
+                </div>
+                <div class=\"modal-body\">
+                  
+                </div>
+                <div class=\"modal-footer\">
+                  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+                  <button type=\"button\" class=\"btn btn-primary\">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>";
         }
         
 
