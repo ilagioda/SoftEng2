@@ -23,36 +23,41 @@
                         if (count($_SESSION['children']) == 1) {
                             //One child
                             echo "
-                                <li><a href='chooseChild?childIndex=$i'>".$_SESSION['childName']." ".$_SESSION['childSurname']."</a></li> 
-                                </ul> 
-                            </div>";
+                                <li><a href='#'>" . $_SESSION['childName'] . " " . $_SESSION['childSurname'] . "</a></li>";
                         } else {
                             //More than one child
-                            echo '                
-                                <li role="presentation" class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                    Choose Child <span class="caret"></span> </a>
-                                    <ul class="dropdown-menu">';
+                            if(isset($_SESSION['childName'])&&isset($_SESSION['childSurname'])){
+
+                                echo '<li role="presentation" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">'
+                                . $_SESSION["childName"] . ' ' . $_SESSION["childSurname"] . '<span class="caret"></span> </a>
+                                <ul class="dropdown-menu">';
                             $i = 0;
                             foreach ($_SESSION['children'] as $child) {
 
-                                echo <<<_ROW
-                                        <li class="nav-item dropdown">
-                                        <a class="dropdown-item" href="chooseChild.php?childIndex=$i">$child[name] $child[surname]</a>
-                                        </li>
+                                if (!(($child['name'] == $_SESSION['childName']) && ($child['surname'] == $_SESSION['childSurname']))) {
+                                    echo <<<_ROW
+                                    <li class="nav-item dropdown">
+                                    <a class="dropdown-item" href="chooseChild.php?childIndex=$i">$child[name] $child[surname]</a>
+                                    </li>
 _ROW;
+                                }
                                 $i++;
                             }
-                            echo '
-                                    </ul>
-                                </li>
-                                ';
+                            echo '</ul>
+                                  </li>';
+
+
+
+
+                            }
+
                         }
                     }
                     ?>
-                    
-                        <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-                    </ul>
+
+                    <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                </ul>
             </div>
         </div>
     </nav>

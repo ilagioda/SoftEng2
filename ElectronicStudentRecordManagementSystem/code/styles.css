@@ -51,6 +51,7 @@ padding: 9px 10px !important;
         padding-top: 26.5px;
         padding-bottom: 26.5px;
         line-height: 27px;
+        min-width: 100px;
     }
 }
 

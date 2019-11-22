@@ -64,7 +64,7 @@ echo "<h1>ATTENDANCE</h1>";
                 <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit">
                 Click
                 </button></td>
-                _ROW;
+_ROW;
             }
 
             echo "</table>";
@@ -97,17 +97,17 @@ echo "<h1>ATTENDANCE</h1>";
         //The class has not yet be chosen so the list of classses must be shown
         echo<<<_LIST
             <ul class="list-group">
-        _LIST;
+_LIST;
 
         foreach($classes as $class){
             echo<<<_ROW
             <a href="attendance.php?class=$class" class="list-group-item">$class</a>     
-            _ROW;
+_ROW;
         }
 
         echo<<<_ENDLIST
         </ul>
-        _ENDLIST;
+_ENDLIST;
     }
 
 echo "</div>";
