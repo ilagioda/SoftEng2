@@ -77,7 +77,7 @@ if (isset($_REQUEST['class'])) {
     } else {
         // The class has at least one student
         echo "<div class=\"table-responsive\">";
-        echo "<table class=\"table table-striped table-bordered\">";
+        echo "<table class=\"table table-striped table-bordered text-center\">";
         echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>Late entrance</b><td><b>Early exit</b></td></tr>";
         foreach ($students as $stud) {
             $fields = explode(",", $stud);
@@ -87,14 +87,14 @@ if (isset($_REQUEST['class'])) {
             // coloumns: name, surname, ssn, presence, lateEntrance, earlyExit
             echo <<<_ROW
                 <tr>
-                <td>$fields[0]</td>
-                <td>$fields[1]</td>
-                <td>$fields[2]</td>
-                <td align='center'> <label class="switch"> <input type="checkbox"> <span class="slider round"></span> </label> </td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td align="center" style="vertical-align: middle;">$fields[0]</td>
+                <td align="center" style="vertical-align: middle;">$fields[1]</td>
+                <td align="center" style="vertical-align: middle;">$fields[2]</td>
+                <td align="center" style="vertical-align: middle;"> <label class="switch"> <input type="checkbox"> <span class="slider round"></span> </label> </td>
+                <td align="center" style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td align="center" style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
 _ROW;
