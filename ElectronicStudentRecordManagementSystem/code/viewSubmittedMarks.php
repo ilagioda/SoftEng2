@@ -33,7 +33,7 @@ if (!$loggedin) {
 		$_SESSION['lessontime'] = $_POST['lessontime'];
 		$_SESSION['comboHour'] = $_POST['comboHour'];
         $_SESSION['comboGrade'] = $_POST['comboGrade'];
-        $_SESSION['comboStudent'] = $_POST['comboStudent'];
+		$_SESSION['comboStudent'] = $_POST['comboStudent'];
         
 		
 		$result = $db->insertGrade($_SESSION['lessontime'], $_SESSION['comboHour'], $_SESSION['comboStudent'], $_SESSION['comboSubject'], $_SESSION['comboGrade']);

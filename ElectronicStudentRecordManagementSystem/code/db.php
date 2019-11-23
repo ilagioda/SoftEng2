@@ -499,7 +499,7 @@ class dbTeacher extends db
 
         $result = $this -> query("SELECT s.classId, s.codFisc, s.name, s.surname, m.subject, m.date, m.hour, m.mark 
         FROM Marks m, TeacherClassSubjectTable tcs, Students s 
-        WHERE tcs.codFisc = '$codfisc' AND tcs.subject = m.subject AND s.codFisc = m.codFisc AND tcs.classID = s.classID");
+        WHERE tcs.codFisc = '$codfisc' AND tcs.subject = m.subject AND s.codFisc = m.codFisc AND tcs.classID = s.classID ORDER BY m.date DESC");
 
         if(!$result)
             die("Unable to load marks.");
@@ -512,6 +512,35 @@ class dbTeacher extends db
 			return $marks;
 		}
 
+    }
+
+    function updateMark($codFisc, $subject, $date, $hour, $grade){
+        $codFisc = $this -> sanitizeString($codFisc);
+		$subject = $this -> sanitizeString($subject);
+		$date = $this -> sanitizeString($date);
+		$hour = $this -> sanitizeString($hour);
+        $grade = $this -> sanitizeString($grade);
+        
+        $result = $this->query("UPDATE marks SET subject='$subject', mark='$grade' 
+							WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc'");
+		
+		if(!$result) {
+			die("ERROR: Mark not updated.");
+		}
+
+    }
+
+
+    function deleteMark($codFisc, $date, $hour){
+        $codFisc = $this -> sanitizeString($codFisc);
+		$date = $this -> sanitizeString($date);
+        $hour = $this -> sanitizeString($hour);
+        
+        $result = $this->query("DELETE FROM marks WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc'");
+
+        if(!$result) {
+			die("ERROR: Mark not deleted.");
+		}
     }
 
     function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics) {

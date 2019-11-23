@@ -47,7 +47,23 @@
                         </ul>
                     </li>
 
-                    <li><a href="selectClassForMarks.php">Marks</a></li>
+                    <li role="presentation" class="dropdown">
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Marks <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item" href="submitMarks.php">New mark</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item" href="viewAllMarks.php">View all marks</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li><a href="">Absence note</a> </li>
 
                 </ul>

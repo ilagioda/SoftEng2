@@ -33,7 +33,7 @@ if (!$loggedin) {
 		$_SESSION['comboSubject'] = $_POST['comboSubject'];
 		$_SESSION['lessontime'] = $_POST['lessontime'];
         $_SESSION['comboHour'] = $_POST['comboHour'];
-        $_SESSION['comboGrade'] = $_POST['comboGrade'];
+		$_SESSION['comboGrade'] = $_POST['comboGrade'];
 	}
     
 ?>
@@ -59,31 +59,29 @@ if (!$loggedin) {
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-	<h1> Update marks </h1>
-		<form class="navbar-form navbar-left" role="class" method="POST" action="updateRecordedLesson.php">
+	<h1> Update mark: </h1>
+		<form class="navbar-form navbar-left" role="class" method="POST" action="updateMark.php">
 			<table class="table">
+
 				<tr><td><label>Class </label></td><td>
-				<input class="form-control" disabled style="width:100%" value="
-				<?php 
+				<input class="form-control" disabled style="width:200%" value=" <?php 
 					$selectedClass = $_SESSION["comboClass"];
 					echo $selectedClass;
-				?>"> 
-				
+				?>">
 				<input hidden name="comboClass" value="<?php echo $selectedClass ?>"/>
+				</td></tr>
 
 
                 <tr><td><label>Student </label></td><td>
-				<input class="form-control" disabled style="width:100%" value="
-				<?php 
+				<input class="form-control" disabled style="width:200%" value="<?php 
 					$selectedStudent = $_SESSION["comboStudent"];
-					echo $selectedStudent;
+					echo $teacher->getStudentByCod($selectedStudent) . " (" . $selectedStudent . ")";
 				?>"> 
-				
-				<input hidden name="comboStudent" value="<?php echo $selectedClass ?>"/>
-
+				<input hidden name="comboStudent" value="<?php echo $selectedStudent ?>"/>
 				</td></tr>
+
 				<tr><td><label>Subject </label></td><td>
-				<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%">	
+				<select class="form-control" id="comboSubject" name="comboSubject" style="width:200%">	
 				<?php 
 					$selectedSubject = $_SESSION["comboSubject"];
 				?>				
@@ -101,12 +99,12 @@ if (!$loggedin) {
 
 				<tr><td><label>Date</label></td><td>  
 				<input class="form-control" disabled type="date" value="<?php echo $_SESSION["lessontime"]; ?>"
-						style="width:100%" required>
+						style="width:200%" required>
 				<input hidden name="lessontime" value="<?php echo $_SESSION["lessontime"]; ?>"/>
 				</td></tr>
 
 				<tr><td><label>Hour</label></td><td>
-				<input disabled name="comboHour" style="width:100%" value="<?php 
+				<input class="form-control" disabled name="comboHour" style="width:200%" value="<?php 
 					$selectedHour = $_SESSION["comboHour"];
 					echo $selectedHour;
 				?>">
@@ -114,21 +112,21 @@ if (!$loggedin) {
 				</td></tr>	
 
 				<tr><td><label>Grade</label></td><td>
-				<select class="form-control" name="comboGrade" id="comboGrade" style="width:100%" required>
+				<select class="form-control" name="comboGrade" id="comboGrade" style="width:200%" required>
                 <?php 
 					$selectedGrade = $_SESSION["comboGrade"];
 				?>
                 <option value="<?php echo $selectedGrade ?>" selected>
-                <?php echo $selectedSubject ?>
+                <?php echo $selectedGrade ?>
 				</option> 
 				<?php
 					for($i=0; $i<=10; $i++) {
                         $j=$i+1;
                         echo "<option value=" . $i . ">" . $i . "</option>";
                         if($i!=10){
-                            echo "<option value=" . $i . ">" . $i . "+</option>";
-                            echo "<option value=" . $i . ">" . $i . ".5</option>";
-                            echo "<option value=" . $j . ">" . $j . "-</option>";
+                            echo "<option value=" . $i . "+>" . $i . "+</option>";
+                            echo "<option value=" . $i . ".5>" . $i . ".5</option>";
+                            echo "<option value=" . $j . "->" . $j . "-</option>";
                         }
                         
                     }

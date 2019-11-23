@@ -29,7 +29,7 @@ if (!$loggedin) {
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 
-<h1> All lectures: </h1>
+<h1> All marks: </h1>
 
 	<?php 
 		$lectures = $teacher->getGrades();
@@ -57,8 +57,8 @@ if (!$loggedin) {
 						<tr><td> Hour: </td><td><?php echo $args[6];?></td></tr>
 						<input type="hidden" name="comboHour" value="<?php echo $args[6];?>">
 
-						<tr><td> Topics: </td><td><?php echo $args[7];?></td></tr>
-						<input type="hidden" name="topics" value="<?php echo $args[7];?>">
+						<tr><td> Grade: </td><td><?php echo $args[7];?></td></tr>
+						<input type="hidden" name="comboGrade" value="<?php echo $args[7];?>">
 					</table>
 					<?php
 						$dateLesson = $args[5];

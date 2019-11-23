@@ -75,13 +75,13 @@ $(document).ready(function(){
 
 <ul class="nav nav-tabs">
 
-  <li role="presentation" class="active"><a href="#">New record</a></li>
-  <li role="presentation"><a href="viewAllMarks.php">View all records</a></li>
+  <li role="presentation" class="active"><a href="#">New mark</a></li>
+  <li role="presentation"><a href="viewAllMarks.php">View all marks</a></li>
 </ul>
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body" >
-	<h1> Record daily lesson topics </h1>
+	<h1> Submit new Mark: </h1>
 	<div class="form-group">
 
 		<form class="navbar-form navbar-left form-inline" method="POST" action="viewSubmittedMarks.php">
@@ -133,9 +133,9 @@ $(document).ready(function(){
                         $j=$i+1;
                         echo "<option value=" . $i . ">" . $i . "</option>";
                         if($i!=10){
-                            echo "<option value=" . $i . ">" . $i . "+</option>";
-                            echo "<option value=" . $i . ">" . $i . ".5</option>";
-                            echo "<option value=" . $j . ">" . $j . "-</option>";
+                            echo "<option value=" . $i . "+>" . $i . "+</option>";
+                            echo "<option value=" . $i . ".5>" . $i . ".5</option>";
+                            echo "<option value=" . $j . "->" . $j . "-</option>";
                         }
                         
                     }
