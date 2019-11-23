@@ -39,65 +39,61 @@ if (isset($_REQUEST['class'])) {
 
     // Retrieve the student of the selected class
     $students = $teacher->getStudents2($chosenClass);
-    ?>
-    <script>
-        /******************************************** */
 
-        $(document).ready(function() {
-            $("input[type='checkbox']").change(function() {
-                // alert("Mi hai svegliato");
-                alert("The once who called me has id: " + this.id);
-                var fiscalCode =$("#ssn"+this.id).text();
+?>
 
-                $.post("attendanceBackEnd.php", {
-                        event: "presence",
-                        ssn: fiscalCode 
-                    },
-                    function(data, status) {
-                        alert("Data: " + data + "\nStatus: " + status);
-                    });
+<script>
 
-            });
+    /******************************************** */
+    $(document).ready(function() {
+        $("input[type='checkbox']").change(function() {
+            // alert("Mi hai svegliato");
+            alert("The once who called me has id: " + this.id);
+            var fiscalCode =$("#ssn"+this.id).text();
+
+            $.post("attendanceBackEnd.php", {
+                    event: "presence",
+                    ssn: fiscalCode 
+                },
+                function(data, status) {
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+
         });
-        /******************************************-* */
+    });
+    /******************************************-* */
 
-        /*
+    /*
         data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass"
         <p id="modal-name"><p>
         <p id="modal-surname"><p>
         <p id="modal-ssn"><p>
         <p id="modal-c"><p>
-     */
+    */
 
-        var ATTRIBUTES = ['name', 'surname', 'ssn', 'c'];
-        $('[data-toggle="modal"]').on('click', function(e) {
-            // convert target (e.g. the button) to jquery object
-            var $target = $(e.target);
-            // modal targeted by the button
-            var modalSelector = $target.data('target');
-            // iterate over each possible data-* attribute
-            ATTRIBUTES.forEach(function(attributeName) {
-                // retrieve the dom element corresponding to current attribute
-                var $modalAttribute = $(modalSelector + ' #modal-' + attributeName);
-                var dataValue = $target.data(attributeName);
-                // if the attribute value is empty, $target.data() will return undefined.
-                // In JS boolean expressions return operands and are not coerced into
-                // booleans. That way is dataValue is undefined, the left part of the following
-                // Boolean expression evaluate to false and the empty string will be returned
-                $modalAttribute.text(dataValue || '');
-            });
+    var ATTRIBUTES = ['name', 'surname', 'ssn', 'c'];
+    $('[data-toggle="modal"]').on('click', function(e) {
+        // convert target (e.g. the button) to jquery object
+        var $target = $(e.target);
+        // modal targeted by the button
+        var modalSelector = $target.data('target');
+        // iterate over each possible data-* attribute
+        ATTRIBUTES.forEach(function(attributeName) {
+            // retrieve the dom element corresponding to current attribute
+            var $modalAttribute = $(modalSelector + ' #modal-' + attributeName);
+            var dataValue = $target.data(attributeName);
+            // if the attribute value is empty, $target.data() will return undefined.
+            // In JS boolean expressions return operands and are not coerced into
+            // booleans. That way is dataValue is undefined, the left part of the following
+            // Boolean expression evaluate to false and the empty string will be returned
+            $modalAttribute.text(dataValue || '');
         });
-    </script>
+    });
 
-
-
-
-
-
-
-
+</script>
 
 <?php
+
     // Create the table containing the students
     // Check if the class has at least one student
     if (empty($students)) {
@@ -117,14 +113,14 @@ if (isset($_REQUEST['class'])) {
             // coloumns: name, surname, ssn, presence, lateEntrance, earlyExit
             echo <<<_ROW
                 <tr>
-                <td id="name$i">$fields[0]</td>
-                <td id="surname$i">$fields[1]</td>
-                <td id="ssn$i">$fields[2]</td>
-                <td align='center'> <label class="switch"> <input type="checkbox" id="$i"> <span class="slider round"></span> </label> </td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td id="name$i" style="vertical-align: middle;">$fields[0]</td>
+                <td id="surname$i" style="vertical-align: middle;">$fields[1]</td>
+                <td id="ssn$i" style="vertical-align: middle;">$fields[2]</td>
+                <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"> <span class="slider round"></span> </label> </td>
+                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
-                <td align="center" style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
 _ROW;
@@ -178,4 +174,5 @@ _ENDLIST;
 echo "</div>";
 
 require_once("defaultFooter.php");
+
 ?>
