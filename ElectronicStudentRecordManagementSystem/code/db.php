@@ -1,7 +1,4 @@
 <?php
-
-require_once("basicChecks.php");
-
 class db
 {
 
@@ -788,6 +785,96 @@ class dbTeacher extends db
      */
     function updateAttendance($ssn, $day)
     {
-        $stm = $this->prepareStatement("");
+
+
+        $this->begin_transaction();
+        //$ssn1 = $ssn;
+        $count = -1;
+        $absence = -1;
+        $stmt = $this->prepareStatement("SELECT COUNT(*),`absence` FROM `Attendance` WHERE `codFisc`= ?");
+        // the parameter is bound to the first '?' in the upper query
+        if (!$stmt->bind_param("s", $ssn))
+            die("Binding Failed in the Transaction.");
+        // the result is characterized by four coloumns and needs to be bounded to corresponding variables
+        if (!$stmt->bind_result($count, $absence))
+            die("Binding result Failed in the Transaction.");
+        try {
+            // The statement is excecuted but the variables do not contain the results
+            if (!$stmt->execute())
+                throw new Exception("Select Failed.");
+
+            $row = $stmt->fetch();
+
+            if ($count == 0) {
+                // THE STUDENT HAS NO RECORD IN THE TABLE, IT MEANS THAT WAS CONSIDERED PRESENT UNTIL THAT MOMENT.
+                // SO AN INSERT SHOULD BE DONE
+                //close the previous statement
+                $stmt->close();
+
+                $hour = 1;
+                $absence = 1;
+                $earlyExit = 0;
+                $lateEntry = 0;
+                $stmt = $this->prepareStatement("INSERT INTO `Attendance`(`date`, `hour`, `codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES (?,?,?,?,?,?)");
+
+                if (!$stmt->bind_param("sisiii", $day, $hour, $ssn, $absence, $earlyExit, $lateEntry))
+                    die("Binding Failed in the Transaction.");
+
+                // The statement is excecuted but the variables do not contain the results
+                if (!$stmt->execute())
+                    throw new Exception("Insert Attendance Failed.");
+                $this->commit();
+                return true;
+            } else {
+                // THE STUDENT HAS ALREADY A RECORD, IT MEANS THAT THE STUDENT HAS ALREADY TRIGGERED THE SYSTEM WITH A LATE ENTRANCE OR AN EARLY EXIT
+                // SO AN UPDATE SHOULD BE DONE OR THE PROF WOULD LIKE TO REMOVE THE ABSENCE
+
+                //IF THE ABSENCE SHOULD BE REMOVED THEN 'absence' should be already set to 1.
+                //ELSE THE ABSENCE SHOULD BE ADDED SO THE QUERY UPDATED
+
+
+                if ($absence == 1) {
+                    //THE ABSENCE SHOULD BE REMOVED
+                    //close the previous statement
+                    $stmt->close();
+
+                    $stmt = $this->prepareStatement("DELETE FROM `Attendance` WHERE `codFisc`= ? AND `date`=?");
+
+                    if (!$stmt->bind_param("ss", $ssn, $day))
+                        die("Binding Failed in the Transaction.");
+
+                    // The statement is excecuted but the variables do not contain the results
+                    if (!$stmt->execute())
+                        throw new Exception("Delete Attendance Failed.");
+
+                    if ($stmt->affected_rows == 0)
+                        throw new Exception("Delete Attendance Failed.");
+                } else {
+
+                    //THE ABSENCE SHOULD BE ADDED SO THE QUERY UPDATED
+                    //close the previous statement
+                    $stmt->close();
+
+
+
+                    $stmt = $this->prepareStatement("UPDATE `Attendance` SET `absence`= 1 WHERE `codFisc`= ?  AND`date` = ?");
+
+                    if (!$stmt->bind_param("ss", $ssn, $day))
+                        die("Binding Failed in the Transaction.");
+
+                    // The statement is excecuted but the variables do not contain the results
+                    if (!$stmt->execute())
+                        throw new Exception("Update Attendance Failed.");
+
+                    if ($stmt->affected_rows == 0)
+                        throw new Exception("Update Attendance Failed.");
+                }
+            }
+            $this->commit();
+            return true;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            $this->rollback();
+        }
     }
 }
