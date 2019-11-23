@@ -2,46 +2,56 @@
 
 require_once("db.php");
 
-class Teacher{
+class Teacher
+{
 
     private $db;
     private $codfisc;
 
-    function __construct(){
-        $this->codfisc=$_SESSION['user'];
+    function __construct()
+    {
+        $this->codfisc = $_SESSION['user'];
         $this->db = new dbTeacher();
-        
     }
 
 
-    function getStudentByCod($codfisc){
-        return $this->db->getStudentsName($codfisc); 
+    function getStudentByCod($codfisc)
+    {
+        return $this->db->getStudentsName($codfisc);
     }
 
-    function getGrades(){
+    function getGrades()
+    {
         return $this->db->getGradesByTeacher($this->codfisc);
     }
-    
-    function getLectures() {
-		return $this->db->getLecturesByTeacher($this->codfisc);
+
+    function getLectures()
+    {
+        return $this->db->getLecturesByTeacher($this->codfisc);
     }
-	
-   function getClassesByTeacher(){
+
+    function getClassesByTeacher()
+    {
         return $this->db->getClassesByTeacher2($this->codfisc);
     }
 
-    function getSubjectByClassAndTeacher($class){
+    function getSubjectByClassAndTeacher($class)
+    {
         return $this->db->getSubjectsByTeacherAndClass2($this->codfisc, $class);
     }
-	
-	function getAssignments() {
-		return $this->db->getAssignmentsByTeacher($this->codfisc);
-	}
-	
-	   function getStudents2($class){
-        return $this->db->getStudentsByClass2($class); 
+
+    function getAssignments()
+    {
+        return $this->db->getAssignmentsByTeacher($this->codfisc);
+    }
+
+    function getStudents2($class)
+    {
+        return $this->db->getStudentsByClass2($class);
+    }
+
+    function updateAttendance($ssn, $day)
+    {
+        return $this->db->updateAttendance($ssn, $day);
     }
 }
-
-
-?>
