@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 21, 2019 alle 19:24
+-- Creato il: Nov 23, 2019 alle 13:50
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -90,7 +90,7 @@ CREATE TABLE `Attendance` (
   `date` date NOT NULL,
   `hour` int(11) NOT NULL,
   `codFisc` varchar(50) NOT NULL,
-  `presence` tinyint(1) NOT NULL,
+  `absence` tinyint(1) NOT NULL,
   `earlyExit` int(11) NOT NULL,
   `lateEntry` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -235,7 +235,7 @@ INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `cla
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
 ('CRS', 'Cristian', 'Mins', 'cris@gmail.it', 'parent@parent.it', '1D'),
 ('FRCWTR', 'Walter', 'Forcignano', 'wlt@gmail.it', 'parent@parent.it', '1A'),
-('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'wlt@gmail.it', '1C'),
+('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'cla_9_6@hotmail.it', '1A'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
 ('SMN', 'Simona', 'Genovese', 'smn@gmail.it', 'parent@parent.it', '');
 
@@ -327,6 +327,12 @@ ALTER TABLE `Admins`
 --
 ALTER TABLE `Assignments`
   ADD PRIMARY KEY (`subject`,`date`,`classID`);
+
+--
+-- Indici per le tabelle `Attendance`
+--
+ALTER TABLE `Attendance`
+  ADD PRIMARY KEY (`date`,`codFisc`);
 
 --
 -- Indici per le tabelle `Lectures`
