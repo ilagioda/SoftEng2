@@ -514,7 +514,7 @@ class dbTeacher extends db
 
     }
 
-    function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $grade) {
+    function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics) {
 
 		$class = $this -> sanitizeString($class);
 		$subject = $this -> sanitizeString($subject);
