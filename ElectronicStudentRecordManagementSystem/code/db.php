@@ -870,11 +870,36 @@ class dbTeacher extends db
     }
     
     function recordLateEntrance($day, $ssn, $hour){
+
+        // CONTROLLO SE L'ALUNNO C'E' GIA' NEL DB NELLA TABELLA attendance (tramite SELECT)
+        // C'E' => TUTTO OK, CONTINUO
+        // NON C'E' => VUOL DIRE CHE E' UNO DEGLI ALUNNI PRESENTI => ERRORE, return false
+
+        // VISTO CHE HO TROVATO LA RIGA NEL DB, CONTROLLO SE IL CAMPO absence = 1
+        // = 1 => TUTTO OK, CONTINUO
+        // = 0 => HO GIA' SEGNATO L'ENTRATA => ERRORE, return false
+
+        // FACCIO UPDATE DELLA ENTRY DELLA TABELLA attendance E METTO absence=0, lateEntry='hour'
+        // return true
+
+        $this->begin_transaction();
+
         
     }
 
     function recordEarlyExit($day, $ssn, $hour){
         
+        // CONTROLLO SE L'ALUNNO C'E' GIA' NEL DB NELLA TABELLA attendance (tramite SELECT)
+        // C'E' => CHECK SU absence => absence = 0  => STUDENTE PRESENTE, MA CHE E' ENTRATO IN RITARDO 
+        //                                          => TUTTO OK, FACCIO UPDATE METTENDO absence=1 e earlyExit='hour'
+        //                                          => return true
+        //                             absence = 1  => ERRORE, return false
+        // NON C'E' => VUOL DIRE CHE L'ALUNNO E' PRESENTE => TUTTO OK, FACCIO INSERT CON absence=1 e earlyExit='hour'
+        // return true
+
+        $this->begin_transaction();
+
+
     }
 
 }
