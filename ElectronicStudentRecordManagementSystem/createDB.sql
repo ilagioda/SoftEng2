@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 23, 2019 alle 13:50
+-- Creato il: Nov 24, 2019 alle 18:36
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -88,11 +88,10 @@ CREATE TABLE `Assignments` (
 
 CREATE TABLE `Attendance` (
   `date` date NOT NULL,
-  `hour` int(11) NOT NULL,
   `codFisc` varchar(50) NOT NULL,
   `absence` tinyint(1) NOT NULL,
-  `earlyExit` int(11) NOT NULL,
-  `lateEntry` int(11) NOT NULL
+  `earlyExit` int(2) NOT NULL,
+  `lateEntry` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -300,17 +299,18 @@ CREATE TABLE `Teachers` (
   `codFisc` varchar(50) NOT NULL,
   `hashedPassword` varchar(512) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL
+  `surname` varchar(50) NOT NULL,
+  `flag` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `Teachers`
 --
 
-INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`) VALUES
-('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio'),
-('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'simona', 'genovese'),
-('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'TeacherName', 'TeacherSurname');
+INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `flag`) VALUES
+('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio', 0),
+('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'simona', 'genovese', 0),
+('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'TeacherName', 'TeacherSurname', 0);
 
 --
 -- Indici per le tabelle scaricate
