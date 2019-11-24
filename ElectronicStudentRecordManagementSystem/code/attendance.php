@@ -82,6 +82,8 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalExit-c").innerHTML = studClass;
         }
 
+        var req;
+
         function ajaxRequest(){
             var request;
             try {		
@@ -130,7 +132,16 @@ if (isset($_REQUEST['class'])) {
 
         function endEntrance(){
 
-            // TODO ---------------------------------------------------------------------------------------------------------
+            if(req.readyState == 4 && (req.status == 0 || req.status == 200)) {
+                if(req.responseText == "0"){
+                    // Something went wrong...
+                    window.alert("Oh no! Something went wrong...");
+                } else {
+                    // Everything is alright
+                    // TODO -----------------------------------------------------------------------------------------------
+
+                }
+            }
 
             // Dismiss manually the modal window
             $('#myEntrance').modal('hide');
@@ -138,7 +149,16 @@ if (isset($_REQUEST['class'])) {
 
         function endExit(){
 
-            // TODO ---------------------------------------------------------------------------------------------------------
+            if(req.readyState == 4 && (req.status == 0 || req.status == 200)) {
+                if(req.responseText == "0"){
+                    // Something went wrong...
+                    window.alert("Oh no! Something went wrong...");
+                } else {
+                    // Everything is alright
+                    // TODO -----------------------------------------------------------------------------------------------
+
+                }
+            }
 
             // Dismiss manually the modal window
             $('#myExit').modal('hide');

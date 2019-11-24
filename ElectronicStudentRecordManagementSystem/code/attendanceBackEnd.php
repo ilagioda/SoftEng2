@@ -38,7 +38,11 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 
             $teacher = new Teacher();
             $ret = $teacher->recordLateEntrance($day, $ssn, $hour);
-            echo $ret;
+            if($ret){
+                echo "$hour";
+            } else {
+                echo "0";
+            }
 
         } else if (($_REQUEST["event"] == "exit") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
             /* EARLY EXIT */
@@ -48,7 +52,11 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 
             $teacher = new Teacher();
             $ret = $teacher->recordEarlyExit($day, $ssn, $hour);
-            echo $ret;
+            if($ret){
+                echo "$hour";
+            } else {
+                echo "0";
+            }
         }
     }
 } else {
