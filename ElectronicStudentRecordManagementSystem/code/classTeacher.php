@@ -57,5 +57,13 @@ class Teacher
 	
 	function checkAbsence($ssn) {
 		return $this->db->checkAbsence($ssn);
-	}
+    }
+    
+    function recordLateEntrance($day, $ssn, $hour){
+        return $this->db->recordLateEntrance($day, $ssn, $hour);
+    }
+
+    function recordEarlyExit($day, $ssn, $hour){
+        return $this->db->recordEarlyExit($day, $ssn, $hour);
+    }
 }

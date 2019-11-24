@@ -849,7 +849,6 @@ class dbTeacher extends db
         }
     }
 	
-	
 	function checkAbsence($ssn) {
 		
 		$ssn = $this->sanitizeString($ssn);
@@ -868,5 +867,14 @@ class dbTeacher extends db
 				return 0;
 			}
 		}
-	}
+    }
+    
+    function recordLateEntrance($day, $ssn, $hour){
+        
+    }
+
+    function recordEarlyExit($day, $ssn, $hour){
+        
+    }
+
 }
