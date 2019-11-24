@@ -850,4 +850,25 @@ class dbTeacher extends db
             $this->rollback();
         }
     }
+	
+	
+	function checkAbsence($ssn) {
+		
+		$ssn = $this->sanitizeString($ssn);
+		
+		$result = $this->query("SELECT * FROM Attendance WHERE CodFisc='$ssn'");
+
+		if (!$result)
+            die("Unable to select attendance");
+
+        if ($result->num_rows > 0) {
+			$row = $result->fetch_assoc();
+			$absence = $row['absence'];
+			if($absence == 1) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
 }

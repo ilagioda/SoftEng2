@@ -54,4 +54,8 @@ class Teacher
     {
         return $this->db->updateAttendance($ssn, $day);
     }
+	
+	function checkAbsence($ssn) {
+		return $this->db->checkAbsence($ssn);
+	}
 }

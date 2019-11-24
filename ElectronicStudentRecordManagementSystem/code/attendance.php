@@ -57,20 +57,6 @@ if (isset($_REQUEST['class'])) {
 
             });
 			
-			$(function(){
-				$('input:checkbox').each(function() {
-					// Iterate over the checkboxes and set their "check" values based on the session data
-					var $el = $(this);
-					$el.prop('checked', sessionStorage[$el.prop('id')] === 'true');
-				});
-
-				$('input:checkbox').on('change', function() {
-					// save the individual checkbox in the session inside the `change` event, 
-					// using the checkbox "id" attribute
-					var $el = $(this);
-					sessionStorage[$el.prop('id')] = $el.is(':checked');
-				});
-			});
         });
 		
         /******************************************* */
@@ -123,7 +109,17 @@ if (isset($_REQUEST['class'])) {
                 <td style="vertical-align: middle;">$fields[0]</td>
                 <td style="vertical-align: middle;">$fields[1]</td>
                 <td style="vertical-align: middle;">$fields[2]</td>
-                <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"> <span class="slider round"></span> </label> </td>
+                <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"
+_ROW;
+
+				$result = $teacher->checkAbsence($fields[2]);
+				if($result == 1) {
+					// assente
+					echo "checked=checked";
+				}
+			echo <<<_ROW
+				
+				> <span class="slider round"></span> </label> </td>
                 <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
                 Click
                 </button></td>
