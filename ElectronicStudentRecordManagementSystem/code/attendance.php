@@ -107,11 +107,11 @@ if (isset($_REQUEST['class'])) {
             // coloumns: name, surname, ssn, presence, lateEntrance, earlyExit
             echo <<<_ROW
                 <tr>
-                <td>$fields[0]</td>
-                <td>$fields[1]</td>
-                <td>$fields[2]</td>
-                <td align='center'> <label class="switch"> <input type="checkbox" id="$i"> <span class="slider round"></span> </label> </td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td style="vertical-align: middle;">$fields[0]</td>
+                <td style="vertical-align: middle;">$fields[1]</td>
+                <td style="vertical-align: middle;">$fields[2]</td>
+                <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"> <span class="slider round"></span> </label> </td>
+                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
                 Click
                 </button></td>
                 <td align="center" style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
