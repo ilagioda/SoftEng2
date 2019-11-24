@@ -41,8 +41,7 @@ if (isset($_REQUEST['class'])) {
     $_SESSION['students'] = $students;
     ?>
     <script>
-        /******************************************** */
-
+        /*********************************************/
         $(document).ready(function() {
             $("input[type='checkbox']").change(function() {
                 // alert("Mi hai svegliato");
@@ -58,34 +57,30 @@ if (isset($_REQUEST['class'])) {
 
             });
         });
-        /******************************************-* */
+        /******************************************* */
 
-        /*
-        data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass"
-        <p id="modal-name"><p>
-        <p id="modal-surname"><p>
-        <p id="modal-ssn"><p>
-        <p id="modal-c"><p>
-     */
+        function fillModalFieldsENTRANCE(obj){
+            var studName = obj.getAttribute("data-name");
+            var studSurname = obj.getAttribute("data-surname");
+            var studSSN = obj.getAttribute("data-ssn");
+            var studClass = obj.getAttribute("data-c");
+            document.getElementById("modalEntrance-name").innerHTML = studName;
+            document.getElementById("modalEntrance-surname").innerHTML = studSurname;
+            document.getElementById("modalEntrance-ssn").innerHTML = studSSN;
+            document.getElementById("modalEntrance-c").innerHTML = studClass;
+        }
 
-        var ATTRIBUTES = ['name', 'surname', 'ssn', 'c'];
-        $('[data-toggle="modal"]').on('click', function(e) {
-            // convert target (e.g. the button) to jquery object
-            var $target = $(e.target);
-            // modal targeted by the button
-            var modalSelector = $target.data('target');
-            // iterate over each possible data-* attribute
-            ATTRIBUTES.forEach(function(attributeName) {
-                // retrieve the dom element corresponding to current attribute
-                var $modalAttribute = $(modalSelector + ' #modal-' + attributeName);
-                var dataValue = $target.data(attributeName);
-                // if the attribute value is empty, $target.data() will return undefined.
-                // In JS boolean expressions return operands and are not coerced into
-                // booleans. That way is dataValue is undefined, the left part of the following
-                // Boolean expression evaluate to false and the empty string will be returned
-                $modalAttribute.text(dataValue || '');
-            });
-        });
+        function fillModalFieldsEXIT(obj){
+            var studName = obj.getAttribute("data-name");
+            var studSurname = obj.getAttribute("data-surname");
+            var studSSN = obj.getAttribute("data-ssn");
+            var studClass = obj.getAttribute("data-c");
+            document.getElementById("modalExit-name").innerHTML = studName;
+            document.getElementById("modalExit-surname").innerHTML = studSurname;
+            document.getElementById("modalExit-ssn").innerHTML = studSSN;
+            document.getElementById("modalExit-c").innerHTML = studClass;
+        }
+
     </script>
 <?php
     // Create the table containing the students
@@ -111,10 +106,10 @@ if (isset($_REQUEST['class'])) {
                 <td style="vertical-align: middle;">$fields[1]</td>
                 <td style="vertical-align: middle;">$fields[2]</td>
                 <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"> <span class="slider round"></span> </label> </td>
-                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
                 Click
                 </button></td>
-                <td align="center" style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[0]" data-ssn="$fields[0]" data-c="$chosenClass">
+                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
                 Click
                 </button></td>
 _ROW;
@@ -132,10 +127,10 @@ _ROW;
                             <h4 class="modal-title" id="myEntrancelabel">Record LATE ENTRANCE</h4>
                         </div>
                         <div class="modal-body">
-                            <span id="modal-name"></span>
-                            <span id="modal-surname"></span>
-                            <span id="modal-ssn"></span>
-                            <span id="modal-c"></span>
+                            <span id="modalEntrance-name"></span><br>
+                            <span id="modalEntrance-surname"></span><br>
+                            <span id="modalEntrance-ssn"></span><br>
+                            <span id="modalEntrance-c"></span><br>
                             <span>TENDINA CON HOUR (1..6)</span>
                         </div>
                         <div class="modal-footer">
@@ -146,6 +141,31 @@ _ROW;
                 </div>
             </div>
 _MODALENTRANCE;
+
+        echo <<<_MODALEXIT
+        <div class="modal fade" id="myExit" tabindex="-1" role="dialog" aria-labelledby="myExitlabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myExitlabel">Record EARLY EXIT</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span id="modalExit-name"></span><br>
+                        <span id="modalExit-surname"></span><br>
+                        <span id="modalExit-ssn"></span><br>
+                        <span id="modalExit-c"></span><br>
+                        <span>TENDINA CON HOUR (1..6)</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+_MODALEXIT;
+
     }
 } else {
 
