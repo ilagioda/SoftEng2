@@ -663,11 +663,9 @@ class dbTeacher extends db
         }
     }
 
-    function getAssignmentsByTeacher($codTeacher)
+    function getAssignments()
     {
-        $codTeacher = $this->sanitizeString($codTeacher);
-
-        $result = $this->query("SELECT * FROM Assignments WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC");
+        $result = $this->query("SELECT * FROM Assignments ORDER BY date DESC");
 
         if (!$result)
             die("Unable to select assignments.");
@@ -697,8 +695,8 @@ class dbTeacher extends db
             return -1;
         }
 
-        $result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment, codFiscTeacher) 
-								VALUES ('$subject', '$date', '$class', '$assignments', '$codTeacher')");
+        $result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment) 
+								VALUES ('$subject', '$date', '$class', '$assignments')");
 
         if ($result == FALSE) {
             die("ERROR: Assignments not inserted.");
@@ -752,31 +750,6 @@ class dbTeacher extends db
                 array_push($students, "" . $row['name'] . "," . $row['surname'] . "," . $row['codFisc'] . "");
             }
             return $students;
-        }
-    }
-
-    function insertAbsenceNote($date, $hour, $student, $class, $codTeacher, $subject, $absencenote)
-    {
-
-        $class = $this->sanitizeString($class);
-        $subject = $this->sanitizeString($subject);
-        $student = $this->sanitizeString($student);
-        $codTeacher = $this->sanitizeString($codTeacher);
-        $date = $this->sanitizeString($date);
-        $hour = $this->sanitizeString($hour);
-        $absencenote = $this->sanitizeString($absencenote);
-
-        $result = $this->query("SELECT * FROM Assignments WHERE (classID='$class' AND subject='$subject' AND date='$date')");
-
-        if ($result->num_rows > 0) {
-            return -1;
-        }
-
-        $result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment, codFiscTeacher) 
-								VALUES ('$subject', '$date', '$class', '$assignments', '$codTeacher')");
-
-        if ($result == FALSE) {
-            die("ERROR: Assignments not inserted.");
         }
     }
 

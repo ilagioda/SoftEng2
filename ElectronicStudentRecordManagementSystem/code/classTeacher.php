@@ -42,7 +42,7 @@ class Teacher
 
     function getAssignments()
     {
-        return $this->db->getAssignmentsByTeacher($this->codfisc);
+        return $this->db->getAssignments();
     }
 
     function getStudents2($class)

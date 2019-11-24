@@ -14,7 +14,6 @@
 		
 		foreach($students as $student) {
 			$args = explode(",",$student);
-			echo $args[0]." ".$args[1]." ".$args[2];
 			$output .= "<option value=".$args[2].">".$args[0]." ".$args[1]." (".$args[2].")</option>";
 		}
 		echo $output;

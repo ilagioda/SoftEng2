@@ -1,5 +1,10 @@
 <?php	
 
+if (!isset($_SESSION))
+    session_start();
+
+if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
+	
 	require_once("classTeacher.php");    
 	$teacher=new Teacher();
 
@@ -17,4 +22,5 @@
 		}
 		echo $output;
 	}
+}
 ?>
