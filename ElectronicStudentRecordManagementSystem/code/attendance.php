@@ -140,34 +140,34 @@ _ROW;
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title" id="myEntrancelabel">Record LATE ENTRANCE</h4>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body col-xs-6 col-xs-offset-3">
                             <form class="form-horizontal attendanceForm">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Name:</label>
+                                    <label class="col-xs-6 control-label">Name:</label>
                                     <div class="col-xs-4">
                                         <p class="form-control-static" id="modalEntrance-name"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Surname:</label>
+                                    <label class="col-xs-6 control-label">Surname:</label>
                                     <div class="col-xs-4">
                                         <p class="form-control-static" id="modalEntrance-surname"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">SSN:</label>
+                                    <label class="col-xs-6 control-label">SSN:</label>
                                     <div class="col-xs-4">
                                         <p class="form-control-static" id="modalEntrance-ssn"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Class:</label>
+                                    <label class="col-xs-6 control-label">Class:</label>
                                     <div class="col-xs-4">
                                         <p class="form-control-static" id="modalEntrance-c"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Hour:</label>
+                                    <label class="col-xs-6 control-label">Hour:</label>
                                     <select class="form-control">
                                         <option>1</option>
                                         <option>2</option>
@@ -196,34 +196,34 @@ _MODALENTRANCE;
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myExitlabel">Record EARLY EXIT</h4>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body col-xs-6 col-xs-offset-3">
                         <form class="form-horizontal attendanceForm">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Name:</label>
+                                <label class="col-xs-6 control-label">Name:</label>
                                 <div class="col-xs-4">
                                     <p class="form-control-static" id="modalExit-name"></p>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Surname:</label>
+                                <label class="col-xs-6 control-label">Surname:</label>
                                 <div class="col-xs-4">
                                     <p class="form-control-static" id="modalExit-surname"></p>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">SSN:</label>
+                                <label class="col-xs-6 control-label">SSN:</label>
                                 <div class="col-xs-4">
                                     <p class="form-control-static" id="modalExit-ssn"></p>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Class:</label>
+                                <label class="col-xs-6 control-label">Class:</label>
                                 <div class="col-xs-4">
                                     <p class="form-control-static" id="modalExit-c"></p>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Hour:</label>
+                                <label class="col-xs-6 control-label">Hour:</label>
                                 <select class="form-control">
                                     <option>1</option>
                                     <option>2</option>
