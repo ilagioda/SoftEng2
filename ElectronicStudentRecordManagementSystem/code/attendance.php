@@ -58,7 +58,6 @@ if (isset($_REQUEST['class'])) {
             });
 			
         });
-		
         /******************************************* */
 
         function fillModalFieldsENTRANCE(obj){
@@ -81,6 +80,68 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalExit-surname").innerHTML = studSurname;
             document.getElementById("modalExit-ssn").innerHTML = studSSN;
             document.getElementById("modalExit-c").innerHTML = studClass;
+        }
+
+        function ajaxRequest(){
+            var request;
+            try {		
+                request = new XMLHttpRequest();										// No Internet Explorer
+            } catch (e1) {
+                try {
+                    request = new ActiveXObject("Msxm12.XMLHTTP");					// Internet Explorer 6+
+                } catch (e2) {
+                    try {
+                        request = new ActiveXObject("Microsoft.XMLHTTP");			// Internet Explorer 5
+                    } catch (e3) {
+                        request = false;											// No supporto AJAX
+                    }
+                }
+            }
+            return request;
+        }
+
+        function recordEntrance(){
+            // Retrieve the info needed to fill the DB 
+            var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
+            var selectedIndex = document.getElementById("selectEntrance").selectedIndex;
+            var listOfOptions = document.getElementById("selectEntrance").options;
+            var hour = listOfOptions[selectedIndex].text;
+
+            // AJAX request
+            req = ajaxRequest();
+            req.onreadystatechange = endEntrance;         
+            req.open("POST", "attendanceBackEnd.php?"+"ssn="+ssn+"&hour="+hour+"&event=entrance", true); 
+            req.send(); 
+        }
+
+        function recordExit(){
+            // Retrieve the info needed to fill the DB 
+            var ssn = document.getElementById("modalExit-ssn").innerHTML;
+            var selectedIndex = document.getElementById("selectExit").selectedIndex;
+            var listOfOptions = document.getElementById("selectExit").options;
+            var hour = listOfOptions[selectedIndex].text;
+
+            // AJAX request
+            req = ajaxRequest();
+            req.onreadystatechange = endExit;         
+            req.open("POST", "attendanceBackEnd.php?"+"ssn="+ssn+"&hour="+hour+"&event=exit", true); 
+            req.send();            
+        }   
+
+        function endEntrance(){
+
+            // TODO ---------------------------------------------------------------------------------------------------------
+
+            // Dismiss manually the modal window
+            $('#myEntrance').modal('hide');
+        }
+
+        function endExit(){
+
+            // TODO ---------------------------------------------------------------------------------------------------------
+
+            // Dismiss manually the modal window
+            $('#myExit').modal('hide');
         }
 
     </script>
@@ -168,7 +229,7 @@ _ROW;
                                 </div>
                                 <div class="form-group">
                                     <label class="col-xs-6 control-label">Hour:</label>
-                                    <select class="form-control">
+                                    <select class="form-control" id="selectEntrance">
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -181,7 +242,7 @@ _ROW;
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary" onclick="recordEntrance()">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -224,7 +285,7 @@ _MODALENTRANCE;
                             </div>
                             <div class="form-group">
                                 <label class="col-xs-6 control-label">Hour:</label>
-                                <select class="form-control">
+                                <select class="form-control" id="selectExit">
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -237,7 +298,7 @@ _MODALENTRANCE;
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary" onclick="recordExit()">Save changes</button>
                     </div>
                 </div>
             </div>
