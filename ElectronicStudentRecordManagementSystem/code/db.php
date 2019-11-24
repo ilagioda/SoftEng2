@@ -869,16 +869,20 @@ class dbTeacher extends db
 		}
     }
 
-    function recordLateEntry($date, $ssn, $hour){
+    function recordLateEntryQUERY($date, $ssn, $hour){
         return $this->query("UPDATE `Attendance` SET `absence`=0, `lateEntry`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
 
-    function recordEarlyExit($date, $ssn, $hour){
+    function recordEarlyExitQUERY($date, $ssn, $hour){
         return $this->query("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES ('$date', '$ssn', 1, '$hour', 0)");
     }
 
-    function recordEarlyExitHavingAlreadyLateEntry($date, $ssn, $hour){
+    function recordEarlyExitHavingAlreadyLateEntryQUERY($date, $ssn, $hour){
         return $this->query("UPDATE `Attendance` SET `absence`=1, `earlyExit`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
+    }
+
+    function checkExistence($date, $ssn){
+        return $this->query("SELECT * FROM `Attendance` WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
     
     function recordLateEntrance($day, $ssn, $hour){
@@ -896,7 +900,33 @@ class dbTeacher extends db
 
         $this->begin_transaction();
 
-        
+        $result = $this->checkExistence($day, $ssn);
+        if (!$result){
+            $this->rollback();
+            return false;
+        }
+
+        if($result->num_rows != 1){
+            $this->rollback();
+            return false;
+        } 
+
+        while($row = $result->fetch_assoc()){
+            $absence = $row['absence'];
+            if($absence != 1){
+                $this->rollback();
+                return false;
+            }
+
+            $result1 = $this->recordLateEntryQUERY($day, $ssn, $hour);
+            if (!$result1){
+                $this->rollback();
+                return false;
+            }
+        }
+
+        $this->commit();
+        return true;        
     }
 
     function recordEarlyExit($day, $ssn, $hour){
@@ -911,7 +941,39 @@ class dbTeacher extends db
 
         $this->begin_transaction();
 
+        $result = $this->checkExistence($day, $ssn);
+        if (!$result){
+            $this->rollback();
+            return false;
+        }
 
+        if($result->num_rows == 1){
+            while($row = $result->fetch_assoc()){
+                $absence = $row['absence'];
+                if($absence == 0){
+                    $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $ssn, $hour);
+                    if (!$result1){
+                        $this->rollback();
+                        return false;
+                    }
+                } else {
+                    $this->rollback();
+                    return false;
+                }                
+            }    
+        } else if ($result->num_rows == 0) {
+            $result2 = $this->recordEarlyExitQUERY($day, $ssn, $hour);
+            if (!$result2){
+                $this->rollback();
+                return false;
+            }
+        } else {
+            $this->rollback();
+            return false;
+        }
+
+        $this->commit();
+        return true;        
     }
 
 }
