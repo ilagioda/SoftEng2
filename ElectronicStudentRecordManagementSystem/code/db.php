@@ -783,14 +783,12 @@ class dbTeacher extends db
                 // SO AN INSERT SHOULD BE DONE
                 //close the previous statement
                 $stmt->close();
-
-                $hour = 1;
                 $absence = 1;
                 $earlyExit = 0;
                 $lateEntry = 0;
-                $stmt = $this->prepareStatement("INSERT INTO `Attendance`(`date`, `hour`, `codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES (?,?,?,?,?,?)");
+                $stmt = $this->prepareStatement("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES (?,?,?,?,?)");
 
-                if (!$stmt->bind_param("sisiii", $day, $hour, $ssn, $absence, $earlyExit, $lateEntry))
+                if (!$stmt->bind_param("ssiii", $day, $ssn, $absence, $earlyExit, $lateEntry))
                     die("Binding Failed in the Transaction.");
 
                 // The statement is excecuted but the variables do not contain the results
