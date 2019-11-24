@@ -440,3 +440,7 @@ min-width: 250px;
   }
   /*CSS toggle button in page attendance*/
 /*************************************/
+
+.attendanceForm {
+  padding: 20px;
+}
