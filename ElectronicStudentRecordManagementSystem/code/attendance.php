@@ -141,12 +141,9 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
-                    // TODO -----------------------------------------------------------------------------------------------
-
-                    // RECUPERO IL NUMERO DAL buttonID
-                    // scrivo nell'innerHTML del p 'hour'
-                    // disabilito il button con id=buttonID 
-
+                    var pID = buttonID.replace("entranceButton", "entrance");
+                    document.getElementById(pID).innerHTML = "Entrance hour: "+req.responseText;
+                    document.getElementById(buttonID).disabled = true; 
                 }
             }
 
@@ -162,11 +159,9 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
-                    // TODO -----------------------------------------------------------------------------------------------
-
-                    // RECUPERO IL NUMERO DAL buttonID
-                    // scrivo nell'innerHTML del p 'hour'
-                    // disabilito il button con id=buttonID 
+                    var pID = buttonID.replace("exitButton", "exit");
+                    document.getElementById(pID).innerHTML = "Exit hour: "+req.responseText;
+                    document.getElementById(buttonID).disabled = true; 
                 }
             }
 
