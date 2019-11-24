@@ -868,6 +868,18 @@ class dbTeacher extends db
 			}
 		}
     }
+
+    function recordLateEntry($date, $ssn, $hour){
+        return $this->query("UPDATE `Attendance` SET `absence`=0, `lateEntry`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
+    }
+
+    function recordEarlyExit($date, $ssn, $hour){
+        return $this->query("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES ('$date', '$ssn', 1, '$hour', 0)");
+    }
+
+    function recordEarlyExitHavingAlreadyLateEntry($date, $ssn, $hour){
+        return $this->query("UPDATE `Attendance` SET `absence`=1, `earlyExit`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
+    }
     
     function recordLateEntrance($day, $ssn, $hour){
 
