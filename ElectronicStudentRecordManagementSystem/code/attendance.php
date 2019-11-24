@@ -153,6 +153,7 @@ _ROW;
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">Hour:</label>
                                     <select class="form-control">
                                         <option>1</option>
                                         <option>2</option>
@@ -208,6 +209,7 @@ _MODALENTRANCE;
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">Hour:</label>
                                 <select class="form-control">
                                     <option>1</option>
                                     <option>2</option>
