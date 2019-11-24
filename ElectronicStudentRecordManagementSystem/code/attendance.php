@@ -60,7 +60,11 @@ if (isset($_REQUEST['class'])) {
         });
         /******************************************* */
 
+        var req;
+        var buttonID;
+
         function fillModalFieldsENTRANCE(obj){
+            buttonID = obj.id;
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
             var studSSN = obj.getAttribute("data-ssn");
@@ -72,6 +76,7 @@ if (isset($_REQUEST['class'])) {
         }
 
         function fillModalFieldsEXIT(obj){
+            buttonID = obj.id;
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
             var studSSN = obj.getAttribute("data-ssn");
@@ -81,8 +86,6 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalExit-ssn").innerHTML = studSSN;
             document.getElementById("modalExit-c").innerHTML = studClass;
         }
-
-        var req;
 
         function ajaxRequest(){
             var request;
@@ -140,6 +143,10 @@ if (isset($_REQUEST['class'])) {
                     // Everything is alright
                     // TODO -----------------------------------------------------------------------------------------------
 
+                    // RECUPERO IL NUMERO DAL buttonID
+                    // scrivo nell'innerHTML del p 'hour'
+                    // disabilito il button con id=buttonID 
+
                 }
             }
 
@@ -157,6 +164,9 @@ if (isset($_REQUEST['class'])) {
                     // Everything is alright
                     // TODO -----------------------------------------------------------------------------------------------
 
+                    // RECUPERO IL NUMERO DAL buttonID
+                    // scrivo nell'innerHTML del p 'hour'
+                    // disabilito il button con id=buttonID 
                 }
             }
 
@@ -201,10 +211,10 @@ _ROW;
 			echo <<<_ROW
 				
 				> <span class="slider round"></span> </label> </td>
-                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
+                <td style="vertical-align: middle;"><p id="entrance$i" style="display: none"></p><button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
                 Click
                 </button></td>
-                <td style="vertical-align: middle;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
+                <td style="vertical-align: middle;"><p id="exit$i" style="display: none"></p><button type="button" id="exitButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
                 Click
                 </button></td>
 _ROW;
