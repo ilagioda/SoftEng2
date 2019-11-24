@@ -63,6 +63,9 @@
                             </li>
                         </ul>
                     </li>
+					
+					<li><a href="attendance.php">Attendance</a>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
