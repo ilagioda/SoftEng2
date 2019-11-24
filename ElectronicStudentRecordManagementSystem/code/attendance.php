@@ -56,7 +56,23 @@ if (isset($_REQUEST['class'])) {
                     });
 
             });
+			
+			$(function(){
+				$('input:checkbox').each(function() {
+					// Iterate over the checkboxes and set their "check" values based on the session data
+					var $el = $(this);
+					$el.prop('checked', sessionStorage[$el.prop('id')] === 'true');
+				});
+
+				$('input:checkbox').on('change', function() {
+					// save the individual checkbox in the session inside the `change` event, 
+					// using the checkbox "id" attribute
+					var $el = $(this);
+					sessionStorage[$el.prop('id')] = $el.is(':checked');
+				});
+			});
         });
+		
         /******************************************* */
 
         function fillModalFieldsENTRANCE(obj){
@@ -87,14 +103,16 @@ if (isset($_REQUEST['class'])) {
     // Check if the class has at least one student
     if (empty($students)) {
         // The class has no students
-        echo "<p>No students in the selected class!!</p>";
+        echo "<p>No students in the selected class!</p>";
     } else {
         // The class has at least one student
         echo "<div class=\"table-responsive\">";
         echo "<table class=\"table table-striped table-bordered text-center\">";
         echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>Late entrance</b><td><b>Early exit</b></td></tr>";
-        $i = 0;
+		
+		$i = 0;
         foreach ($students as $stud) {
+	
             $fields = explode(",", $stud);
             // $fields[0] --> name
             // $fields[1] --> surname
