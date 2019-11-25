@@ -136,14 +136,17 @@ if (isset($_REQUEST['class'])) {
         function endEntrance(){
 
             if(req.readyState == 4 && (req.status == 0 || req.status == 200)) {
-                if(req.responseText == "0"){
+                if(req.responseText === "0"){
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
                     var pID = buttonID.replace("entranceButton", "entrance");
                     document.getElementById(pID).innerHTML = "Entrance hour: "+req.responseText;
+                    document.getElementById(pID).style.display = "block";
                     document.getElementById(buttonID).disabled = true; 
+                    var checkID = buttonID.replace("entranceButton", "");
+                    document.getElementById(checkID).checked = false;
                 }
             }
 
@@ -161,7 +164,10 @@ if (isset($_REQUEST['class'])) {
                     // Everything is alright
                     var pID = buttonID.replace("exitButton", "exit");
                     document.getElementById(pID).innerHTML = "Exit hour: "+req.responseText;
+                    document.getElementById(pID).style.display = "block";
                     document.getElementById(buttonID).disabled = true; 
+                    var checkID = buttonID.replace("exitButton", "");
+                    document.getElementById(checkID).checked = true;
                 }
             }
 

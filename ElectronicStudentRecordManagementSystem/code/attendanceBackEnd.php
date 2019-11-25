@@ -5,11 +5,11 @@ require_once("classTeacher.php");
 if (!isset($_SESSION))
     session_start();
 if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
-    if (isset($_POST["event"])) {
+    if (isset($_REQUEST["event"])) {
 
-        if ( ($_POST["event"] == "presence") && isset($_SESSION['students'])&&isset($_POST['i'])) {
+        if ( ($_REQUEST["event"] == "presence") && isset($_SESSION['students'])&&isset($_REQUEST['i'])) {
             $students =$_SESSION['students'];
-            $index =$_POST['i'];
+            $index =$_REQUEST['i'];
             $tuple = explode(",",$students[$index]);
             $ssn = $tuple[2];
             /* echo $ssn; */
