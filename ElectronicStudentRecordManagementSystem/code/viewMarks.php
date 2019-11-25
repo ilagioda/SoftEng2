@@ -1,19 +1,14 @@
 <?php
 require_once("basicChecks.php");
 
-$loggedin = false;
-if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
-    $loggedin = true;
-}
-if (!$loggedin) {
-    //require_once("defaultNavbar.php");
+if (!(isset($_SESSION['user']) && $_SESSION['role'] == "parent")) {
+    // not logged in
     header("Location: login.php");
-} else {
-    require_once "loggedParentNavbar.php";
-}
-require_once("db.php");
+    exit;
+} 
 
-//checkIfLogged();
+require_once("loggedParentNavbar.php");
+require_once("db.php");
 
 $childName = $_SESSION['childName'];
 $childSurname = $_SESSION['childSurname']; 

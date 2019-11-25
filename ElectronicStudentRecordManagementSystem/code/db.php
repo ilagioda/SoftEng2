@@ -406,21 +406,28 @@ class dbParent extends db
 
         $CodFisc = $this->sanitizeString($CodFisc);
 
+        $this->begin_transaction();
+
         /* Verify if the user logged in is actually allowed to see the marks of the requested child */
         $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
 
-        if (!$result)
+        if (!$result){
+            $this->rollback();
             die("Unable to select student $CodFisc");
+        }
 
         if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
+            $this->rollback();
             die("No student with ID $CodFisc ");
         }
 
         $parent1 = $row['emailP1'];
         $parent2 = $row['emailP2'];
 
-        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
+        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2){
+            $this->rollback();
             die("You are not authorised to see this information.");
+        }
 
         /* The user can see the marks => retrieve the marks of the current year */
 
@@ -439,6 +446,11 @@ class dbParent extends db
 
         $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
 
+        if (!$result){
+            $this->rollback();
+            die("Unable to select marks for student $CodFisc");
+        }
+
         $marks = "";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
@@ -446,6 +458,8 @@ class dbParent extends db
         }
 
         if ($marks != "") $marks = substr($marks, 0, -1); // to remove the last ;
+
+        $this->commit();
 
         return $marks;
     }
@@ -681,8 +695,6 @@ class dbTeacher extends db
 
     function insertNewAssignments($date, $class, $codTeacher, $subject, $assignments)
     {
-
-
         $class = $this->sanitizeString($class);
         $subject = $this->sanitizeString($subject);
         $date = $this->sanitizeString($date);
@@ -731,6 +743,10 @@ class dbTeacher extends db
         if ($result == FALSE) {
             die("ERROR: Assignments not deleted.");
         }
+    }
+
+    function retrieveAssignments($codFisc){
+
     }
 
     function getStudentsByClass2($class)
