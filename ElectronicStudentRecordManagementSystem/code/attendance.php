@@ -266,7 +266,6 @@ _ROW;
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" onclick="recordEntrance()">Save changes</button>
                         </div>
                     </div>
@@ -322,7 +321,6 @@ _MODALENTRANCE;
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" onclick="recordExit()">Save changes</button>
                     </div>
                 </div>
