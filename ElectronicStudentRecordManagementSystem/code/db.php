@@ -370,6 +370,39 @@ class dbParent extends db
         parent::__construct();
     }
 
+    protected function checkIfAuthorisedForChild($CodFisc)
+    {
+
+
+        /**
+         * 
+         * IMPORTANT: TO BE USED INSIDE A TRANSACTION
+         * 
+         * Verify if the user logged in is actually allowed to see the marks of the requested child
+         * @return error String if the users is not authorised, true otherwise
+         */
+        $CodFisc = $this->sanitizeString($CodFisc);
+
+        $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
+
+        if (!$result) {
+            return "Unable to select student $CodFisc";
+        }
+
+        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
+            return "No student with ID $CodFisc ";
+        }
+
+        $parent1 = $row['emailP1'];
+        $parent2 = $row['emailP2'];
+
+        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2) {
+            return "You are not authorised to see this information.";
+        }
+
+        return true;
+    }
+
     public function retrieveChildren($email)
     {
 
@@ -408,41 +441,20 @@ class dbParent extends db
 
         $this->begin_transaction();
 
-        /* Verify if the user logged in is actually allowed to see the marks of the requested child */
-        $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
+        $authorised = $this->checkIfAuthorisedForChild($CodFisc);
 
-        if (!$result) {
+        if ($authorised !== true) {
+            // not authorised to see the child
             $this->rollback();
-            die("Unable to select student $CodFisc");
-        }
-
-        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
-            $this->rollback();
-            die("No student with ID $CodFisc ");
-        }
-
-        $parent1 = $row['emailP1'];
-        $parent2 = $row['emailP2'];
-
-        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2) {
-            $this->rollback();
-            die("You are not authorised to see this information.");
+            die($authorised);
         }
 
         /* The user can see the marks => retrieve the marks of the current year */
 
-        $year = intval(date("Y"));
-        $month = intval(date("m"));
+        $boundaries = getCurrentAcademicYear();
 
-        if ($month <= 7) {
-            // second semester
-            $year = $year - 1;
-        }
-
-        $beginningDate = $year . "-08-01";
-
-        $year = $year + 1;
-        $endingDate = $year . "-07-31";
+        $beginningDate = $boundaries[0];
+        $endingDate = $boundaries[1];
 
         $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
 
@@ -462,6 +474,68 @@ class dbParent extends db
         $this->commit();
 
         return $marks;
+    }
+
+    public function retrieveAttendance($CodFisc)
+    {
+
+        /**
+         * Retrieve the attendance of a given student in the current semester.
+         * @param $codFisc (String) CodFisc of the searched student, e.g. 2015.
+         * @return (Array) The calendar's html.
+         */
+
+        $this->begin_transaction();
+
+        $CodFisc = $this->sanitizeString($CodFisc);
+
+        $authorised = $this->checkIfAuthorisedForChild($CodFisc);
+
+        if ($authorised !== true) {
+            // not authorised to see the child
+            $this->rollback();
+            die($authorised);
+        }
+
+        $boundaries = getCurrentAcademicYear();
+
+        $beginningDate = $boundaries[0];
+        $endingDate = $boundaries[1];
+
+        $result = $this->query("SELECT * FROM Attendance 
+            WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate'");
+
+        if (!$result) {
+            $this->rollback();
+            die("Unable to select attendance for student $CodFisc");
+        }
+
+        $attendance = array();
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+
+            /**
+             * Modify data to simplify them
+             * Produces an array as
+             * "YYYY-MM-DD" => "absent" | "early - hh:mm" | "late - hh:mm"
+             * */
+
+            if ($row["absence"] == 1) {
+                // the student was absent that day
+                $value = "absent";
+            } elseif ($row["lateEntry"] !== 0) {
+                //entered late
+                $value = "late - Entered at " . strval($row["lateEntry"] . "° hour");
+            } else {
+                //no late entry,neither absence => exited early
+                $value = "late - Exited at " . strval($row["earlyExit"] . "° hour");
+            }
+            $attendance[$row["date"]] = $value;
+        }
+
+        $this->commit();
+
+        return $attendance;
     }
 }
 
@@ -967,8 +1041,7 @@ class dbTeacher extends db
         }
 
 
-        if (!(($attendance['earlyExit'] == 0 && ($attendance['lateEntry'] == 0)) ||
-         ($attendance['earlyExit'] !=0 && ($attendance['earlyExit'] <= $hour)))) {
+        if (!(($attendance['earlyExit'] == 0 && ($attendance['lateEntry'] == 0)) || ($attendance['earlyExit'] != 0 && ($attendance['earlyExit'] <= $hour)))) {
             $this->rollback();
             return false;
         }
@@ -1017,8 +1090,7 @@ class dbTeacher extends db
             $absence = $row['absence'];
             if ($absence == 0) {
 
-                if (!((($row['lateEntry'] == 0) && ($row['earlyExit'] == 0)) || 
-                (($row['lateEntry'] != 0) && ($row['lateEntry'] <= $hour)))) {
+                if (!((($row['lateEntry'] == 0) && ($row['earlyExit'] == 0)) || (($row['lateEntry'] != 0) && ($row['lateEntry'] <= $hour)))) {
                     $this->rollback();
                     return false;
                 }

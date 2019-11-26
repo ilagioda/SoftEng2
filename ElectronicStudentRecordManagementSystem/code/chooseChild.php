@@ -6,10 +6,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
     $loggedin = true;
 }
 if (!$loggedin) {
-    //require_once("defaultNavbar.php");
-    echo $_SESSION['user'] ;
-    echo $_SESSION['role'];
-   // header("Location: login.php");
+    header("Location: login.php");
 } else {
     require_once "loggedParentNavbar.php";
 }
@@ -30,17 +27,7 @@ if (isset($_REQUEST['childIndex'])) {
     exit;
 }
 
-if (isset($_SESSION['user']) /* TODO substitute when login is implemented !isset($_SESSION['user']) */) {
-    // Logging in
-
-    /**
-     * These two will already be set from the login
-     */
-
-    //$_SESSION['user'] = $_POST['email']; //to be commented
-    //$_SESSION['role'] = "parent"; //to be commented
-
-    // end lines ot be removed
+if (isset($_SESSION['user'])) {
 
     $db = new dbParent();
     $children = $db->retrieveChildren($_SESSION['user']);
