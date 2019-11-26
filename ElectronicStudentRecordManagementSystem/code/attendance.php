@@ -91,6 +91,11 @@ if (isset($_REQUEST['class'])) {
             var entranceHourString = entranceP.replace("Entrance hour: ", "");
             var entranceHour = parseInt(entranceHourString);
             var select = document.getElementById("selectExit");
+            var child = select.lastElementChild;  
+            while (child) { 
+                select.removeChild(child); 
+                child = select.lastElementChild; 
+            } 
             if (entranceHour >= 1 && entranceHour <= 6) {
                 // admissible number
                 for (var i = entranceHour; i < 7; i++) {
@@ -165,7 +170,8 @@ if (isset($_REQUEST['class'])) {
                     var pID = buttonID.replace("entranceButton", "entrance");
                     document.getElementById(pID).innerHTML = "Entrance hour: " + req.responseText;
                     document.getElementById(pID).style.display = "block";
-                    document.getElementById(buttonID).disabled = true;
+                    // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
+                    document.getElementById(buttonID).remove();
                     var checkID = buttonID.replace("entranceButton", "");
                     document.getElementById(checkID).checked = false;
                 }
@@ -186,7 +192,8 @@ if (isset($_REQUEST['class'])) {
                     var pID = buttonID.replace("exitButton", "exit");
                     document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
                     document.getElementById(pID).style.display = "block";
-                    document.getElementById(buttonID).disabled = true;
+                    // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
+                    document.getElementById(buttonID).remove();
                     var checkID = buttonID.replace("exitButton", "");
                     document.getElementById(checkID).checked = true;
                 }
