@@ -72,6 +72,33 @@ function convertMark($rawMark)
     return $mark;
 }
 
+function getCurrentSemester()
+{
+    /**
+     * SQL-ready function
+     * @return Array with [0] as starting date and [1] as ending date of the current semester
+     */
+
+    /* Select current year */
+    $year = intval(date("Y"));
+    $month = intval(date("m"));
+
+    if ($month > 8) {
+        // first semester
+
+        $beginningDate = $year . "-09-01"; // from September
+        $year = $year + 1;
+        $endingDate = $year . "-01-31"; // to January
+
+    } else {
+        // second semester
+        $beginningDate = $year . "-02-01"; // from February
+        $endingDate = $year . "-06-30"; // to June
+    }    
+
+    return array($beginningDate, $endingDate);
+}
+
 function getCurrentAcademicYear()
 {
 

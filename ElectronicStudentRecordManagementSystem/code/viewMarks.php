@@ -43,8 +43,7 @@ if($marks!=""){
 
         $subject = $row[0];
         $date = $row[1];
-        $hour = $row[2];
-        $initialMark = $row[3];
+        $initialMark = $row[2];
         $mark = convertMark($initialMark);
 
         if($preprocessed_data[$subject]['mean']==0) {
@@ -61,7 +60,7 @@ if($marks!=""){
         }
 
         $preprocessed_data[$subject]['mean'] +=$mark;
-        $preprocessed_data[$subject][$date . " " . $hour] = $initialMark;
+        $preprocessed_data[$subject][$date] = $initialMark;
         $count++;
     }
     
@@ -73,7 +72,7 @@ if($marks!=""){
     /**
      * Now $preprocessed_data should be a map containing:
      * Subject,mean => mean
-     * Subject,date hour => Mark
+     * Subject,date => Mark
      */
 
 }
@@ -142,14 +141,14 @@ _HIDDENLEGEND;
          * (per evitare che si veda un pezzo mancante nella tabella)
          * */
 
-        foreach($marks as $dateHour => $mark){
+        foreach($marks as $date => $mark){
             
-            if($dateHour=='mean') continue;
+            if($date=='mean') continue;
 
             echo <<<_HIDDENROWS
             <tr>
                 <td class="hiddenRow marks" > <div class="accordian-body collapse $subject"></div> </td>
-                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $dateHour </div> </td>
+                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $date </div> </td>
                 <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $mark </div> </td>
                 <td class="hiddenRow marks" > <div class="accordian-body collapse $subject "></div> </td>
             </tr>

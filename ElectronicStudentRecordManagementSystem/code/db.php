@@ -451,12 +451,12 @@ class dbParent extends db
 
         /* The user can see the marks => retrieve the marks of the current year */
 
-        $boundaries = getCurrentAcademicYear();
+        $boundaries = getCurrentSemester();
 
         $beginningDate = $boundaries[0];
         $endingDate = $boundaries[1];
 
-        $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
+        $result = $this->query("SELECT subject,date,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
 
         if (!$result) {
             $this->rollback();
@@ -466,7 +466,7 @@ class dbParent extends db
         $marks = "";
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-            $marks = $marks . $row['subject'] . ',' . $row['date'] . "," . $row['hour'] . "° hour," . $row['mark'] . ";";
+            $marks = $marks . $row['subject'] . ',' . $row['date'] . "," . $row['mark'] . ";";
         }
 
         if ($marks != "") $marks = substr($marks, 0, -1); // to remove the last ;
@@ -497,7 +497,7 @@ class dbParent extends db
             die($authorised);
         }
 
-        $boundaries = getCurrentAcademicYear();
+        $boundaries = getCurrentSemester();
 
         $beginningDate = $boundaries[0];
         $endingDate = $boundaries[1];
