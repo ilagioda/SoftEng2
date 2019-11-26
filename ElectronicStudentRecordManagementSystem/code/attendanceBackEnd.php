@@ -7,13 +7,13 @@ if (!isset($_SESSION))
 if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
     if (isset($_REQUEST["event"])) {
 
-        if ( ($_REQUEST["event"] == "presence") && isset($_SESSION['students'])&&isset($_REQUEST['i'])) {
-            $students =$_SESSION['students'];
-            $index =$_REQUEST['i'];
-            $tuple = explode(",",$students[$index]);
+        if (($_REQUEST["event"] == "presence") && isset($_SESSION['students']) && isset($_REQUEST['i'])) {
+            $students = $_SESSION['students'];
+            $index = $_REQUEST['i'];
+            $tuple = explode(",", $students[$index]);
             $ssn = $tuple[2];
             /* echo $ssn; */
-             
+
             //require_once("classTeacher.php");
 
             $teacher = new Teacher();
@@ -22,14 +22,11 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 
             $text = $teacher->updateAttendance($ssn, $day);
 
-            echo $text;
-
-            /* if($text){
-                echo "The student absence has been recorded";
-            }else{
-                echo "Something has gone wrong";
-            } */
-
+            if ($text) {
+                echo "Event recorded.";
+            } else {
+                echo "Something has gone wrong.";
+            }
         } else if (($_REQUEST["event"] == "entrance") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
             /* LATE ENTRANCE */
             $ssn = $_REQUEST["ssn"];
@@ -38,12 +35,11 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 
             $teacher = new Teacher();
             $ret = $teacher->recordLateEntrance($day, $ssn, $hour);
-            if($ret){
+            if ($ret) {
                 echo "$hour";
             } else {
                 echo "0";
             }
-
         } else if (($_REQUEST["event"] == "exit") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
             /* EARLY EXIT */
             $ssn = $_REQUEST["ssn"];
@@ -52,7 +48,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 
             $teacher = new Teacher();
             $ret = $teacher->recordEarlyExit($day, $ssn, $hour);
-            if($ret){
+            if ($ret) {
                 echo "$hour";
             } else {
                 echo "0";

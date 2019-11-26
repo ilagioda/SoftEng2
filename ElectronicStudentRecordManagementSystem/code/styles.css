@@ -283,7 +283,7 @@ h1.enrollTitle {
 /*  Default Navbar */
 .dropdown {
     border-radius:4px;
-    width:130px;
+    min-width:100px;
 }
 .dropdown-menu>li>a {
     color:black;/*#428bca*/
@@ -372,7 +372,12 @@ h1.enrollTitle {
 /*Button Teacher Homepage*/
 .btn-primary{
 margin-top: 5px;
-min-width: 250px;
+}
+
+
+.btn-primary.main{
+  margin-top: 5px;
+  min-width: 250px;  
 }
 /*Button Teacher Homepage*/
 

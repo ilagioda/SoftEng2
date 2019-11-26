@@ -411,7 +411,7 @@ class dbParent extends db
         /* Verify if the user logged in is actually allowed to see the marks of the requested child */
         $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
 
-        if (!$result){
+        if (!$result) {
             $this->rollback();
             die("Unable to select student $CodFisc");
         }
@@ -424,7 +424,7 @@ class dbParent extends db
         $parent1 = $row['emailP1'];
         $parent2 = $row['emailP2'];
 
-        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2){
+        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2) {
             $this->rollback();
             die("You are not authorised to see this information.");
         }
@@ -446,7 +446,7 @@ class dbParent extends db
 
         $result = $this->query("SELECT subject,date,hour,mark FROM Marks WHERE codFisc='$CodFisc' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC,date DESC,hour DESC;");
 
-        if (!$result){
+        if (!$result) {
             $this->rollback();
             die("Unable to select marks for student $CodFisc");
         }
@@ -624,7 +624,7 @@ class dbTeacher extends db
     function getClassesByTeacher2($codTeacher)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
-        $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher'");
+        $result = $this->query("SELECT DISTINCT classID FROM TeacherClassSubjectTable WHERE codFisc='$codTeacher' ORDER BY classID");
 
         if (!$result)
             die("Unable to select classes.");
@@ -745,9 +745,8 @@ class dbTeacher extends db
         }
     }
 
-    function retrieveAssignments($codFisc){
-
-    }
+    function retrieveAssignments($codFisc)
+    { }
 
     function getStudentsByClass2($class)
     {
@@ -774,20 +773,22 @@ class dbTeacher extends db
      */
     function updateAttendance($ssn, $day)
     {
-
-
         $this->begin_transaction();
         //$ssn1 = $ssn;
         $count = -1;
         $absence = -1;
-        $stmt = $this->prepareStatement("SELECT COUNT(*),`absence` FROM `Attendance` WHERE `codFisc`= ?");
-        // the parameter is bound to the first '?' in the upper query
-        if (!$stmt->bind_param("s", $ssn))
-            die("Binding Failed in the Transaction.");
-        // the result is characterized by four coloumns and needs to be bounded to corresponding variables
-        if (!$stmt->bind_result($count, $absence))
-            die("Binding result Failed in the Transaction.");
+        $lateEntry = -1;
+        $earlyExit = -1;
+
+        $stmt = $this->prepareStatement("SELECT COUNT(*),`absence`,`lateEntry`,`earlyExit` FROM `Attendance` WHERE `codFisc`= ?");
         try {
+            // the parameter is bound to the first '?' in the upper query
+            if (!$stmt->bind_param("s", $ssn))
+                throw new Exception("Binding Failed in the Transaction.");
+            // the result is characterized by four coloumns and needs to be bounded to corresponding variables
+            if (!$stmt->bind_result($count, $absence, $lateEntry, $earlyExit))
+                throw new Exception("Binding result Failed in the Transaction.");
+
             // The statement is excecuted but the variables do not contain the results
             if (!$stmt->execute())
                 throw new Exception("Select Failed.");
@@ -810,6 +811,7 @@ class dbTeacher extends db
                 // The statement is excecuted but the variables do not contain the results
                 if (!$stmt->execute())
                     throw new Exception("Insert Attendance Failed.");
+                $stmt->close();
                 $this->commit();
                 return true;
             } else {
@@ -820,7 +822,7 @@ class dbTeacher extends db
                 //ELSE THE ABSENCE SHOULD BE ADDED SO THE QUERY UPDATED
 
 
-                if ($absence == 1) {
+                if ($absence == 1 && $lateEntry == 0 && $earlyExit == 0) {
                     //THE ABSENCE SHOULD BE REMOVED
                     //close the previous statement
                     $stmt->close();
@@ -836,13 +838,15 @@ class dbTeacher extends db
 
                     if ($stmt->affected_rows == 0)
                         throw new Exception("Delete Attendance Failed.");
+                    $stmt->close();
                 } else {
 
                     //THE ABSENCE SHOULD BE ADDED SO THE QUERY UPDATED
                     //close the previous statement
                     $stmt->close();
 
-
+                    if (!($lateEntry == 0 && $earlyExit == 0))
+                        throw new Exception("The student has some information recorded so this field should not be updated anymore");
 
                     $stmt = $this->prepareStatement("UPDATE `Attendance` SET `absence`= 1 WHERE `codFisc`= ?  AND`date` = ?");
 
@@ -855,53 +859,75 @@ class dbTeacher extends db
 
                     if ($stmt->affected_rows == 0)
                         throw new Exception("Update Attendance Failed.");
+                    $stmt->close();
                 }
             }
+
             $this->commit();
             return true;
         } catch (Exception $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
             $this->rollback();
+            return false;
         }
     }
-	
-	function checkAbsence($ssn) {
-		
-		$ssn = $this->sanitizeString($ssn);
-		
-		$result = $this->query("SELECT * FROM Attendance WHERE CodFisc='$ssn'");
 
-		if (!$result)
-            die("Unable to select attendance");
+    function checkAbsenceEarlyExitLateEntrance($ssn, $day)
+    {
+        $date = "";
+        $codFisc = "";
+        $absence = -1;
+        $earlyExit = -1;
+        $lateEntry = -1;
 
-        if ($result->num_rows > 0) {
-			$row = $result->fetch_assoc();
-			$absence = $row['absence'];
-			if($absence == 1) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
+        $ssn = $this->sanitizeString($ssn);
+        $day = $this->sanitizeString($day);
+
+        $stmt = $this->prepareStatement("SELECT `date`, `codFisc`, `absence`, `earlyExit`, `lateEntry` FROM `Attendance` WHERE `codFisc` = ? AND `date` = ?");
+
+        if (!$stmt->bind_param("ss", $ssn, $day))
+            throw new Exception("Binding Failed.");
+
+        if (!$stmt->bind_result($date, $codFisc, $absence, $earlyExit, $lateEntry))
+            throw new Exception("Binding Failed.");
+
+        try {
+            if (!$stmt->execute())
+                throw new Exception("Select Failed.");
+
+            $row = $stmt->fetch();
+            $result = array($date, $codFisc, $absence, $lateEntry, $earlyExit);
+
+            $stmt->close();
+
+            return $result;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
-    function recordLateEntryQUERY($date, $ssn, $hour){
+    function recordLateEntryQUERY($date, $ssn, $hour)
+    {
         return $this->query("UPDATE `Attendance` SET `absence`=0, `lateEntry`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
 
-    function recordEarlyExitQUERY($date, $ssn, $hour){
+    function recordEarlyExitQUERY($date, $ssn, $hour)
+    {
         return $this->query("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES ('$date', '$ssn', 1, '$hour', 0)");
     }
 
-    function recordEarlyExitHavingAlreadyLateEntryQUERY($date, $ssn, $hour){
+    function recordEarlyExitHavingAlreadyLateEntryQUERY($date, $ssn, $hour)
+    {
         return $this->query("UPDATE `Attendance` SET `absence`=1, `earlyExit`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
 
-    function checkExistence($date, $ssn){
+    function selectAttendanceStudent($date, $ssn)
+    {
         return $this->query("SELECT * FROM `Attendance` WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
-    
-    function recordLateEntrance($day, $ssn, $hour){
+
+    function recordLateEntrance($day, $ssn, $hour)
+    {
 
         // CONTROLLO SE L'ALUNNO C'E' GIA' NEL DB NELLA TABELLA attendance (tramite SELECT)
         // C'E' => TUTTO OK, CONTINUO
@@ -914,39 +940,53 @@ class dbTeacher extends db
         // FACCIO UPDATE DELLA ENTRY DELLA TABELLA attendance E METTO absence=0, lateEntry='hour'
         // return true
 
+        $day = $this->sanitizeString($day);
+        $ssn = $this->sanitizeString($ssn);
+        $hour = $this->sanitizeString($hour);
+
         $this->begin_transaction();
 
-        $result = $this->checkExistence($day, $ssn);
-        if (!$result){
+        $result = $this->selectAttendanceStudent($day, $ssn);
+        if (!$result) {
             $this->rollback();
             return false;
         }
 
-        if($result->num_rows != 1){
+        if ($result->num_rows != 1) {
             $this->rollback();
             return false;
-        } 
+        }
 
-        while($row = $result->fetch_assoc()){
-            $absence = $row['absence'];
-            if($absence != 1){
-                $this->rollback();
-                return false;
-            }
+        $attendance = $result->fetch_assoc();
 
-            $result1 = $this->recordLateEntryQUERY($day, $ssn, $hour);
-            if (!$result1){
-                $this->rollback();
-                return false;
-            }
+        $absence = $attendance['absence'];
+
+        if ($absence != 1) {
+            $this->rollback();
+            return false;
+        }
+
+
+        if (!(($attendance['earlyExit'] == 0 && ($attendance['lateEntry'] == 0)) ||
+         ($attendance['earlyExit'] !=0 && ($attendance['earlyExit'] <= $hour)))) {
+            $this->rollback();
+            return false;
+        }
+
+        $result1 = $this->recordLateEntryQUERY($day, $ssn, $hour);
+
+        if (!$result1) {
+            $this->rollback();
+            return false;
         }
 
         $this->commit();
-        return true;        
+        return true;
     }
 
-    function recordEarlyExit($day, $ssn, $hour){
-        
+    function recordEarlyExit($day, $ssn, $hour)
+    {
+
         // CONTROLLO SE L'ALUNNO C'E' GIA' NEL DB NELLA TABELLA attendance (tramite SELECT)
         // C'E' => CHECK SU absence => absence = 0  => STUDENTE PRESENTE, MA CHE E' ENTRATO IN RITARDO 
         //                                          => TUTTO OK, FACCIO UPDATE METTENDO absence=1 e earlyExit='hour'
@@ -955,31 +995,49 @@ class dbTeacher extends db
         // NON C'E' => VUOL DIRE CHE L'ALUNNO E' PRESENTE => TUTTO OK, FACCIO INSERT CON absence=1 e earlyExit='hour'
         // return true
 
+
+        $day = $this->sanitizeString($day);
+        $ssn = $this->sanitizeString($ssn);
+        $hour = $this->sanitizeString($hour);
+
+
         $this->begin_transaction();
 
-        $result = $this->checkExistence($day, $ssn);
-        if (!$result){
+        $result = $this->selectAttendanceStudent($day, $ssn);
+
+        if (!$result) {
             $this->rollback();
             return false;
         }
 
-        if($result->num_rows == 1){
-            while($row = $result->fetch_assoc()){
-                $absence = $row['absence'];
-                if($absence == 0){
-                    $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $ssn, $hour);
-                    if (!$result1){
-                        $this->rollback();
-                        return false;
-                    }
-                } else {
+        if ($result->num_rows == 1) {
+            //se esiste allora ha gia' un evento registrato early entrance ad esempio
+            $row = $result->fetch_assoc();
+
+            $absence = $row['absence'];
+            if ($absence == 0) {
+
+                if (!((($row['lateEntry'] == 0) && ($row['earlyExit'] == 0)) || 
+                (($row['lateEntry'] != 0) && ($row['lateEntry'] <= $hour)))) {
                     $this->rollback();
                     return false;
-                }                
-            }    
+                }
+
+                $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $ssn, $hour);
+                if (!$result1) {
+                    $this->rollback();
+                    return false;
+                }
+            } else {
+                // se assente non puoi mettere una earlyExit 
+                $this->rollback();
+                return false;
+            }
         } else if ($result->num_rows == 0) {
+            //non è stato registrato alcun evento quindi lo studente è presente
             $result2 = $this->recordEarlyExitQUERY($day, $ssn, $hour);
-            if (!$result2){
+
+            if (!$result2) {
                 $this->rollback();
                 return false;
             }
@@ -989,7 +1047,6 @@ class dbTeacher extends db
         }
 
         $this->commit();
-        return true;        
+        return true;
     }
-
 }

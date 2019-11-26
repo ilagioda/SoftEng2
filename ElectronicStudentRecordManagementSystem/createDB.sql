@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 24, 2019 alle 18:36
+-- Creato il: Nov 26, 2019 alle 13:24
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -90,8 +90,8 @@ CREATE TABLE `Attendance` (
   `date` date NOT NULL,
   `codFisc` varchar(50) NOT NULL,
   `absence` tinyint(1) NOT NULL,
-  `earlyExit` int(2) NOT NULL,
-  `lateEntry` int(2) NOT NULL
+  `lateEntry` int(2) NOT NULL,  
+  `earlyExit` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

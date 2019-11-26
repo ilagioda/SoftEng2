@@ -26,7 +26,7 @@ if (!$loggedin) {
 	echo "<h2>Welcome to your homepage " . $_SESSION["user"] . "!</h2><br>";
 	?>
 	<div class="btn-group">
-		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
 			Daily lesson topics <span class="caret"></span>
 		</button>
@@ -37,7 +37,7 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
 			Insert mark <span class="caret"></span>
 		</button>
@@ -49,7 +49,7 @@ if (!$loggedin) {
 	<br>
 
 	<div class="btn-group">
-		<button type="button" class="btn btn-primary dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
 			Assignments <span class="caret"></span>
 		</button>
@@ -60,7 +60,7 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-		<a href="attendance.php" class="btn btn-primary btn-lg" role="button"><span class=" glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
+		<a href="attendance.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
 	</div>
 </div>
 <?php

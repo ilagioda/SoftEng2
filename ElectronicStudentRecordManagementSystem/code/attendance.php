@@ -44,26 +44,25 @@ if (isset($_REQUEST['class'])) {
         /*********************************************/
         $(document).ready(function() {
             $("input[type='checkbox']").change(function() {
-                // alert("Mi hai svegliato");
-                alert("The once who called me has id: " + this.id);
 
+            // alert("The once who called me has id: " + this.id);
                 $.post("attendanceBackEnd.php", {
                         event: "presence",
                         i: this.id
                     },
                     function(data, status) {
-                        alert("Data: " + data + "\nStatus: " + status);
+                        alert(data);
                     });
 
             });
-			
+
         });
         /******************************************* */
 
         var req;
         var buttonID;
 
-        function fillModalFieldsENTRANCE(obj){
+        function fillModalFieldsENTRANCE(obj) {
             buttonID = obj.id;
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
@@ -75,7 +74,7 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalEntrance-c").innerHTML = studClass;
         }
 
-        function fillModalFieldsEXIT(obj){
+        function fillModalFieldsEXIT(obj) {
             buttonID = obj.id;
 
             var studName = obj.getAttribute("data-name");
@@ -88,46 +87,46 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalExit-c").innerHTML = studClass;
 
             var num = buttonID.replace("exitButton", "");
-            var entranceP = document.getElementById("entrance"+num).innerHTML;
+            var entranceP = document.getElementById("entrance" + num).innerHTML;
             var entranceHourString = entranceP.replace("Entrance hour: ", "");
             var entranceHour = parseInt(entranceHourString);
             var select = document.getElementById("selectExit");
-            if(entranceHour >= 1 && entranceHour <= 6){
+            if (entranceHour >= 1 && entranceHour <= 6) {
                 // admissible number
-                for(var i=entranceHour; i<7; i++){
+                for (var i = entranceHour; i < 7; i++) {
                     option = document.createElement('option');
                     option.textContent = i;
                     select.appendChild(option);
                 }
             } else {
                 // not admissible number
-                for(var i=1; i<7; i++){
+                for (var i = 1; i < 7; i++) {
                     option = document.createElement('option');
                     option.textContent = i;
                     select.appendChild(option);
                 }
-            }   
+            }
         }
 
-        function ajaxRequest(){
+        function ajaxRequest() {
             var request;
-            try {		
-                request = new XMLHttpRequest();										// No Internet Explorer
+            try {
+                request = new XMLHttpRequest(); // No Internet Explorer
             } catch (e1) {
                 try {
-                    request = new ActiveXObject("Msxm12.XMLHTTP");					// Internet Explorer 6+
+                    request = new ActiveXObject("Msxm12.XMLHTTP"); // Internet Explorer 6+
                 } catch (e2) {
                     try {
-                        request = new ActiveXObject("Microsoft.XMLHTTP");			// Internet Explorer 5
+                        request = new ActiveXObject("Microsoft.XMLHTTP"); // Internet Explorer 5
                     } catch (e3) {
-                        request = false;											// No supporto AJAX
+                        request = false; // No supporto AJAX
                     }
                 }
             }
             return request;
         }
 
-        function recordEntrance(){
+        function recordEntrance() {
             // Retrieve the info needed to fill the DB 
             var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
             var selectedIndex = document.getElementById("selectEntrance").selectedIndex;
@@ -136,12 +135,12 @@ if (isset($_REQUEST['class'])) {
 
             // AJAX request
             req = ajaxRequest();
-            req.onreadystatechange = endEntrance;         
-            req.open("POST", "attendanceBackEnd.php?"+"ssn="+ssn+"&hour="+hour+"&event=entrance", true); 
-            req.send(); 
+            req.onreadystatechange = endEntrance;
+            req.open("POST", "attendanceBackEnd.php?" + "ssn=" + ssn + "&hour=" + hour + "&event=entrance", true);
+            req.send();
         }
 
-        function recordExit(){
+        function recordExit() {
             // Retrieve the info needed to fill the DB 
             var ssn = document.getElementById("modalExit-ssn").innerHTML;
             var selectedIndex = document.getElementById("selectExit").selectedIndex;
@@ -150,23 +149,23 @@ if (isset($_REQUEST['class'])) {
 
             // AJAX request
             req = ajaxRequest();
-            req.onreadystatechange = endExit;         
-            req.open("POST", "attendanceBackEnd.php?"+"ssn="+ssn+"&hour="+hour+"&event=exit", true); 
-            req.send();            
-        }   
+            req.onreadystatechange = endExit;
+            req.open("POST", "attendanceBackEnd.php?" + "ssn=" + ssn + "&hour=" + hour + "&event=exit", true);
+            req.send();
+        }
 
-        function endEntrance(){
+        function endEntrance() {
 
-            if(req.readyState == 4 && (req.status == 0 || req.status == 200)) {
-                if(req.responseText === "0"){
+            if (req.readyState == 4 && (req.status == 0 || req.status == 200)) {
+                if (req.responseText === "0") {
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
                     var pID = buttonID.replace("entranceButton", "entrance");
-                    document.getElementById(pID).innerHTML = "Entrance hour: "+req.responseText;
+                    document.getElementById(pID).innerHTML = "Entrance hour: " + req.responseText;
                     document.getElementById(pID).style.display = "block";
-                    document.getElementById(buttonID).disabled = true; 
+                    document.getElementById(buttonID).disabled = true;
                     var checkID = buttonID.replace("entranceButton", "");
                     document.getElementById(checkID).checked = false;
                 }
@@ -176,18 +175,18 @@ if (isset($_REQUEST['class'])) {
             $('#myEntrance').modal('hide');
         }
 
-        function endExit(){
+        function endExit() {
 
-            if(req.readyState == 4 && (req.status == 0 || req.status == 200)) {
-                if(req.responseText == "0"){
+            if (req.readyState == 4 && (req.status == 0 || req.status == 200)) {
+                if (req.responseText == "0") {
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
                     var pID = buttonID.replace("exitButton", "exit");
-                    document.getElementById(pID).innerHTML = "Exit hour: "+req.responseText;
+                    document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
                     document.getElementById(pID).style.display = "block";
-                    document.getElementById(buttonID).disabled = true; 
+                    document.getElementById(buttonID).disabled = true;
                     var checkID = buttonID.replace("exitButton", "");
                     document.getElementById(checkID).checked = true;
                 }
@@ -196,7 +195,6 @@ if (isset($_REQUEST['class'])) {
             // Dismiss manually the modal window
             $('#myExit').modal('hide');
         }
-
     </script>
 <?php
     // Create the table containing the students
@@ -209,10 +207,10 @@ if (isset($_REQUEST['class'])) {
         echo "<div class=\"table-responsive\">";
         echo "<table class=\"table table-striped table-bordered text-center\">";
         echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>Late entrance</b><td><b>Early exit</b></td></tr>";
-		
-		$i = 0;
+
+        $i = 0;
         foreach ($students as $stud) {
-	
+
             $fields = explode(",", $stud);
             // $fields[0] --> name
             // $fields[1] --> surname
@@ -226,21 +224,47 @@ if (isset($_REQUEST['class'])) {
                 <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"
 _ROW;
 
-				$result = $teacher->checkAbsence($fields[2]);
-				if($result == 1) {
-					// assente
-					echo "checked=checked";
-				}
-			echo <<<_ROW
-				
-				> <span class="slider round"></span> </label> </td>
-                <td style="vertical-align: middle;"><p id="entrance$i" style="display: none"></p><button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
+            $result = $teacher->checkAbsenceEarlyExitLateEntrance($fields[2]);
+            //$result = array($date, $codFisc, $absence, $lateEntry, $earlyExit);
+
+            if ($result[2] == 1) {
+                // assente
+                echo "checked=true";
+            }else{
+            }
+
+            echo '> <span class="slider round"></span> </label> </td>';
+            echo <<<_LATEENTRANCE
+                <td style="vertical-align: middle;">
+_LATEENTRANCE;
+            if ($result[3] == 0) {
+                echo <<<_ENTRY
+                <p id="entrance$i" display="none"></p>
+                <button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
                 Click
                 </button></td>
-                <td style="vertical-align: middle;"><p id="exit$i" style="display: none"></p><button type="button" id="exitButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
+_ENTRY;
+            } else {
+                echo <<<_ENTRY
+                <p id="entrance$i" display="block"> Entrance hour: $result[3]</p>
+_ENTRY;
+            }
+
+            echo <<<_EARLYEXIT
+                <td style="vertical-align: middle;">
+_EARLYEXIT;
+            if ($result[4] == 0) {
+                echo <<<_EXIT
+                <p id="exit$i" display="none"></p>
+                <button type="button" id="exitButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
                 Click
                 </button></td>
-_ROW;
+_EXIT;
+            } else {
+                echo <<<_EXIT
+                <p id="exit$i" display="block"> Exit hour: $result[4]</p>
+_EXIT;
+            }
             $i++;
         }
         echo "</table>";
@@ -349,7 +373,6 @@ _MODALENTRANCE;
             </div>
         </div>
 _MODALEXIT;
-
     }
 } else {
 

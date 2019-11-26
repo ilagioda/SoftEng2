@@ -55,8 +55,9 @@ class Teacher
         return $this->db->updateAttendance($ssn, $day);
     }
 	
-	function checkAbsence($ssn) {
-		return $this->db->checkAbsence($ssn);
+	function checkAbsenceEarlyExitLateEntrance($ssn) {
+        $day = date('Y-m-j');
+		return $this->db->checkAbsenceEarlyExitLateEntrance($ssn,$day);
     }
     
     function recordLateEntrance($day, $ssn, $hour){
