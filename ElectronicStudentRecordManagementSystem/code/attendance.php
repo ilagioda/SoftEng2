@@ -77,6 +77,7 @@ if (isset($_REQUEST['class'])) {
 
         function fillModalFieldsEXIT(obj){
             buttonID = obj.id;
+
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
             var studSSN = obj.getAttribute("data-ssn");
@@ -85,6 +86,27 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalExit-surname").innerHTML = studSurname;
             document.getElementById("modalExit-ssn").innerHTML = studSSN;
             document.getElementById("modalExit-c").innerHTML = studClass;
+
+            var num = buttonID.replace("exitButton", "");
+            var entranceP = document.getElementById("entrance"+num).innerHTML;
+            var entranceHourString = entranceP.replace("Entrance hour: ", "");
+            var entranceHour = parseInt(entranceHourString);
+            var select = document.getElementById("selectExit");
+            if(entranceHour >= 1 && entranceHour <= 6){
+                // admissible number
+                for(var i=entranceHour; i<7; i++){
+                    option = document.createElement('option');
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            } else {
+                // not admissible number
+                for(var i=1; i<7; i++){
+                    option = document.createElement('option');
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            }   
         }
 
         function ajaxRequest(){
@@ -316,12 +338,6 @@ _MODALENTRANCE;
                             <div class="form-group">
                                 <label class="col-xs-6 control-label">Hour:</label>
                                 <select class="form-control" id="selectExit">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
                                 </select>
                             </div>
                         </form>
