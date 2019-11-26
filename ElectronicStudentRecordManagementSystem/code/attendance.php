@@ -72,15 +72,22 @@ if (isset($_REQUEST['class'])) {
         });
         /******************************************* */
 
+        // Variables used for late entrance and early exit
         var req;
         var buttonID;
 
         function fillModalFieldsENTRANCE(obj) {
+
+            // Retrieve and store the button id from which this function has been called 
             buttonID = obj.id;
+
+            // Retrieve the information about student in order to show it in the modal window
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
             var studSSN = obj.getAttribute("data-ssn");
             var studClass = obj.getAttribute("data-c");
+
+            // Fill the modal with the student information
             document.getElementById("modalEntrance-name").innerHTML = studName;
             document.getElementById("modalEntrance-surname").innerHTML = studSurname;
             document.getElementById("modalEntrance-ssn").innerHTML = studSSN;
@@ -88,21 +95,34 @@ if (isset($_REQUEST['class'])) {
         }
 
         function fillModalFieldsEXIT(obj) {
+
+            // Retrieve and store the button id from which this function has been called 
             buttonID = obj.id;
 
+             // Retrieve the information about student in order to show it in the modal window
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
             var studSSN = obj.getAttribute("data-ssn");
             var studClass = obj.getAttribute("data-c");
+
+            // Fill the modal with the student information
             document.getElementById("modalExit-name").innerHTML = studName;
             document.getElementById("modalExit-surname").innerHTML = studSurname;
             document.getElementById("modalExit-ssn").innerHTML = studSSN;
             document.getElementById("modalExit-c").innerHTML = studClass;
 
+            // Retrieve the information about the entrance hour (entranceHour = 0 in case of not-late-entrance)
             var num = buttonID.replace("exitButton", "");
-            var entranceP = document.getElementById("entrance" + num).innerHTML;
-            var entranceHourString = entranceP.replace("Entrance hour: ", "");
-            var entranceHour = parseInt(entranceHourString);
+            var entranceP = document.getElementById("entranceButton" + num).innerHTML;
+            var entranceHour;
+            if(entranceP === "Entrance"){
+                entranceHour = 0;
+            } else {
+                var entranceHourString = entranceP.replace("Hour: ", "");
+                entranceHour = parseInt(entranceHourString);
+            }
+
+            // Fill the "menu a tendina" with the correct labels (in case of late entrance, from lateEntranceHour to 6)
             var select = document.getElementById("selectExit");
             var child = select.lastElementChild;
             while (child) {
@@ -111,14 +131,14 @@ if (isset($_REQUEST['class'])) {
             }
             if (entranceHour >= 1 && entranceHour <= 6) {
                 // admissible number
-                for (var i = entranceHour; i < 7; i++) {
+                for (let i = entranceHour; i < 7; i++) {
                     option = document.createElement('option');
                     option.textContent = i;
                     select.appendChild(option);
                 }
             } else {
                 // not admissible number
-                for (var i = 1; i < 7; i++) {
+                for (let i = 1; i < 7; i++) {
                     option = document.createElement('option');
                     option.textContent = i;
                     select.appendChild(option);
@@ -145,7 +165,7 @@ if (isset($_REQUEST['class'])) {
         }
 
         function recordEntrance() {
-            // Retrieve the info needed to fill the DB 
+            // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
             var selectedIndex = document.getElementById("selectEntrance").selectedIndex;
             var listOfOptions = document.getElementById("selectEntrance").options;
@@ -159,7 +179,7 @@ if (isset($_REQUEST['class'])) {
         }
 
         function recordExit() {
-            // Retrieve the info needed to fill the DB 
+            // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalExit-ssn").innerHTML;
             var selectedIndex = document.getElementById("selectExit").selectedIndex;
             var listOfOptions = document.getElementById("selectExit").options;
@@ -179,14 +199,7 @@ if (isset($_REQUEST['class'])) {
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
-                    // Everything is alright
-
-                    // var pID = buttonID.replace("entranceButton", "entrance");
-                    // document.getElementById(pID).innerHTML = "Entrance hour: " + req.responseText;
-                    // document.getElementById(pID).style.display = "block";
-                    // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
-                    // document.getElementById(buttonID).remove();
-
+                    // Everything is alright --> Change the text inside the button and change the state of the switch
                     document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                     var checkID = buttonID.replace("entranceButton", "");
                     document.getElementById(checkID).checked = false;
@@ -204,14 +217,7 @@ if (isset($_REQUEST['class'])) {
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
-                    // Everything is alright
-
-                    // var pID = buttonID.replace("exitButton", "exit");
-                    // document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
-                    // document.getElementById(pID).style.display = "block";
-                    // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
-                    // document.getElementById(buttonID).remove();
-
+                    // Everything is alright --> Change the text inside the button and change the state of the switch
                     document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                     var checkID = buttonID.replace("exitButton", "");
                     document.getElementById(checkID).checked = true;
@@ -403,7 +409,7 @@ _MODALEXIT;
     }
 } else {
 
-    //The class has not yet be chosen so the list of classses must be shown
+    // The class hasn't been chosen yet, so the list of classes must be shown
     echo <<<_LIST
             <ul class="list-group">
 _LIST;
