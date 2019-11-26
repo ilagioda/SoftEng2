@@ -137,7 +137,7 @@ bottom:0;
     margin-left:auto;
     margin-right:auto;
     height: 40vh;
-    width: 35vh;
+    width: 40vh;
 }
 
 .overflow-auto{
@@ -324,7 +324,7 @@ margin-top: 5px;
 
 .btn-primary.main{
   margin-top: 5px;
-  min-width: 250px;  
+  min-width: 380px;  
 }
 /*Button Teacher Homepage*/
 
