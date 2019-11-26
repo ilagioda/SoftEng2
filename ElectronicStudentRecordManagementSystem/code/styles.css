@@ -218,59 +218,6 @@ body{
 }
 
 /* Enroll students */
-div.centralDiv {
-    height: auto;
-    width: auto;
-    margin-left: 100px;
-    margin-right: 100px;
-    margin-bottom: 40px;
-    padding-top: 5px;
-    padding-bottom: 35px;
-    background-color: #ebebeb;
-}
-
-div.centralDiv * {
-    text-align: center;
-}
-
-table.enrollTable {
-    border-collapse: collapse;
-    border-spacing: 5px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    margin-left:auto; 
-    margin-right:auto;
-}
-
-table.enrollTable td {
-    padding: 10px;
-}
-
-h1.enrollTitle {
-    padding: 30px;
-    background: #004e98;
-    color: white;
-    margin-left: 100px;
-    margin-right: 100px;
-}
-
-#homepageAdmin {
-    background-color: #004e98; 
-    color: white;
-    font-size: 14px;
-    padding: 12px 23px;
-    border-radius: 12px;
-    -webkit-transition-duration: 0.2s;   /* Safari */
-    transition-duration: 0.2s;
-    cursor: pointer;
-}
-
-.info {
-    font-size: 18px;
-    color: white;
-    background: #3a6ea5;
-}
-
 #enrollMessage {
 	padding: 20px;
 	font-size: 20px;
