@@ -43,15 +43,28 @@ if (isset($_REQUEST['class'])) {
     <script>
         /*********************************************/
         $(document).ready(function() {
+
             $("input[type='checkbox']").change(function() {
 
-            // alert("The once who called me has id: " + this.id);
+                var switchID;
+                // alert("The once who called me has id: " + this.id);
+                switchID = this.id;
+
                 $.post("attendanceBackEnd.php", {
                         event: "presence",
                         i: this.id
                     },
                     function(data, status) {
-                        alert(data);
+                        // if Something has gone wrong. then adjust the toggle to the previous color.
+                        if (data == "Something has gone wrong.") {
+                            alert(data);
+                        }
+                        //     //Modified the toggle
+                        //     if ($("#" + switchID).attr("checked") == undefined) {
+                        //     }else{
+                        //         $("#" + switchID).removeAttr("checked");
+                        //     }
+                        // }
                     });
 
             });
@@ -91,11 +104,11 @@ if (isset($_REQUEST['class'])) {
             var entranceHourString = entranceP.replace("Entrance hour: ", "");
             var entranceHour = parseInt(entranceHourString);
             var select = document.getElementById("selectExit");
-            var child = select.lastElementChild;  
-            while (child) { 
-                select.removeChild(child); 
-                child = select.lastElementChild; 
-            } 
+            var child = select.lastElementChild;
+            while (child) {
+                select.removeChild(child);
+                child = select.lastElementChild;
+            }
             if (entranceHour >= 1 && entranceHour <= 6) {
                 // admissible number
                 for (var i = entranceHour; i < 7; i++) {
@@ -173,7 +186,7 @@ if (isset($_REQUEST['class'])) {
                     // document.getElementById(pID).style.display = "block";
                     // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
                     // document.getElementById(buttonID).remove();
-                    
+
                     document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                     var checkID = buttonID.replace("entranceButton", "");
                     document.getElementById(checkID).checked = false;
@@ -192,7 +205,7 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
-                    
+
                     // var pID = buttonID.replace("exitButton", "exit");
                     // document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
                     // document.getElementById(pID).style.display = "block";
@@ -243,8 +256,7 @@ _ROW;
             if ($result[2] == 1) {
                 // assente
                 echo "checked=true";
-            }else{
-            }
+            } else { }
 
             echo '> <span class="slider round"></span> </label> </td>';
             echo <<<_LATEENTRANCE
@@ -252,14 +264,15 @@ _ROW;
 _LATEENTRANCE;
             if ($result[3] == 0) {
                 echo <<<_ENTRY
-                <p id="entrance$i" display="none"></p>
                 <button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
                 Entrance
                 </button></td>
 _ENTRY;
             } else {
                 echo <<<_ENTRY
-                <p id="entrance$i" display="block"> Entrance hour: $result[3]</p>
+                <button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
+                Hour: $result[3]
+                </button>
 _ENTRY;
             }
 
@@ -268,14 +281,15 @@ _ENTRY;
 _EARLYEXIT;
             if ($result[4] == 0) {
                 echo <<<_EXIT
-                <p id="exit$i" display="none"></p>
                 <button type="button" id="exitButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
                 Exit
                 </button></td>
 _EXIT;
             } else {
                 echo <<<_EXIT
-                <p id="exit$i" display="block"> Exit hour: $result[4]</p>
+                <button type="button" id="exitButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
+                Hour: $result[4]
+                </button></td>
 _EXIT;
             }
             $i++;

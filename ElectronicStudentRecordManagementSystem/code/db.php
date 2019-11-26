@@ -1035,13 +1035,13 @@ class dbTeacher extends db
 
         $absence = $attendance['absence'];
 
-        if ($absence != 1) {
-            $this->rollback();
-            return false;
-        }
+        // if ($absence != 1) {
+        //     $this->rollback();
+        //     return false;
+        // }
 
 
-        if (!(($attendance['earlyExit'] == 0 && ($attendance['lateEntry'] == 0)) || ($attendance['earlyExit'] != 0 && ($attendance['earlyExit'] <= $hour)))) {
+        if ($attendance['earlyExit'] != 0) {
             $this->rollback();
             return false;
         }
@@ -1090,7 +1090,7 @@ class dbTeacher extends db
             $absence = $row['absence'];
             if ($absence == 0) {
 
-                if (!((($row['lateEntry'] == 0) && ($row['earlyExit'] == 0)) || (($row['lateEntry'] != 0) && ($row['lateEntry'] <= $hour)))) {
+                if ( ($row['lateEntry'] != 0 && $row['lateEntry'] > $hour)) {
                     $this->rollback();
                     return false;
                 }
