@@ -537,6 +537,64 @@ class dbParent extends db
 
         return $attendance;
     }
+
+    public function viewChildAssignments($codFisc){
+        /*Retrieves all assignment of the selected child*/
+
+        $CodFisc = $this->sanitizeString($CodFisc);
+
+
+        /* Verify if the user logged in is actually allowed to see the assignments of the requested child */
+        $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
+
+        if (!$result)
+            die("Unable to select student $CodFisc");
+
+        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
+            die("No student with ID $CodFisc ");
+        }
+
+        $class = $codfiscthis->getChildClass($codfisc);
+
+        $parent1 = $row['emailP1'];
+        $parent2 = $row['emailP2'];
+
+        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
+            die("You are not authorised to see this information.");
+
+
+        $year = intval(date("Y"));
+        $month = intval(date("m"));
+
+        if ($month <= 7) {
+            // second semester
+            $year = $year - 1;
+        }
+
+        $beginningDate = $year . "-08-01";
+
+        $year = $year + 1;
+        $endingDate = $year . "-07-31";
+
+        $result = $this->query("SELECT subject,date,hour,mark FROM assignments WHERE classId='$classID' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY ,date DESC, subject ASC;");
+
+
+    }
+
+
+    public function getChildClass($codFisc){
+        $CodFisc = $this->sanitizeString($CodFisc);
+
+        $result = $this->query("SELECT classID FROM Students WHERE codFisc='$CodFisc';");
+        if (!$result)
+            die("Unable to select class of $CodFisc");
+
+        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
+            die("No class for student with ID $CodFisc ");
+        }
+        else
+            return $row['classID'];
+    }
 }
 
 class dbTeacher extends db
