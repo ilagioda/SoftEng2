@@ -28,7 +28,7 @@ $db = new db();
             <p><a href="#">Language</a></p>
         </div>
         <div class="col-md-8 text-center">
-            <h1>Welcome!!</h1>
+            <h1>Welcome!</h1>
             <img id="central_image" src="images/NEWlogo.png">
             <div class="overflow-auto">
                 <?php
@@ -37,12 +37,12 @@ $db = new db();
                 else{
                     if($res->num_rows == 0) 
                         echo <<<_NOANNOUNCEMENT
-                        <div class="card">
-                        <div class="card-header text-left">
+                        <div class="card-index">
+                        <div class="card-header-index text-left">
                             NONE
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title"><strong> NONE </strong></h5>
+                        <div class="card-body-index">
+                            <h5 class="card-title-index"><strong> NONE </strong></h5>
                             <p>No announcement to be shown.</p>
                         </div>
                     </div>
@@ -54,12 +54,12 @@ _NOANNOUNCEMENT;
                             $title = $tuple['Title'];
 
                             echo <<<_ANNOUNCEMENT
-                            <div class="card">
-                            <div class="card-header text-left">
+                            <div class="card-index">
+                            <div class="card-header-index text-left">
                                 $timestamp
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title"><strong> $title </strong></h5>
+                            <div class="card-body-index">
+                                <h5 class="card-title-index"><strong> $title </strong></h5>
                                 <p>$text</p>
                             </div>
                         </div>
