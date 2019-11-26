@@ -167,11 +167,14 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
-                    var pID = buttonID.replace("entranceButton", "entrance");
-                    document.getElementById(pID).innerHTML = "Entrance hour: " + req.responseText;
-                    document.getElementById(pID).style.display = "block";
+
+                    // var pID = buttonID.replace("entranceButton", "entrance");
+                    // document.getElementById(pID).innerHTML = "Entrance hour: " + req.responseText;
+                    // document.getElementById(pID).style.display = "block";
                     // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
-                   // document.getElementById(buttonID).remove();
+                    // document.getElementById(buttonID).remove();
+                    
+                    document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                     var checkID = buttonID.replace("entranceButton", "");
                     document.getElementById(checkID).checked = false;
                 }
@@ -189,11 +192,14 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright
-                    var pID = buttonID.replace("exitButton", "exit");
-                    document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
-                    document.getElementById(pID).style.display = "block";
+                    
+                    // var pID = buttonID.replace("exitButton", "exit");
+                    // document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
+                    // document.getElementById(pID).style.display = "block";
                     // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
-                    //document.getElementById(buttonID).remove();
+                    // document.getElementById(buttonID).remove();
+
+                    document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                     var checkID = buttonID.replace("exitButton", "");
                     document.getElementById(checkID).checked = true;
                 }
@@ -248,7 +254,7 @@ _LATEENTRANCE;
                 echo <<<_ENTRY
                 <p id="entrance$i" display="none"></p>
                 <button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
-                Click
+                Entrance
                 </button></td>
 _ENTRY;
             } else {
@@ -264,7 +270,7 @@ _EARLYEXIT;
                 echo <<<_EXIT
                 <p id="exit$i" display="none"></p>
                 <button type="button" id="exitButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myExit" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsEXIT(this)">
-                Click
+                Exit
                 </button></td>
 _EXIT;
             } else {
