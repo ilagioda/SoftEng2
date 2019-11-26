@@ -171,7 +171,7 @@ if (isset($_REQUEST['class'])) {
                     document.getElementById(pID).innerHTML = "Entrance hour: " + req.responseText;
                     document.getElementById(pID).style.display = "block";
                     // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
-                    document.getElementById(buttonID).remove();
+                   // document.getElementById(buttonID).remove();
                     var checkID = buttonID.replace("entranceButton", "");
                     document.getElementById(checkID).checked = false;
                 }
@@ -193,7 +193,7 @@ if (isset($_REQUEST['class'])) {
                     document.getElementById(pID).innerHTML = "Exit hour: " + req.responseText;
                     document.getElementById(pID).style.display = "block";
                     // DISABILITO BOTTONE document.getElementById(buttonID).disabled = true;
-                    document.getElementById(buttonID).remove();
+                    //document.getElementById(buttonID).remove();
                     var checkID = buttonID.replace("exitButton", "");
                     document.getElementById(checkID).checked = true;
                 }
