@@ -16,7 +16,7 @@ require_once("db.php");
 <script>
     let d = new Date();
     var year = d.getFullYear();
-    var month = d.getMonth();
+    var month = d.getMonth()+1;
     var startingYear;
     var endingYear;
     var semester;
@@ -171,13 +171,13 @@ echo <<<_TITLE
         <br>
         <h2>
             
-        <button class=" btn btn-default calendar-command-left" role="button" onClick=monthBefore() id='button-left'>
+        <button class=" btn btn-default calendar-command-left" onClick=monthBefore() id='button-left'>
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         </button>
 
         <span class="label label-primary" id='Date'></span>
         
-        <button class=" btn btn-default calendar-command-right" role="button" onClick=monthAfter() id='button-right'>
+        <button class=" btn btn-default calendar-command-right" onClick=monthAfter() id='button-right'>
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         </button>
         </h2>
@@ -196,5 +196,7 @@ var fiscalCode="$_SESSION[child]";
 </script>
 
 _storeCodFisc;
+
+require_once("defaultFooter.php");
 
 ?>
