@@ -49,11 +49,15 @@ if (isset($_REQUEST['class'])) {
                 var switchID;
                 // alert("The once who called me has id: " + this.id);
                 switchID = this.id;
-                alert($("#entranceButton" + switchID).text());
-                alert($("#exitButton" + switchID).text());
+                var entrance = $("#entranceButton" + switchID).text().trim();
+                var exit = $("#exitButton" + switchID).text().trim();
+                // alert(entrance);
+                // alert(exit);
+                var checkedID = document.getElementById(switchID).checked;
+                //alert(checkedID);
 
-                if ((trim($("#entranceButton" + switchID).text()) == "Entrance") && trim($("#exitButton" + switchID).text()) == "Exit") {
-                    alert("Sono qui");
+                if ((entrance == "Entrance") && (exit == "Exit")) {
+                    //alert("Sono qui");
                     $.post("attendanceBackEnd.php", {
                             event: "presence",
                             i: this.id
@@ -64,10 +68,21 @@ if (isset($_REQUEST['class'])) {
                                 alert(data);
                                 //Va Cambiato il bottone e messo nello stato precedente.
                                 //document.getElementById(switchID).checked = false or true;
+
+                                if (document.getElementById(switchID).checked == true) {
+                                    document.getElementById(switchID).checked = false;
+                                } else {
+                                    document.getElementById(switchID).checked = true;
+                                }
                             }
                         });
                 } else {
                     //Va Cambiato il bottone e messo nello stato precedente.
+                    if (document.getElementById(switchID).checked == true) {
+                        document.getElementById(switchID).checked = false;
+                    } else {
+                        document.getElementById(switchID).checked = true;
+                    }
                     //document.getElementById(switchID).checked = false or true;
                 }
             });
