@@ -538,7 +538,8 @@ class dbParent extends db
         return $attendance;
     }
 
-    public function viewChildAssignments($codFisc){
+    public function viewChildAssignments($codFisc)
+    {
         /*Retrieves all assignment of the selected child*/
 
         $CodFisc = $this->sanitizeString($CodFisc);
@@ -577,12 +578,11 @@ class dbParent extends db
         $endingDate = $year . "-07-31";
 
         $result = $this->query("SELECT subject,date,hour,mark FROM assignments WHERE classId='$classID' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY ,date DESC, subject ASC;");
-
-
     }
 
 
-    public function getChildClass($codFisc){
+    public function getChildClass($codFisc)
+    {
         $CodFisc = $this->sanitizeString($CodFisc);
 
         $result = $this->query("SELECT classID FROM Students WHERE codFisc='$CodFisc';");
@@ -591,8 +591,7 @@ class dbParent extends db
 
         if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
             die("No class for student with ID $CodFisc ");
-        }
-        else
+        } else
             return $row['classID'];
     }
 }
@@ -915,7 +914,7 @@ class dbTeacher extends db
         $stmt = $this->prepareStatement("SELECT COUNT(*),`absence`,`lateEntry`,`earlyExit` FROM `Attendance` WHERE `codFisc`= ? AND `date`= ?");
         try {
             // the parameter is bound to the first '?' in the upper query
-            if (!$stmt->bind_param("ss", $ssn,$day))
+            if (!$stmt->bind_param("ss", $ssn, $day))
                 throw new Exception("Binding Failed in the Transaction.");
             // the result is characterized by four coloumns and needs to be bounded to corresponding variables
             if (!$stmt->bind_result($count, $absence, $lateEntry, $earlyExit))
@@ -972,7 +971,6 @@ class dbTeacher extends db
                         throw new Exception("Delete Attendance Failed.");
                     $stmt->close();
                 } else {
-
                     //THE ABSENCE SHOULD BE ADDED SO THE QUERY UPDATED
                     //close the previous statement
                     $stmt->close();
@@ -994,7 +992,6 @@ class dbTeacher extends db
                     $stmt->close();
                 }
             }
-
             $this->commit();
             return true;
         } catch (Exception $e) {
@@ -1043,6 +1040,11 @@ class dbTeacher extends db
         return $this->query("UPDATE `Attendance` SET `absence`=0, `lateEntry`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
 
+    function recordLateEntryQUERYWithoutChangingAbsence($date, $ssn, $hour)
+    {
+        return $this->query("UPDATE `Attendance` SET `lateEntry`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
+    }
+
     function recordEarlyExitQUERY($date, $ssn, $hour)
     {
         return $this->query("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES ('$date', '$ssn', 1, '$hour', 0)");
@@ -1077,42 +1079,47 @@ class dbTeacher extends db
         $hour = $this->sanitizeString($hour);
 
         $this->begin_transaction();
+        try {
+            //Verifico se ci sono tuple relative allo studente
+            $result = $this->selectAttendanceStudent($day, $ssn);
 
-        $result = $this->selectAttendanceStudent($day, $ssn);
-        if (!$result) {
+            if (!$result) {
+                throw new Exception("Problem with select query.");
+            }
+
+            //Lo studente deve essere assente
+            if ($result->num_rows != 1)
+                throw new Exception("Student absence is not recorded.");
+
+            $attendance = $result->fetch_assoc();
+
+            $absence = $attendance['absence'];
+
+            // if ($absence != 1)
+            //     throw new Exception("The student should be absent.");
+
+            //Se è stata settata un uscita e l'ora di uscita < ora entrata
+            if ($attendance['earlyExit'] != 0 && $attendance['earlyExit'] < $hour)
+                throw new Exception("Integrity violeted.");
+
+            if ($attendance["earlyExit"] != 0) {
+                //UN Uscita è stata registrata
+                // Stai registrando un entrata che sarà per forza minore dell'uscita 
+                $result1 = $this->recordLateEntryQUERYWithoutChangingAbsence($day, $ssn, $hour);
+                if (!$result1)
+                    throw new Exception();
+            } else {
+                //Nessuna uscita è stata registrata
+                $result2 = $this->recordLateEntryQUERY($day, $ssn, $hour);
+                if (!$result2)
+                    throw new Exception();
+            }
+            $this->commit();
+            return true;
+        } catch (Exception $e) {
             $this->rollback();
             return false;
         }
-
-        if ($result->num_rows != 1) {
-            $this->rollback();
-            return false;
-        }
-
-        $attendance = $result->fetch_assoc();
-
-        $absence = $attendance['absence'];
-
-        // if ($absence != 1) {
-        //     $this->rollback();
-        //     return false;
-        // }
-
-
-        if ($attendance['earlyExit'] != 0) {
-            $this->rollback();
-            return false;
-        }
-
-        $result1 = $this->recordLateEntryQUERY($day, $ssn, $hour);
-
-        if (!$result1) {
-            $this->rollback();
-            return false;
-        }
-
-        $this->commit();
-        return true;
     }
 
     function recordEarlyExit($day, $ssn, $hour)
@@ -1134,49 +1141,46 @@ class dbTeacher extends db
 
         $this->begin_transaction();
 
-        $result = $this->selectAttendanceStudent($day, $ssn);
 
-        if (!$result) {
-            $this->rollback();
-            return false;
-        }
+        try {
+            $result = $this->selectAttendanceStudent($day, $ssn);
 
-        if ($result->num_rows == 1) {
-            //se esiste allora ha gia' un evento registrato early entrance ad esempio
-            $row = $result->fetch_assoc();
+            if (!$result)
+                throw new Exception();
 
-            $absence = $row['absence'];
-            if ($absence == 0) {
+            if ($result->num_rows == 1) {
+                //se esiste allora ha gia' un evento registrato early entrance ad esempio
+                $row = $result->fetch_assoc();
 
-                if ( ($row['lateEntry'] != 0 && $row['lateEntry'] > $hour)) {
-                    $this->rollback();
-                    return false;
-                }
+                $absence = $row['absence'];
+                $lateEntry = $row["lateEntry"];
+                $earlyExit = $row["earlyExit"];
+
+                // //lo studente deve risultare presente
+                // if ($absence != 0 && $earlyExit==0)
+                //     throw new Exception("Student should be present.");
+
+                if (($row['lateEntry'] != 0 && $row['lateEntry'] > $hour))
+                    throw new Exception("Integrity violeted.");
 
                 $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $ssn, $hour);
-                if (!$result1) {
-                    $this->rollback();
-                    return false;
-                }
-            } else {
-                // se assente non puoi mettere una earlyExit 
-                $this->rollback();
-                return false;
-            }
-        } else if ($result->num_rows == 0) {
-            //non è stato registrato alcun evento quindi lo studente è presente
-            $result2 = $this->recordEarlyExitQUERY($day, $ssn, $hour);
 
-            if (!$result2) {
-                $this->rollback();
-                return false;
+                if (!$result1)
+                    throw new Exception();
+            } else if ($result->num_rows == 0) {
+                //non è stato registrato alcun evento quindi lo studente è presente
+                $result2 = $this->recordEarlyExitQUERY($day, $ssn, $hour);
+
+                if (!$result2)
+                    throw new Exception("recordEarlyExitQUERY failed.");
+            } else {
+                throw new Exception("Integrity violeted.");
             }
-        } else {
+            $this->commit();
+            return true;
+        } catch (Exception $e) {
             $this->rollback();
             return false;
         }
-
-        $this->commit();
-        return true;
     }
 }

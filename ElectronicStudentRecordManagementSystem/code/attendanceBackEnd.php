@@ -27,6 +27,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             } else {
                 echo "Something has gone wrong.";
             }
+            
         } else if (($_REQUEST["event"] == "entrance") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
             /* LATE ENTRANCE */
             $ssn = $_REQUEST["ssn"];

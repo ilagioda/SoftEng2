@@ -65,7 +65,7 @@ if (isset($_REQUEST['class'])) {
                         function(data, status) {
                             // if Something has gone wrong. then adjust the toggle to the previous color.
                             if (data == "Something has gone wrong.") {
-                                alert(data);
+                                alert("The student has a record for late entrance or early exit, remove them to change the presence.");
                                 //Va Cambiato il bottone e messo nello stato precedente.
                                 //document.getElementById(switchID).checked = false or true;
 
