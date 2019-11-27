@@ -49,27 +49,30 @@ if (isset($_REQUEST['class'])) {
                 var switchID;
                 // alert("The once who called me has id: " + this.id);
                 switchID = this.id;
+                alert($("#entranceButton" + switchID).text());
+                alert($("#exitButton" + switchID).text());
 
-                $.post("attendanceBackEnd.php", {
-                        event: "presence",
-                        i: this.id
-                    },
-                    function(data, status) {
-                        // if Something has gone wrong. then adjust the toggle to the previous color.
-                        if (data == "Something has gone wrong.") {
-                            alert(data);
-                        }
-                        //     //Modified the toggle
-                        //     if ($("#" + switchID).attr("checked") == undefined) {
-                        //     }else{
-                        //         $("#" + switchID).removeAttr("checked");
-                        //     }
-                        // }
-                    });
-
+                if ((trim($("#entranceButton" + switchID).text()) == "Entrance") && trim($("#exitButton" + switchID).text()) == "Exit") {
+                    alert("Sono qui");
+                    $.post("attendanceBackEnd.php", {
+                            event: "presence",
+                            i: this.id
+                        },
+                        function(data, status) {
+                            // if Something has gone wrong. then adjust the toggle to the previous color.
+                            if (data == "Something has gone wrong.") {
+                                alert(data);
+                                //Va Cambiato il bottone e messo nello stato precedente.
+                                //document.getElementById(switchID).checked = false or true;
+                            }
+                        });
+                } else {
+                    //Va Cambiato il bottone e messo nello stato precedente.
+                    //document.getElementById(switchID).checked = false or true;
+                }
             });
-
         });
+
         /******************************************* */
 
         // Variables used for late entrance and early exit
@@ -99,7 +102,7 @@ if (isset($_REQUEST['class'])) {
             // Retrieve and store the button id from which this function has been called 
             buttonID = obj.id;
 
-             // Retrieve the information about student in order to show it in the modal window
+            // Retrieve the information about student in order to show it in the modal window
             var studName = obj.getAttribute("data-name");
             var studSurname = obj.getAttribute("data-surname");
             var studSSN = obj.getAttribute("data-ssn");
@@ -115,7 +118,7 @@ if (isset($_REQUEST['class'])) {
             var num = buttonID.replace("exitButton", "");
             var entranceP = document.getElementById("entranceButton" + num).innerHTML;
             var entranceHour;
-            if(entranceP === "Entrance"){
+            if (entranceP === "Entrance") {
                 entranceHour = 0;
             } else {
                 var entranceHourString = entranceP.replace("Hour: ", "");
@@ -261,8 +264,8 @@ _ROW;
 
             if ($result[2] == 1) {
                 // assente
-                echo "checked=true";
-            } else { }
+                echo "checked='true'";
+            }
 
             echo '> <span class="slider round"></span> </label> </td>';
             echo <<<_LATEENTRANCE
