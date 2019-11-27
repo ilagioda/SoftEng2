@@ -110,6 +110,40 @@ if (isset($_REQUEST['class'])) {
             document.getElementById("modalEntrance-surname").innerHTML = studSurname;
             document.getElementById("modalEntrance-ssn").innerHTML = studSSN;
             document.getElementById("modalEntrance-c").innerHTML = studClass;
+
+            // Retrieve the information about the entrance hour (entranceHour = 0 in case of not-late-entrance)
+            var num = buttonID.replace("entranceButton", "");
+            var exitP = document.getElementById("exitButton" + num).innerHTML;
+            var exitHour;
+            if (exitP === "Exit") {
+                exitHour = 0;
+            } else {
+                var exitHourString = exitP.replace("Hour: ", "");
+                exitHour = parseInt(exitHourString);
+            }
+
+            // Fill the "menu a tendina" with the correct labels (in case of late entrance, from lateEntranceHour to 6)
+            var select = document.getElementById("selectEntrance");
+            var child = select.lastElementChild;
+            while (child) {
+                select.removeChild(child);
+                child = select.lastElementChild;
+            }
+            if (exitHour >= 1 && exitHour <= 6) {
+                // admissible number
+                for (let i = 1; i <= exitHour; i++) {
+                    option = document.createElement('option');
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            } else {
+                // not admissible number
+                for (let i = 1; i < 7; i++) {
+                    option = document.createElement('option');
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            }
         }
 
         function fillModalFieldsEXIT(obj) {
@@ -242,7 +276,7 @@ if (isset($_REQUEST['class'])) {
                     var checkID = buttonID.replace("entranceButton", "");
 
                     // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")
-                    var exitButton = document.getElementById("exitButton"+checkID).innerHTML;
+                    var exitButton = document.getElementById("exitButton"+checkID).innerHTML.trim();
                     if(exitButton === "Exit") {
                         // The exit button is still the same (the student has just entered the class, so he/she is now present)
                         document.getElementById(checkID).checked = false;
@@ -384,12 +418,6 @@ _EXIT;
                                 <div class="form-group">
                                     <label class="col-xs-6 control-label">Hour:</label>
                                     <select class="form-control" id="selectEntrance">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
                                     </select>
                                 </div>
                             </form>
