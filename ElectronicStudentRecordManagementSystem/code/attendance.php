@@ -182,12 +182,22 @@ if (isset($_REQUEST['class'])) {
             return request;
         }
 
-        function recordEntrance() {
+        function recordEntrance(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
-            var selectedIndex = document.getElementById("selectEntrance").selectedIndex;
-            var listOfOptions = document.getElementById("selectEntrance").options;
-            var hour = listOfOptions[selectedIndex].text;
+            var hour; 
+
+            // Understand if this function has been called from the "Remove" or "Save changes" button
+            var callingButton = element.innerHTML;
+            if(callingButton === "Remove") {
+                // The recordEntrance function has been called from the "Remove" button
+                hour = 0;
+            } else {
+                // The recordEntrance function has been called from the "Save changes" button
+                var selectedIndex = document.getElementById("selectEntrance").selectedIndex;
+                var listOfOptions = document.getElementById("selectEntrance").options;
+                hour = listOfOptions[selectedIndex].text;
+            }
 
             // AJAX request
             req = ajaxRequest();
@@ -196,12 +206,22 @@ if (isset($_REQUEST['class'])) {
             req.send();
         }
 
-        function recordExit() {
+        function recordExit(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalExit-ssn").innerHTML;
-            var selectedIndex = document.getElementById("selectExit").selectedIndex;
-            var listOfOptions = document.getElementById("selectExit").options;
-            var hour = listOfOptions[selectedIndex].text;
+            var hour; 
+
+            // Understand if this function has been called from the "Remove" or "Save changes" button
+            var callingButton = element.innerHTML;
+            if(callingButton === "Remove") {
+                // The recordExit function has been called from the "Remove" button
+                hour = 0;
+            } else {
+                // The recordExit function has been called from the "Save changes" button
+                var selectedIndex = document.getElementById("selectExit").selectedIndex;
+                var listOfOptions = document.getElementById("selectExit").options;
+                hour = listOfOptions[selectedIndex].text;
+            }
 
             // AJAX request
             req = ajaxRequest();
@@ -220,7 +240,13 @@ if (isset($_REQUEST['class'])) {
                     // Everything is alright --> Change the text inside the button and change the state of the switch
                     document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                     var checkID = buttonID.replace("entranceButton", "");
-                    document.getElementById(checkID).checked = false;
+
+                    // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")
+                    var exitButton = document.getElementById("exitButton"+checkID).innerHTML;
+                    if(exitButton === "Exit") {
+                        // The exit button is still the same (the student has just entered the class, so he/she is now present)
+                        document.getElementById(checkID).checked = false;
+                    }                     
                 }
             }
 
@@ -369,7 +395,8 @@ _EXIT;
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" onclick="recordEntrance()">Save changes</button>
+                            <button type="button" class="btn btn-danger" onclick="recordEntrance(this)">Remove</button>
+                            <button type="button" class="btn btn-primary" onclick="recordEntrance(this)">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -418,7 +445,8 @@ _MODALENTRANCE;
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="recordExit()">Save changes</button>
+                        <button type="button" class="btn btn-danger" onclick="recordExit(this)">Remove</button>
+                        <button type="button" class="btn btn-primary" onclick="recordExit(this)">Save changes</button>
                     </div>
                 </div>
             </div>

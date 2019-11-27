@@ -1099,7 +1099,7 @@ class dbTeacher extends db
             //     throw new Exception("The student should be absent.");
 
             //Se è stata settata un uscita e l'ora di uscita < ora entrata
-            if ($attendance['earlyExit'] != 0 && $attendance['earlyExit'] < $hour)
+            if ($attendance['earlyExit'] != 0 && $attendance['earlyExit'] < $hour && $hour != 0)
                 throw new Exception("Integrity violeted.");
 
             if ($attendance["earlyExit"] != 0) {
@@ -1160,7 +1160,7 @@ class dbTeacher extends db
                 // if ($absence != 0 && $earlyExit==0)
                 //     throw new Exception("Student should be present.");
 
-                if (($row['lateEntry'] != 0 && $row['lateEntry'] > $hour))
+                if ($row['lateEntry'] != 0 && $row['lateEntry'] > $hour && $hour != 0)
                     throw new Exception("Integrity violeted.");
 
                 $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $ssn, $hour);
