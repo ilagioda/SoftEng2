@@ -912,10 +912,10 @@ class dbTeacher extends db
         $lateEntry = -1;
         $earlyExit = -1;
 
-        $stmt = $this->prepareStatement("SELECT COUNT(*),`absence`,`lateEntry`,`earlyExit` FROM `Attendance` WHERE `codFisc`= ?");
+        $stmt = $this->prepareStatement("SELECT COUNT(*),`absence`,`lateEntry`,`earlyExit` FROM `Attendance` WHERE `codFisc`= ? AND `date`= ?");
         try {
             // the parameter is bound to the first '?' in the upper query
-            if (!$stmt->bind_param("s", $ssn))
+            if (!$stmt->bind_param("ss", $ssn,$day))
                 throw new Exception("Binding Failed in the Transaction.");
             // the result is characterized by four coloumns and needs to be bounded to corresponding variables
             if (!$stmt->bind_result($count, $absence, $lateEntry, $earlyExit))
