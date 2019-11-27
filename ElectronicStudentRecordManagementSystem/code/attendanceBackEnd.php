@@ -39,7 +39,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             if ($ret) {
                 echo "$hour";
             } else {
-                echo "0";
+                echo "false";
             }
         } else if (($_REQUEST["event"] == "exit") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
             /* EARLY EXIT */
@@ -52,7 +52,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             if ($ret) {
                 echo "$hour";
             } else {
-                echo "0";
+                echo "false";
             }
         }
     }

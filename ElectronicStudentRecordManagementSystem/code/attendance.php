@@ -267,20 +267,32 @@ if (isset($_REQUEST['class'])) {
         function endEntrance() {
 
             if (req.readyState == 4 && (req.status == 0 || req.status == 200)) {
-                if (req.responseText === "0") {
+                if (req.responseText === "false") {
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
-                    // Everything is alright --> Change the text inside the button and change the state of the switch
-                    document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
-                    var checkID = buttonID.replace("entranceButton", "");
+                    // Everything is alright --> Change the text inside the button 
+                    if(req.responseText === "0"){
+                        document.getElementById(buttonID).innerHTML = "Entrance";
+                        
+                        // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")   // NOT SURE ABOUT THIS ----------------------------
+                        var checkID = buttonID.replace("entranceButton", "");
+                        var exitButton = document.getElementById("exitButton"+checkID).innerHTML.trim();
+                        if(exitButton === "Exit") {
+                            // The exit button is still the same (the student has just entered the class, so he/she is now present)
+                            document.getElementById(checkID).checked = false;
+                        }     
+                    } else {
+                        document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
+                        var checkID = buttonID.replace("entranceButton", "");
 
-                    // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")
-                    var exitButton = document.getElementById("exitButton"+checkID).innerHTML.trim();
-                    if(exitButton === "Exit") {
-                        // The exit button is still the same (the student has just entered the class, so he/she is now present)
-                        document.getElementById(checkID).checked = false;
-                    }                     
+                        // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")
+                        var exitButton = document.getElementById("exitButton"+checkID).innerHTML.trim();
+                        if(exitButton === "Exit") {
+                            // The exit button is still the same (the student has just entered the class, so he/she is now present)
+                            document.getElementById(checkID).checked = false;
+                        }     
+                    }                
                 }
             }
 
@@ -291,14 +303,22 @@ if (isset($_REQUEST['class'])) {
         function endExit() {
 
             if (req.readyState == 4 && (req.status == 0 || req.status == 200)) {
-                if (req.responseText == "0") {
+                if (req.responseText == "false") {
                     // Something went wrong...
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright --> Change the text inside the button and change the state of the switch
-                    document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
-                    var checkID = buttonID.replace("exitButton", "");
-                    document.getElementById(checkID).checked = true;
+                    if(req.responseText === "0"){
+                        document.getElementById(buttonID).innerHTML = "Exit";
+                        var checkID = buttonID.replace("exitButton", "");
+                        document.getElementById(checkID).checked = false;       // NOT SURE ABOUT THIS ----------------------------
+                    } else {
+                        document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
+                        var checkID = buttonID.replace("exitButton", "");
+                        document.getElementById(checkID).checked = true;
+                    }
+                    
+                    
                 }
             }
 
