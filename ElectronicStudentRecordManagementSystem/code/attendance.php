@@ -443,8 +443,8 @@ _EXIT;
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" onclick="recordEntrance(this)">Remove</button>
-                            <button type="button" class="btn btn-primary" onclick="recordEntrance(this)">Save changes</button>
+                            <button type="button" class="btn btn-danger col-xs-3 col-md-offset-3" onclick="recordEntrance(this)">Remove</button>
+                            <button type="button" class="btn btn-primary col-xs-3" style="margin-top: 0px" onclick="recordEntrance(this)">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -492,9 +492,9 @@ _MODALENTRANCE;
                             </div>
                         </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" onclick="recordExit(this)">Remove</button>
-                        <button type="button" class="btn btn-primary" onclick="recordExit(this)">Save changes</button>
+                    <div class="modal-footer" >
+                        <button type="button" class="btn btn-danger col-xs-3 col-md-offset-3" onclick="recordExit(this)">Remove</button>
+                        <button type="button" class="btn btn-primary col-xs-3" style="margin-top: 0px" onclick="recordExit(this)">Save changes</button>
                     </div>
                 </div>
             </div>
