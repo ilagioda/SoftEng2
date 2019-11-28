@@ -15,14 +15,19 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 		
 		$selectedClass = $_POST["comboClass"];
 		$students = $teacher->getStudents2($selectedClass);
+
+		$json=json_encode($students);
+
+		echo $json;
 		
-		$output = "";
+		//echo $students;
+	/*	$output = "";
 		
 		foreach($students as $student) {
 			$args = explode(",",$student);
 			$output .= "<option value=".$args[2].">".$args[0]." ".$args[1]." (".$args[2].")</option>";
 		}
-		echo $output;
+		echo $output;*/
 	}
 }
 ?>
