@@ -1050,15 +1050,20 @@ class dbTeacher extends db
         return $this->query("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES ('$date', '$ssn', 1, '$hour', 0)");
     }
 
-    function recordEarlyExitHavingAlreadyLateEntryQUERY($date, $ssn, $hour)
+    function recordEarlyExitHavingAlreadyLateEntryQUERY($date, $absence, $ssn, $hour)
     {
-        return $this->query("UPDATE `Attendance` SET `absence`=1, `earlyExit`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
+        return $this->query("UPDATE `Attendance` SET `absence`=$absence, `earlyExit`='$hour' WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
 
     function selectAttendanceStudent($date, $ssn)
     {
         return $this->query("SELECT * FROM `Attendance` WHERE `date`='$date' AND `codFisc`='$ssn'");
     }
+    function deleteUselessRowAttendance($date, $ssn)
+    {
+        return $this->query("DELETE FROM `Attendance` WHERE `date`= '$date' AND `codFisc` = '$ssn'");
+    }
+
 
     function recordLateEntrance($day, $ssn, $hour)
     {
@@ -1114,6 +1119,17 @@ class dbTeacher extends db
                 if (!$result2)
                     throw new Exception();
             }
+
+            //check se la tupla non ha informazioni utili allora deve essere rimossa 
+            $check = $this->selectAttendanceStudent($day, $ssn);
+
+            $row = $check->fetch_assoc();
+
+            if ($row['absence'] == 0 && $row['earlyExit'] == 0 && $row['lateEntry'] == 0) {
+                $result3 = $this->deleteUselessRowAttendance($day, $ssn);
+            }
+
+
             $this->commit();
             return true;
         } catch (Exception $e) {
@@ -1163,10 +1179,19 @@ class dbTeacher extends db
                 if ($row['lateEntry'] != 0 && $row['lateEntry'] > $hour && $hour != 0)
                     throw new Exception("Integrity violeted.");
 
-                $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $ssn, $hour);
 
-                if (!$result1)
-                    throw new Exception();
+                if ($hour != 0) {
+                    $absence = 1;
+                    $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $absence, $ssn, $hour);
+                    if (!$result1)
+                        throw new Exception();
+                } else {
+                    //HOUR = 0 => non è più uscito => presente
+                    $absence = 0;
+                    $result1 = $this->recordEarlyExitHavingAlreadyLateEntryQUERY($day, $absence, $ssn, $hour);
+                    if (!$result1)
+                        throw new Exception();
+                }
             } else if ($result->num_rows == 0) {
                 //non è stato registrato alcun evento quindi lo studente è presente
                 $result2 = $this->recordEarlyExitQUERY($day, $ssn, $hour);
@@ -1176,6 +1201,18 @@ class dbTeacher extends db
             } else {
                 throw new Exception("Integrity violeted.");
             }
+
+
+            //check se la tupla non ha informazioni utili allora deve essere rimossa 
+            $check = $this->selectAttendanceStudent($day, $ssn);
+
+            $row = $check->fetch_assoc();
+
+            if ($row['absence'] == 0 && $row['earlyExit'] == 0 && $row['lateEntry'] == 0) {
+                $result3 = $this->deleteUselessRowAttendance($day, $ssn);
+            }
+
+
             $this->commit();
             return true;
         } catch (Exception $e) {
