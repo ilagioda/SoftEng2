@@ -39,7 +39,7 @@ if (isset($_SESSION['user'])) {
             // no children for that email => display error
             echo <<<_ERROR
             <div class="text-center">
-            <h1> No children registered to a class and related to email $em. Please try later to <a href=pseudoLogParent.php>login</a></h1>
+            <h1> No children registered to a class and related to email $em. Please try later to <a href=login.php>login</a></h1>
             </div>
 _ERROR;
             exit;

@@ -1,14 +1,12 @@
 <?php
 require_once("basicChecks.php");
-$_SESSION['user'] = "ueue";
-$_SESSION['role'] = "admin";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require 'C:\xampp\composer\vendor\autoload.php';
 require_once("classphpmailer.php");
 require_once("class.smtp.php");
 require_once "db.php";
-$_SESSION['db'] = new dbAdmin();
+$db = new dbAdmin();
 
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -37,7 +35,11 @@ $pw = generateRandomString();
 //echo "PW vale: $pw";
 $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 //echo "hashedPW vale: $hashed_pw";
-$_SESSION['db']->ChangePassword($to_address, $hashed_pw);
+if(!$db->ChangePassword($to_address, $hashed_pw, "Parents")){
+    echo "TO ADDR: ". $to_address;
+    echo "HASHED PW: ". $hashed_pw;
+    die("Unable to change password for $to_address");
+}
 
 $mail->SMTPAuth = true; // turn on SMTP authentication
 $mail->SMTPSecure = "tls"; // tls

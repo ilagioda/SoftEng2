@@ -86,10 +86,10 @@ class db
 
     function getHashedPassword($user)
     {
-        $sql = "SELECT email, hashedPassword FROM Parents WHERE email='$user'";
-        $sql2 = "SELECT codFisc, hashedPassword FROM Teachers WHERE codFisc='$user'";
-        $sql3 = "SELECT codFisc, hashedPassword FROM Principals WHERE codFisc='$user'";
-        $sql4 = "SELECT codFisc, hashedPassword FROM Admins WHERE codFisc='$user'";
+        $sql = "SELECT * FROM Parents WHERE email='$user'";
+        $sql2 = "SELECT * FROM Teachers WHERE codFisc='$user'";
+        $sql3 = "SELECT * FROM Principals WHERE codFisc='$user'";
+        $sql4 = "SELECT * FROM Admins WHERE codFisc='$user'";
         $ret_value = array();
 
         if (preg_match('/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/', $user)) {
@@ -102,6 +102,7 @@ class db
                 $ret_value["user"] = $result["email"];
                 $ret_value["role"] = "parent";
                 $ret_value["hashedPassword"] = $result["hashedPassword"];
+                $ret_value["firstLogin"] = $result["firstLogin"];
             }
         } else {
             //check if it's a teacher, a principal or an admin
@@ -124,9 +125,10 @@ class db
                         $ret_value["user"] = $result["codFisc"];
                         $ret_value["role"] = "admin";
                         $ret_value["hashedPassword"] = $result["hashedPassword"];
+                        $ret_value["sysAdmin"] = $result["sysAdmin"];
                     }
                 } else {
-                    //it's a principal
+                    //it's a principal //will not exist anymore
                     $result = $result->fetch_array(MYSQLI_ASSOC);
                     $ret_value["user"] = $result["codFisc"];
                     $ret_value["role"] = "principal";
@@ -138,9 +140,16 @@ class db
                 $ret_value["user"] = $result["codFisc"];
                 $ret_value["role"] = "teacher";
                 $ret_value["hashedPassword"] = $result["hashedPassword"];
+                $ret_value["principal"] = $result["principal"];
             }
         }
         return $ret_value;
+    }
+    public function ChangePassword($user, $hashed_pw, $table,$first_time=false)
+    {
+        if($first_time) return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
+        
+        return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
     }
 
     function getAnnouncements()
@@ -290,10 +299,6 @@ class dbAdmin extends db
     {
         $result = $this->query("SELECT email, hashedPassword, firstLogin FROM Parents ORDER BY hashedPassword, email");
         return $result;
-    }
-    public function ChangePassword($to_address, $hashed_pw)
-    {
-        $this->query("UPDATE Parents SET hashedPassword = '$hashed_pw' WHERE email='$to_address'");
     }
 
     public function insertStudent($name, $surname, $SSN, $email1, $email2)
