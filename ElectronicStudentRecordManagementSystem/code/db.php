@@ -538,24 +538,28 @@ class dbParent extends db
         return $attendance;
     }
 
+
+
     public function viewChildAssignments($codFisc)
     {
         /*Retrieves all assignment of the selected child*/
 
-        $CodFisc = $this->sanitizeString($CodFisc);
+        $CodFisc = $this->sanitizeString($codFisc);
+
+        $this->begin_transaction();
 
 
         /* Verify if the user logged in is actually allowed to see the assignments of the requested child */
-        $result = $this->query("SELECT * FROM Students WHERE codFisc='$CodFisc';");
+        $result = $this->query("SELECT * FROM Students WHERE codFisc='$codFisc';");
 
         if (!$result)
-            die("Unable to select student $CodFisc");
+            die("Unable to select student $codFisc");
 
         if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
             die("No student with ID $CodFisc ");
         }
 
-        $class = $codfiscthis->getChildClass($codfisc);
+        $class = $this->getChildClass($codFisc);
 
         $parent1 = $row['emailP1'];
         $parent2 = $row['emailP2'];
@@ -577,20 +581,47 @@ class dbParent extends db
         $year = $year + 1;
         $endingDate = $year . "-07-31";
 
-        $result = $this->query("SELECT subject,date,hour,mark FROM assignments WHERE classId='$classID' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY ,date DESC, subject ASC;");
+        $result = $this->query("SELECT subject,date,textAssignment FROM assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
+
+        if (!$result) {
+            $this->rollback();
+            die("Unable to select assignments for student $CodFisc");
+        }
+
+        $assignments = array();
+
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+
+            /**
+             * Modify data to simplify them
+             * Produces an array as
+             * "YYYY-MM-DD" => "" | "View assignments"
+             * */
+
+            $value = "View assignments";
+            $assignments[$row["date"]] = $value;
+        }
+
+        $this->commit();
+
+        return $assignments;
+
     }
+
 
 
     public function getChildClass($codFisc)
     {
-        $CodFisc = $this->sanitizeString($CodFisc);
+        //returns the classId of a student
 
-        $result = $this->query("SELECT classID FROM Students WHERE codFisc='$CodFisc';");
+        $CodFisc = $this->sanitizeString($codFisc);
+
+        $result = $this->query("SELECT classID FROM Students WHERE codFisc='$codFisc';");
         if (!$result)
-            die("Unable to select class of $CodFisc");
+            die("Unable to select class of $codFisc");
 
         if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
-            die("No class for student with ID $CodFisc ");
+            die("No class for student with ID $codFisc ");
         } else
             return $row['classID'];
     }

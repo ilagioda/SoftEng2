@@ -13,7 +13,159 @@ if (!$loggedin) {
 }
 require_once("db.php");
 
-//checkIfLogged();
+
+?>
+
+<script>
+    let d = new Date();
+    var year = d.getFullYear();
+    var month = d.getMonth()+1;
+    var startingYear;
+    var endingYear;
+    var semester;
+
+    var monthLabel = {
+        1: 'January',
+        2: 'February',
+        3: 'March',
+        4: 'April',
+        5: 'May',
+        6: 'June',
+        9: 'September',
+        10: 'October',
+        11: 'November',
+        12: 'December',
+    }
+
+    if (month == 7 || month == 8) {
+        // display the previous data
+        month = 6;
+    }
+
+    if (month > 8) {
+        // first semester
+        semester = 1;
+        endingYear = year + 1;
+        startingYear = year;
+    } else {
+        // second semester
+        semester = 2;
+    }
+
+    function updateLabels() {
+
+        /**
+         * Called when the calendar is updated => updates labels and disable/enable the buttons when needed
+         */
+
+        document.getElementById('Date').innerHTML = monthLabel[month] + " " + year;
+
+        if (semester == 1) {
+            // first semester
+            if (month == 1) {
+                document.getElementById('button-right').disabled = true;
+            } else if (month == 9) {
+                document.getElementById('button-left').disabled = true;
+            } else {
+                document.getElementById('button-left').disabled = false;
+                document.getElementById('button-right').disabled = false;
+            }
+
+        } else {
+            // second semester
+            if (month == 6) {
+                // you can not display attendance for july or august
+                document.getElementById('button-right').disabled = true;
+            } else if (month == 2) {
+                // you can not display attendance for july or august
+                document.getElementById('button-left').disabled = true;
+            } else {
+                document.getElementById('button-left').disabled = false;
+                document.getElementById('button-right').disabled = false;
+            }
+        }
+
+    }
+
+    function updateCalendar() {
+        $.post("ajaxAssignmentCalendar.php", ({
+            'year': year,
+            'month': month,
+            'codFisc': fiscalCode
+        }), function(text) {
+            $("#calendarAssignment").replaceWith(text);
+            updateLabels();
+        })
+    }
+
+    function monthBefore() {
+        /**
+         * To be used on the < button
+         * When the button is clicked, performs an ajax request and update the calendar
+         */
+
+        if (semester == 1) {
+            // first semester
+            if (month == 9) {
+                // you want to see august lectures => no reason
+                return;
+            }
+
+            if (month == 1) {
+                // From january you should go to december
+                month = 12;
+                year = year - 1;
+            } else month -= 1;
+
+        } else {
+
+            // second semester
+            if (month == 2) {
+                // can't go back
+                return;
+            } else month -= 1;
+        }
+
+        updateCalendar();
+    }
+
+    function monthAfter() {
+        /**
+         * To be used on the < button
+         * When the button is clicked, performs an ajax request and update the calendar
+         */
+
+        if (semester == 1) {
+            // first semester
+            if(month==1){
+                // first semester is ended 
+                return;
+            }
+
+            if (month == 12) {
+                // From january you should go to december
+                month = 1;
+                year += 1;
+            } else month += 1;
+
+        } else {
+            // second semester
+            if (month == 6) {
+                // you want to see July lectures => no reason
+                return;
+            } else month+=1;
+        }
+
+
+
+        updateCalendar();
+    }
+
+    $(document).ready(updateCalendar);
+</script>
+
+<?php
+
 
 $childName = $_SESSION['childName'];
 $childSurname = $_SESSION['childSurname']; 
@@ -21,155 +173,48 @@ $childSurname = $_SESSION['childSurname'];
 $db = new dbParent();
 
 
-$assignments = $db->viewChildAssignment($_SESSION['child']);
+$assignments = $db->viewChildAssignments($_SESSION['child']);
 
 $subjects = $db->getSubjectTaughtInClass($_SESSION['class']);
 
 $preprocessed_data = array();
 
-foreach ($subjects as $subject) {
-    $preprocessed_data[$subject]['mean']=0;
-}
 
-if($marks!=""){
 
-    /**
-     * There are marks for that student
-     * Format: Subject,Date,Mark;Subject,Date...Mark;
-     */
+echo <<<_TITLE
 
-    $rows = explode(";",$marks);
-    $count =0;
-    $prev = "";
-
-    foreach ($rows as $row) {
-
-        // divide per element
-        $row = explode(",",$row);
-
-        $subject = $row[0];
-        $date = $row[1];
-        $hour = $row[2];
-        $initialMark = $row[3];
-        $mark = convertMark($initialMark);
-
-        if($preprocessed_data[$subject]['mean']==0) {
-            // first iteration for that subject
-
-            if($prev!=="" && $count > 0){
-                $preprocessed_data[$prev]['mean'] = $preprocessed_data[$prev]['mean']/$count;
-            }
-
-            $preprocessed_data[$subject]['mean']=0;
-            $count = 0;
-            $prev = $subject;
-
-        }
-
-        $preprocessed_data[$subject]['mean'] +=$mark;
-        $preprocessed_data[$subject][$date . " " . $hour] = $initialMark;
-        $count++;
-    }
-    
-    // compute the last mean
-    if($prev!="" && $count > 0){
-        $preprocessed_data[$prev]['mean'] = $preprocessed_data[$prev]['mean']/$count;
-    }
-
-    /**
-     * Now $preprocessed_data should be a map containing:
-     * Subject,mean => mean
-     * Subject,date hour => Mark
-     */
-
-}
-
-echo <<<_STARTTABLE
-<h1 class="display-1 text-center"> $childName $childSurname's marks </h1>
-<table class="table table-condensed" style="border-collapse:collapse;">
-<thead>
-    <tr>
-        <th>Subject</th>
-        <th></th>
-        <th></th>
-        <th>Average grade</th>
-    </tr>
-</thead>
-<tbody>
-_STARTTABLE;
-
-// print the contents
-
-foreach ($preprocessed_data as $subject => $marks) {
-
-    $mean = round($preprocessed_data[$subject]['mean'],2);          
-
-    if($mean==0){
-    // no marks for that subject
-        $mean = "N.C."; 
-        $modifier="";
-
-    } elseif($mean<6){
-
-    // print the row with a different color in case of mark lower than 6
-        if($mean < 5 ) $modifier = "danger visibleRowMarks";
-        else $modifier = "warning visibleRowMarks";
-
-    } else {
-        // average > 6 
-        $modifier = "success visibleRowMarks";
-    }
-    
-    echo <<<_VISIBLEROW
-        <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
-            <td class="col-md-3">$subject</td>
-            <td class="col-md-3"></td>
-            <td class="col-md-3"></td>
-            <td class="col-md-3">$mean</td>
-        </tr>
-_VISIBLEROW;
-
-    if($mean!="N.C."){
-
-        // print the hidden rows only if the student has at least one mark
-
-        echo <<<_HIDDENLEGEND
-            <tr>
-                <td class="hiddenRow legend"></td>
-                <td class="hiddenRow legend"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
-                <td class="hiddenRow legend"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
-                <td class="hiddenRow legend"></td>
-            </tr>
-_HIDDENLEGEND;
-    
-        /**
-         * Unico modo per sovrascrivere style di bootstrap per le tabelle
-         * Introduco border 0 sulle righe chiuse, tranne che nella prima 
-         * (per evitare che si veda un pezzo mancante nella tabella)
-         * */
-
-        foreach($marks as $dateHour => $mark){
+    <div class="text-center">
+        <h1>$_SESSION[childName] $_SESSION[childSurname]'s assignments</h1>
+        <br>
+        <h2>
             
-            if($dateHour=='mean') continue;
+        <button class=" btn btn-default calendar-command-left" onClick=monthBefore() id='button-left'>
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </button>
 
-            echo <<<_HIDDENROWS
-            <tr>
-                <td class="hiddenRow marks" > <div class="accordian-body collapse $subject"></div> </td>
-                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $dateHour </div> </td>
-                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $mark </div> </td>
-                <td class="hiddenRow marks" > <div class="accordian-body collapse $subject "></div> </td>
-            </tr>
-_HIDDENROWS;
+        <span class="label label-primary" id='Date'></span>
+        
+        <button class=" btn btn-default calendar-command-right" onClick=monthAfter() id='button-right'>
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </button>
+        </h2>
+    </div>
 
-        }
-    }
-}
+_TITLE;
 
-echo <<<_ENDTABLE
-    </tbody>
-</table>
-_ENDTABLE;
+echo "<div id='calendarAssignment'></div>";
+
+echo <<<_storeCodFisc
+
+<script>
+
+var fiscalCode="$_SESSION[child]";
+
+</script>
+
+_storeCodFisc;
 
 require_once("defaultFooter.php");
+
 
 ?>
