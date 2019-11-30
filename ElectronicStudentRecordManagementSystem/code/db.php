@@ -528,12 +528,15 @@ class dbParent extends db
             if ($row["absence"] == 1) {
                 // the student was absent that day
                 $value = "absent";
-            } elseif ($row["lateEntry"] !== 0) {
+            } elseif ($row["lateEntry"] != 0 && $row["earlyExit"] !=0) {
+                // student both entered late and exited early
+                $value = "late - Entered at " . strval($row["lateEntry"]) . "° hour and exited at " . strval($row["earlyExit"]) . "° hour";
+            } elseif ($row["lateEntry"] != 0) {
                 //entered late
-                $value = "late - Entered at " . strval($row["lateEntry"] . "° hour");
+                $value = "late - Entered at " . strval($row["lateEntry"]) . "° hour";
             } else {
                 //no late entry,neither absence => exited early
-                $value = "late - Exited at " . strval($row["earlyExit"] . "° hour");
+                $value = "early - Exited at " . strval($row["earlyExit"]) . "° hour";
             }
             $attendance[$row["date"]] = $value;
         }
