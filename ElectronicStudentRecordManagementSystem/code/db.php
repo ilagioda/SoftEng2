@@ -603,7 +603,7 @@ class dbParent extends db
              * "YYYY-MM-DD" => "" | "View assignments"
              * */
 
-            $value = "View assignments";
+            $value = "View assignments:" . $row["textAssignment"];
             $assignments[$row["date"]] = $value;
         }
 

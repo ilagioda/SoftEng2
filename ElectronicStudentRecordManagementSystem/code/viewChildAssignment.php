@@ -93,7 +93,7 @@ require_once("db.php");
             'month': month,
             'codFisc': fiscalCode
         }), function(text) {
-            $("#calendarAssignment").replaceWith(text);
+            $("#calendar").replaceWith(text);
             updateLabels();
         })
     }
@@ -161,6 +161,14 @@ require_once("db.php");
         updateCalendar();
     }
 
+    function showAssignment($date, $text){
+        var str = "";
+        str += "<h3>Assignments of " + $date + ":</h3>";
+        str += "<br>" + $text;
+        document.getElementById("assignmentList").innerHTML=str;
+    }
+
+
     $(document).ready(updateCalendar);
 </script>
 
@@ -202,7 +210,7 @@ echo <<<_TITLE
 
 _TITLE;
 
-echo "<div id='calendarAssignment'></div>";
+echo "<div id='calendar'></div>";
 
 echo <<<_storeCodFisc
 
@@ -213,6 +221,13 @@ var fiscalCode="$_SESSION[child]";
 </script>
 
 _storeCodFisc;
+
+?>
+
+<div id="assignmentList"></div>
+
+<?php
+
 
 require_once("defaultFooter.php");
 

@@ -178,10 +178,15 @@ function build_html_calendar($year, $month, $events = null)
         $draw_event = false;
         if (isset($events) && isset($events[$cur_date])) {
             $draw_event = true;
+            $assignment = false;
             $event = $events[$cur_date];
             if ($event == "absent") {
                 // absent
                 $color = "style='background-color:orange'";
+            } else if (strpos($event, 'View assignments:') !== false){
+                //assignment
+                $assignment=true;
+                $color = "style='background-color:lightblue'";
             } else if (strpos($event, 'early') !== false) {
                 // exits early
                 // someone came for him => no problem
@@ -194,15 +199,26 @@ function build_html_calendar($year, $month, $events = null)
             } else $color = "";
         } else $color = "";
 
-        // Day cell
+        //Day cell with assignment (clickable)
+        if($draw_event == true && $assignment == true){
+            $assText = ltrim($events[$cur_date], 'View assignments:'); 
+            $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\" $color>";
+        }
+        else{
+              // Day cell
         $calendar .= $draw_event ?
             "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+        }
+     
 
         // Add the day number
         $calendar .= "<div class='{$css_cal_day_number}'>" . $day . "</div>";
 
         // Insert an event for this day
         if ($draw_event) {
+            if($assignment){
+                $events[$cur_date] = 'Click to view assignments'; 
+            }
             $calendar .=
                 "<div class='{$css_cal_event} text-center'>" .
                 $events[$cur_date] .
@@ -243,3 +259,5 @@ function build_html_calendar($year, $month, $events = null)
     // All done, return result
     return $calendar;
 }
+
+
