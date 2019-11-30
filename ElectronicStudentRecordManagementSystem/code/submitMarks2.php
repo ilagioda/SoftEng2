@@ -7,7 +7,6 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 }
 
 if (!$loggedin) {
-    //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
     require_once "loggedTeacherNavbar.php";
@@ -42,11 +41,10 @@ $(document).ready(function(){
 	
 	$("#comboClass").change(function() {
 		document.getElementById('listStudents').style.display= 'block' ;
-
-		//var tableStudent = document.getElementById('listStudents');
-		//tableStudent.style.visibility = 'visible' ;
-		// TO DO: fare apparire la lista degli studenti che inizialmente è nascosta
-				// e fare apparire la tabella con i due bottoni
+	});
+	
+	$("#comboClass").change(function() {
+		document.getElementById('buttons_table').style.display= 'block' ;
 	});
 	
 });
@@ -63,13 +61,13 @@ $(document).ready(function(){
 			cache:		false,
 			success:	function(response){
 							var first = '<tr><td><label> Name</label> </td><td><label> Surname </label></td><td><label> SSN</label> </td><td><label> Grade </label></td></tr>';
-							$('#result').append(first);
+							$('#result').html(first);
 							$.each(response, function(index, row) {	
 								var args = row.split(",");
 								var name = '<td>' + args[0] + '</td>';
 								var surname = '<td>' + args[1] + '</td>';
-								var ssn = '<td>' + args[2] + '</td>';
-								var grade = '<td><select class="form-control" name="comboGrade" id="comboGrade" style="width:100%"> ';;
+								var ssn = '<td><input type="hidden" name="ssn[]" value="'+args[2]+'">' + args[2] + '</td>';
+								var grade = '<td><select class="form-control" name="comboGrade[]" id="comboGrade[]" style="width:100%"> ';;
 								for(var i=0; i<=10; i++) {
 									j=i+1;
 									grade += '<option value=' +i+ '>'+i+'</option>';
@@ -84,18 +82,6 @@ $(document).ready(function(){
 								
 							});      
 						},
-						/*	for (var student in response) {
-								var args = student.split(",");
-								alert(args[1]);
-								var name = '<td>' + args[1] + '</td>';
-								var surname = '<td>' + args[2] + '</td>';
-								var ssn = '<td>' + args[3] + '</td>';
-								
-								$('#result').append('<tr>' + name + surname + ssn + '</tr>');
-								
-							}
-							
-						},*/
 			error: 		function(){
 							alert("Error: students not loaded");
 						}
@@ -178,7 +164,7 @@ $(document).ready(function(){
 					<h2 class="panel-title">Students list: </h2>
 				</div>
 				<div class="panel-body">
-					<table class="table" style="width:100%">
+					<table class="table" id="studentsTable" style="width:100%">
 						<tbody id="result" style="width:100%">
 						</tbody>				
 					</table>
@@ -186,7 +172,7 @@ $(document).ready(function(){
 			</div>
 
 			
-			<table id="buttons_table">
+			<table id="buttons_table" style="display: none;">
 				<tr><td></td><td><button type="reset" class = "btn btn-default">Reset</button>
 				<button type="submit" class="btn btn-success">Confirm</button></td></tr>
 			</table>
