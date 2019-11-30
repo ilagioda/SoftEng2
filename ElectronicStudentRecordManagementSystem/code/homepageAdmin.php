@@ -35,7 +35,7 @@ $_SESSION['role'] = 'admin'; */
         <a href="classComposition.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;Class composition</a>
     </div><br>
     <div class="btn-group">
-        <a href="setupAccounts.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Setup official accounts</a>
+        <a href="setupAccounts.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Setup official accounts</a>
     </div><br>
 </div>
 

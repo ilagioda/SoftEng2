@@ -27,7 +27,7 @@ if (!$loggedin) {
 	?>
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
+			<span class="glyphicon glyphicon-list pull-left" aria-hidden="true"></span>&emsp;
 			Daily lesson topics <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
@@ -38,7 +38,7 @@ if (!$loggedin) {
 	<br>
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
+			<span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;
 			Insert mark <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
@@ -50,7 +50,7 @@ if (!$loggedin) {
 
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;
+			<span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;
 			Assignments <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
