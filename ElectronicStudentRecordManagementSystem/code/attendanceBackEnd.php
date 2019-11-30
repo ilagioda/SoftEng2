@@ -7,7 +7,7 @@ if (!isset($_SESSION))
 if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
     if (isset($_REQUEST["event"])) {
 
-        if (($_REQUEST["event"] == "presence") && isset($_SESSION['students']) && isset($_REQUEST['i'])) {
+        if (($_REQUEST["event"] == "presence") && isset($_SESSION['students']) && isset($_REQUEST['i']) && isset($_REQUEST['date'])) {
             $students = $_SESSION['students'];
             $index = $_REQUEST['i'];
             $tuple = explode(",", $students[$index]);
@@ -18,8 +18,10 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
 
             $teacher = new Teacher();
 
-            $day = date('Y-m-j');
+            // $day = date('Y-m-j');
 
+            $day = $_REQUEST['date'];
+            
             $text = $teacher->updateAttendance($ssn, $day);
 
             if ($text) {
@@ -27,12 +29,12 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             } else {
                 echo "Something has gone wrong.";
             }
-            
-        } else if (($_REQUEST["event"] == "entrance") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
+        } else if (($_REQUEST["event"] == "entrance") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"]) && isset($_REQUEST['date'])) {
             /* LATE ENTRANCE */
             $ssn = $_REQUEST["ssn"];
             $hour = $_REQUEST["hour"];
-            $day = date('Y-m-j');
+            // $day = date('Y-m-j');
+            $day = $_REQUEST['date'];
 
             $teacher = new Teacher();
             $ret = $teacher->recordLateEntrance($day, $ssn, $hour);
@@ -41,12 +43,12 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             } else {
                 echo "false";
             }
-        } else if (($_REQUEST["event"] == "exit") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"])) {
+        } else if (($_REQUEST["event"] == "exit") && isset($_REQUEST["ssn"]) && isset($_REQUEST["hour"]) && isset($_REQUEST['date'])) {
             /* EARLY EXIT */
             $ssn = $_REQUEST["ssn"];
             $hour = $_REQUEST["hour"];
-            $day = date('Y-m-j');
-
+            // $day = date('Y-m-j');
+            $day = $_REQUEST['date'];
             $teacher = new Teacher();
             $ret = $teacher->recordEarlyExit($day, $ssn, $hour);
             if ($ret) {
