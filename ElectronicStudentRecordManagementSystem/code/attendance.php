@@ -27,23 +27,47 @@ if (isset($_REQUEST['class'])) {
     // Print all the information about the students belonging to the selected class
 
     // Print the date
-    $today = date('l, jS \of F Y');         // Format: Friday, 22nd of November 2019 --> to be shown on the screen
-    echo "<h3><i>$today</i></h3><br><br>";
+    $day;
+    if (isset($_REQUEST['dateRequest'])) {
+        $day = $_REQUEST['dateRequest'];
+        $date = $day;
+    } else {
+        $day = date('Y-m-j');
+        $date = date('l, jS \of F Y');         // Format: Friday, 22nd of November 2019 --> to be shown on the screen
 
-    //--- DEBUG ---
-    //echo $_REQUEST['class'];
+    }
+    echo "<h3><i id='dateRequest'>$date</i></h3><br><br>";
 
-    // Store in a variable the name of the selected class
-    $chosenClass = $_REQUEST['class'];
-
-    // Retrieve the student of the selected class
-    $students = $teacher->getStudents2($chosenClass);
-    $_SESSION['students'] = $students;
     ?>
+    <div class="container-fluid">
+        <form class="navbar-form navbar-left form-inline" method="POST" action="attendance.php">
+            <input class="form-control" type="date" name="dateRequest" min="<?php echo date("Y-m-d", strtotime('monday this week'));  ?>" max="
+            <?php
+                if (date("Y-m-d") <= date("Y-m-d", strtotime('friday this week'))) {
+                    echo date("Y-m-d");
+                } else {
+                    echo date("Y-m-d", strtotime('friday this week'));
+                }
+                ?>">
+            <input type="hidden" id="classID" name="class" value="<?php echo $_REQUEST['class'] ?>">
+            <button type="submit" class="btn btn-success">Confirm Date</button>
+        </form>
+    </div>
+    <?php
+
+        //--- DEBUG ---
+        //echo $_REQUEST['class'];
+
+        // Store in a variable the name of the selected class
+        $chosenClass = $_REQUEST['class'];
+
+        // Retrieve the student of the selected class
+        $students = $teacher->getStudents2($chosenClass);
+        $_SESSION['students'] = $students;
+        ?>
     <script>
         /*********************************************/
         $(document).ready(function() {
-
             $("input[type='checkbox']").change(function() {
 
                 var switchID;
@@ -58,9 +82,13 @@ if (isset($_REQUEST['class'])) {
 
                 if ((entrance == "Entrance") && (exit == "Exit")) {
                     //alert("Sono qui");
+                    alert($("#dateRequest").text());
+                    
+                    var dateRequested = $("#dateRequest").text();
                     $.post("attendanceBackEnd.php", {
                             event: "presence",
-                            i: this.id
+                            i: this.id,
+                            date: dateRequested
                         },
                         function(data, status) {
                             // if Something has gone wrong. then adjust the toggle to the previous color.
@@ -219,11 +247,11 @@ if (isset($_REQUEST['class'])) {
         function recordEntrance(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
-            var hour; 
+            var hour;
 
             // Understand if this function has been called from the "Remove" or "Save changes" button
             var callingButton = element.innerHTML;
-            if(callingButton === "Remove") {
+            if (callingButton === "Remove") {
                 // The recordEntrance function has been called from the "Remove" button
                 hour = 0;
             } else {
@@ -243,11 +271,11 @@ if (isset($_REQUEST['class'])) {
         function recordExit(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalExit-ssn").innerHTML;
-            var hour; 
+            var hour;
 
             // Understand if this function has been called from the "Remove" or "Save changes" button
             var callingButton = element.innerHTML;
-            if(callingButton === "Remove") {
+            if (callingButton === "Remove") {
                 // The recordExit function has been called from the "Remove" button
                 hour = 0;
             } else {
@@ -272,27 +300,27 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright --> Change the text inside the button 
-                    if(req.responseText === "0"){
+                    if (req.responseText === "0") {
                         document.getElementById(buttonID).innerHTML = "Entrance";
-                        
+
                         // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")   // NOT SURE ABOUT THIS ----------------------------
                         var checkID = buttonID.replace("entranceButton", "");
-                        var exitButton = document.getElementById("exitButton"+checkID).innerHTML.trim();
-                        if(exitButton === "Exit") {
+                        var exitButton = document.getElementById("exitButton" + checkID).innerHTML.trim();
+                        if (exitButton === "Exit") {
                             // The exit button is still the same (the student has just entered the class, so he/she is now present)
                             document.getElementById(checkID).checked = false;
-                        }     
+                        }
                     } else {
                         document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                         var checkID = buttonID.replace("entranceButton", "");
 
                         // Check if the "exit button" has been already changed (from "Exit" to "Hour: X")
-                        var exitButton = document.getElementById("exitButton"+checkID).innerHTML.trim();
-                        if(exitButton === "Exit") {
+                        var exitButton = document.getElementById("exitButton" + checkID).innerHTML.trim();
+                        if (exitButton === "Exit") {
                             // The exit button is still the same (the student has just entered the class, so he/she is now present)
                             document.getElementById(checkID).checked = false;
-                        }     
-                    }                
+                        }
+                    }
                 }
             }
 
@@ -308,17 +336,17 @@ if (isset($_REQUEST['class'])) {
                     window.alert("Oh no! Something went wrong...");
                 } else {
                     // Everything is alright --> Change the text inside the button and change the state of the switch
-                    if(req.responseText === "0"){
+                    if (req.responseText === "0") {
                         document.getElementById(buttonID).innerHTML = "Exit";
                         var checkID = buttonID.replace("exitButton", "");
-                        document.getElementById(checkID).checked = false;       // NOT SURE ABOUT THIS ----------------------------
+                        document.getElementById(checkID).checked = false; // NOT SURE ABOUT THIS ----------------------------
                     } else {
                         document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                         var checkID = buttonID.replace("exitButton", "");
                         document.getElementById(checkID).checked = true;
                     }
-                    
-                    
+
+
                 }
             }
 
@@ -353,8 +381,7 @@ if (isset($_REQUEST['class'])) {
                 <td style="vertical-align: middle;">$fields[2]</td>
                 <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"
 _ROW;
-
-            $result = $teacher->checkAbsenceEarlyExitLateEntrance($fields[2]);
+            $result = $teacher->checkAbsenceEarlyExitLateEntrance($fields[2], $day);
             //$result = array($date, $codFisc, $absence, $lateEntry, $earlyExit);
 
             if ($result[2] == 1) {
