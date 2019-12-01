@@ -525,7 +525,7 @@ class dbParent extends db
              * "YYYY-MM-DD" => "absent" | "early - hh:mm" | "late - hh:mm"
              * */
 
-            if ($row["absence"] == 1) {
+            if ($row["absence"] == 1 && $row["lateEntry"] == 0 && $row["earlyExit"] ==0) {
                 // the student was absent that day
                 $value = "Absent";
             } elseif ($row["lateEntry"] != 0 && $row["earlyExit"] !=0) {
