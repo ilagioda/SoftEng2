@@ -29,8 +29,6 @@ if (isset($_REQUEST['class'])) {
     // Let the teacher choose the day
 
 
-    $greaterMin = false;
-    $lessMax = false;
     $minWeek =  date("Y-m-d", strtotime('monday this week'));
     $maxWeek = date("Y-m-d", strtotime('friday this week'));
     $currentMax;
@@ -43,12 +41,8 @@ if (isset($_REQUEST['class'])) {
     // Print the info about the date
     if (isset($_REQUEST['dateRequest'])) {
 
-        if ($_REQUEST['dateRequest'] >= $minWeek) {
-            $greaterMin = true;
-        }
-        if ($_REQUEST['dateRequest'] <= $maxWeek) {
-            $lessMax = true;
-        }
+        $greaterMin = $_REQUEST['dateRequest'] >= $minWeek;
+        $lessMax = $_REQUEST['dateRequest'] <= $maxWeek;
 
         if ($greaterMin && $lessMax) {
             $date = $_REQUEST['dateRequest'];                    // Format: 2019-11-22 --> to be put into the DB
@@ -60,12 +54,8 @@ if (isset($_REQUEST['class'])) {
     } else {
         //dateRequest non è settata implica che devo guardare il giorno corrente
 
-        if (date("Y-m-d") >= $minWeek) {
-            $greaterMin = true;
-        }
-        if (date("Y-m-d") <= $maxWeek) {
-            $lessMax = true;
-        }
+        $greaterMin = date("Y-m-d") >= $minWeek;
+        $lessMax = date("Y-m-d") <= $maxWeek;
 
         if (!($greaterMin && $lessMax)) {
             $date = date("Y-m-d", strtotime('friday this week'));                   // Format: 2019-11-22 --> to be put into the DB
@@ -140,8 +130,8 @@ if (isset($_REQUEST['class'])) {
                         },
                         function(data, status) {
                             // if Something has gone wrong. then adjust the toggle to the previous color.
-                            if (data == "Something has gone wrong.") {
-                                alert("The student has a record for late entrance or early exit, remove them to change the presence.");
+                            if (data == "false") {
+                                alert("Something has gone wrong.");
                                 //Va Cambiato il bottone e messo nello stato precedente.
                                 //document.getElementById(switchID).checked = false or true;
 
