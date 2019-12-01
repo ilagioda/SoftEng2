@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 30, 2019 alle 18:52
+-- Creato il: Dic 01, 2019 alle 16:43
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -100,16 +100,21 @@ CREATE TABLE `Attendance` (
 --
 
 INSERT INTO `Attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`) VALUES
-('2019-09-20', 'FRCWTR', 0, 1, 5),
-('2019-10-03', 'FRCWTR', 0, 0, 2),
+('2019-09-20', 'FRCWTR', 1, 1, 5),
+('2019-10-03', 'FRCWTR', 1, 0, 2),
 ('2019-10-08', 'FRCWTR', 1, 0, 0),
 ('2019-10-09', 'FRCWTR', 1, 0, 0),
 ('2019-10-10', 'FRCWTR', 1, 0, 0),
 ('2019-10-11', 'FRCWTR', 1, 0, 0),
 ('2019-11-22', 'FRCWTR', 1, 0, 0),
-('2019-11-27', 'FRCWTR', 1, 2, 0),
+('2019-11-25', 'ILA', 1, 2, 4),
+('2019-11-26', 'ILA', 1, 0, 0),
+('2019-11-27', 'FRCWTR', 0, 2, 0),
+('2019-11-27', 'ILA', 1, 0, 4),
+('2019-11-28', 'ILA', 0, 3, 0),
+('2019-12-01', 'FRCWTR', 1, 0, 0),
 ('2019-12-03', 'FRCWTR', 0, 3, 0),
-('2020-01-12', 'FRCWTR', 0, 2, 4);
+('2020-01-12', 'FRCWTR', 1, 2, 4);
 
 -- --------------------------------------------------------
 
