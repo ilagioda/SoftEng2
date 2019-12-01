@@ -1212,8 +1212,8 @@ class dbTeacher extends db
                 $earlyExit = $row["earlyExit"];
 
                 // //lo studente deve risultare presente
-                // if ($absence != 0 && $earlyExit==0)
-                //     throw new Exception("Student should be present.");
+                if ($absence != 0 && $earlyExit==0)
+                    throw new Exception("Student should be present.");
 
                 if ($row['lateEntry'] != 0 && $row['lateEntry'] > $hour && $hour != 0)
                     throw new Exception("Integrity violeted.");

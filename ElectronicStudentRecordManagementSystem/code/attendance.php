@@ -28,53 +28,96 @@ if (isset($_REQUEST['class'])) {
 
     // Let the teacher choose the day
 
-?>
 
-<div class="container-fluid">
-    <form class="form" method="POST" action="attendance.php">
-        Choose the day:
-        <input class="form-control text-center" type="date" name="dateRequest" min="<?php echo date("Y-m-d", strtotime('monday this week'));  ?>" max="
-        <?php
-            if (date("Y-m-d") <= date("Y-m-d", strtotime('friday this week'))) {
-                echo date("Y-m-d");
-            } else {
-                echo date("Y-m-d", strtotime('friday this week'));
-            }
-            ?>">
-        <input type="hidden" id="classID" name="class" value="<?php echo $_REQUEST['class'] ?>">
-        <button type="submit" class="btn btn-success">Confirm date</button>
-    </form>
-</div><br><br>
-
-<?php
+    $greaterMin = false;
+    $lessMax = false;
+    $minWeek =  date("Y-m-d", strtotime('monday this week'));
+    $maxWeek = date("Y-m-d", strtotime('friday this week'));
+    $currentMax;
+    if (date("Y-m-d") <= date("Y-m-d", strtotime('friday this week'))) {
+        $currentMax = date("Y-m-d");
+    } else {
+        $currentMax = date("Y-m-d", strtotime('friday this week'));
+    }
 
     // Print the info about the date
     if (isset($_REQUEST['dateRequest'])) {
-        $date = $_REQUEST['dateRequest'];                    // Format: 2019-11-22 --> to be put into the DB
-        $day = date('l, jS \of F Y', strtotime($date));      // Format: Friday, 22nd of November 2019 --> to be shown on the screen
+
+        if ($_REQUEST['dateRequest'] >= $minWeek) {
+            $greaterMin = true;
+        }
+        if ($_REQUEST['dateRequest'] <= $maxWeek) {
+            $lessMax = true;
+        }
+
+        if ($greaterMin && $lessMax) {
+            $date = $_REQUEST['dateRequest'];                    // Format: 2019-11-22 --> to be put into the DB
+            $day = date('l, jS \of F Y', strtotime($date));      // Format: Friday, 22nd of November 2019 --> to be shown on the screen
+        } else {
+            $date = date("Y-m-d", strtotime('friday this week'));                   // Format: 2019-11-22 --> to be put into the DB
+            $day = date('l, jS \of F Y', strtotime($date));      // Format: Friday, 22nd of November 2019 --> to be shown on the screen
+        }
     } else {
-        $date = date('Y-m-j');
-        $day = date('l, jS \of F Y');         
+        //dateRequest non è settata implica che devo guardare il giorno corrente
+
+        if (date("Y-m-d") >= $minWeek) {
+            $greaterMin = true;
+        }
+        if (date("Y-m-d") <= $maxWeek) {
+            $lessMax = true;
+        }
+
+        if (!($greaterMin && $lessMax)) {
+            $date = date("Y-m-d", strtotime('friday this week'));                   // Format: 2019-11-22 --> to be put into the DB
+            $day = date('l, jS \of F Y', strtotime($date));      // Format: Friday, 22nd of November 2019 --> to be shown on the screen
+        } else {
+            $date = date("Y-m-d");                    // Format: 2019-11-22 --> to be put into the DB
+            $day = date('l, jS \of F Y', strtotime($date));      // Format: Friday, 22nd of November 2019 --> to be shown on the screen
+        }
     }
-    echo "<p id='hiddenDate' style='display: none;'>$date</p>";
-    echo "<h3><i>$day</i></h3><br><br>";
+    ?>
 
-    //--- DEBUG ---
-    //echo $_REQUEST['class'];
 
-    // Store in a variable the name of the selected class
-    $chosenClass = $_REQUEST['class'];
+    <div class="container-fluid">
 
-    // Retrieve the student of the selected class
-    $students = $teacher->getStudents2($chosenClass);
-    $_SESSION['students'] = $students;
+        <form class="form" method="POST" action="attendance.php" id="formDate">
+            Choose the day:
+            <input class="form-control text-center" type="date" name="dateRequest" min="<?php echo $minWeek; ?>" max="<?php echo $currentMax ?>" value="<?php echo $date; ?>">
+            <input type="hidden" id="classID" name="class" value="<?php echo $_REQUEST['class'] ?>">
+            <button type="submit" class="btn btn-success">Confirm date</button>
+        </form>
 
-?>
+    </div>
+    <br>
+    <br>
+
+
+    <?php
+        echo "<p id='hiddenDate' style='display: none;'>$date</p>";
+        echo "<h3><i>$day</i></h3><br><br>";
+
+        //--- DEBUG ---
+        //echo $_REQUEST['class'];
+
+        // Store in a variable the name of the selected class
+        $chosenClass = $_REQUEST['class'];
+
+        // Retrieve the student of the selected class
+        $students = $teacher->getStudents2($chosenClass);
+        $_SESSION['students'] = $students;
+
+        ?>
     <script>
         /*********************************************/
         $(document).ready(function() {
-            $("input[type='checkbox']").change(function() {
 
+            // $("#formDate").submit(function() {
+            //     alert($("#hiddenDate").text());
+            //     if ($("#hiddenDate").text() == "") return false;
+            //     else return true;
+            // });
+
+            $("input[type='checkbox']").change(function() {
                 var switchID;
                 // alert("The once who called me has id: " + this.id);
                 switchID = this.id;
@@ -87,8 +130,8 @@ if (isset($_REQUEST['class'])) {
 
                 if ((entrance == "Entrance") && (exit == "Exit")) {
                     //alert("Sono qui");
-                    alert($("#hiddenDate").text());
-                    
+                    // alert($("#hiddenDate").text());
+
                     var dateRequested = $("#hiddenDate").text();
                     $.post("attendanceBackEnd.php", {
                             event: "presence",
@@ -252,7 +295,7 @@ if (isset($_REQUEST['class'])) {
         function recordEntrance(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
-            var day = document.getElementById("hiddenDate").innerHTML;    
+            var day = document.getElementById("hiddenDate").innerHTML;
             var hour;
 
             // Understand if this function has been called from the "Remove" or "Save changes" button
@@ -277,7 +320,7 @@ if (isset($_REQUEST['class'])) {
         function recordExit(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalExit-ssn").innerHTML;
-            var day = document.getElementById("hiddenDate").innerHTML;    
+            var day = document.getElementById("hiddenDate").innerHTML;
             var hour;
 
             // Understand if this function has been called from the "Remove" or "Save changes" button
@@ -346,7 +389,7 @@ if (isset($_REQUEST['class'])) {
                     if (req.responseText === "0") {
                         document.getElementById(buttonID).innerHTML = "Exit";
                         var checkID = buttonID.replace("exitButton", "");
-                        document.getElementById(checkID).checked = false; 
+                        document.getElementById(checkID).checked = false;
                     } else {
                         document.getElementById(buttonID).innerHTML = "Hour: " + req.responseText;
                         var checkID = buttonID.replace("exitButton", "");
