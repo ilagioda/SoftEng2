@@ -2,7 +2,7 @@
 require_once("basicChecks.php");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require 'C:\xampp\composer\vendor\autoload.php';
+require 'COMPOSER/vendor/autoload.php';
 require_once("classphpmailer.php");
 require_once("class.smtp.php");
 require_once "db.php";
