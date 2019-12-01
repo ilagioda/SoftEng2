@@ -56,7 +56,7 @@ if (isset($_REQUEST['class'])) {
         $date = date('Y-m-j');
         $day = date('l, jS \of F Y');         
     }
-    echo "<input type='hidden' id='hiddenDate' name='hiddenDate' value='$date'>";
+    echo "<p id='hiddenDate' style='display: none;'>$date</p>";
     echo "<h3><i>$day</i></h3><br><br>";
 
     //--- DEBUG ---
@@ -87,9 +87,9 @@ if (isset($_REQUEST['class'])) {
 
                 if ((entrance == "Entrance") && (exit == "Exit")) {
                     //alert("Sono qui");
-                    alert($("#dateRequest").text());
+                    alert($("#hiddenDate").text());
                     
-                    var dateRequested = $("#dateRequest").text();
+                    var dateRequested = $("#hiddenDate").text();
                     $.post("attendanceBackEnd.php", {
                             event: "presence",
                             i: this.id,
@@ -252,7 +252,7 @@ if (isset($_REQUEST['class'])) {
         function recordEntrance(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalEntrance-ssn").innerHTML;
-            var day = document.getElementById("hiddenDate").value;    
+            var day = document.getElementById("hiddenDate").innerHTML;    
             var hour;
 
             // Understand if this function has been called from the "Remove" or "Save changes" button
@@ -277,7 +277,7 @@ if (isset($_REQUEST['class'])) {
         function recordExit(element) {
             // Retrieve the information needed to fill the DB 
             var ssn = document.getElementById("modalExit-ssn").innerHTML;
-            var day = document.getElementById("hiddenDate").value;    
+            var day = document.getElementById("hiddenDate").innerHTML;    
             var hour;
 
             // Understand if this function has been called from the "Remove" or "Save changes" button
