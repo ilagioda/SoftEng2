@@ -180,7 +180,7 @@ function build_html_calendar($year, $month, $events = null)
             $draw_event = true;
             $assignment = false;
             $event = $events[$cur_date];
-            if ($event == "absent") {
+            if ($event == "Absent") {
                 // absent
                 $color = "style='background-color:orange'";
             } else if (strpos($event, 'View assignments:') !== false){
