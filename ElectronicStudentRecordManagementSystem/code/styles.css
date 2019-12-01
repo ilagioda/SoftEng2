@@ -469,8 +469,13 @@ td.calendar-day, td.calendar-day-np {
 /*View student assignments*/
 
 
-/*td.calendar-day-event{
-  background-color: #aee5ff;
-}*/
+td.calendar-day-event{
+  z-index: -1;
+}
+
+.calendar-event{
+  font-weight: bold;
+  font-size: 18px;
+}
 
 /*************************************/
