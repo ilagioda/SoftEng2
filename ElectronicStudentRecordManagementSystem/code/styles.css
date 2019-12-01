@@ -1,396 +1,440 @@
-.form-control{
-    margin-bottom:10px;
-    width:30%;
-    margin-left:auto;
-    margin-right:auto;
+.form-control {
+  margin-bottom: 10px;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
 }
-.form-control.enrollStudent{
-    margin-bottom:10px;
-    width:60%;
-    margin-left:auto;
-    margin-right:auto;
+
+.form-control.enrollStudent {
+  margin-bottom: 10px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* LOGIN */
-.btn.btn-lg.btn-primary.btn-block.login{
-    margin-bottom:10px;
-    width:30%;
-    margin-left:auto;
-    margin-right:auto;
+
+.btn.btn-lg.btn-primary.btn-block.login {
+  margin-bottom: 10px;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* NAVBAR */
+
 .navbar {
-    min-height: 10vh;
-    position: relative;
-    top: 0;
+  min-height: 10vh;
+  position: relative;
+  top: 0;
 }
 
 .navbar-brand {
-    padding: 0 15px;
-    height: 80px;
-    line-height: 80px;
+  padding: 0 15px;
+  height: 80px;
+  line-height: 80px;
 }
 
-.td_resized_sendmail{
-    width: 20px;
+.td_resized_sendmail {
+  width: 20px;
 }
-.table.table-striped.sendmail{
-    font-size:20px;
+
+.table.table-striped.sendmail {
+  font-size: 20px;
 }
 
 .navbar-toggle {
-/* (80px - button height 34px) / 2 = 23px */
-margin-top: 23px;
-padding: 9px 10px !important;
+  /* (80px - button height 34px) / 2 = 23px */
+  margin-top: 23px;
+  padding: 9px 10px !important;
 }
 
 @media (min-width: 768px) {
-    .navbar-nav > li > a {
-        /* (80px - line-height of 27px) / 2 = 26.5px */
-        padding-top: 26.5px;
-        padding-bottom: 26.5px;
-        line-height: 27px;
-        min-width: 100px;
-    }
+  .navbar-nav>li>a {
+    /* (80px - line-height of 27px) / 2 = 26.5px */
+    padding-top: 26.5px;
+    padding-bottom: 26.5px;
+    line-height: 27px;
+    min-width: 100px;
+  }
 }
 
-.table.sendmail{
-    font-size:20px;
+.table.sendmail {
+  font-size: 20px;
 }
 
 .loader {
-    border: 5px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 5px solid #000000;
-    width: 40px;
-    height: 40px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;
-    margin-left:auto;
-    margin-right:auto;
-  }
-.badge-yellow {
-    background-color: rgb(255, 255, 181);
-    border: solid black 1px;
-    color: black;
-}
-.badge-white{
-    background-color: white;
-    color:black;
-    border: solid black 1px;
-}
-
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #000000;
+  width: 40px;
+  height: 40px;
+  -webkit-animation: spin 2s linear infinite;
   /* Safari */
-@-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-.logo{
-    padding-top: 0px;
-    height: 80px;
-    width: 80px;
+  animation: spin 2s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.ads_logos{
-    height:7vh;
-    width:7vh;
-    margin-left:auto;
-    margin-right:auto;
+.badge-yellow {
+  background-color: rgb(255, 255, 181);
+  border: solid black 1px;
+  color: black;
+}
+
+.badge-white {
+  background-color: white;
+  color: black;
+  border: solid black 1px;
+}
+
+/* Safari */
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.logo {
+  padding-top: 0px;
+  height: 80px;
+  width: 80px;
+}
+
+.ads_logos {
+  height: 7vh;
+  width: 7vh;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-.row.content {height: 80vh;}
+
+.row.content {
+  height: 80vh;
+}
 
 /* Set gray background color and 100% height */
+
 .sidenav {
-padding-top: 20px;
-background-color: #f1f1f1;
-height: 100%;
+  padding-top: 20px;
+  background-color: #f1f1f1;
+  height: 100%;
 }
 
 /* Set black background color, white text and some padding */
+
 footer {
-background-color: #555;
-color: white;
-padding: 1.75vh;
-min-height:5vh;
-width:100%;
-margin-top:auto;
-margin-bottom: 0 auto;
-bottom:0;
+  background-color: #555;
+  color: white;
+  padding: 1.75vh;
+  min-height: 5vh;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 0 auto;
+  bottom: 0;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
 }
 
-#central_image{
-    margin-left:auto;
-    margin-right:auto;
-    height: 40vh;
-    width: 40vh;
+#central_image {
+  margin-left: auto;
+  margin-right: auto;
+  height: 40vh;
+  width: 40vh;
 }
 
-.overflow-auto{
-    border: 1px solid rgba(0,0,0,.125);
-    overflow:auto;
-    height:30vh;
+.overflow-auto {
+  border: 1px solid rgba(0, 0, 0, .125);
+  overflow: auto;
+  height: 30vh;
 }
 
 .card-header-index {
-    padding: .75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: rgba(0,0,0,.03);
-    border-bottom: 1px solid rgba(0,0,0,.125);
+  padding: .75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, .03);
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
 }
 
 .card-header-index:first-child {
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+  border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
 }
 
 .card-body-index {
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    padding: 2.25rem 2.25rem 2.25rem 2.25rem;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 2.25rem 2.25rem 2.25rem 2.25rem;
 }
 
 .card-index {
-    position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: .25rem;
-    margin-bottom:2vh;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: .25rem;
+  margin-bottom: 2vh;
 }
+
 .card-title-index {
-    margin-top:0;
+  margin-top: 0;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
+
 @media screen and (max-width: 767px) {
-.sidenav {
+  .sidenav {
     height: auto;
     padding: 15px;
-}
-
-.row.content {height:auto;}
+  }
+  .row.content {
+    height: auto;
+  }
 }
 
 /* Choose child */
 
-
 /* View marks*/
-.hiddenRow.legend{
-    padding: 0;
+
+.hiddenRow.legend {
+  padding: 0;
 }
 
-.hiddenRow.marks{
-    padding: 0;
-    border: 0;
+.hiddenRow.marks {
+  padding: 0;
+  border: 0;
 }
 
-.visibleRowMarks:hover{
-    filter: brightness(90%);
-    cursor: pointer;
+.visibleRowMarks:hover {
+  filter: brightness(90%);
+  cursor: pointer;
 }
 
-body{
-    margin:0;
+body {
+  margin: 0;
 }
 
 /* Enroll students */
+
 #enrollMessage {
-	padding: 20px;
-	font-size: 20px;
+  padding: 20px;
+  font-size: 20px;
 }
 
 #rowParent2 {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /*  Default Navbar */
+
 .dropdown {
-    border-radius:4px;
-    min-width:100px;
+  border-radius: 4px;
+  min-width: 100px;
 }
+
 .dropdown-menu>li>a {
-    color:black;/*#428bca*/
+  color: black;
+  /*#428bca*/
 }
+
 .dropdown ul.dropdown-menu {
-    border-radius:4px;
-    box-shadow:none;
-    margin-top:20px;
-    min-width:90px;
-    width:150px;
+  border-radius: 4px;
+  box-shadow: none;
+  margin-top: 20px;
+  min-width: 90px;
+  width: 150px;
 }
+
 .dropdown ul.dropdown-menu:before {
-    content: "";
-    border-bottom: 10px solid #fff;
-    border-right: 10px solid transparent;
-    border-left: 10px solid transparent;
-    position: absolute;
-    top: -10px;
-    right: 16px;
-    z-index: 10;
+  content: "";
+  border-bottom: 10px solid #fff;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  z-index: 10;
 }
+
 .dropdown ul.dropdown-menu:after {
-    content: "";
-    border-bottom: 12px solid #ccc;
-    border-right: 12px solid transparent;
-    border-left: 12px solid transparent;
-    position: absolute;
-    top: -12px;
-    right: 14px;
-    z-index: 9;
+  content: "";
+  border-bottom: 12px solid #ccc;
+  border-right: 12px solid transparent;
+  border-left: 12px solid transparent;
+  position: absolute;
+  top: -12px;
+  right: 14px;
+  z-index: 9;
 }
 
 /*  Default Navbar */
-
 
 /* setup Accounts */
+
 .custom-radios div {
-    display: inline-block;
-  }
-  .custom-radios input[type="radio"] {
-    display: none;
-  }
-  .custom-radios input[type="radio"] + label {
-    color: #333;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-  }
-  .custom-radios input[type="radio"] + label span {
-    display: inline-block;
-    width: 13vh;
-    height: 13vh;
-    margin: -1px 4px 0 0;
-    vertical-align: middle;
-    cursor: pointer;
-    border-radius: 50%;
-    border: 2px solid #FFFFFF;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-    background-repeat: no-repeat;
-    background-position: center;
-    text-align: center;
-    line-height: 44px;
-  }
-  .custom-radios input[type="radio"] + label span img {
-    opacity: 0;
-    transition: all .3s ease;
-  }
-  .custom-radios input[type="radio"]#color-1 + label span {
-    background-color: #2ecc71;
-  }
-  .custom-radios input[type="radio"]#color-2 + label span {
-    background-color: #d47089;
-  }
-  .custom-radios input[type="radio"]#color-3 + label span {
-    background-color: #f1c40f;
-  }
-  .custom-radios input[type="radio"]:checked + label span {
-    opacity: 1;
-    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg) center center no-repeat;
-    width: 13vh;
-    height: 13vh;
-    display: inline-block;
-  
-  }
+  display: inline-block;
+}
+
+.custom-radios input[type="radio"] {
+  display: none;
+}
+
+.custom-radios input[type="radio"]+label {
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.custom-radios input[type="radio"]+label span {
+  display: inline-block;
+  width: 13vh;
+  height: 13vh;
+  margin: -1px 4px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  line-height: 44px;
+}
+
+.custom-radios input[type="radio"]+label span img {
+  opacity: 0;
+  transition: all .3s ease;
+}
+
+.custom-radios input[type="radio"]#color-1+label span {
+  background-color: #2ecc71;
+}
+
+.custom-radios input[type="radio"]#color-2+label span {
+  background-color: #d47089;
+}
+
+.custom-radios input[type="radio"]#color-3+label span {
+  background-color: #f1c40f;
+}
+
+.custom-radios input[type="radio"]:checked+label span {
+  opacity: 1;
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg) center center no-repeat;
+  width: 13vh;
+  height: 13vh;
+  display: inline-block;
+}
+
 /*****************************/
 
 /*Button Teacher Homepage*/
-.btn-primary{
-margin-top: 5px;
-}
 
-
-.btn-primary.main{
+.btn-primary {
   margin-top: 5px;
-  min-width: 400px;  
 }
+
+.btn-primary.main {
+  margin-top: 5px;
+  min-width: 400px;
+}
+
 /*Button Teacher Homepage*/
 
+/*CSS toggle button in page attendance*/
+
+/*************************************/
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: green;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: red;
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 
 /*CSS toggle button in page attendance*/
-/*************************************/
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-  
-  .switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: green;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: red;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
-  }
-  /*CSS toggle button in page attendance*/
+
 /*************************************/
 
 .attendanceForm {
@@ -401,7 +445,7 @@ margin-top: 5px;
 
 /* View student attendance */
 
-#Date{
+#Date {
   width: 20%;
   display: inline-block;
 }
@@ -468,18 +512,24 @@ td.calendar-day, td.calendar-day-np {
   border-right: 1px solid #999;
 }
 
-
-
 /*View student assignments*/
 
-
-td.calendar-day-event{
+td.calendar-day-event {
   z-index: -1;
 }
 
-.calendar-event{
+.calendar-event {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 25px;
 }
 
 /*************************************/
+
+/***/
+/*Size of date */
+input[type="date"].form-control {
+  line-height: 30px;
+  font-size: 20px;
+}
+
+/***/
