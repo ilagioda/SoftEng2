@@ -55,11 +55,11 @@
 
                         <ul class="dropdown-menu">
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="submitMarks.php">New mark</a>
+                                <a class="dropdown-item" href="submitMarks.php">New record</a>
                             </li>
                             <li class="divider"></li>
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="viewAllMarks.php">View all marks</a>
+                                <a class="dropdown-item" href="viewAllMarks.php">View all records</a>
                             </li>
                         </ul>
                     </li>

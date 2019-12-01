@@ -66,4 +66,8 @@ class Teacher
     function recordEarlyExit($day, $ssn, $hour){
         return $this->db->recordEarlyExit($day, $ssn, $hour);
     }
+	
+	function viewStudentMarks($ssn, $subject) {
+		return $this->db->viewStudentMarks($ssn, $subject);
+	}
 }

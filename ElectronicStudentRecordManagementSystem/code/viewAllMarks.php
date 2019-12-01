@@ -13,8 +13,47 @@ if (!$loggedin) {
 }	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
-    
 ?>
+
+<script>
+$(document).ready(function(){
+	$("#comboClass").change(function() {
+		
+
+		var comboClass = $("option:selected", this).val();
+
+		$.ajax({
+			type:		"POST",
+			dataType:	"text",
+			url:		"selectSubjects.php",
+			data:		"comboClass="+comboClass,
+			cache:		false,
+			success:	function(response){
+							$('#comboSubject').html(response);
+						},
+			error: 		function(){
+							alert("Error: subjects not loaded");
+						}
+		});
+	});
+	$("#comboClass").change(function() {
+			document.getElementById('titleStudent').style.display= 'none' ;
+			document.getElementById('studentTable').style.display= 'none' ;
+	});
+	
+	$(function() {
+		$('tr.parent td span.btn').on("click", function(){
+			var idOfParent = $(this).parents('tr').attr('id');
+			$('tr.child-'+idOfParent).toggle();	
+			$(this).text($(this).text() == 'View marks' ? 'Hide marks' : 'View marks');		
+		});
+		$('tr[class^=child-]').hide().children('td');
+
+	});
+	
+});
+
+</script>
 
 <style> 
 	#container {
@@ -23,68 +62,111 @@ if (!$loggedin) {
 	}
 </style>
 <ul class="nav nav-tabs">
-  <li role="presentation"><a href="submitMarks.php">New mark</a></li>
-  <li role="presentation" class="active"><a href="#">View all marks</a></li>
+  <li role="presentation"><a href="submitMarks.php">New record</a></li>
+  <li role="presentation" class="active"><a href="#">View all records</a></li>
 </ul>
+
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
+	<h1> View all marks </h1>
+		<div class="form-group">
+		<form class="navbar-form navbar form-inline" role="class" method="POST" action="viewAllMarks.php">
+		
+			<table class="table">
+						
+				<tr><td><label> Class </label></td><td>
+					<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
+						<option value="" disabled selected>Select class...</option>
 
-<h1> All marks: </h1>
+						<?php 
+							$classes=$teacher->getClassesByTeacher();
+							foreach($classes as $value) {
+								echo "<option value=".$value.">".$value."</option>";
+							}
+						?>
+					</select></td>
+				</tr>
+				
+				<tr><td><label>Subject </label></td><td>
+					<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
+						<option value="" disabled selected>Select subject...</option>
+					</select></td>
+				</tr>	
+				<tr><td><button type="submit" name="ok" class="btn btn-success">OK</button></td></tr>
+			</table>
+		</form>
+	</div>
 
 	<?php 
-		$lectures = $teacher->getGrades();
-		foreach((array)$lectures as $value) {
-	?>	
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<form role="class" method="POST" action="">
-					<table class="table">
-					<?php
-						$args = explode(",",$value);
-					?>
-						<tr><td class="col-md-4"> Class: </td><td><?php echo $args[0];?></td></tr>
-						<input type="hidden" name="comboClass" value="<?php echo $args[0];?>">
-
-                        <tr><td> Student: </td><td><?php echo $args[1] . " - " . $args[2] . " " . $args[3];?></td></tr>
-						<input type="hidden" name="comboStudent" value="<?php echo $args[1];?>">
-
-                        <tr><td> Subject: </td><td><?php echo $args[4];?></td></tr>
-						<input type="hidden" name="comboSubject" value="<?php echo $args[4];?>">
-
-						<tr><td> Date: </td><td><?php echo $args[5];?></td></tr>
-						<input type="hidden" name="lessontime" value="<?php echo $args[5];?>">
-
-						<tr><td> Hour: </td><td><?php echo $args[6];?></td></tr>
-						<input type="hidden" name="comboHour" value="<?php echo $args[6];?>">
-
-						<tr><td> Grade: </td><td><?php echo $args[7];?></td></tr>
-						<input type="hidden" name="comboGrade" value="<?php echo $args[7];?>">
-					</table>
-					<?php
-						$dateLesson = $args[5];
-						if($dateLesson >= date("Y-m-d", strtotime('monday this week')) && $dateLesson <= date("Y-m-d", strtotime('sunday this week'))) { 
-					?>
-							<button type="submit" class="btn btn-default" onClick="this.form.action='editMark.php'">Edit</button>
-							<button type="submit" class="btn btn-danger" onClick="this.form.action='deleteMark.php'">Delete</button>
-					<?php	
-						} else { ?>
-							<div class="alert alert-warning" role="alert"> 
-								<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-								 This mark is not editable/erasable as it relates to past weeks...
-							</div> <?php
-						}
-					?>
-				</form>
-			</div>
-		</div>
-	<?php
+	if(!isset($_POST["ok"])) {
+		if(!isset($_SESSION['ok'])) {
+			$error = 1;
 		}
+	} else { 
+		$_SESSION['ok']=$_POST['ok'];
+			// show students list
+			$selectedClass = $_POST["comboClass"];
+			$selectedSubject = $_POST["comboSubject"];
 	?>
-				</div>
+			
+			<h1 id="titleStudent"> Students list  <small>Class: <?php echo $selectedClass ?> - Subject: <?php echo $selectedSubject?></small></h1>
+			
+			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
+				
+				<tbody>
+	<?php
 
-			</div>
+			$students = $teacher->getStudents2($selectedClass);
+			foreach($students as $student) {
+				$args = explode(",",$student);
+
+				// VISIBLE ROWS
+	?> 			<tr class="parent active" id="<?php echo $args[2] ?>">
+
+				<td>
+				<?php 
+					echo "".$args[0]." ".$args[1]." ".$args[2]."";
+				?> 
+				</td><td><span class="btn btn-primary pull-right" id="viewMarks">View marks</span></td></tr>
+			
+			<?php 
+				$marks = $teacher->viewStudentMarks($args[2], $selectedSubject);
+				if ($marks) {
+			?>
+				<tr class="child-<?php echo $args[2] ?>">
+					<td class="text-center"> <strong> Date </strong>  </td>
+					<td><strong> Specific marks </strong>  </td>
+				</tr>
+				<?php
+					foreach($marks as $mark){
+						
+						$argm = explode(",",$mark);
+						$date = $argm[0];
+						$specificMark = $argm[1];
+						
+			?>
+				<tr class="child-<?php echo $args[2] ?>">
+                <td class="text-center"> <?php echo $date ?> </td>
+                <td><?php echo $specificMark ?> </td>
+            </tr>
+			<?php
+					}
+				} else { ?>
+				<tr class="child-<?php echo $args[2] ?>">
+						<td></td><td>No marks </td>
+					</tr>
+				<?php
+				}
+			}
+			?>
+			</tbody>
+			</table>
+			<?php
+	}
+			?>
+	</div>
+</div>
 
 <?php 
     require_once("defaultFooter.php")
 ?>
-

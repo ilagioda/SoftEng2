@@ -671,16 +671,16 @@ class dbTeacher extends db
         $hour = $this->sanitizeString($hour);
         $grade = $this->sanitizeString($grade);
 
-        $result = $this->query("SELECT * FROM marks WHERE (codFisc='$student' AND hour='$hour' AND date='$date')");
+        $result = $this->query("SELECT * FROM Marks WHERE (codFisc='$student' AND hour='$hour' AND date='$date')");
 
         if ($result->num_rows > 0) {
             return -1;
         }
 
-        $result = $this->query("INSERT INTO marks(codFisc, subject, date, hour, mark) 
+        $result = $this->query("INSERT INTO Marks(codFisc, subject, date, hour, mark) 
 								VALUES ('$student', '$subject', '$date', '$hour', '$grade')");
 
-        if ($result == FALSE) {
+        if (!$result) {
             die("ERROR: Mark not inserted.");
         }
     }
@@ -1258,5 +1258,27 @@ class dbTeacher extends db
             $this->rollback();
             return false;
         }
+    }
+	
+	
+	public function viewStudentMarks($CodFisc, $subject) {
+
+        $CodFisc = $this->sanitizeString($CodFisc);
+        $subject = $this->sanitizeString($subject);
+
+
+        $result = $this->query("SELECT date,mark FROM Marks WHERE codFisc='$CodFisc' AND subject='$subject' ORDER BY date DESC;");
+
+        if (!$result) {
+            die("Unable to select marks for student $CodFisc");
+        }
+
+        if ($result->num_rows > 0) {
+            $marks = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($marks,  "" . $row['date'] . "," . $row['mark'] . "");
+            }
+			return $marks;
+		}
     }
 }

@@ -17,6 +17,7 @@ if (!$loggedin) {
     $db = new dbTeacher();
 	
 	$error = 0;	
+	$inserted = 0;
 	
     if(!isset($_POST["comboSubject"]) || !isset($_POST["lessontime"]) || 
 			!isset($_POST["comboHour"]) || !isset($_POST["comboGrade"]) 
@@ -39,31 +40,41 @@ if (!$loggedin) {
         
 		foreach($_SESSION['ssn'] as $key => $value) {
 			if($_SESSION['comboGrade'][$key] > 0) {
-				
-				$result = $db->insertGrade($_SESSION['lessontime'], $_SESSION['comboHour'], $value, $_SESSION['comboSubject'], $_SESSION['comboGrade'][$key]);
-				if($result == -1) {
-					$error = 1;
-				}		
-		}
 
+				$result = $db->insertGrade($_SESSION['lessontime'], $_SESSION['comboHour'], $value, $_SESSION['comboSubject'], $_SESSION['comboGrade'][$key]);
+				
+				if($result == -1) { 
+					$inserted = 1;
+				?>
+					<div class='alert alert-danger' role='alert'>
+						<?php echo "<p class='alert-link'> The student ".$value." already has a mark for the date ".$_SESSION['lessontime']." (hour ".$_SESSION['comboHour'].") </p>" ?>
+					</div>		
+					
+<?php			}		
+			}
+		}
 	}
-	if($error != 0){ ?>
+	if($error != 0){ 
+		if($inserted != 1) {?>
 		<div class='alert alert-danger' role='alert'>
 			<p class="alert-link"> Oh no! Something went wrong... </p>
 		</div>
 <?php
+		}
 	} else {
+		if($inserted != 1) {
 ?> 
 		<div class="alert alert-success" role="alert">
 			<p class="alert-link"> Mark successfully recorded!</p>
 		</div>
 <?php 
+		}
 	}	
 ?>
 	<div>
 	<form method="POST" action="">
-		<button type="submit" class="btn btn-primary" onClick="this.form.action='homepageTeacher.php'">Homepage</button>
-		<button type="submit" class="btn btn-primary" onClick="this.form.action='viewAllMarks.php'">View all marks</button>
+		<button type="submit" class="btn btn-primary" onClick="this.form.action='submitMarks.php'">New record</button>
+		<button type="submit" class="btn btn-primary" onClick="this.form.action='viewAllMarks.php'">View all records</button>
 	</form>
 	</div>
 

@@ -39,18 +39,14 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#comboClass").change(function() {
-		document.getElementById('listStudents').style.display= 'block' ;
-	});
-	
-	$("#comboClass").change(function() {
-		document.getElementById('buttons_table').style.display= 'block' ;
-	});
-	
 });
 
 $(document).ready(function(){
 	$("#comboClass").change(function() {
+		
+		document.getElementById('listStudents').style.display= 'block' ;
+		document.getElementById('buttons_table').style.display= 'block' ;
+		
 		var comboClass = $("option:selected", this).val();
 
 		$.ajax({
