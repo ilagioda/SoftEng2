@@ -388,7 +388,7 @@ if (isset($_REQUEST['class'])) {
                 <td style="vertical-align: middle;">$fields[2]</td>
                 <td style="vertical-align: middle;"> <label class="switch"> <input type="checkbox" id="$i"
 _ROW;
-            $result = $teacher->checkAbsenceEarlyExitLateEntrance($fields[2], $day);
+            $result = $teacher->checkAbsenceEarlyExitLateEntrance($fields[2], $date);
             //$result = array($date, $codFisc, $absence, $lateEntry, $earlyExit);
 
             if ($result[2] == 1) {
