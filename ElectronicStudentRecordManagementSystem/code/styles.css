@@ -410,6 +410,10 @@ margin-top: 5px;
   padding: 20px;
 }
 
+#attendanceTable {
+  margin-bottom: 80px;
+}
+
 /* Attendance for student (parent view) */
 
 table.calendar {

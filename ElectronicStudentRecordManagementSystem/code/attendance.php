@@ -370,7 +370,7 @@ if (isset($_REQUEST['class'])) {
     } else {
         // The class has at least one student
         echo "<div class=\"table-responsive\">";
-        echo "<table class=\"table table-striped table-bordered text-center\">";
+        echo "<table class=\"table table-striped table-bordered text-center\" id=\"attendanceTable\">";
         echo "<tr style=\"color: black; font-size: 20px;\"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>Presence/Absence</b><td><b>Late entrance</b><td><b>Early exit</b></td></tr>";
 
         $i = 0;
