@@ -21,9 +21,8 @@ if (!$loggedin) {
 ?>
 
 <div class="text-center">
-	<h1> TEACHER HOMEPAGE </h1>
 	<?php
-	echo "<h2>Welcome to your homepage " . $_SESSION["user"] . "!</h2><br>";
+	echo "<h1>Welcome to your homepage " . $_SESSION["user"] . "!</h1><br>";
 	?>
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,8 +41,8 @@ if (!$loggedin) {
 			Insert mark <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			<li><a href="submitMarks.php">New mark</a></li>
-			<li><a href="viewAllMarks.php">View all marks</a></li>
+			<li><a href="submitMarks.php">New record</a></li>
+			<li><a href="viewAllMarks.php">View all records</a></li>
 		</ul>
 	</div>
 	<br>

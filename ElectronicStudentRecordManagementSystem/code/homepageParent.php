@@ -19,19 +19,18 @@ if(!isset($_SESSION['childName'])){
 //checkIfLogged();
 
 echo "<div class=text-center>";
-echo "<h2>Welcome to your homepage PARENT " . $_SESSION["user"] . "!</h2>";
-echo "<h3>You can:</h3>";
+echo "<h1>Welcome to your homepage " . $_SESSION["user"] . "!</h1><br>";
 
 echo <<< _OPLIST
 <div class="text-center">
     <div class="btn-group">
-        <a href="viewMarks.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;View $_SESSION[childName]'s marks</a>
+        <a href="viewMarks.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Marks</a>
     </div><br>
     <div class="btn-group">
-        <a href="studentAttendance.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;View $_SESSION[childName]'s attendance to the lectures</a>
+        <a href="studentAttendance.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
     </div><br>
     <div class="btn-group">
-        <a href="viewChildAssignment.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;View $_SESSION[childName]'s assignments</a>
+        <a href="viewChildAssignment.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Assignments</a>
     </div><br>
 </div>
 _OPLIST;
