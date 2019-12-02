@@ -1,26 +1,27 @@
-<body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.php"><img class="logo" src="images/logo.png" alt="logo"></a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.php">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<?php
 
-    <div class="container">
+require_once("basicChecks.php");
+
+$whoAmI = $_SESSION['role'];
+
+switch($whoAmI){
+
+    case "admin":
+        require_once("loggedAdminNavbar.php");
+        break;
+    case "teacher":
+        if($_SESSION['principal'] == 1)
+            require_once("loggedPrincipalNavbar.php");
+        else
+            require_once("loggedTeacherNavbar.php");
+        break;
+    case "parent":
+        require_once("loggedParentNavbar.php");
+        break;
+    default: 
+        require_once("defaultNavbar.php");
+        break;
+}
+
+
+?>
