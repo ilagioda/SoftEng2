@@ -96,7 +96,7 @@ if (!$loggedin) {
 				<input hidden name="lessontime" value="<?php echo $_SESSION["lessontime"]; ?>"/>
 						</td></tr>
 				<tr><td><label>Hour</label></td><td>
-				<input disabled name="comboHour" style="width:100%" value="<?php 
+				<input class="form-control" disabled name="comboHour" style="width:100%" value="<?php 
 					$selectedHour = $_SESSION["comboHour"];
 					echo $selectedHour;
 				?>">
