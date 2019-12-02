@@ -217,10 +217,12 @@ function build_html_calendar($year, $month, $events = null)
         // Insert an event for this day
         if ($draw_event) {
             if($assignment){
-                $events[$cur_date] = 'Click to view assignments'; 
-            }
+                $events[$cur_date] = 'Assignments';
+                $assignmentClass="assignment"; 
+            } else $assignmentClass="";
+
             $calendar .=
-                "<div class='{$css_cal_event} text-center'>" .
+                "<div class='{$css_cal_event} text-center $assignmentClass'>" .
                 $events[$cur_date] .
                 "</div>";
         }

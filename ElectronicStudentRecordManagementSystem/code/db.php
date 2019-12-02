@@ -620,9 +620,9 @@ class dbParent extends db
 
             $value = "View assignments:" . $row["textAssignment"];
             if(array_key_exists($row["date"], $assignments))
-                $assignments[$row["date"]] = $assignments[$row["date"]] . "<br><br>" . $value;
+                $assignments[$row["date"]] = $assignments[$row["date"]] . "~" .  $row["subject"] . ":" . $value;
             else   
-                $assignments[$row["date"]] = $value;
+                $assignments[$row["date"]] = $row["subject"] . ":" . $value;
         }
 
         $this->commit();

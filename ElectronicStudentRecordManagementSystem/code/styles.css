@@ -531,4 +531,14 @@ td.calendar-day-event {
 
 /*************************************/
 
+/*View student assignments*/
+
+.calendar-event.assignment {
+  cursor: pointer;
+}
+
+
+/*************************************/
+
+
 /***/

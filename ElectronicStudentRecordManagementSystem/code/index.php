@@ -55,14 +55,14 @@ _NOANNOUNCEMENT;
 
                             echo <<<_ANNOUNCEMENT
                             <div class="card-index">
-                            <div class="card-header-index text-left">
-                                $timestamp
+                                <div class="card-header-index text-left">
+                                    $timestamp
+                                </div>
+                                <div class="card-body-index">
+                                    <h5 class="card-title-index"><strong> $title </strong></h5>
+                                    <p>$text</p>
+                                </div>
                             </div>
-                            <div class="card-body-index">
-                                <h5 class="card-title-index"><strong> $title </strong></h5>
-                                <p>$text</p>
-                            </div>
-                        </div>
 _ANNOUNCEMENT;
                         }
                     }

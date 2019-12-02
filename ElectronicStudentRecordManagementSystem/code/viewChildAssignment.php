@@ -162,10 +162,36 @@ require_once("db.php");
     }
 
     function showAssignment($date, $text){
-        var str = "";
-        str += "<h3>Assignments of " + $date + ":</h3>";
-        str += "<br>" + $text;
-        document.getElementById("assignmentList").innerHTML=str;
+        var old_date = document.getElementById("date").innerHTML;
+        document.getElementById("assignmentList").innerHTML="";
+
+        if(old_date.includes($date)){
+            // clear date
+            document.getElementById("date").innerHTML="";
+            return;  
+        } 
+        
+        // Update date
+        document.getElementById("date").innerHTML=$date;
+        // insert new cards
+        var assignments = document.getElementById("assignmentList");
+        var str="";
+        console.log($text);
+        let rows = $text.split("~");
+
+        for(let i=0;i<rows.length;i++){
+            row = rows[i].split(":");
+            let subject = row[0];
+            let assignment = row[2];
+
+            str+='<div class="card-index"><div class="card-header-index text-left"><strong>';
+            str+=subject;
+            str+='</strong></div><div class="card-body-index"><p>';
+            str+=assignment;
+            str+='</p></div></div>';
+            
+        }
+        assignments.innerHTML = str;
     }
 
 
@@ -184,8 +210,6 @@ $db = new dbParent();
 $assignments = $db->viewChildAssignments($_SESSION['child']);
 
 $subjects = $db->getSubjectTaughtInClass($_SESSION['class']);
-
-$preprocessed_data = array();
 
 
 
@@ -224,7 +248,11 @@ _storeCodFisc;
 
 ?>
 
-<div id="assignmentList"></div>
+
+<h2 id="date" class="text-center"></h2>
+<div id="assignmentList">
+    
+</div>
 
 <?php
 
