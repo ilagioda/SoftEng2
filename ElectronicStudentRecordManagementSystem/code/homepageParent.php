@@ -12,6 +12,7 @@ if (!$loggedin) {
 } else {
 if(!isset($_SESSION['childName'])){
     header("Location: chooseChild.php");
+    exit;
 }
     require_once "loggedParentNavbar.php";
 }

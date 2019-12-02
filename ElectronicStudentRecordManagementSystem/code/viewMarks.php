@@ -7,6 +7,12 @@ if (!(isset($_SESSION['user']) && $_SESSION['role'] == "parent")) {
     exit;
 } 
 
+if(!isset($_SESSION['childName'])){
+    header("Location: chooseChild.php");
+    exit;
+}
+
+
 require_once("loggedParentNavbar.php");
 require_once("db.php");
 
