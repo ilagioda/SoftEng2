@@ -862,9 +862,12 @@ class dbTeacher extends db
         }
     }
 
-    function getAssignments()
+    function getAssignments($codTeacher)
     {
-        $result = $this->query("SELECT * FROM Assignments ORDER BY date DESC");
+		
+		$codTeacher = $this->sanitizeString($codTeacher);
+
+        $result = $this->query("SELECT * FROM Assignments a, TeacherClassSubjectTable t WHERE t.codFisc='$codTeacher' AND t.subject = a.subject ORDER BY date DESC");
 
         if (!$result)
             die("Unable to select assignments.");
