@@ -601,7 +601,7 @@ class dbParent extends db
         $year = $year + 1;
         $endingDate = $year . "-07-31";
 
-        $result = $this->query("SELECT subject,date,textAssignment FROM assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
+        $result = $this->query("SELECT subject,date,textAssignment FROM Assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
 
         if (!$result) {
             $this->rollback();
@@ -744,7 +744,7 @@ class dbTeacher extends db
         $date = $this->sanitizeString($date);
         $hour = $this->sanitizeString($hour);
 
-        $result = $this->query("DELETE FROM marks WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc'");
+        $result = $this->query("DELETE FROM Marks WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc'");
 
         if (!$result) {
             die("ERROR: Mark not deleted.");

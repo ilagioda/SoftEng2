@@ -15,6 +15,9 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="homepageParent.php">Home</a></li>
+                    <li><a href="viewMarks.php">Marks</a></li>
+                    <li><a href="studentAttendance.php">Attendance</a></li>
+                    <li><a href="viewChildAssignment.php">Assignments</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php

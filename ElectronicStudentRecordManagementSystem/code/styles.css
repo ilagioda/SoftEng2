@@ -365,11 +365,12 @@ body {
 
 .btn-primary {
   margin-top: 5px;
+  min-width: 80px;
 }
 
 .btn-primary.main {
   margin-top: 5px;
-  min-width: 400px;
+  min-width: 300px;
 }
 
 /*Button Teacher Homepage*/

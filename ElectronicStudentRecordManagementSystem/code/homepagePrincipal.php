@@ -19,11 +19,10 @@ if (!$loggedin) {
     
     /* End lines to be changed*/    
 ?>
-<h1 align="center"> PRINCIPAL HOMEPAGE </h1>
 <div class="text-center">
 	<p>
         <?php
-            echo "<h2>Welcome to your homepage PRINCIPAL ".$_SESSION["user"]."!</h2><br>";
+            echo "<h1>Welcome to your homepage ".$_SESSION["user"]."!</h1><br>";
         ?>
 		
 	</p>

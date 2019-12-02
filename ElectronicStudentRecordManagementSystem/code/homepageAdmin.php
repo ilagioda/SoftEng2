@@ -21,9 +21,8 @@ $_SESSION['role'] = 'admin'; */
 ?>
 
 <div class="text-center">
-    <h1> ADMIN HOMEPAGE </h1>
     <?php
-        echo "<h2>Welcome to your homepage ADMIN " . $_SESSION["user"] . "!</h2><br>";
+        echo "<h1>Welcome to your homepage " . $_SESSION["user"] . "!</h1><br>";
     ?>
     <div class="btn-group">
         <a href="enrollstudent.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>&emsp;Enroll new student</a>
