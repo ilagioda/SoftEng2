@@ -55,7 +55,9 @@
     padding-top: 26.5px;
     padding-bottom: 26.5px;
     line-height: 27px;
-    min-width: 100px;
+    min-width: 148px;
+    text-align: center;
+    font-weight: bold;
   }
 }
 
@@ -528,12 +530,5 @@ td.calendar-day-event {
 }
 
 /*************************************/
-
-/***/
-/*Size of date */
-input[type="date"].form-control {
-  line-height: 30px;
-  font-size: 20px;
-}
 
 /***/

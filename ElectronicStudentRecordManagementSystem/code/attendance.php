@@ -72,7 +72,7 @@ if (isset($_REQUEST['class'])) {
 
         <form class="form" method="POST" action="attendance.php" id="formDate">
             Choose the day:
-            <input class="form-control text-center" type="date" name="dateRequest" min="<?php echo $minWeek; ?>" max="<?php echo $currentMax ?>" value="<?php echo $date; ?>">
+            <input class="form-control text-center attendanceDate" type="date" name="dateRequest" min="<?php echo $minWeek; ?>" max="<?php echo $currentMax ?>" value="<?php echo $date; ?>" style="line-height: 30px; line-height: 20px;font-size: 20px;">
             <input type="hidden" id="classID" name="class" value="<?php echo $_REQUEST['class'] ?>">
             <button type="submit" class="btn btn-success">Confirm date</button>
         </form>
