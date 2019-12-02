@@ -231,11 +231,23 @@ class dbAdmin extends db
         }
     }
 
-    function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname)
+    function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights=0)
     {
-        $sql = "INSERT INTO $who VALUES('$SSN', '$hashedPw', '$name', '$surname')";
+        $this->begin_transaction();
+
+        if($who == "Teachers"){
+            $sel = $this->query("SELECT COUNT(*) as PRIN_NUM FROM $who WHERE principal=1");
+            $sel = $sel->fetch_assoc();
+            if(!$sel || $sel["PRIN_NUM"] != 0){
+                $this->rollback();
+                return false;
+            }
+        }
+        
+
+        $sql = "INSERT INTO $who VALUES('$SSN', '$hashedPw', '$name', '$surname', '$rights')";
         $res = $this->query($sql);
-        return $res;
+        return $this->commit();
     }
 
     function SearchInParents($user, $pass)

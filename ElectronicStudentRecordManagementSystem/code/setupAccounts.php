@@ -22,18 +22,23 @@ if(isset($_POST['SSN']) && isset($_POST['password']) && isset($_POST['name']) &&
     if($res === false){
         //ok
         if($_POST['radio_butt'] == "color-1" ){
-            $res = $db->insertOfficialAccount("Admins", $us, $hashedPw, $name, $surname);
+            $res = $db->insertOfficialAccount("Admins", $us, $hashedPw, $name, $surname, 0);
             if(!$res) $err = "Some error occurred, please retry";
             else $msg = "Admin correctly inserted.";
         }
+        else if($_POST['radio_butt'] == "color-4" ){
+            $res = $db->insertOfficialAccount("Admins", $us, $hashedPw, $name, $surname, 1);
+            if(!$res) $err = "Some error occurred, please retry";
+            else $msg = "System admin correctly inserted.";
+        }
         else if($_POST['radio_butt'] == "color-2" ){
-            $res = $db->insertOfficialAccount("Teachers", $us, $hashedPw, $name, $surname);
+            $res = $db->insertOfficialAccount("Teachers", $us, $hashedPw, $name, $surname, 0);
             if(!$res) $err = "Some error occurred, please retry";
             else $msg = "Teacher correctly inserted.";
 
         }
         else if($_POST['radio_butt'] == "color-3" ){
-            $res = $db->insertOfficialAccount("Principals", $us, $hashedPw, $name, $surname);
+            $res = $db->insertOfficialAccount("Teachers", $us, $hashedPw, $name, $surname, 1);
             if(!$res) $err = "Some error occurred, please retry";
             else $msg = "Principal correctly inserted.";
 
@@ -56,14 +61,14 @@ if(isset($_POST['SSN']) && isset($_POST['password']) && isset($_POST['name']) &&
             echo <<<_ERR
             <div class="alert alert-danger alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong><span class="glyphicon glyphicon-send"></span>$err</strong></div>
+            <strong><span class="glyphicon glyphicon-send"></span> $err</strong></div>
 _ERR;
         } 
         if ($msg != ""){
             echo <<<_MSG
             <div class="alert alert-success alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong><span class="glyphicon glyphicon-send"></span>$msg</strong></div>
+            <strong><span class="glyphicon glyphicon-send"></span> $msg</strong></div>
 _MSG;
         }
         ?>
@@ -75,6 +80,14 @@ _MSG;
                 <label for="color-1">
                 <span>
                     ADMIN
+                </span>
+                </label>
+            </div>
+            <div>
+                <input type="radio" id="color-4" name="radio_butt" value="color-4">
+                <label for="color-4">
+                <span>
+                    SYS ADMIN
                 </span>
                 </label>
             </div>
