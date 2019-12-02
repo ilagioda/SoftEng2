@@ -8,7 +8,13 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
 if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
+    exit;
 } else {
+
+    if (!isset($_SESSION['childName'])) {
+        header("Location: chooseChild.php");
+        exit;
+    }
     require_once "loggedParentNavbar.php";
 }
 require_once("db.php");
@@ -19,7 +25,7 @@ require_once("db.php");
 <script>
     let d = new Date();
     var year = d.getFullYear();
-    var month = d.getMonth()+1;
+    var month = d.getMonth() + 1;
     var startingYear;
     var endingYear;
     var semester;
@@ -137,7 +143,7 @@ require_once("db.php");
 
         if (semester == 1) {
             // first semester
-            if(month==1){
+            if (month == 1) {
                 // first semester is ended 
                 return;
             }
@@ -153,7 +159,7 @@ require_once("db.php");
             if (month == 6) {
                 // you want to see July lectures => no reason
                 return;
-            } else month+=1;
+            } else month += 1;
         }
 
 
@@ -161,35 +167,35 @@ require_once("db.php");
         updateCalendar();
     }
 
-    function showAssignment($date, $text){
+    function showAssignment($date, $text) {
         var old_date = document.getElementById("date").innerHTML;
-        document.getElementById("assignmentList").innerHTML="";
+        document.getElementById("assignmentList").innerHTML = "";
 
-        if(old_date.includes($date)){
+        if (old_date.includes($date)) {
             // clear date
-            document.getElementById("date").innerHTML="";
-            return;  
-        } 
-        
+            document.getElementById("date").innerHTML = "";
+            return;
+        }
+
         // Update date
-        document.getElementById("date").innerHTML=$date;
+        document.getElementById("date").innerHTML = $date;
         // insert new cards
         var assignments = document.getElementById("assignmentList");
-        var str="";
+        var str = "";
         console.log($text);
         let rows = $text.split("~");
 
-        for(let i=0;i<rows.length;i++){
+        for (let i = 0; i < rows.length; i++) {
             row = rows[i].split(":");
             let subject = row[0];
             let assignment = row[2];
 
-            str+='<div class="card-index"><div class="card-header-index text-left"><strong>';
-            str+=subject;
-            str+='</strong></div><div class="card-body-index"><p>';
-            str+=assignment;
-            str+='</p></div></div>';
-            
+            str += '<div class="card-index"><div class="card-header-index text-left"><strong>';
+            str += subject;
+            str += '</strong></div><div class="card-body-index"><p>';
+            str += assignment;
+            str += '</p></div></div>';
+
         }
         assignments.innerHTML = str;
     }
@@ -202,7 +208,7 @@ require_once("db.php");
 
 
 $childName = $_SESSION['childName'];
-$childSurname = $_SESSION['childSurname']; 
+$childSurname = $_SESSION['childSurname'];
 
 $db = new dbParent();
 
@@ -251,7 +257,7 @@ _storeCodFisc;
 
 <h2 id="date" class="text-center"></h2>
 <div id="assignmentList">
-    
+
 </div>
 
 <?php
