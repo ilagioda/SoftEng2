@@ -217,7 +217,7 @@ function build_html_calendar($year, $month, $events = null)
         // Insert an event for this day
         if ($draw_event) {
             if($assignment){
-                $events[$cur_date] = 'Assignments';
+                $events[$cur_date] = '<div class="glyphicon glyphicon-book"></div> Assignments';
                 $assignmentClass="assignment"; 
             } else $assignmentClass="";
 
