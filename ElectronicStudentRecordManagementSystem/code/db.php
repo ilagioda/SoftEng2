@@ -250,6 +250,15 @@ class dbAdmin extends db
         return $this->commit();
     }
 
+
+    function insertCommunication($title, $text){
+        $res = $this->query("SELECT MAX(ID) as oldID FROM announcements");
+        $res = $res->fetch_assoc();
+
+        $newID = $res['oldID'] +1;
+        return $this->query("INSERT INTO announcements VALUES('$newID', CURRENT_TIMESTAMP, '$title', '$text')");
+    }
+
     function SearchInParents($user, $pass)
     {
         $sql = "SELECT email,hashedPassword FROM Parents /* Parents, Principals, Teachers, Admins*/

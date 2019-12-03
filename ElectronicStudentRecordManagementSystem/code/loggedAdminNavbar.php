@@ -19,6 +19,7 @@
                     <li><a href="mailInterface.php">E-mail portal</a>
                     <li><a href="classComposition.php">Class composition</a>
                     <li><a href="setupAccounts.php">Setup official accounts</a>
+                    <li><a href="publishCommunications.php">Publish communications</a>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
