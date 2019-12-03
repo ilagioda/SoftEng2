@@ -235,7 +235,7 @@ class dbAdmin extends db
     {
         $this->begin_transaction();
 
-        if($who == "Teachers"){
+        if($who == "Teachers" && $rights==1){
             $sel = $this->query("SELECT COUNT(*) as PRIN_NUM FROM $who WHERE principal=1");
             $sel = $sel->fetch_assoc();
             if(!$sel || $sel["PRIN_NUM"] != 0){
