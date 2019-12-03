@@ -2,7 +2,7 @@
 
 require_once "basicChecks.php";
 $loggedin = false;
-if (isset($_SESSION['user']) && $_SESSION['role'] == "admin" && $_SESSION['sysAdmin']==1) {
+if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
     $loggedin = true;
 }
 if (!$loggedin) {
@@ -16,7 +16,7 @@ $db = new dbAdmin();
 $err = $msg= "";
 
 
-if(isset($_POST['title']) && isset($_POST['textCommunication']) ){
+if(isset($_POST['title']) && isset($_POST['textCommunication']) && $_POST['title'] != "" && $_POST['textCommunication']!=""){
     $title = $db->sanitizeString($_POST['title']);
     $text = $db->sanitizeString($_POST['textCommunication']);
 
