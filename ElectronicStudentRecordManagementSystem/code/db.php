@@ -252,11 +252,14 @@ class dbAdmin extends db
 
 
     function insertCommunication($title, $text){
-        $res = $this->query("SELECT MAX(ID) as oldID FROM announcements");
+        $res = $this->query("SELECT MAX(ID) as oldID FROM Announcements");
+        
+        if(!$res) return false;
+
         $res = $res->fetch_assoc();
 
         $newID = $res['oldID'] +1;
-        return $this->query("INSERT INTO announcements VALUES('$newID', CURRENT_TIMESTAMP, '$title', '$text')");
+        return $this->query("INSERT INTO Announcements VALUES('$newID', CURRENT_TIMESTAMP, '$title', '$text')");
     }
 
     function SearchInParents($user, $pass)

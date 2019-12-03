@@ -22,7 +22,7 @@ if(isset($_POST['title']) && isset($_POST['textCommunication']) && $_POST['title
 
     $res = $db->insertCommunication($title, $text);
     if(!$res) $err = "Some error occurred. Please retry later";
-    else $msg = "Principal correctly inserted.";
+    else $msg = "Communication inserted correctly.";
     $_POST = array();
     
 }
