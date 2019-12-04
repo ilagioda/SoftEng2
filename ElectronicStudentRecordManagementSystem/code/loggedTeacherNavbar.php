@@ -65,6 +65,7 @@
                     </li>
 					
 					<li><a href="attendance.php">Attendance</a>
+                    <li><a href="publishSupportMaterial.php">Publish Material</a>
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

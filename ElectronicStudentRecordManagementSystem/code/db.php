@@ -689,6 +689,10 @@ class dbTeacher extends db
         return $student;
     }
 
+    function insertSupportMaterial($title, $filename, $dimension, $class, $subject){
+        return $this->query("INSERT INTO supportmaterials VALUES(CURRENT_TIMESTAMP, '$title', '$filename', '$dimension', '$class', '$subject')");
+    }
+
     function insertGrade($date, $hour, $student, $subject, $grade)
     {
 
