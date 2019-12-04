@@ -26,22 +26,30 @@ if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] !
     $class = $db->sanitizeString($_POST['comboClass']);
     $subject = $db->sanitizeString($_POST['comboSubject']);
 
-    $target_dir = "supportMaterial/$class/";
+    $target_dir = "supportMaterial/$class";
     $file = $_FILES['file']['name'];
     $path = pathinfo($file);
     $filename = $path['filename'];
     $ext = $path['extension'];
     $temp_name = $_FILES['file']['tmp_name'];
+
+    //check if directory of class exists
+    if(!file_exists($target_dir)){
+        mkdir($target_dir);
+    }
+    $target_dir = $target_dir . "/" . $subject . "/";
+
+    //If directory with the name of the subject does not exist, it will be created
+    if(!file_exists($target_dir)){
+        mkdir($target_dir);
+    }
+
     $path_filename_ext = $target_dir.$filename.".".$ext;
 
     // Check if file already exists
     if (file_exists($path_filename_ext)) {
-        echo "Sorry, file already exists.";
+        $err = "Sorry, file already exists.";
     }else{
-        //If directory with the name of the class does not exist, it will be created
-        if(!file_exists($target_dir)){
-            mkdir($target_dir);
-        }
         //upload the file
         move_uploaded_file($temp_name,$path_filename_ext);
         if(!$db->insertSupportMaterial($title, $path_filename_ext, $_FILES['file']['size'], $class, $subject)){
