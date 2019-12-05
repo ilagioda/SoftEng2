@@ -39,6 +39,9 @@ $_SESSION['role'] = 'admin'; */
     <div class="btn-group">
         <a href="publishCommunications.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Publish communications</a>
     </div><br>
+    <div class="btn-group">
+        <a href="publishTimetable.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Publish timetables</a>
+    </div><br>
 </div>
 
 <?php
