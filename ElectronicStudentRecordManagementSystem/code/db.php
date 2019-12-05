@@ -386,6 +386,18 @@ class dbAdmin extends db
         $this->commit();
         return 1;
     }
+
+    public function retrieveAllClasses(){
+        $sql = "SELECT classID FROM Classes";
+        $resultQuery = $this->query($sql);
+        if ($resultQuery->num_rows > 0) {
+            $resultArray = array();
+            while ($row = $resultQuery->fetch_assoc()) {
+                array_push($resultArray, $row["classID"]);
+            }
+            return $resultArray;
+        }
+    }
 }
 
 
