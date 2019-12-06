@@ -33,9 +33,14 @@ $_SESSION['role'] = 'admin'; */
     <div class="btn-group">
         <a href="classComposition.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-list-alt pull-left" aria-hidden="true"></span>&emsp;Class composition</a>
     </div><br>
-    <div class="btn-group">
-        <a href="setupAccounts.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Setup official accounts</a>
-    </div><br>
+    <?php
+    if($_SESSION['sysAdmin']==1)
+        echo <<<_SETUPACCOUNTSBUTTON
+        <div class="btn-group">
+            <a href="setupAccounts.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Setup official accounts</a>
+        </div><br>
+_SETUPACCOUNTSBUTTON;
+    ?>
     <div class="btn-group">
         <a href="publishCommunications.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Publish communications</a>
     </div><br>

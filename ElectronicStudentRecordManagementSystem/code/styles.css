@@ -539,6 +539,13 @@ td.calendar-day-event {
 }
 
 
-/*************************************/
+/*******viewSupportMaterial***/
+
+.visibleRowMaterial:hover{
+
+  background-color:lightgray;
+  cursor: pointer;
+
+}
 
 /*****************************/
