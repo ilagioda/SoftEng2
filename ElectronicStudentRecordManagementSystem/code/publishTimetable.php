@@ -118,7 +118,11 @@ if (isset($_REQUEST["class"])) {
         // Close the file
         fclose($fp);
     } else {
-        echo "<i>Oh no! The CSV file containing the timetable for the selected class is missing!</i>";
+        echo <<<_NOCSVMSG
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                Oh no! The CSV file containing the timetable for the selected class is missing!
+            </div> 
+_NOCSVMSG;
         $errore = 1;
     }
 
