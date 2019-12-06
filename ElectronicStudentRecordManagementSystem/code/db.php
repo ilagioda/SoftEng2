@@ -724,7 +724,7 @@ class dbParent extends db
         $class = $this->sanitizeString($class);
         $timetableToReturn = array();
 
-        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'");  // TO CHECK NOME DELL'ATTRIBUTO CLASS NEL DB ----
+        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'"); 
 
         if (!$result)
             die("Unable to select timetable for class $class");
@@ -733,10 +733,10 @@ class dbParent extends db
             while ($lecture = $result->fetch_assoc()) {
                 // Store the row with the format: $timetableToReturn[1]["mon"] = "Math"
                 // $lecture[0] = class
-                // $lecture[1] = day
-                // $lecture[2] = hour
-                // $lecture[3] = subject
-                $timetableToReturn[$lecture[2]][$lecture[1]] = $lecture[3];
+                $day = $lecture["day"];
+                $hour = $lecture["hour"];
+                $subject = $lecture["subject"]; 
+                $timetableToReturn[$hour][$day] = $subject;
             }
         } 
 
