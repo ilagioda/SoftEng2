@@ -505,6 +505,10 @@ class dbParent extends db
         return $marks;
     }
 
+    public function getMaterials($class, $subject){
+        return $this->query("SELECT * FROM supportMaterials WHERE Class='$class' and Subject='$subject'");
+    }
+
     public function retrieveAttendance($CodFisc)
     {
 

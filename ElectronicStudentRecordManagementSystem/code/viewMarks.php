@@ -101,7 +101,8 @@ _STARTTABLE;
 
 foreach ($preprocessed_data as $subject => $marks) {
 
-    $mean = round($preprocessed_data[$subject]['mean'],2);          
+    $mean = round($preprocessed_data[$subject]['mean'],2);  
+    $subjectID = str_replace(' ', '_', $subject);
 
     if($mean==0){
     // no marks for that subject
@@ -120,7 +121,7 @@ foreach ($preprocessed_data as $subject => $marks) {
     }
     
     echo <<<_VISIBLEROW
-        <tr data-toggle='collapse' data-target=".$subject" class="accordion-toggle $modifier">
+        <tr data-toggle='collapse' data-target=".$subjectID" class="accordion-toggle $modifier">
             <td class="col-md-3">$subject</td>
             <td class="col-md-3"></td>
             <td class="col-md-3"></td>
@@ -135,8 +136,8 @@ _VISIBLEROW;
         echo <<<_HIDDENLEGEND
             <tr>
                 <td class="hiddenRow legend"></td>
-                <td class="hiddenRow legend"><div class="accordian-body collapse $subject "> <strong> Date </strong> </div> </td>
-                <td class="hiddenRow legend"><div class="accordian-body collapse $subject "> <strong> Specific marks </strong> </div> </td>
+                <td class="hiddenRow legend"><div class="accordian-body collapse $subjectID "> <strong> Date </strong> </div> </td>
+                <td class="hiddenRow legend"><div class="accordian-body collapse $subjectID "> <strong> Specific marks </strong> </div> </td>
                 <td class="hiddenRow legend"></td>
             </tr>
 _HIDDENLEGEND;
@@ -153,10 +154,10 @@ _HIDDENLEGEND;
 
             echo <<<_HIDDENROWS
             <tr>
-                <td class="hiddenRow marks" > <div class="accordian-body collapse $subject"></div> </td>
-                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $date </div> </td>
-                <td class="hiddenRow marks" ><div class="accordian-body collapse $subject "> $mark </div> </td>
-                <td class="hiddenRow marks" > <div class="accordian-body collapse $subject "></div> </td>
+                <td class="hiddenRow marks" > <div class="accordian-body collapse $subjectID"></div> </td>
+                <td class="hiddenRow marks" ><div class="accordian-body collapse $subjectID "> $date </div> </td>
+                <td class="hiddenRow marks" ><div class="accordian-body collapse $subjectID "> $mark </div> </td>
+                <td class="hiddenRow marks" > <div class="accordian-body collapse $subjectID "></div> </td>
             </tr>
 _HIDDENROWS;
 
