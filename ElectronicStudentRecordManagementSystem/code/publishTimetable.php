@@ -22,21 +22,14 @@
     function storeTimetable(){
 
         // Retrieve the selected class
-        var chosenClass = document.getElementById("classID").innerHTML.replace("Class ", "");;
+        var chosenClass = document.getElementById("classID").innerHTML.replace("Class ", "");
 
         // Retrieve the subjects and prepare the AJAX request
-        var dest = "publishTimetableBackend.php?";
+        var dest = "publishTimetableBackend.php?class="+chosenClass;
 
-        // req.open("POST", "publishTimetableBackend.php?" + "ssn=" + ssn + "&hour=" + hour + "&date=" + day + "&event=entrance", true);
         for(let i=1; i<=6; i++){
             var subMon = document.getElementById("mon_"+i).innerHTML;
-    
-            if(i==1){
-                dest += "mon_"+i+"="+subMon;
-            } else {
-                dest += "&mon_"+i+"="+subMon;
-            }
-
+            dest += "&mon_"+i+"="+subMon;
             var subTue = document.getElementById("tue_"+i).innerHTML;
             dest += "&tue_"+i+"="+subTue;
             var subWed = document.getElementById("wed_"+i).innerHTML;
@@ -55,7 +48,13 @@
     }
 
     function endStore(){
-        // ALERT SUCCESS OR FAILURE ----------------------------------------------------------------------------
+        if (req.readyState == 4 && (req.status == 0 || req.status == 200)) {
+            if (req.responseText === "error") {
+                document.getElementById("failureMSG").style.display = "block";
+            } else {
+                document.getElementById("successMSG").style.display = "block";;
+            }
+        }
     }
 
 </script>
@@ -80,13 +79,24 @@ $dbAdmin = new dbAdmin();
 echo "<div class=text-center style='margin-bottom: 30px;'>";
 echo "<h1>PUBLISH TIMETABLE</h1><br>";
 
+echo <<<_ALERTMSG
+    <div id="successMSG" class="alert alert-success alert-dismissible" role="alert" style="display: none;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        Hurray! Timetable has been published correctly!
+    </div> 
+    <div id="failureMSG" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        Oh no! Something went wrong...
+    </div>
+_ALERTMSG;
+
 if (isset($_REQUEST["class"])) {
 
     // The admin has selected a class
 
     // Store in a variable the name of the selected class
     $chosenClass = $_REQUEST["class"];
-    echo "<h3 id='classID'><i>Class $chosenClass</i></h3><br>";
+    echo "<h3><i id='classID'>Class $chosenClass</i></h3><br>";
 
     // Create a local variable which will contain the timetable loaded from the CSV file
     $loadedTimetable = array();

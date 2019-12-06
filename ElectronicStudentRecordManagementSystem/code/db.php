@@ -398,6 +398,50 @@ class dbAdmin extends db
             return $resultArray;
         }
     }
+
+    public function storeTimetable($class, $timetable){
+
+        $class = $this->sanitizeString($class);
+
+        $this->begin_transaction();
+
+        // Ckeck if a timetable for the chosen class is already present in the DB
+        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'");
+        if (!$result) {
+            $this->rollback();
+            return 0;
+        }
+        if($result->num_rows > 0){
+            // There's already a timetable for the chosen class in the DB --> delete the old one in order to insert the new one
+            $result = $this->query("DELETE FROM Timetable WHERE class='$class'");
+            if (!$result) {
+                $this->rollback();
+                return 0;
+            }
+        }
+
+        foreach ($timetable as $line){
+
+            // Retrieve the fields
+            $day = $line[0];
+            $hour = $line[1]; 
+            $subject = $line[2];
+
+            // Sanitize
+            $day = $this->sanitizeString($day);
+            $hour = $this->sanitizeString($hour); 
+            $subject = $this->sanitizeString($subject);
+            
+            $result = $this->query("INSERT INTO Timetable(`class`, `day`, `hour`, `subject`) VALUES ('$class','$day','$hour','$subject')");
+            if (!$result) {
+                $this->rollback();
+                return 0;
+            }
+        }
+
+        $this->commit();
+        return 1;
+    }
 }
 
 
@@ -671,6 +715,32 @@ class dbParent extends db
             die("No class for student with ID $codFisc ");
         } else
             return $row['classID'];
+    }
+
+    public function retrieveChildTimetable($class){
+
+        // returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
+
+        $class = $this->sanitizeString($class);
+        $timetableToReturn = array();
+
+        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'");  // TO CHECK NOME DELL'ATTRIBUTO CLASS NEL DB ----
+
+        if (!$result)
+            die("Unable to select timetable for class $class");
+
+        if ($result->num_rows > 0) {
+            while ($lecture = $result->fetch_assoc()) {
+                // Store the row with the format: $timetableToReturn[1]["mon"] = "Math"
+                // $lecture[0] = class
+                // $lecture[1] = day
+                // $lecture[2] = hour
+                // $lecture[3] = subject
+                $timetableToReturn[$lecture[2]][$lecture[1]] = $lecture[3];
+            }
+        } 
+
+        return $timetableToReturn;
     }
 }
 
