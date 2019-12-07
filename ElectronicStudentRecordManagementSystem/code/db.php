@@ -745,8 +745,8 @@ class dbTeacher extends db
         $hour = $this->sanitizeString($hour);
         $grade = $this->sanitizeString($grade);
 
-        $result = $this->query("UPDATE marks SET subject='$subject', mark='$grade' 
-							WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc'");
+        $result = $this->query("UPDATE marks SET mark='$grade' 
+							WHERE subject='$subject' AND date='$date' AND hour='$hour' AND codFisc='$codFisc'");
 
         if (!$result) {
             die("ERROR: Mark not updated.");
@@ -754,17 +754,20 @@ class dbTeacher extends db
     }
 
 
-    function deleteMark($codFisc, $date, $hour)
+    function deleteMark($codFisc, $date, $hour, $subject)
     {
         $codFisc = $this->sanitizeString($codFisc);
         $date = $this->sanitizeString($date);
         $hour = $this->sanitizeString($hour);
+		$subject = $this->sanitizeString($subject);
 
-        $result = $this->query("DELETE FROM Marks WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc'");
+        $result = $this->query("DELETE FROM Marks WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc' AND subject='$subject'");
 
         if (!$result) {
             die("ERROR: Mark not deleted.");
         }
+		
+		return 0;
     }
 
     function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics)
@@ -1301,7 +1304,7 @@ class dbTeacher extends db
         $subject = $this->sanitizeString($subject);
 
 
-        $result = $this->query("SELECT date,mark FROM Marks WHERE codFisc='$CodFisc' AND subject='$subject' ORDER BY date DESC;");
+        $result = $this->query("SELECT * FROM Marks WHERE codFisc='$CodFisc' AND subject='$subject' ORDER BY date DESC;");
 
         if (!$result) {
             die("Unable to select marks for student $CodFisc");
@@ -1310,7 +1313,7 @@ class dbTeacher extends db
         if ($result->num_rows > 0) {
             $marks = array();
             while ($row = $result->fetch_assoc()) {
-                array_push($marks,  "" . $row['date'] . "," . $row['mark'] . "");
+                array_push($marks,  "" . $row['date'] . "," . $row['mark'] . "," . $row['hour'] . "");
             }
 			return $marks;
 		}

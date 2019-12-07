@@ -34,8 +34,6 @@ if (!$loggedin) {
 		$_SESSION['lessontime'] = $_POST['lessontime'];
 		$_SESSION['comboHour'] = $_POST['comboHour'];
 		$_SESSION['topics'] = $_POST['topics'];
-
-	}
     
 ?>
 
@@ -113,7 +111,9 @@ if (!$loggedin) {
 	</div>
 </div>
 
-
+<?php
+	}
+	?>
 
 <?php
 	require_once("defaultFooter.php")

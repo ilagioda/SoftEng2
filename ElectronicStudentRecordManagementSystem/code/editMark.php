@@ -6,21 +6,17 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
     $loggedin = true;
 }
 if (!$loggedin) {
-    //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
     require_once "loggedTeacherNavbar.php";
 }
-	
-/* 	$_SESSION['user']="GNV";
-	$_SESSION['role']="teacher"; */
 	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
 	
     if(!isset($_REQUEST["comboClass"]) || !isset($_REQUEST["comboStudent"]) || !isset($_REQUEST["comboSubject"]) ||
 		!isset($_REQUEST["lessontime"]) || !isset($_REQUEST["comboHour"]) || !isset($_REQUEST['comboGrade'])){
-		
+			
 		if(!isset($_SESSION['comboClass']) || !isset($_SESSION['comboStudent']) || !isset($_SESSION['comboSubject']) ||
 			!isset($_SESSION['lessontime']) || !isset($_SESSION['comboHour']) || !isset($_SESSION['comboGrade'])) {
 
@@ -51,68 +47,54 @@ if (!$loggedin) {
 
 <ul class="nav nav-tabs">
 
-  <li role="presentation"><a href="submitMarks.php">New mark</a></li>
-  <li role="presentation"><a href="viewAllMarks.php">View all marks</a></li>
-  <li role="presentation" class="active"><a href="#">Edit mark</a></li>
+  <li role="presentation"><a href="submitMarks.php">New record</a></li>
+  <li role="presentation"><a href="viewAllMarks.php">View all records</a></li>
+  <li role="presentation" class="active"><a href="#">Edit record</a></li>
 
 </ul>
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 	<h1> Update mark: </h1>
-		<form class="navbar-form navbar-left" role="class" method="POST" action="updateMark.php">
+		<form class="navbar-form navbar-center" role="class" method="POST" action="updateMark.php">
 			<table class="table">
 
 				<tr><td><label>Class </label></td><td>
-				<input class="form-control" disabled style="width:200%" value=" <?php 
+				<?php 
 					$selectedClass = $_SESSION["comboClass"];
 					echo $selectedClass;
-				?>">
+				?>
 				<input hidden name="comboClass" value="<?php echo $selectedClass ?>"/>
 				</td></tr>
 
-
                 <tr><td><label>Student </label></td><td>
-				<input class="form-control" disabled style="width:200%" value="<?php 
+				<?php 
 					$selectedStudent = $_SESSION["comboStudent"];
 					echo $teacher->getStudentByCod($selectedStudent) . " (" . $selectedStudent . ")";
-				?>"> 
+				?>
 				<input hidden name="comboStudent" value="<?php echo $selectedStudent ?>"/>
 				</td></tr>
 
 				<tr><td><label>Subject </label></td><td>
-				<select class="form-control" id="comboSubject" name="comboSubject" style="width:200%">	
 				<?php 
-					$selectedSubject = $_SESSION["comboSubject"];
+					echo $_SESSION["comboSubject"];
 				?>				
-				<option value="<?php echo $selectedSubject ?>" selected> 
-				<?php echo $selectedSubject ?>
-				</option>
-				<?php 
-					$subjects=$teacher->getSubjectByClassAndTeacher($selectedClass);
-					foreach($subjects as $value) {
-						if($value != $selectedSubject)
-							echo "<option value=".$value.">".$value."</option>";
-					}		
-				?>
-				</select></td></tr>
+				</td></tr>
 
 				<tr><td><label>Date</label></td><td>  
-				<input class="form-control" disabled type="date" value="<?php echo $_SESSION["lessontime"]; ?>"
-						style="width:200%" required>
+				<?php echo $_SESSION["lessontime"]; ?>
 				<input hidden name="lessontime" value="<?php echo $_SESSION["lessontime"]; ?>"/>
 				</td></tr>
 
 				<tr><td><label>Hour</label></td><td>
-				<input class="form-control" disabled name="comboHour" style="width:200%" value="<?php 
-					$selectedHour = $_SESSION["comboHour"];
-					echo $selectedHour;
-				?>">
+				<?php 
+					echo $_SESSION["comboHour"];
+				?>
 				<input hidden name="comboHour" value="<?php echo $selectedHour ?>"/>	
 				</td></tr>	
 
 				<tr><td><label>Grade</label></td><td>
-				<select class="form-control" name="comboGrade" id="comboGrade" style="width:200%" required>
+				<select class="form-control" name="comboGrade" id="comboGrade" required>
                 <?php 
 					$selectedGrade = $_SESSION["comboGrade"];
 				?>
@@ -133,7 +115,7 @@ if (!$loggedin) {
 				?>	
 				</select></td></tr>	
 	
-				<tr><td></td><td><button type="submit" class="btn btn-success">Update</button></td></tr>
+				<tr><td><button type="submit" class="btn btn-success">Update</button></td><td></td></tr>
 			</table>
 		</form>
 	</div>
