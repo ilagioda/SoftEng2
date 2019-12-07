@@ -61,8 +61,6 @@ if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] !
     
 }
 ?>
-
-<div class="container">
 	<div class="row">
     <?php
         if($err != ""){
@@ -100,6 +98,7 @@ _MSG;
         <select class="form-control" id="comboSubject" name="comboSubject" required>
                 <option value="" disabled selected>Select subject...</option>
         </select>
+                    </div>
 
         <div class="form-group text-center">
 			<label for="title">TITLE: </label>
@@ -124,7 +123,6 @@ _MSG;
         </div>
         </form>
     </div>
-</div>
 
 <?php
 require_once("defaultFooter.php");

@@ -33,6 +33,9 @@ echo <<< _OPLIST
     <div class="btn-group">
         <a href="viewChildAssignment.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Assignments</a>
     </div><br>
+    <div class="btn-group">
+        <a href="viewSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Materials</a>
+    </div><br>
 </div>
 _OPLIST;
 
