@@ -10,6 +10,60 @@ final class dbTest extends TestCase{
 
     ///////////////////////////////////////////////////////////
 
+     /* DB */
+     public function testGetSubjectTaughtInClass(){
+        $db = new db();
+
+        try{
+            $db->getSubjectTaughtInClass("6A");
+            // should throw an exception
+            $this->fail("Accepted 6A as a valid class");
+        } catch (Exception $e){}
+
+        try{
+            $db->getSubjectTaughtInClass("AA");
+            // should throw an exception
+            $this->fail("Accepted AA as a valid class");
+        } catch (Exception $e){}
+
+        try{
+            $db->getSubjectTaughtInClass("0B");
+            // should throw an exception
+            $this->fail("Accepted 0A as a valid class");
+        }catch (Exception $e){}
+
+        $subjects = $db->getSubjectTaughtInClass("1A"); // this should work
+
+        $this->assertNotNull($subjects);
+        $this->assertTrue(in_array("Maths",$subjects));
+        $this->assertTrue(in_array("Biology and Chemistry",$subjects));
+        $this->assertTrue(in_array("Latin",$subjects));
+        $this->assertTrue(in_array("Physics",$subjects));
+        $this->assertTrue(in_array("English",$subjects));
+        $this->assertTrue(in_array("History",$subjects));
+        $this->assertTrue(in_array("Italian",$subjects));
+        $this->assertTrue(in_array("Philosophy",$subjects));
+        $this->assertTrue(in_array("Geography",$subjects));        
+    }
+
+    public function testGetHashedPassword(){
+        $db = new db();
+
+        /* TODO: modify getHashedPassword to remove principal*/
+        
+        // admin
+        
+        // parent
+        
+        // teacher
+        
+        // principal
+
+        $this->assertTrue(true);
+    }
+
+
+    /* TEACHER */
     public function testViewStudentMarks() {
 
         $_SESSION['role'] = "teacher";

@@ -14,7 +14,7 @@ class db
         // Create connection
         try {
             $this->conn = new mysqli($servername, $username, $password, $dbname);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $servername = "127.0.0.1";
             $this->conn = new mysqli($servername, $username, $password, $dbname);
         }
@@ -47,7 +47,8 @@ class db
      * Test methods
      */
 
-    public function queryForTesting($query){
+    public function queryForTesting($query)
+    {
         return $this->query($query);
     }
 
@@ -76,6 +77,7 @@ class db
 
     public function getSubjectTaughtInClass($class)
     {
+        // tested
 
         $class = $this->sanitizeString($class);
 
@@ -99,6 +101,8 @@ class db
 
     function getHashedPassword($user)
     {
+        /* FIXME: adapt to the new behaviour => remove Principal table and adapt teacher */
+        
         $sql = "SELECT * FROM Parents WHERE email='$user'";
         $sql2 = "SELECT * FROM Teachers WHERE codFisc='$user'";
         $sql3 = "SELECT * FROM Principals WHERE codFisc='$user'";
@@ -1444,7 +1448,7 @@ class dbTeacher extends db
                 $this->commit();
             } else {
                 //UPDATE
-             }
+            }
         }
     }
 }
