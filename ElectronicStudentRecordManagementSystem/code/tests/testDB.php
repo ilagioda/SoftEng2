@@ -199,24 +199,6 @@ final class dbTest extends TestCase{
         $this->assertSame($array['absence'], '0');
         $this->assertSame($array['lateEntry'], '3');
         $this->assertSame($array['earlyExit'], '0');
-
-        //Entry is present with no late or early -> should be absent
-
-        $day="2019-12-09";
-        $db->recordEarlyExitHavingAlreadyLateEntryQUERY($day, 0, $ssn, 0);
-        $result=$db->updateAttendance($ssn, $day);
-        $this->assertSame($result, true);
-
-        $result=$db->selectAttendanceStudent($day, $ssn);
-
-        if (!$result)
-            $this->assertTrue(false);
-        $this->assertSame($result->num_rows,1);
-        
-        $array=$result->fetch_assoc();
-        $this->assertSame($array['absence'], '1');
-        $this->assertSame($array['lateEntry'], '0');
-        $this->assertSame($array['earlyExit'], '0');
         
     } 
 
