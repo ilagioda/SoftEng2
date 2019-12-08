@@ -173,7 +173,7 @@ function modalEdit(obj) {
 		
 		if(isset($_POST['editButton'])) {
 			if(!isset($_POST["comboStudent"]) || !isset($_POST["lessontime"]) 
-				|| !isset($_POST["comboHour"]) || !isset($_POST["comboSubject"]) || !isset($_POST["comboSubject"])) {
+				|| !isset($_POST["comboHour"]) || !isset($_POST["comboSubject"]) || !isset($_POST["comboGrade"])) {
 		?>
 			<div class="alert alert-danger alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

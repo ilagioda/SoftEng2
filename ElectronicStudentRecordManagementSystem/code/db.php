@@ -1038,8 +1038,6 @@ class dbTeacher extends db
         }
     }
 
-    function retrieveAssignments($codFisc)
-    { }
 
     function getStudentsByClass2($class)
     {
@@ -1404,4 +1402,30 @@ class dbTeacher extends db
 			return $marks;
 		}
     }
+	
+	public function insertFinalGrade($ssn, $subject, $finalGrade, $date) {
+		
+		/* This function allows to insert the final grade of the term of the student */
+		
+		$ssn = $this->sanitizeString($ssn);
+        $subject = $this->sanitizeString($subject);
+        $finalGrade = $this->sanitizeString($finalGrade);
+        $date = $this->sanitizeString($date);
+
+		
+		$result = $this->query("SELECT * FROM FinalGrade WHERE (codFisc='$ssn' AND subject='$subject' AND date='$date')");
+
+        if ($result->num_rows > 0) {
+            return -1;
+        }
+
+        $result = $this->query("INSERT INTO FinalGrade(codFisc, subject, date, finalGrade) 
+								VALUES ('$ssn', '$subject', '$date', '$finalGrade')");
+
+        if (!$result) {
+            die("ERROR: Final grade not inserted.");
+        }
+		
+		return 0;
+	}
 }

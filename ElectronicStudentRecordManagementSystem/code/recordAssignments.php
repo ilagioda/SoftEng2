@@ -65,7 +65,7 @@ $(document).ready(function(){
 
 		var d = new Date(e.target.value)
 		if(d.getDay() === 6 || d.getDay() === 0 || checkIfHoliday(d)) {
-			$('#confirm').attr('disabled',true)
+			$('#confirm').attr('disabled',true);
 			$('#assignmentstime').after(warning);
 		} else {
 			warning.remove()
