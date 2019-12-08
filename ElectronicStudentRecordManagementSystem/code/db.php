@@ -422,14 +422,14 @@ class dbAdmin extends db
         $this->begin_transaction();
 
         // Ckeck if a timetable for the chosen class is already present in the DB
-        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'");
+        $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
         if (!$result) {
             $this->rollback();
             return 0;
         }
         if ($result->num_rows > 0) {
             // There's already a timetable for the chosen class in the DB --> delete the old one in order to insert the new one
-            $result = $this->query("DELETE FROM Timetable WHERE class='$class'");
+            $result = $this->query("DELETE FROM Timetable WHERE classID='$class'");
             if (!$result) {
                 $this->rollback();
                 return 0;
@@ -448,7 +448,7 @@ class dbAdmin extends db
             $hour = $this->sanitizeString($hour);
             $subject = $this->sanitizeString($subject);
 
-            $result = $this->query("INSERT INTO Timetable(`class`, `day`, `hour`, `subject`) VALUES ('$class','$day','$hour','$subject')");
+            $result = $this->query("INSERT INTO Timetable(`classID`, `day`, `hour`, `subject`) VALUES ('$class','$day','$hour','$subject')");
             if (!$result) {
                 $this->rollback();
                 return 0;
@@ -745,7 +745,7 @@ class dbParent extends db
         $class = $this->sanitizeString($class);
         $timetableToReturn = array();
 
-        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'");
+        $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
 
         if (!$result)
             die("Unable to select timetable for class $class");
