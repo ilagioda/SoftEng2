@@ -347,6 +347,39 @@ final class dbTest extends TestCase{
 
     }
 
+    public function testInsertDailyLesson(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //New entry -> insert
+        $date="2019-12-06";
+        $hour="1";
+        $class="1A";
+        $teacher="FLCM";
+        $subject="Philosophy";
+        $topics="Some nice topics";
+
+        $result=$db->insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics);
+        $this->assertSame($result, null);
+
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some nice topics");
+
+        //Entry already in db -> insert fail
+        $topics="Some WRONG topics";
+        $result=$db->insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics);
+        $this->assertSame($result, -1);
+
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some nice topics");
+    }
     
 
 
