@@ -69,5 +69,10 @@ class Teacher
 	
 	function viewStudentMarks($ssn, $subject) {
 		return $this->db->viewStudentMarks($ssn, $subject);
-	}
+    }
+    
+
+    function recordStudentNote($ssn,$subject,$note,$date,$hour){
+        return $this->db->recordStudentNote($ssn,$subject,$note,$date,$hour);
+    }
 }

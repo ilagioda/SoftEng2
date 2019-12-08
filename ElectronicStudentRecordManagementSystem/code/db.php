@@ -1421,4 +1421,30 @@ class dbTeacher extends db
             return $marks;
         }
     }
+
+    function recordStudentNote($ssn, $subject, $note, $date, $hour)
+    {
+        // query to record the note
+        $ssn = $this->sanitizeString($ssn);
+        $date = $this->sanitizeString($date);
+        $hour =  $this->sanitizeString($hour);
+        $subject = $this->sanitizeString($subject);
+        $note = $this->sanitizeString($note);
+
+        $this->begin_transaction();
+
+        $result = $this->query("SELECT COUNT(*) AS 'cnt' FROM `StudentNotes` WHERE   ");
+
+        if ($result->num_rows > 0) {
+            $marks = array();
+            $row = $result->fetch_row();
+            $count = $row['cnt'];
+            if ($count == 0) {
+                $this->query("INSERT INTO `StudentNotes`(`codFiscStudent`, `date`, `hour`, `subject`, `Note`) VALUES ($ssn,$date,$hour,$subject,$note)");
+                $this->commit();
+            } else {
+                //UPDATE
+             }
+        }
+    }
 }

@@ -11,36 +11,54 @@ if (!$loggedin) {
 } else {
   require_once("loggedTeacherNavbar.php");
 }
-
-
 ?>
-
-
 <script>
   $(document).ready(function() {
 
     $("#saveButton").click(function() {
-
-      var studName = obj.getAttribute("data-name");
-      var studSurname = obj.getAttribute("data-surname");
-      var studSSN = obj.getAttribute("data-ssn");
-      var studClass = obj.getAttribute("data-c");
       // Fill the modal with the student information
-      alert($("#modalEntrance-name").text());
-      alert($("#modalEntrance-surname").text());
-      alert($("#modalEntrance-ssn").text());
-      alert($("#modalEntrance-c").text());
-      
-    });
+      var name = $("#modalEntrance-name").text();
+      var surname = $("#modalEntrance-surname").text();
+      var ssn = $("#modalEntrance-ssn").text();
+      var classID = $("#modalEntrance-c").text();
+      var note = $("#note").val();
 
+
+      // INSERISCI NEL DB LA NOTA
+      $.post("writeStudentNoteBackEnd.php", {
+          event: "recordNote",
+          codFisc: ssn,
+          hour: hour,
+          note: note,
+          classID: classID
+        },
+        function(data, status) {
+          if (data)
+            alert("Absence note registered.");
+          alert("Something went wrong.");
+        });
+    });
 
     $("#removeButton").click(function() {
+      var name = $("#modalEntrance-name").text();
+      var surname = $("#modalEntrance-surname").text();
+      var ssn = $("#modalEntrance-ssn").text();
+      var classID = $("#modalEntrance-c").text();
+      //RIMUOVI LA NOTA
 
-
-
-
+      $.post("writeStudentNoteBackEnd.php", {
+          event: "deleteNote",
+          codFisc: ssn,
+          hour: hour,
+          note: note,
+          classID: classID
+        },
+        function(data, status) {
+          if (data)
+            alert("Absence note registered.");
+          alert("Something went wrong.");
+        });
     });
-
   });
 
 
@@ -83,7 +101,7 @@ if (!$loggedin) {
 
 if (!isset($_REQUEST["class"])) {
 
-  //SELEZIONA LA CLASSE
+  // DEVE SELEZIONARE LA CLASSE
 
   require_once("classTeacher.php");
 
@@ -108,7 +126,7 @@ _ROW;
   }
   echo "</div>";
 } else {
-  //the class is selected
+  // LA CLASSE E' STATA SELEZIONATA
 
   require_once("classTeacher.php");
 
@@ -146,7 +164,7 @@ _ROW;
               <td style="vertical-align: middle;">$fields[1]</td>
               <td style="vertical-align: middle;">$fields[2]</td>
               <td><button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
-              Entrance
+              Note
               </button>
               </td>
 _ROW;
@@ -194,6 +212,10 @@ _ROW;
                                   <select class="form-control" id="selectEntrance">
                                   </select>
                               </div>
+                              <div class="form-group">
+                                <label for="comment">Note:</label>
+                                <textarea class="form-control" rows="5" id="note" style="width: 265px; height: 175px;"></textarea>
+                              </div> 
                           </form>
                       </div>
                       <div class="modal-footer">
