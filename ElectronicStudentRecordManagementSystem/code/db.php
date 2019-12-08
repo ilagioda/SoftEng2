@@ -1064,6 +1064,7 @@ class dbTeacher extends db
     /**
      * This function makes a student absent for a particular day
      */
+    //tested
     function updateAttendance($ssn, $day)
     {
         $this->begin_transaction();
@@ -1163,6 +1164,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested except exceptions
     function checkAbsenceEarlyExitLateEntrance($ssn, $day)
     {
         $date = "";
@@ -1383,7 +1385,7 @@ class dbTeacher extends db
         }
     }
 	
-	
+	//tested
 	public function viewStudentMarks($CodFisc, $subject) {
 
         $CodFisc = $this->sanitizeString($CodFisc);
