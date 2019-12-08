@@ -146,9 +146,10 @@ final class dbTest extends TestCase{
 
         $result=$db->selectAttendanceStudent($day, $ssn);
 
-        if (!$result || $result->num_rows != 1){
+        if (!$result)
             $this->assertTrue(false);
-        }
+        $this->assertSame($result->num_rows,1);
+
         $array=$result->fetch_assoc();
         $this->assertSame($array['absence'], '1');
 
@@ -159,9 +160,9 @@ final class dbTest extends TestCase{
 
         $result=$db->selectAttendanceStudent($day, $ssn);
 
-        if (!$result || $result->num_rows != 0){
+        if (!$result)
             $this->assertTrue(false);
-        }
+        $this->assertSame($result->num_rows,0);
 
 
         //Entry is present with both late and early -> exception thrown
@@ -172,9 +173,10 @@ final class dbTest extends TestCase{
 
         $result=$db->selectAttendanceStudent($day, $ssn);
 
-        if (!$result || $result->num_rows != 1){
+        if (!$result)
             $this->assertTrue(false);
-        }
+        $this->assertSame($result->num_rows,1);
+
         $array=$result->fetch_assoc();
         $this->assertSame($array['absence'], '1');
         $this->assertSame($array['lateEntry'], '2');
@@ -189,9 +191,9 @@ final class dbTest extends TestCase{
 
         $result=$db->selectAttendanceStudent($day, $ssn);
 
-        if (!$result || $result->num_rows != 1){
+        if (!$result)
             $this->assertTrue(false);
-        }
+        $this->assertSame($result->num_rows,1);
         $array=$result->fetch_assoc();
 
         $this->assertSame($array['absence'], '0');
@@ -200,15 +202,17 @@ final class dbTest extends TestCase{
 
         //Entry is present with no late or early -> should be absent
 
-        $day="2019-12-08";
+        $day="2019-12-09";
+        $db->recordEarlyExitHavingAlreadyLateEntryQUERY($day, 0, $ssn, 0);
         $result=$db->updateAttendance($ssn, $day);
         $this->assertSame($result, true);
 
         $result=$db->selectAttendanceStudent($day, $ssn);
 
-        if (!$result || $result->num_rows != 1){
+        if (!$result)
             $this->assertTrue(false);
-        }
+        $this->assertSame($result->num_rows,1);
+        
         $array=$result->fetch_assoc();
         $this->assertSame($array['absence'], '1');
         $this->assertSame($array['lateEntry'], '0');
@@ -216,8 +220,36 @@ final class dbTest extends TestCase{
         
     } 
 
+    public function testGetStudentsByClass2(){
 
-    
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "test";
+        $db = new dbTeacher();
+
+        //Existing class
+        $class="1B";
+        $result=$db->getStudentsByClass2($class);
+
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 5);
+
+        //Unexisting class
+
+        $class="wrong";
+        $result=$db->getStudentsByClass2($class);
+
+        if($result)
+            $this->assertTrue(false);
+        
+        
+
+        
+    }
+
+
+
+
     
 
 

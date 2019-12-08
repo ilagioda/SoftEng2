@@ -1140,19 +1140,6 @@ class dbTeacher extends db
 
                     if (!($lateEntry == 0 && $earlyExit == 0))
                         throw new Exception("The student has some information recorded so this field should not be updated anymore");
-
-                    $stmt = $this->prepareStatement("UPDATE `Attendance` SET `absence`= 1 WHERE `codFisc`= ?  AND`date` = ?");
-
-                    if (!$stmt->bind_param("ss", $ssn, $day))
-                        die("Binding Failed in the Transaction.");
-
-                    // The statement is excecuted but the variables do not contain the results
-                    if (!$stmt->execute())
-                        throw new Exception("Update Attendance Failed.");
-
-                    if ($stmt->affected_rows == 0)
-                        throw new Exception("Update Attendance Failed.");
-                    $stmt->close();
                 }
             }
             $this->commit();
