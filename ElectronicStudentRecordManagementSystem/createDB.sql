@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 02, 2019 alle 17:15
+-- Creato il: Dic 08, 2019 alle 16:37
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -129,6 +129,17 @@ INSERT INTO `Attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`
 ('2019-12-02', 'ILA', 1, 2, 4),
 ('2019-12-03', 'FRCWTR', 0, 3, 0),
 ('2020-01-12', 'FRCWTR', 1, 2, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Classes`
+--
+
+CREATE TABLE `Classes` (
+  `classID` varchar(32) NOT NULL,
+  `coordinatorSSN` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -362,6 +373,19 @@ INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `princip
 ('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio', 1),
 ('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'simona', 'genovese', 0),
 ('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'TeacherName', 'TeacherSurname', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Timetable`
+--
+
+CREATE TABLE `Timetable` (
+  `class` varchar(32) NOT NULL,
+  `day` int(1) NOT NULL,
+  `hour` int(1) NOT NULL,
+  `subject` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indici per le tabelle scaricate
