@@ -325,6 +325,45 @@ final class dbTest extends TestCase{
         
     }
 
+    public function testGetLecturesByTeacher(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "TEA";
+        $db = new dbTeacher();
+
+        //Existing lectures
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 2);
+        $this->assertSame($result[0],"1A,History,2019-11-11,1,arg1");
+        $this->assertSame($result[1],"1A,History,2019-11-05,1,arg0");
+
+
+        //Non existing lectures
+        $result=$db->getLecturesByTeacher("wrong");
+        $this->assertSame($result, null);
+    }
+
+    public function testGetSubjectsByTeacherAndClass2(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //Existing subject
+        $class="1A";
+    
+        $result=$db->getSubjectsByTeacherAndClass2( $_SESSION['user'], $class);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"Philosophy");
+
+        //Non existing subject
+        $class="wrong";
+        $result=$db->getSubjectsByTeacherAndClass2( $_SESSION['user'], $class);
+        $this->assertSame($result, null);
+
+
+    }
+
     
 
 

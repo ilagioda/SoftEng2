@@ -935,6 +935,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function getSubjectsByTeacherAndClass2($codTeacher, $class)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
@@ -954,6 +955,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function getLecturesByTeacher($codTeacher)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
