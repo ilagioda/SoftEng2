@@ -102,7 +102,7 @@ class db
     function getHashedPassword($user)
     {
         /* FIXME: adapt to the new behaviour => remove Principal table and adapt teacher */
-        
+
         $sql = "SELECT * FROM Parents WHERE email='$user'";
         $sql2 = "SELECT * FROM Teachers WHERE codFisc='$user'";
         $sql3 = "SELECT * FROM Principals WHERE codFisc='$user'";
@@ -592,7 +592,9 @@ class dbParent extends db
         /**
          * Retrieve the attendance of a given student in the current semester.
          * @param $codFisc (String) CodFisc of the searched student, e.g. 2015.
-         * @return (Array) The calendar's html.
+         * @return (Array) The attendance to the lectures of the given student in the form: 
+         * "YYYY-MM-DD" => "Absent" | "early - Exited at x° hour" | "late - Entered at x° hour" | "late - Entered at x° hour Exited at y° hour" 
+         * 
          */
 
         $this->begin_transaction();
@@ -625,9 +627,8 @@ class dbParent extends db
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
 
             /**
-             * Modify data to simplify them
              * Produces an array as
-             * "YYYY-MM-DD" => "absent" | "early - hh:mm" | "late - hh:mm"
+             * "YYYY-MM-DD" => "Absent" | "early - Exited at x° hour" | "late - Entered at x° hour" | "late - Entered at x° hour Exited at y° hour"
              * */
 
             if ($row["absence"] == 1 && $row["lateEntry"] == 0 && $row["earlyExit"] == 0) {
