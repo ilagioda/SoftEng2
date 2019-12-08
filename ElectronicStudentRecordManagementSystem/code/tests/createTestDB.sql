@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Nov 30, 2019 alle 18:34
+-- Creato il: Dic 08, 2019 alle 16:37
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -45,7 +45,7 @@ CREATE TABLE `Admins` (
 
 INSERT INTO `Admins` (`codFisc`, `hashedPassword`, `name`, `surname`, `sysAdmin`) VALUES
 ('ADM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Adamo', 'Eva', 0),
-('FLC', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Nino', 'Frassica', 0);
+('FLC', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Nino', 'Frassica', 1);
 
 -- --------------------------------------------------------
 
@@ -81,6 +81,15 @@ CREATE TABLE `Assignments` (
   `textAssignment` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `Assignments`
+--
+
+INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`) VALUES
+('History', '2019-12-03', '1A', 'WWII'),
+('Maths', '2019-11-28', '1A', 'Equations'),
+('Physics', '2019-11-27', '1A', 'Vectors');
+
 -- --------------------------------------------------------
 
 --
@@ -100,7 +109,37 @@ CREATE TABLE `Attendance` (
 --
 
 INSERT INTO `Attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`) VALUES
-('2019-11-27', 'FRCWTR', 1, 2, 0);
+('2019-09-20', 'FRCWTR', 1, 1, 5),
+('2019-10-03', 'FRCWTR', 1, 0, 2),
+('2019-10-08', 'FRCWTR', 1, 0, 0),
+('2019-10-09', 'FRCWTR', 1, 0, 0),
+('2019-10-10', 'FRCWTR', 1, 0, 0),
+('2019-10-11', 'FRCWTR', 1, 0, 0),
+('2019-11-22', 'FRCWTR', 1, 0, 0),
+('2019-11-25', 'ILA', 1, 2, 4),
+('2019-11-26', 'ILA', 1, 0, 0),
+('2019-11-27', 'FRCWTR', 0, 2, 0),
+('2019-11-27', 'ILA', 1, 0, 4),
+('2019-11-28', 'ILA', 0, 3, 0),
+('2019-12-01', 'FRCWTR', 1, 0, 0),
+('2019-12-02', 'BOB', 1, 0, 0),
+('2019-12-02', 'CHARED', 1, 1, 1),
+('2019-12-02', 'DANBROWN', 0, 1, 0),
+('2019-12-02', 'FRCWTR', 1, 1, 3),
+('2019-12-02', 'ILA', 1, 2, 4),
+('2019-12-03', 'FRCWTR', 0, 3, 0),
+('2020-01-12', 'FRCWTR', 1, 2, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Classes`
+--
+
+CREATE TABLE `Classes` (
+  `classID` varchar(32) NOT NULL,
+  `coordinatorSSN` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -122,8 +161,8 @@ CREATE TABLE `Lectures` (
 --
 
 INSERT INTO `Lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
-('2019-11-05', 1, '1A', 'GNV', 'Maths', 'arg0'),
-('2019-11-11', 1, '1A', 'GNV', 'Maths', 'arg1');
+('2019-11-05', 1, '1A', 'TEA', 'History', 'arg0'),
+('2019-11-11', 1, '1A', 'TEA', 'History', 'arg1');
 
 -- --------------------------------------------------------
 
@@ -147,8 +186,8 @@ INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
 ('FRCWTR', 'Italian', '2019-10-10', 1, '7+'),
 ('FRCWTR', 'History', '2019-10-10', 2, '6'),
 ('FRCWTR', 'Philosophy', '2019-10-10', 3, '5/6'),
-('FRCWTR', 'Maths', '2019-10-11', 1, '5-'),
-('FRCWTR', 'Physics', '2019-10-12', 1, '4+'),
+('FRCWTR', 'Maths', '2019-10-11', 1, '9-'),
+('FRCWTR', 'Physics', '2019-10-12', 1, '3+'),
 ('FRCWTR', 'Italian', '2019-10-14', 2, '9/10'),
 ('FRCWTR', 'Italian', '2019-10-15', 3, '9');
 
@@ -172,7 +211,7 @@ CREATE TABLE `Parents` (
 --
 
 INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
-('cla_9_6@hotmail.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
+('cla_9_6@hotmail.it', '$2y$10$aC4SPkQR3pFQjw1rrIcsT.Xn0AFtcdSc2BXsBYwh.Bor9FUAp0NeK', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
 ('fant@hotmail.it', '', 'Ugo', 'Fantozzi', 'GFNTZZ', 0),
 ('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
 ('gigimarzullo@genitore1.it', '', 'Gigi', 'Marzullo', 'MZRGG65', 1),
@@ -239,12 +278,27 @@ CREATE TABLE `Students` (
 
 INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `classID`) VALUES
 ('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', ''),
+('BOB', 'Bob', 'Silver', 'cla_9_6@hotmail.it', '', '1A'),
+('CHAPIN', 'Charlotte', 'Pink', 'miiiimmo_9_6@hotmail.it', '', '1B'),
+('CHARED', 'Charlie', 'Red', 'cla_9_6@hotmail.it', '', '1A'),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
 ('CRS', 'Cristian', 'Mins', 'cris@gmail.it', 'parent@parent.it', '1D'),
+('DANBROWN', 'Daniel', 'Brown', 'parent@parent.it', '', '1A'),
+('EMILI', 'Emily', 'Lime', 'volley.champions@hotmail.it', '', '1B'),
 ('FRCWTR', 'Walter', 'Forcignano', 'wlt@gmail.it', 'parent@parent.it', '1A'),
+('HRRWHI', 'Harry', 'White', 'gigimarzullo@genitore1.it', '', '1D'),
 ('ILA', 'Ilaria', 'Gioda', 'ila@gmail.it', 'cla_9_6@hotmail.it', '1A'),
+('ISAORA', 'Isabella', 'Orange', 'padre@hotmail.it', '', '1D'),
+('JAMBCK', 'James', 'Black', 'padre@hotmail.it', '', '1D'),
+('JEPPL', 'Jessica', 'Purple', 'gigimarzullo@genitore1.it', '', '1D'),
+('LILYCO', 'Lily', 'Coral', 'parent@parent.it', '', '1A'),
+('MARYG', 'Mary', 'Golden', 'volley.champions@hotmail.it', '', '1B'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
-('SMN', 'Simona', 'Genovese', 'smn@gmail.it', 'parent@parent.it', '');
+('OSCGRA', 'Oscar', 'Gray', 'volley.champions@hotmail.it', '', '1B'),
+('SAHYEW', 'Sarah', 'Yellow', 'volley.champions@hotmail.it', '', '1D'),
+('SMN', 'Simona', 'Genovese', 'smn@gmail.it', 'parent@parent.it', ''),
+('SUSBLU', 'Susan', 'Blue', 'miiiimmo_9_6@hotmail.it', '', '1B'),
+('WILGEE', 'William', 'Green', 'padre@hotmail.it', '', '1A');
 
 -- --------------------------------------------------------
 
@@ -291,10 +345,10 @@ CREATE TABLE `TeacherClassSubjectTable` (
 
 INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
 ('FLCM', '1A', 'Philosophy'),
-('GNV', '1A', 'Maths'),
 ('GNV', '1A', 'Physics'),
 ('GNV', '1D', 'Geography'),
 ('TEA', '1A', 'History'),
+('TEA', '1A', 'Maths'),
 ('TEA', '1B', 'Italian');
 
 -- --------------------------------------------------------
@@ -316,9 +370,22 @@ CREATE TABLE `Teachers` (
 --
 
 INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `principal`) VALUES
-('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio', 0),
+('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio', 1),
 ('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'simona', 'genovese', 0),
 ('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'TeacherName', 'TeacherSurname', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Timetable`
+--
+
+CREATE TABLE `Timetable` (
+  `class` varchar(32) NOT NULL,
+  `day` int(1) NOT NULL,
+  `hour` int(1) NOT NULL,
+  `subject` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indici per le tabelle scaricate

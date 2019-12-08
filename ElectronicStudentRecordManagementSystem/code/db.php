@@ -12,7 +12,12 @@ class db
         $dbname = "school";
 
         // Create connection
-        $this->conn = new mysqli($servername, $username, $password, $dbname);
+        try {
+            $this->conn = new mysqli($servername, $username, $password, $dbname);
+        } catch (Exception $e){
+            $servername = "127.0.0.1";
+            $this->conn = new mysqli($servername, $username, $password, $dbname);
+        }
 
         // Check connection
         if ($this->conn->connect_error) {
