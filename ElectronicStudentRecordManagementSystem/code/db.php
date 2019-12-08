@@ -874,6 +874,7 @@ class dbTeacher extends db
         return 0;
     }
 
+    //tested
     function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics)
     {
 
