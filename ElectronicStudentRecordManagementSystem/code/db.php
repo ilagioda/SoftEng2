@@ -44,6 +44,14 @@ class db
     }
 
     /**
+     * Test methods
+     */
+
+    public function queryForTesting($query){
+        return $this->query($query);
+    }
+
+    /**
      * Transaction oriented commands
      */
 
@@ -921,6 +929,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function getClassesByTeacher2($codTeacher)
     {
         $codTeacher = $this->sanitizeString($codTeacher);

@@ -7,43 +7,10 @@ require_once("../db.php");
 
 final class dbTest extends TestCase{
 
-    // public function testGetSubjectTaughtInClass(): void{
-    //     $this->assertSame(1,1);
-    // }
-
-    // public function updateAttendanceTest(): void
-    // {
-    //     $teacher = new Teacher();
-
-    //     $ssn = "FRCWTR";
-    //     $day = date('Y-m-j');
-
-    //     $text = $teacher->updateAttendance($ssn, $day);
-    //     $this->assertSame($text, "Event recorded.");
-
-
-    //     $result = $this->selectAttendanceStudent($day, $ssn);
-
-    //     if (!$result) {
-    //         $this->assertTrue(false);
-    //     }
-
-    //     //Lo studente deve essere assente
-    //     if ($result->num_rows != 1)
-    //         $this->assertTrue(false);
-
-    //     $attendance = $result->fetch_assoc();
-
-    //     //Se è stata settata un uscita e l'ora di uscita < ora entrata
-    //     $this->assertEquals($attendance['absence'] == 1);
-    // }
-
-
-
 
     ///////////////////////////////////////////////////////////
 
-    public function testViewStudentMarks(): void {
+    public function testViewStudentMarks() {
 
         $_SESSION['role'] = "teacher";
         $_SESSION['user'] = "test";
@@ -356,14 +323,31 @@ final class dbTest extends TestCase{
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0],"Philosophy");
 
-        //Non existing subject
+        //Non existing subject or teacher
         $class="wrong";
-        $result=$db->getSubjectsByTeacherAndClass2( $_SESSION['user'], $class);
+        $result=$db->getSubjectsByTeacherAndClass2("Wrong", $class);
         $this->assertSame($result, null);
+    }
 
+    public function testgetClassesByTeacher2(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //Existing class
+
+        $result=$db->getClassesByTeacher2($_SESSION['user']);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"1A");
+
+        //Non existing class
+
+        $result=$db->getClassesByTeacher2("wrong");
+        $this->assertSame($result, null);
 
     }
 
+    public function testget
     
 
 
