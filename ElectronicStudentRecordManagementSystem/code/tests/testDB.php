@@ -1,11 +1,11 @@
 <?php
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 require_once("../classTeacher.php");
 require_once("../db.php");
 
-final class dbTest extends PHPUnit_Framework_TestCase{
+final class dbTest extends TestCase{
 
     public function testGetSubjectTaughtInClass(): void{
         $this->assertSame(1,1);
@@ -78,12 +78,20 @@ final class dbTest extends PHPUnit_Framework_TestCase{
 
     }
 
-    public function testrecordEarlyExit(){
-        $_SESSION['role'] = "teacher";
-        $_SESSION['user'] = "test";
-        $db = new dbTeacher();
+    // public function testrecordEarlyExit(){
+    //     $_SESSION['role'] = "teacher";
+    //     $_SESSION['user'] = "test";
+    //     $db = new dbTeacher();
 
-    }
+    //     $day='wrong';
+    //     $ssn='wrong';
+    //     $hour='wrong';
+
+    //     //Errore nella query
+    //     $result=$db->recordEarlyExit($day, $ssn, $hour);
+    //     $this->assertSame($result,false);
+
+    // }
 
 
 
