@@ -224,11 +224,108 @@ final class dbTest extends TestCase{
         if($result)
             $this->assertTrue(false);
         
-        
+    }
+
+
+    public function testGetAssignments(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //Existing teacher (with subjects and assignments)
+        $result=$db->getAssignments($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+
+        //Non existing teacher
+        $result=$db->getAssignments("iAmNotHere");
+        if($result)
+            $this->assertTrue(false);
+
+    }
+
+    public function testInsertNewAssignments(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //New assignment, all correct
+        $day="2019-12-05";
+        $class="1A";
+        $subject="Philosophy";
+        $assignments="Some Assignments";
+
+        $result=$db->insertNewAssignments($day, $class, $_SESSION['user'], $subject, $assignments);
+        if($result)
+            $this->assertTrue(false);
+
+        $result=$db->getAssignments($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
+
+        //Existing assignment -> insert failure
+
+        $result=$db->insertNewAssignments($day, $class, $_SESSION['user'], $subject, $assignments);
+        $this->assertSame($result, -1);
+
+
+    }
+
+    public function testUpdateAssignments(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //Existing assignment
+        $day="2019-12-05";
+        $class="1A";
+        $subject="Philosophy";
+        $assignments="Some NEW Assignments";
+
+        $db->updateAssignments($day, $class, $subject, $assignments);
+
+        $result=$db->getAssignments($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
+
+
+        //Non existing assignment
+
+        $day2="2019-12-03";
+        $assignmnents="Some WRONG Assignments";
+        $db->updateAssignments($day, $class, $subject, $assignments);
+
+        $result=$db->getAssignments($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
 
         
     }
 
+    public function testDeleteAssignments(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        $day="2019-12-05";
+        $class="1A";
+        $subject="Philosophy";
+
+        $db->deleteAssignments($day, $subject, $class);
+        
+        $result=$db->getAssignments($_SESSION['user']);
+        $this->assertSame($result, null);
+        
+    }
+
+    
 
 
 

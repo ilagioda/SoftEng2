@@ -972,6 +972,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function getAssignments($codTeacher)
     {
 
@@ -991,6 +992,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function insertNewAssignments($date, $class, $codTeacher, $subject, $assignments)
     {
         $class = $this->sanitizeString($class);
@@ -1013,6 +1015,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function updateAssignments($date, $class, $subject, $assignments)
     {
 
@@ -1029,6 +1032,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function deleteAssignments($date, $subject, $class)
     {
 
@@ -1046,6 +1050,7 @@ class dbTeacher extends db
     function retrieveAssignments($codFisc)
     { }
 
+    //tested
     function getStudentsByClass2($class)
     {
 
