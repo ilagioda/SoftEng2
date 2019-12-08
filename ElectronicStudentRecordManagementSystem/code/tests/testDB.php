@@ -380,6 +380,24 @@ final class dbTest extends TestCase{
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some nice topics");
     }
+
+    public function testDeleteDailyLesson(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //just for replayability, will be implemented later
+
+        $date="2019-12-06";
+        $hour="1";
+        $class="1A";
+        $teacher="FLCM";
+        $subject="Philosophy";
+        $topics="Some nice topics";
+        $this->assertSame(true,true);
+
+        $result=$db->deleteDailyLesson($date, $hour, $class);
+    }
     
 
 
