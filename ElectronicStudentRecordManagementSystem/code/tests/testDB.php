@@ -360,7 +360,7 @@ final class dbTest extends TestCase{
         $subject="Philosophy";
         $topics="Some nice topics";
 
-        $result=$db->insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics);
+        $result=$db->insertDailyLesson($date, $hour, $class, $teacher, $subject, $topics);
         $this->assertSame($result, null);
 
         $result=$db->getLecturesByTeacher($_SESSION['user']);
@@ -371,7 +371,7 @@ final class dbTest extends TestCase{
 
         //Entry already in db -> insert fail
         $topics="Some WRONG topics";
-        $result=$db->insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics);
+        $result=$db->insertDailyLesson($date, $hour, $class, $teacher, $subject, $topics);
         $this->assertSame($result, -1);
 
         $result=$db->getLecturesByTeacher($_SESSION['user']);
