@@ -145,10 +145,10 @@ class db
         }
         return $ret_value;
     }
-    public function ChangePassword($user, $hashed_pw, $table,$first_time=false)
+    public function ChangePassword($user, $hashed_pw, $table, $first_time = false)
     {
-        if($first_time) return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
-        
+        if ($first_time) return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
+
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
     }
 
@@ -231,19 +231,19 @@ class dbAdmin extends db
         }
     }
 
-    function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights=0)
+    function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights = 0)
     {
         $this->begin_transaction();
 
-        if($who == "Teachers" && $rights==1){
+        if ($who == "Teachers" && $rights == 1) {
             $sel = $this->query("SELECT COUNT(*) as PRIN_NUM FROM $who WHERE principal=1");
             $sel = $sel->fetch_assoc();
-            if(!$sel || $sel["PRIN_NUM"] != 0){
+            if (!$sel || $sel["PRIN_NUM"] != 0) {
                 $this->rollback();
                 return false;
             }
         }
-        
+
 
         $sql = "INSERT INTO $who VALUES('$SSN', '$hashedPw', '$name', '$surname', '$rights')";
         $res = $this->query($sql);
@@ -251,14 +251,15 @@ class dbAdmin extends db
     }
 
 
-    function insertCommunication($title, $text){
+    function insertCommunication($title, $text)
+    {
         $res = $this->query("SELECT MAX(ID) as oldID FROM Announcements");
-        
-        if(!$res) return false;
+
+        if (!$res) return false;
 
         $res = $res->fetch_assoc();
 
-        $newID = $res['oldID'] +1;
+        $newID = $res['oldID'] + 1;
         return $this->query("INSERT INTO Announcements VALUES('$newID', CURRENT_TIMESTAMP, '$title', '$text')");
     }
 
@@ -387,7 +388,8 @@ class dbAdmin extends db
         return 1;
     }
 
-    public function retrieveAllClasses(){
+    public function retrieveAllClasses()
+    {
         $sql = "SELECT classID FROM Classes";
         $resultQuery = $this->query($sql);
         if ($resultQuery->num_rows > 0) {
@@ -399,7 +401,8 @@ class dbAdmin extends db
         }
     }
 
-    public function storeTimetable($class, $timetable){
+    public function storeTimetable($class, $timetable)
+    {
 
         $class = $this->sanitizeString($class);
 
@@ -411,7 +414,7 @@ class dbAdmin extends db
             $this->rollback();
             return 0;
         }
-        if($result->num_rows > 0){
+        if ($result->num_rows > 0) {
             // There's already a timetable for the chosen class in the DB --> delete the old one in order to insert the new one
             $result = $this->query("DELETE FROM Timetable WHERE class='$class'");
             if (!$result) {
@@ -420,18 +423,18 @@ class dbAdmin extends db
             }
         }
 
-        foreach ($timetable as $line){
+        foreach ($timetable as $line) {
 
             // Retrieve the fields
             $day = $line[0];
-            $hour = $line[1]; 
+            $hour = $line[1];
             $subject = $line[2];
 
             // Sanitize
             $day = $this->sanitizeString($day);
-            $hour = $this->sanitizeString($hour); 
+            $hour = $this->sanitizeString($hour);
             $subject = $this->sanitizeString($subject);
-            
+
             $result = $this->query("INSERT INTO Timetable(`class`, `day`, `hour`, `subject`) VALUES ('$class','$day','$hour','$subject')");
             if (!$result) {
                 $this->rollback();
@@ -561,7 +564,8 @@ class dbParent extends db
         return $marks;
     }
 
-    public function getMaterials($class, $subject){
+    public function getMaterials($class, $subject)
+    {
         return $this->query("SELECT * FROM supportMaterials WHERE Class='$class' and Subject='$subject'");
     }
 
@@ -609,10 +613,10 @@ class dbParent extends db
              * "YYYY-MM-DD" => "absent" | "early - hh:mm" | "late - hh:mm"
              * */
 
-            if ($row["absence"] == 1 && $row["lateEntry"] == 0 && $row["earlyExit"] ==0) {
+            if ($row["absence"] == 1 && $row["lateEntry"] == 0 && $row["earlyExit"] == 0) {
                 // the student was absent that day
                 $value = "Absent";
-            } elseif ($row["lateEntry"] != 0 && $row["earlyExit"] !=0) {
+            } elseif ($row["lateEntry"] != 0 && $row["earlyExit"] != 0) {
                 // student both entered late and exited early
                 $value = "late - Entered: " . strval($row["lateEntry"]) . "° hour Exited: " . strval($row["earlyExit"]) . "° hour";
             } elseif ($row["lateEntry"] != 0) {
@@ -691,16 +695,15 @@ class dbParent extends db
              * */
 
             $value = "View assignments:" . $row["textAssignment"];
-            if(array_key_exists($row["date"], $assignments))
+            if (array_key_exists($row["date"], $assignments))
                 $assignments[$row["date"]] = $assignments[$row["date"]] . "~" .  $row["subject"] . ":" . $value;
-            else   
+            else
                 $assignments[$row["date"]] = $row["subject"] . ":" . $value;
         }
 
         $this->commit();
 
         return $assignments;
-
     }
 
 
@@ -721,14 +724,15 @@ class dbParent extends db
             return $row['classID'];
     }
 
-    public function retrieveChildTimetable($class){
+    public function retrieveChildTimetable($class)
+    {
 
         // returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
 
         $class = $this->sanitizeString($class);
         $timetableToReturn = array();
 
-        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'"); 
+        $result = $this->query("SELECT * FROM Timetable WHERE class='$class'");
 
         if (!$result)
             die("Unable to select timetable for class $class");
@@ -739,10 +743,10 @@ class dbParent extends db
                 // $lecture[0] = class
                 $day = $lecture["day"];
                 $hour = $lecture["hour"];
-                $subject = $lecture["subject"]; 
+                $subject = $lecture["subject"];
                 $timetableToReturn[$hour][$day] = $subject;
             }
-        } 
+        }
 
         return $timetableToReturn;
     }
@@ -775,7 +779,8 @@ class dbTeacher extends db
         return $student;
     }
 
-    function insertSupportMaterial($title, $filename, $dimension, $class, $subject){
+    function insertSupportMaterial($title, $filename, $dimension, $class, $subject)
+    {
         return $this->query("INSERT INTO supportmaterials VALUES(CURRENT_TIMESTAMP, '$title', '$filename', '$dimension', '$class', '$subject')");
     }
 
@@ -845,15 +850,15 @@ class dbTeacher extends db
         $codFisc = $this->sanitizeString($codFisc);
         $date = $this->sanitizeString($date);
         $hour = $this->sanitizeString($hour);
-		$subject = $this->sanitizeString($subject);
+        $subject = $this->sanitizeString($subject);
 
         $result = $this->query("DELETE FROM Marks WHERE date='$date' AND hour='$hour' AND codFisc='$codFisc' AND subject='$subject'");
 
         if (!$result) {
             die("ERROR: Mark not deleted.");
         }
-		
-		return 0;
+
+        return 0;
     }
 
     function insertDailyLesson($date, $hour, $class, $codTeacher, $subject, $topics)
@@ -969,8 +974,8 @@ class dbTeacher extends db
 
     function getAssignments($codTeacher)
     {
-		
-		$codTeacher = $this->sanitizeString($codTeacher);
+
+        $codTeacher = $this->sanitizeString($codTeacher);
 
         $result = $this->query("SELECT * FROM Assignments a, TeacherClassSubjectTable t WHERE t.codFisc='$codTeacher' AND t.subject = a.subject ORDER BY date DESC");
 
@@ -1324,7 +1329,7 @@ class dbTeacher extends db
                 $earlyExit = $row["earlyExit"];
 
                 // //lo studente deve risultare presente
-                if ($absence != 0 && $earlyExit==0)
+                if ($absence != 0 && $earlyExit == 0)
                     throw new Exception("Student should be present.");
 
                 if ($row['lateEntry'] != 0 && $row['lateEntry'] > $hour && $hour != 0)
@@ -1371,9 +1376,10 @@ class dbTeacher extends db
             return false;
         }
     }
-	
-	//tested
-	public function viewStudentMarks($CodFisc, $subject) {
+
+    //tested
+    public function viewStudentMarks($CodFisc, $subject)
+    {
 
         $CodFisc = $this->sanitizeString($CodFisc);
         $subject = $this->sanitizeString($subject);
@@ -1390,7 +1396,7 @@ class dbTeacher extends db
             while ($row = $result->fetch_assoc()) {
                 array_push($marks,  "" . $row['date'] . "," . $row['mark'] . "," . $row['hour'] . "");
             }
-			return $marks;
-		}
+            return $marks;
+        }
     }
 }
