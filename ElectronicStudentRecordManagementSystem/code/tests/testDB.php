@@ -62,6 +62,27 @@ final class dbTest extends TestCase{
         $this->assertTrue(true);
     }
 
+    /* dbAdmin */
+
+    public function testReadClassCompositions(){
+
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+
+        // should return an empty array
+        $this->assertEmpty($db->readClassCompositions(6.8));
+        
+        // this should work
+        $res = $db->readClassCompositions("1B");
+        $this->assertEquals(1,count($res));
+        $this->assertEquals("MRC",$res[0][0]); #codFisc
+        $this->assertEquals("Marco",$res[0][1]); #name
+        $this->assertEquals("Cipriano",$res[0][2]); #surname
+        $this->assertEquals("1B",$res[0][3]); #classID
+
+    }
 
     /* TEACHER */
     public function testViewStudentMarks() {

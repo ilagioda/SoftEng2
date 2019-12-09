@@ -101,7 +101,7 @@ class db
 
     function getHashedPassword($user)
     {
-         /**
+        /**
          * Retrieves the password of a certain user, if any.
          * @param $user (String) email of a parent or CodFisc in case of Teacher (Principal or not) or Admin (sysAdmin or not)
          * @return (Array) Returns associative array corresponding to the user found, if any.
@@ -148,7 +148,7 @@ class db
                         $ret_value["sysAdmin"] = $result["sysAdmin"];
                     }
                 }
-            }else {
+            } else {
                 //it's a teacher
                 $result = $result->fetch_array(MYSQLI_ASSOC);
                 $ret_value["user"] = $result["codFisc"];
@@ -202,6 +202,14 @@ class dbAdmin extends db
 
     function readClassCompositions($classID)
     {
+        // tested
+
+        /**
+         * Read class composition for a given classID
+         * @param String $classID: the classID on which we are interested in
+         * @return Array $codFisc, $name, $surname, $class
+         */
+
         $codFisc = "";
         $name = "";
         $surname = "";
@@ -212,7 +220,7 @@ class dbAdmin extends db
         $stmt = $this->prepareStatement(
             "SELECT s.`codFisc`,`name`,`surname`,p.`classID` 
         FROM `Students` as s , `ProposedClasses` as p 
-        WHERE s.codFisc = p.codFisc AND p.classID = ? ORDER BY 'CLASSID'"
+        WHERE s.codFisc = p.codFisc AND p.classID = ?"
         );
         // the parameter is bound to the first '?' in the upper query
         if (!$stmt->bind_param("s", $classID))
@@ -228,10 +236,8 @@ class dbAdmin extends db
                 throw new Exception("Select Failed.");
             $i = 0;
             //Once the statement is excecuted in the variables will be saved the corrisponding values only after the fetch()  
-            while ($row = $stmt->fetch()) {
-                $codFiscnameSurnameClass = array($codFisc, $name, $surname, $class);
-                $compositionVector[$i] = $codFiscnameSurnameClass;
-                $i++;
+            while ($stmt->fetch()) {
+                $compositionVector[$i++] = array($codFisc, $name, $surname, $class);
             }
 
             /* close statement */
@@ -1447,18 +1453,19 @@ class dbTeacher extends db
             }
         }
     }
-	
-	public function insertFinalGrade($ssn, $subject, $finalGrade, $date) {
-		
-		/* This function allows to insert the final grade of the term of the student */
-		
-		$ssn = $this->sanitizeString($ssn);
+
+    public function insertFinalGrade($ssn, $subject, $finalGrade, $date)
+    {
+
+        /* This function allows to insert the final grade of the term of the student */
+
+        $ssn = $this->sanitizeString($ssn);
         $subject = $this->sanitizeString($subject);
         $finalGrade = $this->sanitizeString($finalGrade);
         $date = $this->sanitizeString($date);
 
-		
-		$result = $this->query("SELECT * FROM FinalGrade WHERE (codFisc='$ssn' AND subject='$subject' AND date='$date')");
+
+        $result = $this->query("SELECT * FROM FinalGrade WHERE (codFisc='$ssn' AND subject='$subject' AND date='$date')");
 
         if ($result->num_rows > 0) {
             return -1;
@@ -1470,7 +1477,7 @@ class dbTeacher extends db
         if (!$result) {
             die("ERROR: Final grade not inserted.");
         }
-		
-		return 0;
-	}
+
+        return 0;
+    }
 }
