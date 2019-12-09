@@ -101,7 +101,11 @@ class db
 
     function getHashedPassword($user)
     {
-        /* FIXME: adapt to the new behaviour => remove Principal table and adapt teacher */
+         /**
+         * Retrieves the password of a certain user, if any.
+         * @param $user (String) email of a parent or CodFisc in case of Teacher (Principal or not) or Admin (sysAdmin or not)
+         * @return (Array) Returns associative array corresponding to the user found, if any.
+         */
 
         $sql = "SELECT * FROM Parents WHERE email='$user'";
         $sql2 = "SELECT * FROM Teachers WHERE codFisc='$user'";
