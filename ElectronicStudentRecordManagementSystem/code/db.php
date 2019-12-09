@@ -161,6 +161,14 @@ class db
     }
     public function ChangePassword($user, $hashed_pw, $table, $first_time = false)
     {
+        /**
+         * Changes the password of a given user.
+         * @param $user (String) email of a parent or CodFisc in case of Teacher (Principal or not) or Admin (sysAdmin or not)
+         * @param $hashedPassword (String) hashed password of a certain user 
+         * @param $table (String) table in which user password should be updated
+         * @param $first_time (bool) value used to know if the password is being changed by the "sendmail.php"(false) file or when logging in for the first time (true)
+         * @return (bool) 
+        */
         if ($first_time) return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
 
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
