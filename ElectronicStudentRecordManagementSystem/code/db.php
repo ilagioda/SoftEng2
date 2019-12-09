@@ -101,6 +101,8 @@ class db
 
     function getHashedPassword($user)
     {
+        // TESTED
+        
         /**
          * Retrieves the password of a certain user, if any.
          * @param $user (String) email of a parent or CodFisc in case of Teacher (Principal or not) or Admin (sysAdmin or not)
