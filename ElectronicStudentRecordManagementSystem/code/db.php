@@ -261,6 +261,18 @@ class dbAdmin extends db
 
     function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights = 0)
     {
+
+        /**
+         * Creates entry in db of an official account (Teacher, Principal, Admin or SysAdmin), checking if a Principal is already present in it.
+         * @param $SSN (String) SSN of Teacher (Principal or not) or Admin (sysAdmin or not)
+         * @param $hashedPw (String) hashed password of a certain user 
+         * @param $who (String) Table in which the entry must be inserted
+         * @param $name (String) Name of the user
+         * @param $surname (String) Surname of the user
+         * @param $rights (bool) tells wheter the user has the rights to be a SysAdmin(1) or a Principal(1) or if he/she is just an Admin(0) or a Teacher(0)
+         * @return (bool) 
+        */
+
         $this->begin_transaction();
 
         if ($who == "Teachers" && $rights == 1) {
