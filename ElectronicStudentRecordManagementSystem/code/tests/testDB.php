@@ -49,17 +49,58 @@ final class dbTest extends TestCase{
     public function testGetHashedPassword(){
         $db = new db();
 
-        /* TODO: modify getHashedPassword to remove principal*/
-        
-        // admin
-        
-        // parent
-        
-        // teacher
-        
-        // principal
+        // non existing user
 
-        $this->assertTrue(true);
+        $this->assertEmpty($db->getHashedPassword("nonExistentUser"));
+
+        // sysadmin
+
+        $ret = $db->getHashedPassword("FLC");   #sysadmin
+
+        $this->assertEquals("FLC",$ret["user"]);
+        $this->assertEquals("admin",$ret["role"]);
+        $this->assertTrue(password_verify("ciao",$ret["hashedPassword"])); 
+        $this->assertEquals(1,$ret["sysAdmin"]);
+
+        // admin
+        $ret = $db->getHashedPassword("ADM");   #admin
+
+        $this->assertEquals("ADM",$ret["user"]);
+        $this->assertEquals("admin",$ret["role"]);
+        $this->assertTrue(password_verify("ciao",$ret["hashedPassword"])); 
+        $this->assertEquals(0,$ret["sysAdmin"]);
+
+        // parent with first login = 0
+        $ret = $db->getHashedPassword("parent@parent.it");
+
+        $this->assertEquals("parent@parent.it",$ret["user"]);
+        $this->assertEquals("parent",$ret["role"]);
+        $this->assertTrue(password_verify("ciao",$ret["hashedPassword"])); 
+        $this->assertEquals(0,$ret["firstLogin"]);
+
+        // parent with first login = 1
+        $ret = $db->getHashedPassword("cla_9_6@hotmail.it");
+
+        $this->assertEquals("cla_9_6@hotmail.it",$ret["user"]);
+        $this->assertEquals("parent",$ret["role"]);
+        $this->assertTrue(password_verify("ciao",$ret["hashedPassword"])); 
+        $this->assertEquals(1,$ret["firstLogin"]);
+           
+        // teacher 
+        $ret = $db->getHashedPassword("TEA");
+
+        $this->assertEquals("TEA",$ret["user"]);
+        $this->assertEquals("teacher",$ret["role"]);
+        $this->assertTrue(password_verify("ciao",$ret["hashedPassword"])); 
+        $this->assertEquals(0,$ret["principal"]);
+
+        // principal
+        $ret = $db->getHashedPassword("FLCM");
+
+        $this->assertEquals("FLCM",$ret["user"]);
+        $this->assertEquals("teacher",$ret["role"]);
+        $this->assertTrue(password_verify("ciao",$ret["hashedPassword"])); 
+        $this->assertEquals(1,$ret["principal"]);
     }
 
     /* dbAdmin */
@@ -484,4 +525,3 @@ final class dbTest extends TestCase{
 
 
 }
-?>
