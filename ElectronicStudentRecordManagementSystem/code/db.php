@@ -293,6 +293,12 @@ class dbAdmin extends db
 
     function insertCommunication($title, $text)
     {
+        /**
+         * Inserts an official communication incrementing the ID.
+         * @param $title(String) Title of the communication
+         * @param $text (String) Text of the communication
+         * @return (bool) 
+        */
         $res = $this->query("SELECT MAX(ID) as oldID FROM Announcements");
 
         if (!$res) return false;
@@ -305,6 +311,12 @@ class dbAdmin extends db
 
     function SearchInParents($user, $pass)
     {
+        /**
+         * Selects email and hashedPassword in Parents, if any.
+         * @param $user(String) email of the parent to look for
+         * @param $pass (String) hashedPassword of the parent to search for
+         * @return (array) Associative array with email and hashedPassword 
+        */
         $sql = "SELECT email,hashedPassword FROM Parents /* Parents, Principals, Teachers, Admins*/
         WHERE email='$user' AND hashedPassword='$pass'";
         $resultQuery = $this->query($sql);
