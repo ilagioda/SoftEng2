@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 08, 2019 alle 16:37
--- Versione del server: 10.4.8-MariaDB
--- Versione PHP: 7.1.32
+-- Creato il: Dic 09, 2019 alle 20:10
+-- Versione del server: 10.4.10-MariaDB
+-- Versione PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
-DROP DATABASE IF EXISTS `school`;
+DROP DATABASE IF EXISTS `school`
 CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
 
@@ -211,7 +211,7 @@ CREATE TABLE `Parents` (
 --
 
 INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, `firstLogin`) VALUES
-('cla_9_6@hotmail.it', '$2y$10$aC4SPkQR3pFQjw1rrIcsT.Xn0AFtcdSc2BXsBYwh.Bor9FUAp0NeK', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
+('cla_9_6@hotmail.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Claudio', 'Filocamo', 'CLDFLCM', 1),
 ('fant@hotmail.it', '', 'Ugo', 'Fantozzi', 'GFNTZZ', 0),
 ('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
 ('gigimarzullo@genitore1.it', '', 'Gigi', 'Marzullo', 'MZRGG65', 1),

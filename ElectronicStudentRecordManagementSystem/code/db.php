@@ -109,7 +109,7 @@ class db
 
         $sql = "SELECT * FROM Parents WHERE email='$user'";
         $sql2 = "SELECT * FROM Teachers WHERE codFisc='$user'";
-        $sql4 = "SELECT * FROM Admins WHERE codFisc='$user'";
+        $sql3 = "SELECT * FROM Admins WHERE codFisc='$user'";
         $ret_value = array();
 
         if (preg_match('/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/', $user)) {
@@ -130,23 +130,19 @@ class db
 
             if (!$result) return false;
             if ($result->num_rows == 0) {
+
                 $result = $this->query($sql3);
 
                 if (!$result) return false;
                 if ($result->num_rows == 0) {
-                    $result = $this->query($sql4);
-
-                    if (!$result) return false;
-                    if ($result->num_rows == 0) {
-                        return false; //neither a parent, nor a teacher, nor a principal, nor an admin
-                    } else {
-                        //it's an admin
-                        $result = $result->fetch_array(MYSQLI_ASSOC);
-                        $ret_value["user"] = $result["codFisc"];
-                        $ret_value["role"] = "admin";
-                        $ret_value["hashedPassword"] = $result["hashedPassword"];
-                        $ret_value["sysAdmin"] = $result["sysAdmin"];
-                    }
+                    return false; //neither a parent, nor a teacher, nor a principal, nor an admin
+                } else {
+                    //it's an admin
+                    $result = $result->fetch_array(MYSQLI_ASSOC);
+                    $ret_value["user"] = $result["codFisc"];
+                    $ret_value["role"] = "admin";
+                    $ret_value["hashedPassword"] = $result["hashedPassword"];
+                    $ret_value["sysAdmin"] = $result["sysAdmin"];
                 }
             } else {
                 //it's a teacher
@@ -168,7 +164,7 @@ class db
          * @param $table (String) table in which user password should be updated
          * @param $first_time (bool) value used to know if the password is being changed by the "sendmail.php"(false) file or when logging in for the first time (true)
          * @return (bool) 
-        */
+         */
         if ($first_time) return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
 
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
@@ -271,7 +267,7 @@ class dbAdmin extends db
          * @param $surname (String) Surname of the user
          * @param $rights (bool) tells wheter the user has the rights to be a SysAdmin(1) or a Principal(1) or if he/she is just an Admin(0) or a Teacher(0)
          * @return (bool) 
-        */
+         */
 
         $this->begin_transaction();
 
@@ -298,7 +294,7 @@ class dbAdmin extends db
          * @param $title(String) Title of the communication
          * @param $text (String) Text of the communication
          * @return (bool) 
-        */
+         */
         $res = $this->query("SELECT MAX(ID) as oldID FROM Announcements");
 
         if (!$res) return false;
@@ -316,7 +312,7 @@ class dbAdmin extends db
          * @param $user(String) email of the parent to look for
          * @param $pass (String) hashedPassword of the parent to search for
          * @return (array) Associative array with email and hashedPassword 
-        */
+         */
         $sql = "SELECT email,hashedPassword FROM Parents /* Parents, Principals, Teachers, Admins*/
         WHERE email='$user' AND hashedPassword='$pass'";
         $resultQuery = $this->query($sql);
