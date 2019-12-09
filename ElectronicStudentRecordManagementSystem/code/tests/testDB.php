@@ -126,6 +126,9 @@ final class dbTest extends TestCase{
     }
 
     public function testInsertOfficialAccount(){
+
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
         $db = new dbAdmin();
 
         // add admins and teachers with privileges or not
@@ -164,6 +167,34 @@ final class dbTest extends TestCase{
         $db->queryForTesting("DELETE FROM Teachers WHERE codFisc='TestA~'");
         $db->queryForTesting("DELETE FROM Admins WHERE codFisc='TestC~' OR codFisc='TestD~'");
 
+    }
+
+    public function testInsertCommunication(){
+
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        $res = $db->queryForTesting("SELECT MAX(ID) as oldID FROM Announcements");
+
+        if (!$res) $this->fail();
+
+        $res = $res->fetch_assoc();
+
+        $newID = $res['oldID'] + 1;
+
+        $this->assertTrue($db->insertCommunication("title","text"));
+
+        $q=$db->queryForTesting("SELECT COUNT(*) as n FROM Announcements WHERE ID=$newID");
+
+        if (!$q) $this->fail();
+
+        $q = $q->fetch_assoc();
+
+        if($q['n']!=1) $this->fail();
+
+        // clean DB
+        $db->queryForTesting("DELETE FROM Announcements WHERE ID=$newID");
     }
 
     /* TEACHER */

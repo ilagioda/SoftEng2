@@ -302,12 +302,18 @@ class dbAdmin extends db
 
     function insertCommunication($title, $text)
     {
+        //TESTED 
+        
         /**
          * Inserts an official communication incrementing the ID.
          * @param $title(String) Title of the communication
          * @param $text (String) Text of the communication
          * @return (bool) 
          */
+
+        $title = $this->sanitizeString($title);
+        $text = $this->sanitizeString($text);
+
         $res = $this->query("SELECT MAX(ID) as oldID FROM Announcements");
 
         if (!$res) return false;
