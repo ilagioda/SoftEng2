@@ -31,15 +31,20 @@ if (isset($_POST['user'])) {
                     if ($_SESSION['role'] == "admin") {
                         $_SESSION['sysAdmin'] = $pw['sysAdmin'];
                         header("Location: homepageAdmin.php?view=$user");
-                    } else if ($_SESSION['role'] == "parent") {
-                        header("Location: chooseChild.php?view=$user");
+                        exit;
                     } else if ($_SESSION['role'] == "teacher") {
                         $_SESSION['principal'] = $pw['principal'];
+                        if($_SESSION['principal']){
+                            header("Location: homepagePrincipal.php?view=$user");
+                            exit;
+                        }
                         header("Location: homepageTeacher.php?view=$user");
+                        exit;
                     }
-                    exit;
-                }
-            } else {
+                    }
+                    
+            }
+            else {
                 $error = "Invalid login attempt"; //Wrong password
             }
         }

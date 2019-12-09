@@ -2,7 +2,7 @@
     require_once("basicChecks.php");
 
     $loggedin = false;
-if (isset($_SESSION['user']) && $_SESSION['role'] == "principal") {
+if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher" && $_SESSION['principal']) {
     $loggedin = true;
 }
 if (!$loggedin) {

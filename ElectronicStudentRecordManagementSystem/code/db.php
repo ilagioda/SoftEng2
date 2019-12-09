@@ -105,7 +105,6 @@ class db
 
         $sql = "SELECT * FROM Parents WHERE email='$user'";
         $sql2 = "SELECT * FROM Teachers WHERE codFisc='$user'";
-        $sql3 = "SELECT * FROM Principals WHERE codFisc='$user'";
         $sql4 = "SELECT * FROM Admins WHERE codFisc='$user'";
         $ret_value = array();
 
@@ -144,14 +143,8 @@ class db
                         $ret_value["hashedPassword"] = $result["hashedPassword"];
                         $ret_value["sysAdmin"] = $result["sysAdmin"];
                     }
-                } else {
-                    //it's a principal //will not exist anymore
-                    $result = $result->fetch_array(MYSQLI_ASSOC);
-                    $ret_value["user"] = $result["codFisc"];
-                    $ret_value["role"] = "principal";
-                    $ret_value["hashedPassword"] = $result["hashedPassword"];
                 }
-            } else {
+            }else {
                 //it's a teacher
                 $result = $result->fetch_array(MYSQLI_ASSOC);
                 $ret_value["user"] = $result["codFisc"];
