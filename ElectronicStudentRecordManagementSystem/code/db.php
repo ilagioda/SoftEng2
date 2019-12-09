@@ -102,7 +102,7 @@ class db
     function getHashedPassword($user)
     {
         // TESTED
-        
+
         /**
          * Retrieves the password of a certain user, if any.
          * @param $user (String) email of a parent or CodFisc in case of Teacher (Principal or not) or Admin (sysAdmin or not)
@@ -259,21 +259,32 @@ class dbAdmin extends db
 
     function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights = 0)
     {
+        // TESTED
 
         /**
          * Creates entry in db of an official account (Teacher, Principal, Admin or SysAdmin), checking if a Principal is already present in it.
+         * @param $who (String) Table in which the entry must be inserted (role + "s"). Supports only Teachers and Admins
          * @param $SSN (String) SSN of Teacher (Principal or not) or Admin (sysAdmin or not)
          * @param $hashedPw (String) hashed password of a certain user 
-         * @param $who (String) Table in which the entry must be inserted
          * @param $name (String) Name of the user
          * @param $surname (String) Surname of the user
          * @param $rights (bool) tells wheter the user has the rights to be a SysAdmin(1) or a Principal(1) or if he/she is just an Admin(0) or a Teacher(0)
          * @return (bool) 
          */
 
+        if($who!=="Teachers" && $who!=="Admins") return false;
+        if($rights!==0 && $rights!==1) return false;
+
+        $SSN = $this->sanitizeString($SSN);
+        $name = $this->sanitizeString($name);
+        $surname = $this->sanitizeString($surname);
+
         $this->begin_transaction();
 
         if ($who == "Teachers" && $rights == 1) {
+            // If the admin wants to insert a principal, check that there is not another one
+            // If there is already a principal, rollback and return false;
+
             $sel = $this->query("SELECT COUNT(*) as PRIN_NUM FROM $who WHERE principal=1");
             $sel = $sel->fetch_assoc();
             if (!$sel || $sel["PRIN_NUM"] != 0) {
@@ -284,7 +295,7 @@ class dbAdmin extends db
 
 
         $sql = "INSERT INTO $who VALUES('$SSN', '$hashedPw', '$name', '$surname', '$rights')";
-        $res = $this->query($sql);
+        $this->query($sql);
         return $this->commit();
     }
 

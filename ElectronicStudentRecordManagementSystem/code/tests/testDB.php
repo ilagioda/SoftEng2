@@ -125,6 +125,47 @@ final class dbTest extends TestCase{
 
     }
 
+    public function testInsertOfficialAccount(){
+        $db = new dbAdmin();
+
+        // add admins and teachers with privileges or not
+        $this->assertTrue($db->insertOfficialAccount("Teachers","TestA~","a","a","a"));
+        $this->assertFalse($db->insertOfficialAccount("Teachers","TestB~","a","a","a",1)); // just one principal
+        $this->assertTrue($db->insertOfficialAccount("Admins","TestC~","a","a","a"));
+        $this->assertTrue($db->insertOfficialAccount("Admins","TestD~","a","a","a",1));
+
+        // check if the insertion was good
+        
+        // Teacher
+        $ret = $db->getHashedPassword("TestA~"); 
+        $this->assertEquals("TestA~",$ret["user"]);
+        $this->assertEquals("teacher",$ret["role"]);
+        $this->assertEquals("a",$ret["hashedPassword"]); 
+        $this->assertEquals(0,$ret["principal"]);
+
+        // principal => should not have been inserted
+        $this->assertEmpty($db->getHashedPassword("TestB~"));
+
+        // admin
+        $ret = $db->getHashedPassword("TestC~");
+        $this->assertEquals("TestC~",$ret["user"]);
+        $this->assertEquals("admin",$ret["role"]);
+        $this->assertEquals("a",$ret["hashedPassword"]); 
+        $this->assertEquals(0,$ret["sysAdmin"]);
+
+        // sysadmin
+        $ret = $db->getHashedPassword("TestD~");
+        $this->assertEquals("TestD~",$ret["user"]);
+        $this->assertEquals("admin",$ret["role"]);
+        $this->assertEquals("a",$ret["hashedPassword"]); 
+        $this->assertEquals(1,$ret["sysAdmin"]);
+
+        // clean the db
+        $db->queryForTesting("DELETE FROM Teachers WHERE codFisc='TestA~'");
+        $db->queryForTesting("DELETE FROM Admins WHERE codFisc='TestC~' OR codFisc='TestD~'");
+
+    }
+
     /* TEACHER */
     public function testViewStudentMarks() {
 
