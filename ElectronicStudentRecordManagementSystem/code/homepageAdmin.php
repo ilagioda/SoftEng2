@@ -42,13 +42,13 @@ $_SESSION['role'] = 'admin'; */
 _SETUPACCOUNTSBUTTON;
     ?>
     <div class="btn-group">
-        <a href="publishCommunications.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Publish general communications</a>
+        <a href="publishCommunications.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-bullhorn pull-left" aria-hidden="true"></span>&emsp;Publish general communications</a>
     </div><br>
     <div class="btn-group">
-            <a href="publishInternalCommunications.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Publish internal communications</a>
+            <a href="publishInternalCommunications.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-bullhorn pull-left" aria-hidden="true"></span>&emsp;Publish internal communications</a>
         </div><br>
     <div class="btn-group">
-        <a href="publishTimetable.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Publish timetables</a>
+        <a href="publishTimetable.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Publish timetables</a>
     </div><br>
 </div>
 

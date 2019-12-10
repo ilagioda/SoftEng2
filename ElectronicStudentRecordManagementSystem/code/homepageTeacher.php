@@ -59,11 +59,11 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-		<a href="attendance.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
+		<a href="attendance.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
 	</div>
 	<br>
 	<div class="btn-group">
-		<a href="publishSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Publish material</a>
+		<a href="publishSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Publish material</a>
 	</div>
 </div>
 <?php

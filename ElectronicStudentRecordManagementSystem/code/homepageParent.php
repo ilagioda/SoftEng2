@@ -30,13 +30,16 @@ echo <<< _OPLIST
         <a href="viewMarks.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Marks</a>
     </div><br>
     <div class="btn-group">
-        <a href="studentAttendance.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
+        <a href="studentAttendance.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Attendance</a>
     </div><br>
     <div class="btn-group">
-        <a href="viewChildAssignment.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Assignments</a>
+        <a href="viewChildAssignment.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-file pull-left" aria-hidden="true"></span>&emsp;Assignments</a>
     </div><br>
     <div class="btn-group">
         <a href="viewSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Materials</a>
+    </div><br>
+    <div class="btn-group">
+        <a href="seeTimetable.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Timetable</a>
     </div><br>
 </div>
 _OPLIST;
