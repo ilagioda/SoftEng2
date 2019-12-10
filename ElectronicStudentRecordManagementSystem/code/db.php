@@ -327,7 +327,7 @@ class dbAdmin extends db
     function readAllClassCompositions()
     {
         // TESTED 
-        
+
         $sql = "SELECT DISTINCT classID FROM ProposedClasses";
 
         $resultQuery = $this->query($sql);
@@ -348,7 +348,8 @@ class dbAdmin extends db
         return $this->query("SELECT classID FROM classes ORDER BY classID");
     }
 
-    public function insertInternalCommunication($class, $title, $text){
+    public function insertInternalCommunication($class, $title, $text)
+    {
 
         $res = $this->query("SELECT MAX(ID) as oldID FROM internalCommunications");
 
@@ -367,36 +368,62 @@ class dbAdmin extends db
         return $this->query("INSERT INTO internalCommunications VALUES('$newID', '$class', CURRENT_TIMESTAMP, '$title', '$text') ");
     }
 
+
+    /**
+     * This function has the aim to update the class of the students for which the class composition has been accepted.
+     * @param $vectorCodFiscNameSurnameClass vector in which two important values are recorded:
+     *  $codFisc = $value[0];
+     *  $classID = $value[3];
+     * 
+     * @return true if successed else @return false;
+     * 
+     */
     function updateStudentsClass($vectorCodFiscNameSurnameClass)
     {
+        $this->begin_transaction();
+
         $stmt = $this->prepareStatement("UPDATE `Students` SET `classID`= ? WHERE `codFisc` = ? ");
         foreach ($vectorCodFiscNameSurnameClass as $value) {
             $codFisc = $value[0];
             $classID = $value[3];
 
-            if (!$stmt->bind_param("ss", $classID, $codFisc))
-                die("Binding Failed the update statement.");
+            if (!$stmt->bind_param("ss", $classID, $codFisc)) {
+                $this->rollback();
+                return false;
+            }
 
-            if (!$stmt->execute())
-                die("Update Failed.");
+            if (!$stmt->execute()) {
+                $this->rollback();
+                return false;
+            }
 
             if (($stmt->affected_rows) != 1) {
-                die("Update Failed.");
+                $this->rollback();
+                return false;
             }
         }
         /* close statement */
         $stmt->close();
 
         $stmt = $this->prepareStatement("DELETE FROM `ProposedClasses` WHERE `classID` = ?");
-        if (!$stmt->bind_param("s", $classID))
-            die("Binding Failed the delete statement.");
+        if (!$stmt->bind_param("s", $classID)) {
+            $this->rollback();
+            return false;
+        }
 
-        if (!$stmt->execute())
-            die("Delete Failed.");
+        if (!$stmt->execute()) {
+            $this->rollback();
+            return false;
+        }
 
         if (($stmt->affected_rows) == 0) {
-            die("Delete Failed.");
+            $this->rollback();
+            return false;
         }
+
+        $this->commit();
+
+        return true;
     }
 
 
@@ -595,7 +622,8 @@ class dbParent extends db
 
         return $children;
     }
-    public function getInternalAnnouncements($classID){
+    public function getInternalAnnouncements($classID)
+    {
         $sql = "SELECT * FROM internalCommunications WHERE classID='$classID' ORDER BY Timestamp DESC";
         $res = $this->query($sql);
         return $res;
@@ -1203,7 +1231,7 @@ class dbTeacher extends db
                 $stmt = $this->prepareStatement("INSERT INTO `Attendance`(`date`,`codFisc`, `absence`, `earlyExit`, `lateEntry`) VALUES (?,?,?,?,?)");
 
                 if (!$stmt->bind_param("ssiii", $day, $ssn, $absence, $earlyExit, $lateEntry))
-                    die("Binding Failed in the Transaction.");
+                    throw new Exception("Binding Failed in the Transaction.");
 
                 // The statement is excecuted but the variables do not contain the results
                 if (!$stmt->execute())
@@ -1227,7 +1255,7 @@ class dbTeacher extends db
                     $stmt = $this->prepareStatement("DELETE FROM `Attendance` WHERE `codFisc`= ? AND `date`=?");
 
                     if (!$stmt->bind_param("ss", $ssn, $day))
-                        die("Binding Failed in the Transaction.");
+                        throw new Exception("Binding Failed in the Transaction.");
 
                     // The statement is excecuted but the variables do not contain the results
                     if (!$stmt->execute())
@@ -1525,32 +1553,33 @@ class dbTeacher extends db
         }
     }
 
-	public function getFinalGrade($ssn, $subject, $date) {
-		
-		$result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
-		
-		if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-			return $row['finalGrade'];
-        }
-		
-		return -1;
+    public function getFinalGrade($ssn, $subject, $date)
+    {
 
-	}
-	public function insertFinalGrade($ssn, $subject, $finalGrade, $date) {
-		
-		/* This function allows to insert the final grade of the term of the student */
-		
-		$ssn = $this->sanitizeString($ssn);
+        $result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row['finalGrade'];
+        }
+
+        return -1;
+    }
+    public function insertFinalGrade($ssn, $subject, $finalGrade, $date)
+    {
+
+        /* This function allows to insert the final grade of the term of the student */
+
+        $ssn = $this->sanitizeString($ssn);
         $subject = $this->sanitizeString($subject);
         $finalGrade = $this->sanitizeString($finalGrade);
         $date = $this->sanitizeString($date);
-		
-		$result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
-		
-		if ($result->num_rows > 0) {			
-			return -1;
-		}
+
+        $result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
+
+        if ($result->num_rows > 0) {
+            return -1;
+        }
 
         $result = $this->query("INSERT INTO FinalGrades(codFisc, subject, finalTerm, finalGrade) 
 								VALUES ('$ssn', '$subject', '$date', '$finalGrade')");
@@ -1558,7 +1587,7 @@ class dbTeacher extends db
         if (!$result) {
             die("ERROR: Final grade not inserted.");
         }
-		
-		return 0;
-	}
+
+        return 0;
+    }
 }

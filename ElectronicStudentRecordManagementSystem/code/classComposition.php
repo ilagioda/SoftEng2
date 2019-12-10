@@ -3,13 +3,13 @@
 require_once('basicChecks.php');
 $loggedin = false;
 if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
-    $loggedin = true;
+  $loggedin = true;
 }
 if (!$loggedin) {
-    //require_once("defaultNavbar.php");
-    header("Location: login.php");
+  //require_once("defaultNavbar.php");
+  header("Location: login.php");
 } else {
-    require_once "loggedAdminNavbar.php";
+  require_once "loggedAdminNavbar.php";
 }
 
 require_once('db.php');
@@ -97,26 +97,40 @@ _ENDOFREQUESTEDPAGE;
     // The db should be updated
     //print($_POST["confirm"]);
     $parameters = json_decode($_POST["confirm"]);
-    $dbAdmin->updateStudentsClass($parameters);
-
-
-    //require_once("defaultNavbar.php");
-    echo <<<_CONFIRMEDPAGE
-    <div class="col-sm-20 text-left">
-                <h1>Composition of the class confirmed.</h1>
-                <hr>
-                <div class="container col-sm-10">
-                <form class="form-horizontal" method = "post" action="./classComposition.php">
-                            <div class="form-group">
-                              <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-default pull-right">Go Back</button>
-                                </div>
-                                </div>
-                            </form>
-                </div>
-      </div>
+    if ($dbAdmin->updateStudentsClass($parameters)) {
+      echo <<<_CONFIRMEDPAGE
+      <div class="col-sm-20 text-left">
+                  <h1>Composition of the class confirmed.</h1>
+                  <hr>
+                  <div class="container col-sm-10">
+                  <form class="form-horizontal" method = "post" action="./classComposition.php">
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <button type="submit" class="btn btn-default pull-right">Go Back</button>
+                                  </div>
+                                  </div>
+                              </form>
+                  </div>
+        </div>
 _CONFIRMEDPAGE;
-require_once("defaultFooter.php");
+    } else {
+      echo <<<_DENIEDPAGE
+      <div class="col-sm-20 text-left">
+                  <h1>Sorry the recording process faced a problem... try later.</h1>
+                  <hr>
+                  <div class="container col-sm-10">
+                  <form class="form-horizontal" method = "post" action="./classComposition.php">
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <button type="submit" class="btn btn-default pull-right">Go Back</button>
+                                  </div>
+                                  </div>
+                              </form>
+                  </div>
+        </div>
+_DENIEDPAGE;
+    }
+    require_once("defaultFooter.php");
   } else {
     // The user has not requested or confirmed the page.
     //print the normal page
@@ -193,4 +207,3 @@ _ENDOFNORMALPAGE;
     require_once("defaultFooter.php");
   }
 }
-?>
