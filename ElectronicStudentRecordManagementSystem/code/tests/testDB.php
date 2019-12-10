@@ -656,6 +656,99 @@ final class dbTest extends TestCase{
         $result=$db->getGradesByTeacher($codfisc);
         $this->assertSame($result, null);
     }
+
+    public function testInsertGrade(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //New entry->insert successful (should return null)
+        $date="2019-12-12";
+        $hour=2;
+        $student="FRCWTR";
+        $subject="Physics";
+        $grade="5/6";
+        $codfisc="GNV";
+
+        $result=$db->insertGrade($date, $hour, $student, $subject, $grade);
+        $this->assertSame($result, null);
+        //controls on data
+        $result=$db->getGradesByTeacher($codfisc);
+        $this->assertSame(count($result), 2);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-12-12,2,5/6");
+        $this->assertSame($result[1], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
+        
+        //Existing entry (should return -1 and make no changes to DB)
+        $result=$db->insertGrade($date, $hour, $student, $subject, $grade);
+        $this->assertSame($result, -1);
+
+        $result=$db->getGradesByTeacher($codfisc);
+        $this->assertSame(count($result), 2);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-12-12,2,5/6");
+        $this->assertSame($result[1], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
+    }
+
+    public function testUpdateMark(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        $codFiscTeacher="GNV";
+
+        //Mark is present -> update should be successful
+        $date="2019-12-12";
+        $hour=2;
+        $codFisc="FRCWTR";
+        $subject="Physics";
+        $grade=10;
+        
+        $result=$db->updateMark($codFisc, $subject, $date, $hour, $grade);
+        //this function always return null
+        $this->assertSame($result, null);
+        //data controls
+        $result=$db->getGradesByTeacher($codFiscTeacher);
+        $this->assertSame(count($result), 2);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-12-12,2,10");
+        $this->assertSame($result[1], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
+
+        //Mark is not present -> update should fail
+        $date="wrong";
+        $result=$db->updateMark($codFisc, $subject, $date, $hour, $grade);
+        $this->assertSame($result, null);
+
+        $result=$db->getGradesByTeacher($codFiscTeacher);
+        $this->assertSame(count($result), 2);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-12-12,2,10");
+        $this->assertSame($result[1], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");        
+    }
+
+    public function testDeleteMark(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //Existing mark (this function always returns 0)
+        $date="2019-12-12";
+        $hour=2;
+        $codFisc="FRCWTR";
+        $subject="Physics";
+        $result=$db->deleteMark($codFisc, $date, $hour, $subject);
+        $this->assertSame($result, 0);
+        //data control
+        $codfiscTeacher="GNV";
+        $result=$db->getGradesByTeacher($codfiscTeacher);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
+
+        //Non existing mark (no changes to the DB should occur)
+        $result=$db->deleteMark($codFisc, $date, $hour, $subject);
+        $this->assertSame($result, 0);
+        //data control
+        $codfiscTeacher="GNV";
+        $result=$db->getGradesByTeacher($codfiscTeacher);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
+    }
     
 
 

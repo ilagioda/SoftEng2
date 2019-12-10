@@ -840,6 +840,7 @@ class dbTeacher extends db
         return $this->query("INSERT INTO supportmaterials VALUES(CURRENT_TIMESTAMP, '$title', '$filename', '$dimension', '$class', '$subject')");
     }
 
+    //tested
     function insertGrade($date, $hour, $student, $subject, $grade)
     {
 
@@ -884,6 +885,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function updateMark($codFisc, $subject, $date, $hour, $grade)
     {
         $codFisc = $this->sanitizeString($codFisc);
@@ -900,7 +902,7 @@ class dbTeacher extends db
         }
     }
 
-
+    //tested
     function deleteMark($codFisc, $date, $hour, $subject)
     {
         $codFisc = $this->sanitizeString($codFisc);
