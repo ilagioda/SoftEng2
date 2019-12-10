@@ -197,6 +197,49 @@ final class dbTest extends TestCase{
         $db->queryForTesting("DELETE FROM Announcements WHERE ID=$newID");
     }
 
+    public function testReadAllClassCompositions(){
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        $ret = $db->readAllClassCompositions();
+        $this->assertNotEmpty($ret);
+        $this->assertCount(3,$ret);
+        $this->assertContains("1A",$ret);
+        $this->assertContains("1B",$ret);
+        $this->assertContains("1C",$ret);
+
+        // remove entries and see if the return value is an empty array
+        $db->queryForTesting("DELETE FROM ProposedClasses");
+
+        $this->assertEmpty($db->readAllClassCompositions());
+
+        // restore values
+        $db->queryForTesting("INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
+                                                                ('1A', 'CLDFLCM'),
+                                                                ('1B', 'MRC'),
+                                                                ('1C', 'ANDR'),
+                                                                ('1C', 'SMN');");
+
+    }
+
+    public function testUpdateStudentsClass(){
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        $class1A = $db->readClassCompositions("1A"); // already tested
+
+        $codFisc = $class1A[0][0];
+
+        // should set the class of the student
+        $db->updateStudentsClass($class1A);
+
+        $this->assertEquals("1A",$db->queryForTesting("SELECT classID FROM Students WHERE codFisc=$codFisc")->fetch_assoc()["classID"]);
+        
+        
+    }
+
     /* TEACHER */
     public function testViewStudentMarks() {
 

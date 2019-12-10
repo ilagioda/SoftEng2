@@ -326,6 +326,8 @@ class dbAdmin extends db
 
     function readAllClassCompositions()
     {
+        // TESTED 
+        
         $sql = "SELECT DISTINCT classID FROM ProposedClasses";
 
         $resultQuery = $this->query($sql);
