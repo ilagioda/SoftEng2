@@ -196,6 +196,10 @@ function build_html_calendar($year, $month, $events = null)
                 // enters late
                 $events[$cur_date] = explode("-", $event)[1];
                 $color = "style='background-color:yellow'";
+            } else if (strpos($event, 'teacherMeetings') !== false){
+                // Parent meeting timeslots (Teacher's side)
+                $teacherMeetings=true;
+                $color = "style='background-color:#b3ffcc'";
             } else $color = "";
         } else $color = "";
 
@@ -205,9 +209,14 @@ function build_html_calendar($year, $month, $events = null)
             $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\" $color>";
         }
         else{
-              // Day cell
-        $calendar .= $draw_event ?
-            "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+            // Day cell with parent meetings time slots (clickable)
+            if($draw_event == true && $teacherMeetings == true){
+                $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
+            } else {
+                  // Day cell
+                $calendar .= $draw_event ?
+                "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+            }
         }
      
 
@@ -220,6 +229,10 @@ function build_html_calendar($year, $month, $events = null)
                 $events[$cur_date] = '<div class="glyphicon glyphicon-book"></div> Assignments';
                 $assignmentClass="assignment"; 
             } else $assignmentClass="";
+
+            if($teacherMeetings){
+                $events[$cur_date] = '<div class="glyphicon glyphicon-cog"></div>';
+            }
 
             $calendar .=
                 "<div class='{$css_cal_event} text-center $assignmentClass'>" .

@@ -1627,4 +1627,39 @@ class dbTeacher extends db
 
         return 0;
     }
+
+    public function viewSlotsAlreadyProvided($CodFisc)
+    {
+
+        /**
+         * Retrieve the days in which a teacher has already provided at least one time slot for parent meetings in the current semester.
+         * @param $CodFisc (String) CodFisc of the teacher.
+         * @return (Array) The days in which a teacher has already provided at least one time slot for parent meetings in the form: 
+         * "YYYY-MM-DD" => "" | "teacherMeetings" 
+         */
+
+        $this->begin_transaction();
+
+        $CodFisc = $this->sanitizeString($CodFisc);
+
+        $query = "SELECT DISTINCT `day` FROM `ParentMeetings` WHERE teacherCodFisc='$CodFisc'";
+        $result = $this->query($query);
+        if (!$result)
+            die("Unable to execute the query!");
+
+        $ret = array();
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+
+            /**
+             * Produces an array as
+             * "YYYY-MM-DD" => "teacherMeetings" 
+             * */
+
+            $ret[$row["day"]] = "teacherMeetings";
+        }
+
+        $this->commit();
+
+        return $ret;
+    }
 }

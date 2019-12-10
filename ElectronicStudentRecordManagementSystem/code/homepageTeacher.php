@@ -65,6 +65,10 @@ if (!$loggedin) {
 	<div class="btn-group">
 		<a href="publishSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Publish material</a>
 	</div>
+	<br>
+	<div class="btn-group">
+		<a href="provideParentMeetingSlots.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Provide parent meetings</a>
+	</div>
 </div>
 <?php
 require_once("defaultFooter.php")
