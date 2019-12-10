@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 08, 2019 alle 16:37
+-- Creato il: Dic 10, 2019 alle 11:02
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -141,6 +141,28 @@ CREATE TABLE `Classes` (
   `coordinatorSSN` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `Classes`
+--
+
+INSERT INTO `Classes` (`classID`, `coordinatorSSN`) VALUES
+('1A', 'TEA'),
+('1B', 'TEA'),
+('1D', 'GNV');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `FinalGrades`
+--
+
+CREATE TABLE `FinalGrades` (
+  `codFisc` varchar(64) NOT NULL,
+  `subject` varchar(32) NOT NULL,
+  `finalTerm` date NOT NULL,
+  `finalGrade` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------
 
 --
@@ -256,6 +278,20 @@ INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
 ('1B', 'MRC'),
 ('1C', 'ANDR'),
 ('1C', 'SMN');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `StudentNotes`
+--
+
+CREATE TABLE `StudentNotes` (
+  `codFiscStudent` varchar(64) NOT NULL,
+  `date` date NOT NULL,
+  `hour` int(1) NOT NULL,
+  `subject` varchar(32) NOT NULL,
+  `Note` varchar(4096) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -381,8 +417,8 @@ INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `princip
 --
 
 CREATE TABLE `Timetable` (
-  `class` varchar(32) NOT NULL,
-  `day` int(1) NOT NULL,
+  `classID` varchar(32) NOT NULL,
+  `day` varchar(8) NOT NULL,
   `hour` int(1) NOT NULL,
   `subject` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -442,6 +478,12 @@ ALTER TABLE `ProposedClasses`
   ADD KEY `studentIDForeignKey` (`codFisc`);
 
 --
+-- Indici per le tabelle `StudentNotes`
+--
+ALTER TABLE `StudentNotes`
+  ADD PRIMARY KEY (`codFiscStudent`,`date`,`hour`,`subject`);
+
+--
 -- Indici per le tabelle `Students`
 --
 ALTER TABLE `Students`
@@ -465,6 +507,12 @@ ALTER TABLE `TeacherClassSubjectTable`
 --
 ALTER TABLE `Teachers`
   ADD PRIMARY KEY (`codFisc`);
+
+--
+-- Indici per le tabelle `Timetable`
+--
+ALTER TABLE `Timetable`
+  ADD PRIMARY KEY (`classID`,`day`,`hour`,`subject`);
 
 --
 -- Limiti per le tabelle scaricate

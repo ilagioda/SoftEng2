@@ -64,8 +64,9 @@
                         </ul>
                     </li>
 					
-					<li><a href="attendance.php">Attendance</a>
-                    <li><a href="publishSupportMaterial.php">Publish Material</a>
+					<li><a href="attendance.php">Attendance</a></li>
+                    <li><a href="publishSupportMaterial.php">Publish Material</a></li>
+                    <li><a href="writeStudentNote.php">Discplinar note</a></li>
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

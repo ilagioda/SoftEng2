@@ -272,8 +272,8 @@ class dbAdmin extends db
          * @return (bool) 
          */
 
-        if($who!=="Teachers" && $who!=="Admins") return false;
-        if($rights!==0 && $rights!==1) return false;
+        if ($who !== "Teachers" && $who !== "Admins") return false;
+        if ($rights !== 0 && $rights !== 1) return false;
 
         $SSN = $this->sanitizeString($SSN);
         $name = $this->sanitizeString($name);
@@ -303,7 +303,7 @@ class dbAdmin extends db
     function insertCommunication($title, $text)
     {
         //TESTED 
-        
+
         /**
          * Inserts an official communication incrementing the ID.
          * @param $title(String) Title of the communication
@@ -324,34 +324,21 @@ class dbAdmin extends db
         return $this->query("INSERT INTO Announcements VALUES('$newID', CURRENT_TIMESTAMP, '$title', '$text')");
     }
 
-    function SearchInParents($user, $pass)
+    function readAllClassCompositions()
     {
-        /**
-         * Selects email and hashedPassword in Parents, if any.
-         * @param $user(String) email of the parent to look for
-         * @param $pass (String) hashedPassword of the parent to search for
-         * @return (array) Associative array with email and hashedPassword 
-         */
-        $sql = "SELECT email,hashedPassword FROM Parents /* Parents, Principals, Teachers, Admins*/
-        WHERE email='$user' AND hashedPassword='$pass'";
-        $resultQuery = $this->query($sql);
-        return $resultQuery;
-    }
-
-    function readAllClasses()
-    {
-
         $sql = "SELECT DISTINCT classID FROM ProposedClasses";
+
         $resultQuery = $this->query($sql);
+
+        $resultArray = array();
 
         if ($resultQuery->num_rows > 0) {
-            $resultArray = array();
             // output data of each row
             while ($row = $resultQuery->fetch_assoc()) {
                 array_push($resultArray, $row["classID"]);
             }
-            return $resultArray;
         }
+        return $resultArray;
     }
 
     function updateStudentsClass($vectorCodFiscNameSurnameClass)
