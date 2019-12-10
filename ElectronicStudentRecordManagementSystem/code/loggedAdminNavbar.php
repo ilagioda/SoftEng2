@@ -19,10 +19,28 @@
                     <li><a href="mailInterface.php">E-mail portal</a>
                     <li><a href="classComposition.php">Class composition</a>
                     <?php
-                    if($_SESSION['sysAdmin']==1)
-                        echo '<li><a href="setupAccounts.php">Setup official accounts</a>';
-                    ?>
-                    <li><a href="publishCommunications.php">Publish communications</a>
+if ($_SESSION['sysAdmin'] == 1) {
+    echo '<li><a href="setupAccounts.php">Setup official accounts</a>';
+}
+
+?>
+
+<li role="presentation" class="dropdown">
+
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+    Publish communications <span class="caret"></span>
+</a>
+
+<ul class="dropdown-menu">
+    <li class="nav-item dropdown">
+        <a class="dropdown-item" href="publishInternalCommunications.php">Internal</a>
+    </li>
+    <li class="divider"></li>
+    <li class="nav-item dropdown">
+        <a class="dropdown-item" href="publishCommunications.php">General</a>
+    </li>
+</ul>
+</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
