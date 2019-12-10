@@ -16,6 +16,8 @@ if(!isset($_SESSION['childName'])){
 }
     require_once "loggedParentNavbar.php";
 }
+require_once("db.php");
+$parent = new dbParent();
 
 //checkIfLogged();
 
@@ -40,5 +42,52 @@ echo <<< _OPLIST
 _OPLIST;
 
 echo "</div>";
+?>
+
+<br>
+<br>
+<div class="overflow-auto">
+                <?php
+                $res = $parent->getInternalAnnouncements($parent->getChildClass($_SESSION['child']));
+                if(!$res) echo "<p>Some problem occurred. We're sorry.</p>";
+                else{
+                    if($res->num_rows == 0) 
+                        echo <<<_NOANNOUNCEMENT
+                        <div class="card-index">
+                        <div class="card-header-index text-left">
+                            NONE
+                        </div>
+                        <div class="card-body-index">
+                            <h5 class="card-title-index"><strong> NONE </strong></h5>
+                            <p>No announcement to be shown.</p>
+                        </div>
+                    </div>
+_NOANNOUNCEMENT;
+                    else{
+                        foreach($res as $tuple){
+                            $timestamp = $tuple['timestamp'];
+                            $text = $tuple['text'];
+                            $title = $tuple['title'];
+
+                            echo <<<_ANNOUNCEMENT
+                            <div class="card-index">
+                                <div class="card-header-index text-left">
+                                    $timestamp
+                                </div>
+                                <div class="card-body-index">
+                                    <h5 class="card-title-index"><strong> $title </strong></h5>
+                                    <p>$text</p>
+                                </div>
+                            </div>
+_ANNOUNCEMENT;
+                        }
+                    }
+                }
+
+
+                ?>
+            </div>
+
+<?php
 require_once("defaultFooter.php");
 ?>

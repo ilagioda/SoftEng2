@@ -595,6 +595,11 @@ class dbParent extends db
 
         return $children;
     }
+    public function getInternalAnnouncements($classID){
+        $sql = "SELECT * FROM internalCommunications WHERE classID='$classID' ORDER BY Timestamp DESC";
+        $res = $this->query($sql);
+        return $res;
+    }
 
     public function viewChildMarks($CodFisc)
     {
