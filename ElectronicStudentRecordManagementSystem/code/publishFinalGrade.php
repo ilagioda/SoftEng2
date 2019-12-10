@@ -99,6 +99,7 @@ $(document).ready(function(){
 		var subject = $(this).attr("data-subject");
 		var idButton = $(this).attr("data-select");
 		var finalGrade = $('#'+idButton+' option:selected').text();
+		alert(finalGrade);
 		var finalTerm = $(this).attr("data-finalTerm");
 		
 		// ajax call for inserting the final grade record inside the DB
@@ -116,12 +117,10 @@ $(document).ready(function(){
 								button.html("Done");
 								setTimeout(function() {
 									button.attr('disabled',false);
-
 									button.html("Edit").removeClass("btn-success").addClass("btn-default");;
 								},2000);
 							} else {
-								alert(response);
-								alert("Error: final grade not inserted");
+
 							}
 						},
 			error: 		function(){
@@ -250,6 +249,8 @@ $(document).ready(function(){
 				<?php
 					foreach($subjects as $subject) {
 						
+						$resultFinalGrade = $db->getFinalGrade($args[2], $subject, $finalTerm);
+						
 						$rows = $teacher->viewStudentMarks($args[2], $subject);
 						$marks = array();
 						$j=0;
@@ -266,6 +267,10 @@ $(document).ready(function(){
 							<tr class="child-<?php echo $args[2] ?>">
 								<td class="text-center"> <?php echo $subject ?> </td>
 								<?php
+
+								if($resultFinalGrade == -1) {
+									// if the final grade has been not inserted yet, then check the average 
+									
 									if(is_int($average)) {
 										// if the average is an integer, then the value can be printed in the field and the teacher can already confirm or modify the grade
 										echo "<td>
@@ -274,11 +279,13 @@ $(document).ready(function(){
 												for($k=0; $k<=10; $k++) {
 													echo "<option value='$k'>$k</option>"; 
 												}
-											echo "</select></td>";									
-										echo "<td><button type='button' class='btn btn-success btn-xs confirmButton' style='width:25%'
+											echo "</select></td>";		
+	
+											// the grade does not exist --> button CONFIRM
+											echo "<td><button type='button' class='btn btn-success btn-xs confirmButton' style='width:25%'
 												data-student='$args[2]' data-subject='$subject' data-select='$idButton' data-finalTerm='$finalTerm'
 												id='confirmButton$idButton'>Confirm</button></td>";
-
+										
 									} else {
 										// if the average is a float, then the teacher must change it into an integer and the "confirm" button is disabled until she changes the grade
 										$option = round($average, 2);
@@ -294,11 +301,26 @@ $(document).ready(function(){
 												id='confirmButton$idButton' disabled>Confirm</button></td>";
 									}
 									$idButton++;
+								} else {
+									// if the final grade has been inserted, then the value confirmed before is loaded
+										echo "<td>
+											<select class='form-control comboGrade' name='comboGrade' id='$idButton' style='width:60%' required>
+												<option value='' selected>$resultFinalGrade</option>";
+										echo "</select></td>";		
+		
+										
+									// the grade already exists --> button EDIT
+									echo "<td><button type='button' class='btn btn-default btn-xs editButton' style='width:25%'
+											data-student='$args[2]' data-subject='$subject' data-select='$idButton' data-finalTerm='$finalTerm'
+											id='editButton$idButton'>Edit</button></td>";
+								}
 
 								?>
 							</tr>
 					<?php	
 						} else { 
+							if($resultFinalGrade == -1) {
+
 					?>
 					
 							<tr class="child-<?php echo $args[2] ?>">
@@ -321,7 +343,24 @@ $(document).ready(function(){
 								</td>
 							</tr>
 					<?php
-						$idButton++;
+							} else {
+								?>
+								<tr class="child-<?php echo $args[2] ?>">
+								<td class="text-center"> <?php echo $subject ?> </td>
+								<td>
+									<select class="form-control comboGrade" name="comboGrade" id="<?php echo $idButton ?>" style="width:60%" required>
+										<option type="text" value="" selected><?php echo $resultFinalGrade ?></option> 
+									</select>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default btn-xs editButton" style='width:25%'
+												data-student="<?php echo $args[2] ?>" data-subject="<?php echo $subject ?>" data-select="<?php echo $idButton ?>"
+												data-finalTerm="<?php echo $finalTerm ?>" id='editButton<?php echo $idButton ?>'>Edit</button>
+								</td>
+							</tr>
+								<?php
+							}
+							$idButton++;
 						}
 					}
 				}

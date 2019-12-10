@@ -1494,6 +1494,18 @@ class dbTeacher extends db
         }
     }
 
+	public function getFinalGrade($ssn, $subject, $date) {
+		
+		$result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
+		
+		if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+			return $row['finalGrade'];
+        }
+		
+		return -1;
+
+	}
 	public function insertFinalGrade($ssn, $subject, $finalGrade, $date) {
 		
 		/* This function allows to insert the final grade of the term of the student */
@@ -1502,13 +1514,12 @@ class dbTeacher extends db
         $subject = $this->sanitizeString($subject);
         $finalGrade = $this->sanitizeString($finalGrade);
         $date = $this->sanitizeString($date);
-
 		
-		$result = $this->query("SELECT * FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
-
-        if ($result->num_rows > 0) {
-            return -1;
-        }
+		$result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
+		
+		if ($result->num_rows > 0) {			
+			return -1;
+		}
 
         $result = $this->query("INSERT INTO FinalGrades(codFisc, subject, finalTerm, finalGrade) 
 								VALUES ('$ssn', '$subject', '$date', '$finalGrade')");
