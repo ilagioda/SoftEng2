@@ -341,6 +341,30 @@ class dbAdmin extends db
         return $resultArray;
     }
 
+    public function getClasses()
+    {
+        return $this->query("SELECT classID FROM classes ORDER BY classID");
+    }
+
+    public function insertInternalCommunication($class, $title, $text){
+
+        $res = $this->query("SELECT MAX(ID) as oldID FROM internalCommunications");
+
+        if (!$res) {
+            return false;
+        }
+
+        $res = $res->fetch_assoc();
+
+        $newID = $res['oldID'] + 1;
+
+        $class = $this->sanitizeString($class);
+        $title = $this->sanitizeString($title);
+        $text = $this->sanitizeString($text);
+
+        return $this->query("INSERT INTO internalCommunications VALUES('$newID', '$class', CURRENT_TIMESTAMP, '$title', '$text') ");
+    }
+
     function updateStudentsClass($vectorCodFiscNameSurnameClass)
     {
         $stmt = $this->prepareStatement("UPDATE `Students` SET `classID`= ? WHERE `codFisc` = ? ");
