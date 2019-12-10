@@ -121,7 +121,7 @@ require_once("defaultFooter.php");
     // The user has not requested or confirmed the page.
     //print the normal page
 
-    $classes = $dbAdmin->readAllClasses();
+    $classes = $dbAdmin->readAllClassCompositions();
 
     //require_once("defaultNavbar.php");
     echo <<<_NORMALPAGE

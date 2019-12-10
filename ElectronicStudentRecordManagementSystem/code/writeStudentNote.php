@@ -64,15 +64,6 @@ if (!$loggedin) {
 
   function fillModalFieldsENTRANCE(obj) {
 
-    // Retrieve and store the button id from which this function has been called 
-    buttonID = obj.id;
-
-    // Retrieve the information about student in order to show it in the modal window
-    var studName = obj.getAttribute("data-name");
-    var studSurname = obj.getAttribute("data-surname");
-    var studSSN = obj.getAttribute("data-ssn");
-    var studClass = obj.getAttribute("data-c");
-
     // Fill the modal with the student information
     document.getElementById("modalEntrance-name").innerHTML = studName;
     document.getElementById("modalEntrance-surname").innerHTML = studSurname;
@@ -96,7 +87,6 @@ if (!$loggedin) {
   }
 </script>
 
-
 <?php
 
 if (!isset($_REQUEST["class"])) {
@@ -113,7 +103,7 @@ if (!isset($_REQUEST["class"])) {
 
     if (is_array($classes)) {
 
-      echo '<div class="col-md-12 text-center">
+      echo '<div class="col-xs-12 text-center">
       <h2>Classes</h2>';
       foreach ($classes as $class) {
         echo <<<_ROW
