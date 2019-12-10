@@ -17,6 +17,29 @@ if (!$loggedin) {
 ?>
 
 <script>
+
+function checkIfHoliday(day) {
+	
+	var holidays = ["2019-12-23","2019-12-24", "2019-12-25", "2019-12-26",
+					"2019-12-27", "2019-12-28", "2019-12-29", "2019-12-30",
+					"2019-12-31", "2020-01-01", "2020-01-02", "2020-01-03",
+					"2020-01-04", "2020-02-22", "2020-02-23", "2020-02-24",
+					"2020-02-25", "2020-02-26", "2020-04-09", "2020-04-10",
+					"2020-04-11", "2020-04-12", "2020-04-13", "2020-04-14",
+					"2020-05-02", "2020-05-02"];
+						
+						
+	for(var i=0; i<holidays.length; i++) {
+		var temp = new Date(holidays[i]);
+		if(day.getTime() == temp.getTime()) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
 $(document).ready(function(){
 	$("#comboClass").change(function() {
 	
@@ -37,12 +60,14 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#comboClass").change(function() {
+	$("#comboClass").change(function() { 
 			document.getElementById('titleStudent').style.display= 'none' ;
 			document.getElementById('studentTable').style.display= 'none' ;
 	});
 	
 	$(function() {
+		// this function allows to open/hide the window that shows the rows subject-grade
+		
 		$('tr.parent td span.btn').on("click", function(){
 			var idOfParent = $(this).parents('tr').attr('id');
 			$('tr.child-'+idOfParent).toggle();	
@@ -53,22 +78,35 @@ $(document).ready(function(){
 	});
 	
 	
+	var warning = $('<p class="text-danger">').text('Error: you must select a working day!')
+	$('#finalTerm').change(function(e) {
+
+		var d = new Date(e.target.value)
+		if(d.getDay() === 6 || d.getDay() === 0 || checkIfHoliday(d)) {
+			$('#okPublish').attr('disabled',true);
+			$('#finalTerm').after(warning);
+		} else {
+			warning.remove()
+			$('#okPublish').attr('disabled',false);
+		}
+	});
+	
 	$('.confirmButton').click(function () {
 		
-        var id = $(this).attr("id");
+       //  var id = $(this).attr("id");
 		
 		var student = $(this).attr("data-student");
 		var subject = $(this).attr("data-subject");
 		var idButton = $(this).attr("data-select");
-		var optionSelected = $('#'+idButton+' option:selected').text()
-		var finalTerm = $(this).attr("data-date");
+		var finalGrade = $('#'+idButton+' option:selected').text();
+		var finalTerm = $(this).attr("data-finalTerm");
 		
 		// ajax call for inserting the final grade record inside the DB
 		$.ajax({
 			type:		"POST",
 			dataType:	"text",
 			url:		"insertFinalGrade.php",
-			data:		"student="+student+", subject="+subject+", mark="+optionSelected+", date="+finalTerm,
+			data:		"student="+student+"&subject="+subject+"&finalGrade="+finalGrade+"&finalTerm="+finalTerm,
 			cache:		false,
 			success:	function(response){
 							// the button "confirm" becomes "edit" to feedback the teacher that the grade has been inserted
@@ -78,9 +116,11 @@ $(document).ready(function(){
 								button.html("Done");
 								setTimeout(function() {
 									button.attr('disabled',false);
+
 									button.html("Edit").removeClass("btn-success").addClass("btn-default");;
 								},2000);
 							} else {
+								alert(response);
 								alert("Error: final grade not inserted");
 							}
 						},
@@ -90,6 +130,7 @@ $(document).ready(function(){
 		});
 		
 	});
+	
 	
 	
 	$(".comboGrade").change(function () {	
@@ -145,7 +186,7 @@ $(document).ready(function(){
 							min="<?php echo date("Y-m-d");  ?>" max="<?php echo date("Y-m-d", strtotime('2020-06-10')); ?>"
 							style="width:100%" required> </td>
 					</tr>
-					<tr><td><button type="submit" name="okPublish" class="btn btn-success">OK</button></td></tr>
+					<tr><td><button type="submit" name="okPublish" id="okPublish" class="btn btn-success">OK</button></td></tr>
 				</table>
 			</form>
 		</div>
@@ -172,7 +213,7 @@ $(document).ready(function(){
 			$finalTerm = $_SESSION["finalTerm"];
 	?>
 			
-			<h1 id="titleStudent"> Publish final grades  <small>Class: <?php echo $selectedClass ?></small></h1>
+			<h1 id="titleStudent"> Publish final grades  <small>Class: <?php echo $selectedClass ?> - Final term:  <?php echo $finalTerm ?></small></h1>
 			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
 				<tbody>
 	<?php
@@ -235,7 +276,7 @@ $(document).ready(function(){
 												}
 											echo "</select></td>";									
 										echo "<td><button type='button' class='btn btn-success btn-xs confirmButton' style='width:25%'
-												data-student=$args[2] data-subject=$subject data-select=$idButton
+												data-student='$args[2]' data-subject='$subject' data-select='$idButton' data-finalTerm='$finalTerm'
 												id='confirmButton$idButton'>Confirm</button></td>";
 
 									} else {
@@ -249,7 +290,7 @@ $(document).ready(function(){
 												}
 											echo "</select></td>";	
 										echo "<td><button type='button' class='btn btn-success btn-xs confirmButton' style='width:25%'
-												data-student=$args[2] data-subject=$subject data-select=$idButton data-date=$finalTerm
+												data-student='$args[2]' data-subject='$subject' data-select='$idButton' data-finalTerm='$finalTerm'
 												id='confirmButton$idButton' disabled>Confirm</button></td>";
 									}
 									$idButton++;
@@ -275,8 +316,8 @@ $(document).ready(function(){
 								</td>
 								<td>
 									<button type="button" class="btn btn-success btn-xs confirmButton" style='width:25%'
-												data-student=<?php echo $args[2] ?> data-subject=<?php echo $subject ?> data-select=<?php echo $idButton ?>
-												id='confirmButton<?php echo $idButton ?>'>Confirm</button>
+												data-student="<?php echo $args[2] ?>" data-subject="<?php echo $subject ?>" data-select="<?php echo $idButton ?>"
+												data-finalTerm="<?php echo $finalTerm ?>" id='confirmButton<?php echo $idButton ?>'>Confirm</button>
 								</td>
 							</tr>
 					<?php
