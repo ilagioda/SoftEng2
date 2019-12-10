@@ -17,7 +17,7 @@ if (!$loggedin) {
     
 ?>
 
-<script type="text/javascript">
+<script>
 
 function checkIfHoliday(day) {
 	
@@ -77,18 +77,6 @@ $(document).ready(function(){
 
 </script>
 
-<style>
-    .form-control:focus {
-        border-color: #ff80ff;
-        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
-    }
-	#container {
-		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
-		padding:0 15px 0 15px;
-	}
-</style>
-
-
 <ul class="nav nav-tabs">
 
   <li role="presentation" class="active"><a href="#">New record</a></li>
@@ -100,7 +88,7 @@ $(document).ready(function(){
 	<h1> Record assignments </h1>
 	<div class="form-group">
 
-		<form class="navbar-form navbar-left form-inline" role="class" method="POST" action="viewRecordedAssignments.php">
+		<form class="navbar-form navbar-left form-inline" method="POST" action="viewRecordedAssignments.php">
 			<table class="table">
 				<tr><td><label>Class </label></td><td>
 				<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
@@ -116,8 +104,8 @@ $(document).ready(function(){
 				<tr><td><label>Subject </label></td><td>
 				<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
 				<option value="" disabled selected>Select subject...</option>
-				</td></tr>
-				</select><tr><td><label>Date</label></td><td>  
+				</select></td></tr>
+				<tr><td><label>Date</label></td><td>  
 				<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
 						min="<?php echo date("Y-m-d");  ?>" max="<?php echo date("Y-m-d", strtotime('2020-06-10')); ?>"
 						style="width:100%" required> </td></tr>

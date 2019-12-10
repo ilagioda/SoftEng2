@@ -17,7 +17,7 @@ if (!$loggedin) {
     
 ?>
 
-<script type="text/javascript">
+<script>
 
 $(document).ready(function(){
 	$("#comboClass").change(function() {
@@ -40,18 +40,6 @@ $(document).ready(function(){
 });
 
 </script>
-
-<style>
-    .form-control:focus {
-        border-color: #ff80ff;
-        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
-    }
-	#container {
-		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
-		padding:0 15px 0 15px;
-	}
-</style>
-
 
 <ul class="nav nav-tabs">
 
@@ -78,11 +66,13 @@ $(document).ready(function(){
 					}
 				?>
 				</select></td></tr>
-				<tr><td><label>Subject </label></td><td>
-				<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
-				<option value="" disabled selected>Select subject...</option>
+				<tr><td><label>Subject </label></td>
+				<td>
+					<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
+						<option value="" disabled selected>Select subject...</option>
+					</select>
 				</td></tr>
-				</select><tr><td><label>Date</label></td><td>  
+				<tr><td><label>Date</label></td><td>  
 				<input class="form-control" type="date" name="lessontime" id="lessontime"
 						min="<?php echo date("Y-m-d", strtotime('monday this week'));  ?>" 
 						max="<?php 
@@ -95,9 +85,10 @@ $(document).ready(function(){
 						style="width:100%" required> </td></tr>
 				<tr><td><label>Hour</label></td><td>
 				<select class="form-control" name="comboHour" id="comboHour" style="width:100%" required>
+					<option value='' disabled selected>Select hour...</option>
 				<?php
 					for($i=1; $i<=6; $i++) 
-						echo "<option value=" . $i . ">" . $i . "</option>";
+						echo "<option value='$i'>$i</option>";
 				?>	
 				</select></td></tr>	
 				<tr><td><label>Topic(s)</label></td><td>

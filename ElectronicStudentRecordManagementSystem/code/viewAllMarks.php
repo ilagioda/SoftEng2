@@ -88,12 +88,6 @@ function modalEdit(obj) {
 
 </script>
 
-<style> 
-	#container {
-		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
-		padding:0 15px 0 15px;
-	}
-</style>
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="submitMarks.php">New record</a></li>
   <li role="presentation" class="active"><a href="#">View all records</a></li>
@@ -104,7 +98,7 @@ function modalEdit(obj) {
 	<div class="panel-body">
 	<h1> View all marks </h1>
 		<div class="form-group">
-		<form class="navbar-form navbar form-inline" role="class" method="POST" action="viewAllMarks.php">
+		<form class="navbar-form navbar form-inline" method="POST" action="viewAllMarks.php">
 		
 			<table class="table">
 						
@@ -126,7 +120,7 @@ function modalEdit(obj) {
 						<option value="" disabled selected>Select subject...</option>
 					</select></td>
 				</tr>	
-				<tr><td><button type="submit" name="ok" class="btn btn-success">OK</button></td></tr>
+				<tr><td><button type="submit" name="ok" class="btn btn-success">OK</button></td><td></td></tr>
 			</table>
 		</form>
 	</div>

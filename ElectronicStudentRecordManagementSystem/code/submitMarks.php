@@ -18,7 +18,7 @@ if (!$loggedin) {
 
 ?>
 
-<script type="text/javascript">
+<script>
 
 $(document).ready(function(){
 	$("#comboClass").change(function() {
@@ -87,18 +87,6 @@ $(document).ready(function(){
 
 </script>
 
-<style>
-    .form-control:focus {
-        border-color: #ff80ff;
-        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 100, 255, 0.5);
-    }
-	#container {
-		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
-		padding:0 15px 0 15px;
-	}
-</style>
-
-
 <ul class="nav nav-tabs">
 
   <li role="presentation" class="active"><a href="#">New record</a></li>
@@ -110,7 +98,7 @@ $(document).ready(function(){
 	<h1> Record mark </h1>
 	<div class="form-group">
 	
-		<form class="navbar-form navbar form-inline" role="class" method="POST" action="viewSubmittedMarks.php">
+		<form class="navbar-form navbar form-inline" method="POST" action="viewSubmittedMarks.php">
 		
 			<table class="table">
 			
@@ -148,6 +136,7 @@ $(document).ready(function(){
                 
 				<tr><td><label>Hour</label></td><td>
 					<select class="form-control" name="comboHour" id="comboHour" style="width:100%" required>
+						<option value="" disabled selected>Select hour...</option>
 						<?php
 							for($i=1; $i<=6; $i++) 
 								echo "<option value=" . $i . ">" . $i . "</option>";

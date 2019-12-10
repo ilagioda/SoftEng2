@@ -14,6 +14,31 @@ if (!$loggedin) {
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
 	$db = new dbTeacher();
+	
+	// get the current semester:
+	$now = new DateTime('now');
+	// $month = $now->format('m');
+	$year = $now->format('Y');
+	$one_year = new DateInterval('P1Y');
+	$next_year = (new DateTime())->add(new DateInterval('P1Y'));
+
+	if(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-09-01')) 
+		&& strtotime($now->format("Y-m-d")) <= strtotime($next_year->format('Y-01-31'))) {
+			// TODAY IS WITHIN THE FIRST SEMESTER
+			// the teacher can select a date within January for inserting the final grades of the term
+		$beginSemester = ($next_year->format('Y-01-01'));
+		$endSemester = ($next_year->format('Y-01-31'));
+	} elseif(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-02-01')) 
+		&& strtotime($now->format("Y-m-d")) <= strtotime($now->format('Y-06-30'))) {
+			// TODAY IS WITHIN THE SECOND SEMESTER
+			// the teacher can select a date within June for inserting the final grades of the term
+		$beginSemester = ($now->format('Y-06-01'));
+		$endSemester = ($now->format('Y-06-30'));
+	} else {
+		// summer holidays
+	}
+	
+	
 ?>
 
 <script>
@@ -99,7 +124,6 @@ $(document).ready(function(){
 		var subject = $(this).attr("data-subject");
 		var idButton = $(this).attr("data-select");
 		var finalGrade = $('#'+idButton+' option:selected').text();
-		alert(finalGrade);
 		var finalTerm = $(this).attr("data-finalTerm");
 		
 		// ajax call for inserting the final grade record inside the DB
@@ -110,17 +134,12 @@ $(document).ready(function(){
 			data:		"student="+student+"&subject="+subject+"&finalGrade="+finalGrade+"&finalTerm="+finalTerm,
 			cache:		false,
 			success:	function(response){
-							// the button "confirm" becomes "edit" to feedback the teacher that the grade has been inserted
+							// the button "confirm" becomes "done" to feedback the teacher that the grade has been inserted
 							if(response == "ok") {
 								var button = $('#confirmButton'+idButton);
 								button.attr('disabled',true);
 								button.html("Done");
-								setTimeout(function() {
-									button.attr('disabled',false);
-									button.html("Edit").removeClass("btn-success").addClass("btn-default");;
-								},2000);
-							} else {
-
+								$('#'+idButton).replaceWith("<p class='form-control' style='width:60%'>"+finalGrade+" </p>");
 							}
 						},
 			error: 		function(){
@@ -149,12 +168,6 @@ $(document).ready(function(){
 
 </script>
 
-<style> 
-	#container {
-		box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);
-		padding:0 15px 0 15px;
-	}
-</style>
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="submitMarks.php">New record</a></li>
   <li role="presentation" class="active"><a href="#">View all records</a></li>
@@ -164,7 +177,7 @@ $(document).ready(function(){
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 		<div class="form-group">
-			<form class="navbar-form navbar form-inline" role="class" method="POST" action="publishFinalGrade.php">
+			<form class="navbar-form navbar form-inline" method="POST" action="publishFinalGrade.php">
 			
 				<table class="table">
 							
@@ -182,10 +195,10 @@ $(document).ready(function(){
 					</tr>
 					<tr><td><label> Final term </label></td><td>
 						<input class="form-control" type="date" name="finalTerm" id="finalTerm"
-							min="<?php echo date("Y-m-d");  ?>" max="<?php echo date("Y-m-d", strtotime('2020-06-10')); ?>"
+							min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>"
 							style="width:100%" required> </td>
 					</tr>
-					<tr><td><button type="submit" name="okPublish" id="okPublish" class="btn btn-success">OK</button></td></tr>
+					<tr><td><button type="submit" name="okPublish" id="okPublish" class="btn btn-success">OK</button></td><td></td></tr>
 				</table>
 			</form>
 		</div>
@@ -214,7 +227,6 @@ $(document).ready(function(){
 			
 			<h1 id="titleStudent"> Publish final grades  <small>Class: <?php echo $selectedClass ?> - Final term:  <?php echo $finalTerm ?></small></h1>
 			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
-				<tbody>
 	<?php
 
 			$students = $teacher->getStudents2($selectedClass);
@@ -303,16 +315,8 @@ $(document).ready(function(){
 									$idButton++;
 								} else {
 									// if the final grade has been inserted, then the value confirmed before is loaded
-										echo "<td>
-											<select class='form-control comboGrade' name='comboGrade' id='$idButton' style='width:60%' required>
-												<option value='' selected>$resultFinalGrade</option>";
-										echo "</select></td>";		
-		
-										
-									// the grade already exists --> button EDIT
-									echo "<td><button type='button' class='btn btn-default btn-xs editButton' style='width:25%'
-											data-student='$args[2]' data-subject='$subject' data-select='$idButton' data-finalTerm='$finalTerm'
-											id='editButton$idButton'>Edit</button></td>";
+										echo "<td><p class='form-control comboGrade' name='comboGrade' style='width:60%'>$resultFinalGrade</p></td>";		
+										echo "<td><button class='btn btn-success btn-xs' type='button' style='width:25%' disabled>Done</button></td>";
 								}
 
 								?>
@@ -347,16 +351,8 @@ $(document).ready(function(){
 								?>
 								<tr class="child-<?php echo $args[2] ?>">
 								<td class="text-center"> <?php echo $subject ?> </td>
-								<td>
-									<select class="form-control comboGrade" name="comboGrade" id="<?php echo $idButton ?>" style="width:60%" required>
-										<option type="text" value="" selected><?php echo $resultFinalGrade ?></option> 
-									</select>
-								</td>
-								<td>
-									<button type="button" class="btn btn-default btn-xs editButton" style='width:25%'
-												data-student="<?php echo $args[2] ?>" data-subject="<?php echo $subject ?>" data-select="<?php echo $idButton ?>"
-												data-finalTerm="<?php echo $finalTerm ?>" id='editButton<?php echo $idButton ?>'>Edit</button>
-								</td>
+								<td><p class='form-control comboGrade' name='comboGrade' style='width:60%'><?php echo $resultFinalGrade ?></p></td>
+								<td><button class='btn btn-success btn-xs' type='button' style='width:25%' disabled>Done</button></td>
 							</tr>
 								<?php
 							}
@@ -366,13 +362,13 @@ $(document).ready(function(){
 				}
 				$i++;
 			}
-	}
-					?>	
-
-				</tbody>
-
+			?>
 			</table>
 		</form>
+		<?php
+	}
+		?>	
+
     </div>
 </div>
 
