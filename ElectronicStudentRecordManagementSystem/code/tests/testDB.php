@@ -205,7 +205,7 @@ final class dbTest extends TestCase{
         $db = new dbTeacher();
 
 
-        //Studente non presente nel db o senza voti
+        //Student not in DB or without markls, result should be null
         $CodFisc = "absent";
         $subject = "Italian";
 
@@ -213,8 +213,8 @@ final class dbTest extends TestCase{
 
         $this->assertSame($result, null);
 
-
-        //Studente presente e con voti (si assume che si testi dopo aver caricato il db)
+        //Student in db and with marks 
+        //(assuming tests are done after loading createTestDB.sql, as for all subsequent tests)
         $CodFisc = "FRCWTR";
 
         $result = $db->ViewStudentMarks($CodFisc, $subject);
@@ -256,11 +256,10 @@ final class dbTest extends TestCase{
 
         $ssn="FRCWTR";
         $day="2019-12-06";
-
         $array=array();
 
 
-        //No entry in db (empty array)
+        //No entry in db (should return an empty array)
 
         $array[0]=null;
         $array[1]=null;
@@ -272,7 +271,7 @@ final class dbTest extends TestCase{
         $this->assertSame($result, $array);
 
 
-        //Entry in db
+        //Entry in db (should return an array with results)
         $day="2019-09-20";
         $array[0]=$day;
         $array[1]=$ssn;
@@ -282,9 +281,6 @@ final class dbTest extends TestCase{
 
         $result=$db->checkAbsenceEarlyExitLateEntrance($ssn, $day);
         $this->assertSame($result, $array);
-
-        //Exception thrown (false is returned)
-
     }
 
     public function testUpdateAttendance(){
@@ -295,12 +291,12 @@ final class dbTest extends TestCase{
         $ssn="FRCWTR";
         $day="2019-12-08";
 
-        //New entry -> the student must be absent after the insert
+        //New entry -> the student must be absent after the insert (result should be true)
         $result=$db->updateAttendance($ssn, $day);
         $this->assertSame($result, true);
 
+        //there should be one row with absence set to 1
         $result=$db->selectAttendanceStudent($day, $ssn);
-
         if (!$result)
             $this->assertTrue(false);
         $this->assertSame($result->num_rows,1);
@@ -313,21 +309,20 @@ final class dbTest extends TestCase{
         $result=$db->updateAttendance($ssn, $day);
         $this->assertSame($result, true);
 
+        //there should be no rows beecause the entry should have been deleted
         $result=$db->selectAttendanceStudent($day, $ssn);
-
         if (!$result)
             $this->assertTrue(false);
         $this->assertSame($result->num_rows,0);
 
 
-        //Entry is present with both late and early -> exception thrown
-
+        //Entry is present with both late and early -> exception thrown (result should be false)
         $day="2020-01-12";
         $result=$db->updateAttendance($ssn, $day);
         $this->assertSame($result, false);
 
+        //No changes should be made to the DB
         $result=$db->selectAttendanceStudent($day, $ssn);
-
         if (!$result)
             $this->assertTrue(false);
         $this->assertSame($result->num_rows,1);
@@ -344,8 +339,8 @@ final class dbTest extends TestCase{
         $result=$db->updateAttendance($ssn, $day);
         $this->assertSame($result, false);
 
+        //No changes should be made to the DB
         $result=$db->selectAttendanceStudent($day, $ssn);
-
         if (!$result)
             $this->assertTrue(false);
         $this->assertSame($result->num_rows,1);
@@ -363,21 +358,17 @@ final class dbTest extends TestCase{
         $_SESSION['user'] = "test";
         $db = new dbTeacher();
 
-        //Existing class
+        //Existing class (should return 5 entries, the data cannot be tested because the query is not ordered)
         $class="1B";
         $result=$db->getStudentsByClass2($class);
-
         if(!$result)
             $this->assertTrue(false);
         $this->assertSame(count($result), 5);
 
-        //Unexisting class
-
+        //Unexisting class (return should be null)
         $class="wrong";
         $result=$db->getStudentsByClass2($class);
-
-        if($result)
-            $this->assertTrue(false);
+        $this->assertSame($result, null);
         
     }
 
@@ -387,16 +378,17 @@ final class dbTest extends TestCase{
         $_SESSION['user'] = "GNV";
         $db = new dbTeacher();
 
-        //Existing teacher (with subjects and assignments)
+        //Existing teacher with subjects and assignments (should return one assignment)
         $result=$db->getAssignments($_SESSION['user']);
         if(!$result)
             $this->assertTrue(false);
         $this->assertSame(count($result), 1);
+        //testing the value returned
+        $this->assertSame($result[0], "1A,Physics,2019-11-27,Vectors");
 
-        //Non existing teacher
+        //Non existing teacher (result should be null)
         $result=$db->getAssignments("iAmNotHere");
-        if($result)
-            $this->assertTrue(false);
+        $this->assertSame($result, null);
 
     }
 
@@ -405,7 +397,7 @@ final class dbTest extends TestCase{
         $_SESSION['user'] = "FLCM";
         $db = new dbTeacher();
 
-        //New assignment, all correct
+        //New assignment, all correct (should return one assignment)
         $day="2019-12-05";
         $class="1A";
         $subject="Philosophy";
@@ -421,8 +413,7 @@ final class dbTest extends TestCase{
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
 
-        //Existing assignment -> insert failure
-
+        //Existing assignment -> insert failure (should return -1)
         $result=$db->insertNewAssignments($day, $class, $_SESSION['user'], $subject, $assignments);
         $this->assertSame($result, -1);
 
@@ -434,7 +425,7 @@ final class dbTest extends TestCase{
         $_SESSION['user'] = "FLCM";
         $db = new dbTeacher();
 
-        //Existing assignment
+        //Existing assignment (should return 1 assignment, modified with the new text)
         $day="2019-12-05";
         $class="1A";
         $subject="Philosophy";
@@ -449,11 +440,10 @@ final class dbTest extends TestCase{
         $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
 
 
-        //Non existing assignment
-
+        //Non existing assignment (should return the same assignment from before, not modified)
         $day2="2019-12-03";
-        $assignmnents="Some WRONG Assignments";
-        $db->updateAssignments($day, $class, $subject, $assignments);
+        $assignments2="Some WRONG Assignments";
+        $db->updateAssignments($day2, $class, $subject, $assignments2);
 
         $result=$db->getAssignments($_SESSION['user']);
         if(!$result)
@@ -474,7 +464,7 @@ final class dbTest extends TestCase{
         $subject="Philosophy";
 
         $db->deleteAssignments($day, $subject, $class);
-        
+        //Should return no assignment for the current teacher
         $result=$db->getAssignments($_SESSION['user']);
         $this->assertSame($result, null);
         
@@ -494,7 +484,7 @@ final class dbTest extends TestCase{
         $this->assertSame($result[1],"1A,History,2019-11-05,1,arg0");
 
 
-        //Non existing lectures
+        //Non existing lectures (should return null)
         $result=$db->getLecturesByTeacher("wrong");
         $this->assertSame($result, null);
     }
@@ -511,7 +501,7 @@ final class dbTest extends TestCase{
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0],"Philosophy");
 
-        //Non existing subject or teacher
+        //Non existing subject or teacher (should return null)
         $class="wrong";
         $result=$db->getSubjectsByTeacherAndClass2("Wrong", $class);
         $this->assertSame($result, null);
@@ -523,13 +513,11 @@ final class dbTest extends TestCase{
         $db = new dbTeacher();
 
         //Existing class
-
         $result=$db->getClassesByTeacher2($_SESSION['user']);
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0],"1A");
 
-        //Non existing class
-
+        //Non existing class (should return null)
         $result=$db->getClassesByTeacher2("wrong");
         $this->assertSame($result, null);
 
@@ -557,7 +545,7 @@ final class dbTest extends TestCase{
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some nice topics");
 
-        //Entry already in db -> insert fail
+        //Entry already in db -> insert fail (should return -1 and nothing should change in the DB)
         $topics="Some WRONG topics";
         $result=$db->insertDailyLesson($date, $hour, $class, $teacher, $subject, $topics);
         $this->assertSame($result, -1);
@@ -569,22 +557,71 @@ final class dbTest extends TestCase{
         $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some nice topics");
     }
 
-    public function testDeleteDailyLesson(){
+    public function testUpdateDailyLesson(){
         $_SESSION['role'] = "teacher";
         $_SESSION['user'] = "FLCM";
         $db = new dbTeacher();
 
-        //just for replayability, will be implemented later
-
+        //Entry in DB
         $date="2019-12-06";
         $hour="1";
         $class="1A";
         $teacher="FLCM";
         $subject="Philosophy";
-        $topics="Some nice topics";
-        $this->assertSame(true,true);
+        $topics="Some updated topics";
+        //the function always return null, both in case of success and in case of failure
+        $result=$db->updateDailyLesson($date, $hour, $class, $subject, $topics);
+        $this->assertSame($result, null);
+
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some updated topics");
+
+        //Entry not in DB (nothing should change in the DB)
+        $date2="2019-12-17";
+        $topics2="Some WRONG topics";
+        $result=$db->updateDailyLesson($date, $hour, $class, $subject, $topics);
+        $this->assertSame($result, null);
+
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some updated topics");
+    }
+
+
+    public function testDeleteDailyLesson(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //Entry not in DB -> nothing should change
+        $date="2019-12-07";
+        $hour="1";
+        $class="1A";
+
+        //this function always returns null
+        $result=$db->deleteDailyLesson($date, $hour, $class);
+        $this->assertSame($result, null);
+
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        if(!$result)
+            $this->assertTrue(false);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0],"1A,Philosophy,2019-12-06,1,Some updated topics");
+
+
+        //Entry in DB -> should delete it (getLectures should return null)
+        $date="2019-12-06";
 
         $result=$db->deleteDailyLesson($date, $hour, $class);
+        $this->assertSame($result, null);
+
+        $result=$db->getLecturesByTeacher($_SESSION['user']);
+        $this->assertSame($result, null);
     }
     
 

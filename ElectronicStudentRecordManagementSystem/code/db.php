@@ -954,6 +954,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function updateDailyLesson($date, $hour, $class, $subject, $topics)
     {
 
@@ -972,6 +973,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function deleteDailyLesson($date, $hour, $class)
     {
         $date = $this->sanitizeString($date);
@@ -1231,7 +1233,7 @@ class dbTeacher extends db
         }
     }
 
-    //tested except exceptions
+    //tested
     function checkAbsenceEarlyExitLateEntrance($ssn, $day)
     {
         $date = "";
