@@ -864,6 +864,43 @@ class dbParent extends db
 
         return $timetableToReturn;
     }
+	
+	public function viewChildFinalGrades($codFisc) {
+		
+		$codFisc = $this->sanitizeString($codFisc);
+
+        $this->begin_transaction();
+
+        $authorised = $this->checkIfAuthorisedForChild($codFisc);
+
+        if ($authorised !== true) {
+            // not authorised to see the child
+            $this->rollback();
+            die($authorised);
+        }
+
+        $boundaries = getCurrentSemester();
+
+        $beginningDate = $boundaries[0];
+        $endingDate = $boundaries[1];
+
+        $result = $this->query("SELECT * FROM FinalGrades WHERE codFisc='$codFisc' AND finalTerm > '$beginningDate' AND finalTerm< '$endingDate';");
+
+        if (!$result) {
+            $this->rollback();
+            die("Unable to select final grades for student $codFisc");
+        }
+
+        $finalGrades = array();
+
+		
+		while ($row = $result->fetch_assoc()) {
+            array_push($finalGrades,  "" . $row['subject'] . "," . $row['finalGrade'] . "");
+        }
+
+        return $finalGrades;
+		
+	}
 }
 
 class dbTeacher extends db
