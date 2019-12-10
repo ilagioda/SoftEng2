@@ -623,6 +623,22 @@ final class dbTest extends TestCase{
         $result=$db->getLecturesByTeacher($_SESSION['user']);
         $this->assertSame($result, null);
     }
+
+    public function testGetStudentsName(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "FLCM";
+        $db = new dbTeacher();
+
+        //Student in DB (should return "Surname Name" of the student)
+        $codfisc="MRC";
+        $result=$db->getStudentsName($codfisc);
+        $this->assertSame($result, "Cipriano Marco");
+
+        //Student not in DB (Should return "")
+        $codfisc="WRNG";
+        $result=$db->getStudentsName($codfisc);
+        $this->assertSame($result, "");
+    }
     
 
 

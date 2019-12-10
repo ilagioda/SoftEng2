@@ -829,6 +829,7 @@ class dbTeacher extends db
         parent::__construct();
     }
 
+    //tested
     function getStudentsName($codfisc)
     {
 
