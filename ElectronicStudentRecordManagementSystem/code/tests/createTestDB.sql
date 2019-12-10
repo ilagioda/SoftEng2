@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `school`
 --
-DROP DATABASE IF EXISTS `school`
+DROP DATABASE IF EXISTS `school`;
 CREATE DATABASE IF NOT EXISTS `school` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `school`;
 
