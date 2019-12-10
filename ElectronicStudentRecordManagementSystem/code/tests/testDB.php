@@ -639,6 +639,23 @@ final class dbTest extends TestCase{
         $result=$db->getStudentsName($codfisc);
         $this->assertSame($result, "");
     }
+
+    public function testGetGradesByTeacher(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //Teacher in DB with marks inserted (there is 1 mark for that teacher);
+        $codfisc="GNV";
+        $result=$db->getGradesByTeacher($codfisc);
+        $this->assertSame(count($result), 1);
+        $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
+
+        //Teacher not in DB or without marks (should return null);
+        $codfisc="WRNG"; 
+        $result=$db->getGradesByTeacher($codfisc);
+        $this->assertSame($result, null);
+    }
     
 
 

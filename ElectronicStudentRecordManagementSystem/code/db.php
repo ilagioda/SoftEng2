@@ -876,7 +876,7 @@ class dbTeacher extends db
         }
     }
 
-
+    //tested
     function getGradesByTeacher($codfisc)
     {
         $codfisc = $this->sanitizeString($codfisc);
