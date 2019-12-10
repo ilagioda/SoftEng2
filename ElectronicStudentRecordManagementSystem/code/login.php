@@ -32,7 +32,10 @@ if (isset($_POST['user'])) {
                         $_SESSION['sysAdmin'] = $pw['sysAdmin'];
                         header("Location: homepageAdmin.php?view=$user");
                         exit;
-                    } else if ($_SESSION['role'] == "teacher") {
+                    } else if ($_SESSION['role'] == "parent") {
+                        header("Location: chooseChild.php?view=$user");
+                        exit;
+                    }else if ($_SESSION['role'] == "teacher") {
                         $_SESSION['principal'] = $pw['principal'];
                         if($_SESSION['principal']){
                             header("Location: homepagePrincipal.php?view=$user");
@@ -41,7 +44,7 @@ if (isset($_POST['user'])) {
                         header("Location: homepageTeacher.php?view=$user");
                         exit;
                     }
-                    }
+                }
                     
             }
             else {
