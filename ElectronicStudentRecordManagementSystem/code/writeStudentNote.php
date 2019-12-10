@@ -1,6 +1,8 @@
 <?php
 require_once("basicChecks.php");
 
+var_dump($_SESSION);
+
 $loggedin = false;
 if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
   $loggedin = true;
@@ -17,33 +19,45 @@ if (!$loggedin) {
 
     $("#saveButton").click(function() {
       // Fill the modal with the student information
-      var name = $("#modalEntrance-name").text();
-      var surname = $("#modalEntrance-surname").text();
-      var ssn = $("#modalEntrance-ssn").text();
-      var classID = $("#modalEntrance-c").text();
-      var note = $("#note").val();
 
+      // var name = $("#studentName").text();
+      // var surname = $("#studentSurname").text();
+      var ssn = $("#studentSsn").text();
+      var classID = $("#modal-Class").text();
+      var note = $("#note").val();
+      var hour = $("#hour").val();
+
+      // alert(name);
+      // alert(surname);
+      // alert(ssn);
+      // alert(classID);
+      // alert(note);
+      // alert(hour);
 
       // INSERISCI NEL DB LA NOTA
       $.post("writeStudentNoteBackEnd.php", {
           event: "recordNote",
           codFisc: ssn,
-          hour: hour,
+          classID: classID,
           note: note,
-          classID: classID
+          hour: hour
         },
         function(data, status) {
-          if (data)
+          if (data == true) {
             alert("Absence note registered.");
-          alert("Something went wrong.");
+          } else {
+            alert("Something went wrong.");
+          }
         });
+
+
     });
 
     $("#removeButton").click(function() {
-      var name = $("#modalEntrance-name").text();
-      var surname = $("#modalEntrance-surname").text();
-      var ssn = $("#modalEntrance-ssn").text();
-      var classID = $("#modalEntrance-c").text();
+      var name = $("#studentName").text();
+      var surname = $("#studentSurname").text();
+      var ssn = $("#studentSsn").text();
+      var classID = $("#modal-Class").text();
       //RIMUOVI LA NOTA
 
       $.post("writeStudentNoteBackEnd.php", {
@@ -64,14 +78,23 @@ if (!$loggedin) {
 
   function fillModalFieldsENTRANCE(obj) {
 
-    // Fill the modal with the student information
-    document.getElementById("modalEntrance-name").innerHTML = studName;
-    document.getElementById("modalEntrance-surname").innerHTML = studSurname;
-    document.getElementById("modalEntrance-ssn").innerHTML = studSSN;
-    document.getElementById("modalEntrance-c").innerHTML = studClass;
+    // Retrieve and store the button id from which this function has been called 
+    buttonID = obj.id;
 
-    // Fill the "menu a tendina" with the correct labels (in case of late entrance, from lateEntranceHour to 6)
-    var select = document.getElementById("selectEntrance");
+    // Retrieve the information about student in order to show it in the modal window
+    var studName = obj.getAttribute("data-name");
+    var studSurname = obj.getAttribute("data-surname");
+    var studSSN = obj.getAttribute("data-ssn");
+    var studClass = obj.getAttribute("data-c");
+
+    // Fill the modal with the student information
+    document.getElementById("studentName").innerHTML = studName;
+    document.getElementById("studentSurname").innerHTML = studSurname;
+    document.getElementById("studentSsn").innerHTML = studSSN;
+    document.getElementById("modal-Class").innerHTML = studClass;
+
+    // Fill hours in the modal (hours 1 to 6)
+    var select = document.getElementById("hour");
     var child = select.lastElementChild;
     while (child) {
       select.removeChild(child);
@@ -86,6 +109,7 @@ if (!$loggedin) {
     }
   }
 </script>
+
 
 <?php
 
@@ -103,7 +127,7 @@ if (!isset($_REQUEST["class"])) {
 
     if (is_array($classes)) {
 
-      echo '<div class="col-xs-12 text-center">
+      echo '<div class="col-md-12 text-center">
       <h2>Classes</h2>';
       foreach ($classes as $class) {
         echo <<<_ROW
@@ -153,7 +177,7 @@ _ROW;
               <td style="vertical-align: middle;">$fields[0]</td>
               <td style="vertical-align: middle;">$fields[1]</td>
               <td style="vertical-align: middle;">$fields[2]</td>
-              <td><button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#myEntrance" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
+              <td><button type="button" id="entranceButton$i" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-name="$fields[0]" data-surname="$fields[1]" data-ssn="$fields[2]" data-c="$chosenClass" onclick="fillModalFieldsENTRANCE(this)">
               Note
               </button>
               </td>
@@ -163,8 +187,8 @@ _ROW;
     echo "</table>";
     echo "</div>";
 
-    echo <<<_MODALENTRANCE
-          <div class="modal fade" id="myEntrance" tabindex="-1" role="dialog" aria-labelledby="myEntrancelabel">
+    echo <<<_MODAL
+          <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myEntrancelabel">
               <div class="modal-dialog" role="document">
                   <div class="modal-content">
                       <div class="modal-header">
@@ -176,30 +200,30 @@ _ROW;
                               <div class="form-group">
                                   <label class="col-xs-6 control-label">Name:</label>
                                   <div class="col-xs-4">
-                                      <p class="form-control-static" id="modalEntrance-name"></p>
+                                      <p class="form-control-static" id="studentName"></p>
                                   </div>
                               </div>
                               <div class="form-group">
                                   <label class="col-xs-6 control-label">Surname:</label>
                                   <div class="col-xs-4">
-                                      <p class="form-control-static" id="modalEntrance-surname"></p>
+                                      <p class="form-control-static" id="studentSurname"></p>
                                   </div>
                               </div>
                               <div class="form-group">
                                   <label class="col-xs-6 control-label">SSN:</label>
                                   <div class="col-xs-4">
-                                      <p class="form-control-static" id="modalEntrance-ssn"></p>
+                                      <p class="form-control-static" id="studentSsn"></p>
                                   </div>
                               </div>
                               <div class="form-group">
                                   <label class="col-xs-6 control-label">Class:</label>
                                   <div class="col-xs-4">
-                                      <p class="form-control-static" id="modalEntrance-c"></p>
+                                      <p class="form-control-static" id="modal-Class"></p>
                                   </div>
                               </div>
                               <div class="form-group">
                                   <label class="col-xs-6 control-label">Hour:</label>
-                                  <select class="form-control" id="selectEntrance">
+                                  <select class="form-control" id="hour">
                                   </select>
                               </div>
                               <div class="form-group">
@@ -215,7 +239,7 @@ _ROW;
                   </div>
               </div>
           </div>
-_MODALENTRANCE;
+_MODAL;
   }
 }
 

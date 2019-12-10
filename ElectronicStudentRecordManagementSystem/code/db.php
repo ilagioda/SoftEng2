@@ -1467,29 +1467,30 @@ class dbTeacher extends db
         }
     }
 
+    /**
+     * This function has the aim to introduce in the DB a record about a discplinar note of a student;
+     * @param $ssn: ssn of the student
+     * @param $subject: subject in which the note has been recorded
+     * @param $note: the discplinar note
+     * @param $date: date in which the note has been recorded. (In theory it should be the same day that it happened)
+     * @param $hour: hour of the day in which it happened
+     * @return True if the insert has gone well, false otherwise.     
+     */
     function recordStudentNote($ssn, $subject, $note, $date, $hour)
     {
-        // query to record the note
-        $ssn = $this->sanitizeString($ssn);
-        $date = $this->sanitizeString($date);
-        $hour =  $this->sanitizeString($hour);
-        $subject = $this->sanitizeString($subject);
-        $note = $this->sanitizeString($note);
+        try {
 
-        $this->begin_transaction();
+            // query to record the note
+            $ssn = $this->sanitizeString($ssn);
+            $date = $this->sanitizeString($date);
+            $hour =  $this->sanitizeString($hour);
+            $subject = $this->sanitizeString($subject);
+            $note = $this->sanitizeString($note);
 
-        $result = $this->query("SELECT COUNT(*) AS 'cnt' FROM `StudentNotes` WHERE   ");
-
-        if ($result->num_rows > 0) {
-            $marks = array();
-            $row = $result->fetch_row();
-            $count = $row['cnt'];
-            if ($count == 0) {
-                $this->query("INSERT INTO `StudentNotes`(`codFiscStudent`, `date`, `hour`, `subject`, `Note`) VALUES ($ssn,$date,$hour,$subject,$note)");
-                $this->commit();
-            } else {
-                //UPDATE
-            }
+            // No discplinar note in the same day and in the same 
+            return $this->query("INSERT INTO `StudentNotes`(`codFiscStudent`, `date`, `hour`, `subject`, `Note`) VALUES ($ssn,$date,$hour,$subject,$note)");
+        } catch (Exception $e) {
+            return false;
         }
     }
 
