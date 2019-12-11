@@ -281,20 +281,93 @@ final class dbTest extends TestCase{
 
     }
 
-    // public function testrecordEarlyExit(){
-    //     $_SESSION['role'] = "teacher";
-    //     $_SESSION['user'] = "test";
-    //     $db = new dbTeacher();
+    public function testrecordEarlyExit(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "test";
+        $db = new dbTeacher();
 
-    //     $day='wrong';
-    //     $ssn='wrong';
-    //     $hour='wrong';
+        $day='2019-12-11';
+        $ssn='FRCWTR';
+        $hour='4';
 
-    //     //Errore nella query
-    //     $result=$db->recordEarlyExit($day, $ssn, $hour);
-    //     $this->assertSame($result,false);
+        //Add early exit on new entry (the student was present before, expected true)
+        $result=$db->recordEarlyExit($day, $ssn, $hour);
+        $this->assertSame($result,true);
 
-    // }
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '1');
+        $this->assertSame($row['lateEntry'], '0');
+        $this->assertSame($row['earlyExit'], '4');
+        
+        //restoringDB
+        $db->queryForTesting("DELETE FROM attendance WHERE codFisc='$ssn' AND date='$day'");
+
+
+        //Add early exit on a tuple with late entrance and present student (expected true)
+        $day="2019-11-27";
+        $result=$db->recordEarlyExit($day, $ssn, $hour);
+        $this->assertSame($result,true);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '1');
+        $this->assertSame($row['lateEntry'], '2');
+        $this->assertSame($row['earlyExit'], '4');
+
+        //restoring DB
+        $db->queryForTesting("UPDATE attendance SET absence='0', earlyExit='0' WHERE codFisc='$ssn' AND date='$day'");
+
+        
+        //Add early exit on a tuple with absent student and no early exit (exception should be thrown -> expected false)
+        $day='2019-12-13';
+        $db->queryForTesting("INSERT INTO `attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`) VALUES ('2019-12-13', 'FRCWTR', '1', '0', '0')");
+
+        $result=$db->recordEarlyExit($day, $ssn, $hour);
+        $this->assertSame($result,false);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '1');
+        $this->assertSame($row['lateEntry'], '0');
+        $this->assertSame($row['earlyExit'], '0');
+
+
+        //lateEntry > earlyExit (exception should be thrown -> expected false)
+        $db->queryForTesting("UPDATE attendance SET absence='1', lateEntry='5' WHERE codFisc='$ssn' AND date='$day'");
+
+        $result=$db->recordEarlyExit($day, $ssn, $hour);
+        $this->assertSame($result,false);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '1');
+        $this->assertSame($row['lateEntry'], '5');
+        $this->assertSame($row['earlyExit'], '0');
+
+        //restoring db
+        $db->queryForTesting("DELETE FROM attendance WHERE codFisc='$ssn' AND date='$day'");
+
+
+        //deleting the early extit with hour=0 -> student should become present (expected true, and removal of tuple from table) 
+        $hour=0;
+        $day='2019-10-03';
+
+        $result=$db->recordEarlyExit($day, $ssn, $hour);
+        $this->assertSame($result,true);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 0);
+
+        //restoring DB
+        $db->queryForTesting("INSERT INTO `attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`) VALUES ('$day', 'FRCWTR', '1', '0', '2')");
+    }
+
+
 
 
     public function testCheckAbsenceEarlyExitLateEntrance(){

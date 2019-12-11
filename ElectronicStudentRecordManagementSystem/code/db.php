@@ -1250,7 +1250,7 @@ class dbTeacher extends db
     {
         $ssn=$this->sanitizeString($ssn);
         $day=$this->sanitizeString($day);
-        
+
         $this->begin_transaction();
         //$ssn1 = $ssn;
         $count = -1;
@@ -1473,6 +1473,7 @@ class dbTeacher extends db
         }
     }
 
+    //tested
     function recordEarlyExit($day, $ssn, $hour)
     {
 
