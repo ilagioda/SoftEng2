@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 11, 2019 alle 13:38
+-- Creato il: Dic 11, 2019 alle 15:09
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -394,6 +394,21 @@ INSERT INTO `Subjects` (`name`, `year`, `hours`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `SupportMaterials`
+--
+
+CREATE TABLE `SupportMaterials` (
+  `Timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `Title` varchar(64) NOT NULL,
+  `Filename` varchar(256) NOT NULL,
+  `Dimension` double NOT NULL,
+  `Class` varchar(2) NOT NULL,
+  `Subject` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `TeacherClassSubjectTable`
 --
 
@@ -534,6 +549,12 @@ ALTER TABLE `Students`
 --
 ALTER TABLE `Subjects`
   ADD PRIMARY KEY (`name`,`year`);
+
+--
+-- Indici per le tabelle `SupportMaterials`
+--
+ALTER TABLE `SupportMaterials`
+  ADD PRIMARY KEY (`Timestamp`,`Title`);
 
 --
 -- Indici per le tabelle `TeacherClassSubjectTable`
