@@ -1248,6 +1248,9 @@ class dbTeacher extends db
     //tested
     function updateAttendance($ssn, $day)
     {
+        $ssn=$this->sanitizeString($ssn);
+        $day=$this->sanitizeString($day);
+        
         $this->begin_transaction();
         //$ssn1 = $ssn;
         $count = -1;
