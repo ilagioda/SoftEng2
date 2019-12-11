@@ -380,6 +380,8 @@ class dbAdmin extends db
      */
     function updateStudentsClass($vectorCodFiscNameSurnameClass)
     {
+
+        // TESTED 
         $this->begin_transaction();
 
         $stmt = $this->prepareStatement("UPDATE `Students` SET `classID`= ? WHERE `codFisc` = ? ");

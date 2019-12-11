@@ -230,14 +230,19 @@ final class dbTest extends TestCase{
 
         $class1A = $db->readClassCompositions("1A"); // already tested
 
-        $codFisc = $class1A[0][0];
+        $studentData = $class1A[0];
 
         // should set the class of the student
-        $db->updateStudentsClass($class1A);
+        $db->updateStudentsClass(array($studentData));
 
-        $this->assertEquals("1A",$db->queryForTesting("SELECT classID FROM Students WHERE codFisc=$codFisc")->fetch_assoc()["classID"]);
-        
-        
+        $ret = $db->queryForTesting("SELECT classID FROM Students WHERE codFisc='CLDFLCM'");
+        $this->assertNotFalse($ret);
+        $this->assertEquals("1A",$ret->fetch_assoc()["classID"]); // student should have an assigned class
+        $this->assertEquals(0,$db->queryForTesting("SELECT classID FROM ProposedClasses WHERE classID='1A'")->num_rows); // noone from 1A should be in ProposedClasses
+
+        // restore the state of the db
+        $db->queryForTesting("INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES ('1A', 'CLDFLCM')");
+        $db->queryForTesting("UPDATE Students SET classID='' WHERE codFisc='CLDFLCM'");
     }
 
     /* TEACHER */
