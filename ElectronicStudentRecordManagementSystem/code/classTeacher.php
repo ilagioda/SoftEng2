@@ -54,26 +54,33 @@ class Teacher
     {
         return $this->db->updateAttendance($ssn, $day);
     }
-	
-	function checkAbsenceEarlyExitLateEntrance($ssn,$day) {
-		return $this->db->checkAbsenceEarlyExitLateEntrance($ssn,$day);
+
+    function checkAbsenceEarlyExitLateEntrance($ssn, $day)
+    {
+        return $this->db->checkAbsenceEarlyExitLateEntrance($ssn, $day);
     }
-    
-    function recordLateEntrance($day, $ssn, $hour){
+
+    function recordLateEntrance($day, $ssn, $hour)
+    {
         return $this->db->recordLateEntrance($day, $ssn, $hour);
     }
 
-    function recordEarlyExit($day, $ssn, $hour){
+    function recordEarlyExit($day, $ssn, $hour)
+    {
         return $this->db->recordEarlyExit($day, $ssn, $hour);
     }
-	
-	function viewStudentMarks($ssn, $subject) {
-		return $this->db->viewStudentMarks($ssn, $subject);
-    }
-    
 
-    function recordStudentNote($ssn,$subject,$note,$date,$hour){
-        return $this->db->recordStudentNote($ssn,$subject,$note,$date,$hour);
+    function viewStudentMarks($ssn, $subject)
+    {
+        return $this->db->viewStudentMarks($ssn, $subject);
+    }
+    function recordStudentNote($ssnStudent, $ssnTeacher, $subject, $note, $date, $hour)
+    {
+        return $this->db->recordStudentNote($ssnStudent, $ssnTeacher, $subject, $note, $date, $hour);
+    }
+    function removeStudentNote($ssnStudent, $ssnTeacher, $date, $subject)
+    {
+        return $this->db->removeStudentNote($ssnStudent, $ssnTeacher, $date, $subject);
     }
 	
 	function getAssignmentsByClassAndDate($class, $date) {

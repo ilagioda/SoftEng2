@@ -438,11 +438,11 @@ class dbAdmin extends db
     public function insertStudent($name, $surname, $SSN, $email1, $email2)
     {
         // NO NEED TO BE TESTED
-        $name=$this->sanitizeString($name);
-        $surname=$this->sanitizeString($surname);
-        $SSN=$this->sanitizeString($SSN);
-        $email1=$this->sanitizeString($email1);
-        $email2=$this->sanitizeString($email2);
+        $name = $this->sanitizeString($name);
+        $surname = $this->sanitizeString($surname);
+        $SSN = $this->sanitizeString($SSN);
+        $email1 = $this->sanitizeString($email1);
+        $email2 = $this->sanitizeString($email2);
 
         return $this->query("INSERT INTO Students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
     }
@@ -451,10 +451,10 @@ class dbAdmin extends db
     {
         // NO NEED TO BE TESTED
 
-        $name=$this->sanitizeString($name);
-        $surname=$this->sanitizeString($surname);
-        $SSN=$this->sanitizeString($SSN);
-        $email=$this->sanitizeString($email);
+        $name = $this->sanitizeString($name);
+        $surname = $this->sanitizeString($surname);
+        $SSN = $this->sanitizeString($SSN);
+        $email = $this->sanitizeString($email);
 
         return $this->query("INSERT INTO Parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
@@ -463,18 +463,18 @@ class dbAdmin extends db
     {
         // NO NEED TO BE TESTED
 
-        $date=$this->sanitizeString($date);
-        $hour=$this->sanitizeString($hour);
-        $classID=$this->sanitizeString($classID);
-        $codFiscTeacher=$this->sanitizeString($codFiscTeacher);
-        $subject=$this->sanitizeString($subject);
-        $topic=$this->sanitizeString($topic);
-        
+        $date = $this->sanitizeString($date);
+        $hour = $this->sanitizeString($hour);
+        $classID = $this->sanitizeString($classID);
+        $codFiscTeacher = $this->sanitizeString($codFiscTeacher);
+        $subject = $this->sanitizeString($subject);
+        $topic = $this->sanitizeString($topic);
+
         return $this->query("INSERT INTO Lectures(date, hour, classID, codFiscTeacher, subject, topic) 
 								VALUES('$date', '$hour', '$classID', '$codFiscTeacher', '$subject', '$topic')");
     }
 
-    public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2='', $surname2='', $SSN2='', $email2='')
+    public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2 = '', $surname2 = '', $SSN2 = '', $email2 = '')
     {
 
         /* Sanitize parameters before inserting them into the DB */
@@ -888,10 +888,11 @@ class dbParent extends db
 
         return $timetableToReturn;
     }
-	
-	public function viewChildFinalGrades($codFisc) {
-		
-		$codFisc = $this->sanitizeString($codFisc);
+
+    public function viewChildFinalGrades($codFisc)
+    {
+
+        $codFisc = $this->sanitizeString($codFisc);
 
         $this->begin_transaction();
 
@@ -917,14 +918,13 @@ class dbParent extends db
 
         $finalGrades = array();
 
-		
-		while ($row = $result->fetch_assoc()) {
+
+        while ($row = $result->fetch_assoc()) {
             array_push($finalGrades,  "" . $row['subject'] . "," . $row['finalGrade'] . "");
         }
 
         return $finalGrades;
-		
-	}
+    }
 }
 
 class dbTeacher extends db
@@ -1281,8 +1281,8 @@ class dbTeacher extends db
     //tested
     function updateAttendance($ssn, $day)
     {
-        $ssn=$this->sanitizeString($ssn);
-        $day=$this->sanitizeString($day);
+        $ssn = $this->sanitizeString($ssn);
+        $day = $this->sanitizeString($day);
 
         $this->begin_transaction();
         //$ssn1 = $ssn;
@@ -1620,24 +1620,41 @@ class dbTeacher extends db
      * @param $note: the discplinar note
      * @param $date: date in which the note has been recorded. (In theory it should be the same day that it happened)
      * @param $hour: hour of the day in which it happened
-     * @return True if the insert has gone well, false otherwise.     
+     * @return True if the insert has gone well, @return false otherwise.     
      */
-    function recordStudentNote($ssn, $subject, $note, $date, $hour)
+    function recordStudentNote($ssnStudent, $ssnTeacher, $subject, $note, $date, $hour)
     {
-        try {
+        // query to record the note
+        $ssnStudent = $this->sanitizeString($ssnStudent);
+        $ssnTeacher = $this->sanitizeString($ssnTeacher);
+        $subject = $this->sanitizeString($subject);
+        $note = $this->sanitizeString($note);
+        $date = $this->sanitizeString($date);
+        $hour =  $this->sanitizeString($hour);
 
-            // query to record the note
-            $ssn = $this->sanitizeString($ssn);
-            $date = $this->sanitizeString($date);
-            $hour =  $this->sanitizeString($hour);
-            $subject = $this->sanitizeString($subject);
-            $note = $this->sanitizeString($note);
+        return $this->query("INSERT INTO `StudentNotes`(`codFiscStudent`, `codFiscTeacher`, `date`, `hour`, `subject`, `Note`) VALUES ('$ssnStudent','$ssnTeacher','$date',$hour,'$subject','$note')");
+    }
 
-            // No discplinar note in the same day and in the same 
-            return $this->query("INSERT INTO `StudentNotes`(`codFiscStudent`, `date`, `hour`, `subject`, `Note`) VALUES ($ssn,$date,$hour,$subject,$note)");
-        } catch (Exception $e) {
-            return false;
-        }
+    /**
+     * This function has the aim of removing all the notes of a student in a subject that have been recorded by the teacher in a particular day 
+     * 
+     * @param $ssnStudent
+     * @param $ssnTeacher
+     * @param $date
+     * @param $subject
+     * 
+     * @return true if succeed
+     * @return false otherwise.
+     */
+    function removeStudentNote($ssnStudent, $ssnTeacher, $date, $subject)
+    {
+        // query to record the note
+        $ssnStudent = $this->sanitizeString($ssnStudent);
+        $ssnTeacher = $this->sanitizeString($ssnTeacher);
+        $date = $this->sanitizeString($date);
+        $subject = $this->sanitizeString($subject);
+
+        return $this->query("DELETE FROM `StudentNotes` WHERE `codFiscStudent`='$ssnStudent' AND`codFiscTeacher`='$ssnTeacher' AND`date`= '$date' AND `subject`='$subject'");
     }
 
     public function getFinalGrade($ssn, $subject, $date)
@@ -1713,7 +1730,8 @@ class dbTeacher extends db
         return $ret;
     }
 
-    public function showParentMeetingSlotsOfTheDay($codFisc, $day){
+    public function showParentMeetingSlotsOfTheDay($codFisc, $day)
+    {
         /**
          * Retrieve the slots and their availability of a certain date and of a certain teacher.
          * @param $codFisc (String) CodFisc of the teacher.
@@ -1727,6 +1745,6 @@ class dbTeacher extends db
          * "selected" --> time slot already selected for meetings
          */
 
-         // TODO ----------------------------------------------------------------------------------------------------------
+        // TODO ----------------------------------------------------------------------------------------------------------
     }
 }

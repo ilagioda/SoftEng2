@@ -1,7 +1,7 @@
 <?php
 require_once("basicChecks.php");
 
-var_dump($_SESSION);
+//var_dump($_SESSION);
 
 $loggedin = false;
 if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
@@ -26,6 +26,7 @@ if (!$loggedin) {
       var classID = $("#modal-Class").text();
       var note = $("#note").val();
       var hour = $("#hour").val();
+      var selectedSubject = $("#selectSubject").val();
 
       // alert(name);
       // alert(surname);
@@ -40,38 +41,49 @@ if (!$loggedin) {
           codFisc: ssn,
           classID: classID,
           note: note,
-          hour: hour
+          hour: hour,
+          subject: selectedSubject
         },
         function(data, status) {
-          if (data == true) {
-            alert("Absence note registered.");
+          if (data == 1) {
+            alert("Discplinar note registered.");
           } else {
-            alert("Something went wrong.");
+            alert("Sorry something has gone wrong, try later.");
           }
+          // alert(data);
         });
+
+      // Dismiss manually the modal window
+      $('#modal').modal('hide');
 
 
     });
 
     $("#removeButton").click(function() {
-      var name = $("#studentName").text();
-      var surname = $("#studentSurname").text();
+
       var ssn = $("#studentSsn").text();
       var classID = $("#modal-Class").text();
+      var note = $("#note").val();
+      var hour = $("#hour").val();
+      var selectedSubject = $("#selectSubject").val();
       //RIMUOVI LA NOTA
 
       $.post("writeStudentNoteBackEnd.php", {
-          event: "deleteNote",
+          event: "removeNote",
           codFisc: ssn,
-          hour: hour,
-          note: note,
-          classID: classID
+          subject: selectedSubject
         },
         function(data, status) {
-          if (data)
-            alert("Absence note registered.");
-          alert("Something went wrong.");
+          if (data == 1) {
+            alert("All the discplinar notes written by you in the selected subject were removed.");
+          } else {
+            alert("Sorry something has gone wrong, try later.");
+          }
+          // alert(data);
         });
+
+      // Dismiss manually the modal window
+      $('#modal').modal('hide');
     });
   });
 
@@ -92,6 +104,9 @@ if (!$loggedin) {
     document.getElementById("studentSurname").innerHTML = studSurname;
     document.getElementById("studentSsn").innerHTML = studSSN;
     document.getElementById("modal-Class").innerHTML = studClass;
+
+    //delete the previous existing content if there is one.
+    $("#note").val("");
 
     // Fill hours in the modal (hours 1 to 6)
     var select = document.getElementById("hour");
@@ -154,25 +169,30 @@ _ROW;
   // Retrieve the student of the selected class
   $students = $teacher->getStudents2($chosenClass);
 
+  $subjects = $teacher->getSubjectByClassAndTeacher($chosenClass);
+
   // Create the table containing the students
   // Check if the class has at least one student
   if (empty($students)) {
     // The class has no students
     echo "<p>No students in the selected class!</p>";
   } else {
-    // The class has at least one student
-    echo '<div class="table-responsive">';
-    echo '<table class="table table-striped table-bordered text-center" id="attendanceTable">';
-    echo '<tr style="color: black; font-size: 20px;"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>InsertNote</b></tr>';
+    if (empty($subjects))
+      echo "<p> No subjects are teached by the selected teacher!</p>";
+    else {
+      // The class has at least one student
+      echo '<div class="table-responsive">';
+      echo '<table class="table table-striped table-bordered text-center" id="attendanceTable">';
+      echo '<tr style="color: black; font-size: 20px;"><td><b>Name</b></td><td><b>Surname</b></td><td><b>SSN</b><td><b>InsertNote</b></td></tr>';
 
-    $i = 0;
-    foreach ($students as $stud) {
-      $fields = explode(",", $stud);
-      // $fields[0] --> name
-      // $fields[1] --> surname
-      // $fields[2] --> SSN
-      // coloumns: name, surname, ssn, presence, lateEntrance, earlyExit
-      echo <<<_ROW
+      $i = 0;
+      foreach ($students as $stud) {
+        $fields = explode(",", $stud);
+        // $fields[0] --> name
+        // $fields[1] --> surname
+        // $fields[2] --> SSN
+        // coloumns: name, surname, ssn, presence, lateEntrance, earlyExit
+        echo <<<_ROW
               <tr>
               <td style="vertical-align: middle;">$fields[0]</td>
               <td style="vertical-align: middle;">$fields[1]</td>
@@ -182,12 +202,12 @@ _ROW;
               </button>
               </td>
 _ROW;
-      $i++;
-    }
-    echo "</table>";
-    echo "</div>";
+        $i++;
+      }
+      echo "</table>";
+      echo "</div>";
 
-    echo <<<_MODAL
+      echo <<<_MODAL
           <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myEntrancelabel">
               <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -221,10 +241,22 @@ _ROW;
                                       <p class="form-control-static" id="modal-Class"></p>
                                   </div>
                               </div>
-                              <div class="form-group">
+                              <div class="form-group bootstrap-select-wrapper">
                                   <label class="col-xs-6 control-label">Hour:</label>
-                                  <select class="form-control" id="hour">
+                                  <select id="hour">
                                   </select>
+                              </div>
+                              <div class="form-group bootstrap-select-wrapper">
+                                <label class="col-xs-6 control-label">Subject:</label>
+                                <select id="selectSubject" title="Select a subject">
+_MODAL;
+
+      foreach ($subjects as $value) {
+        echo "<option value=$value>$value</option>";
+      }
+      echo <<<_MODAL
+
+                                </select>
                               </div>
                               <div class="form-group">
                                 <label for="comment">Note:</label>
@@ -240,6 +272,7 @@ _ROW;
               </div>
           </div>
 _MODAL;
+    }
   }
 }
 
