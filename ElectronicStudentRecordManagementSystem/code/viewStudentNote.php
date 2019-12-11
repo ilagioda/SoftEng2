@@ -16,7 +16,7 @@ if(!isset($_SESSION['childName'])){
     require_once "loggedParentNavbar.php";
 }
 require_once("db.php");
-$parent = new dbParent();
+$parentDB = new dbParent();
 
 //checkIfLogged();
 
@@ -33,21 +33,8 @@ echo "<div class=text-center>";
         }
 
 
+        $ssnStudent = $_SESSION['child'];
 
-
-                //$disciplinarNotes = $parent->
-
-
-
-
-
-
-
-
-
-
-
-
-
+                $disciplinarNotes = $parentDB->retrieveStudentNotes($ssnStudent);
 echo "</div>";
 require_once("defaultFooter.php");

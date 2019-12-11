@@ -922,6 +922,24 @@ class dbParent extends db
 
         return $finalGrades;
     }
+
+
+    //NEW for the current sprint
+    function retrieveStudentNotes($ssnStudent)
+    {
+        $ssnStudent = $this->sanitizeString($ssnStudent);
+        return $result = $this->query("");
+
+        if ($result->num_rows > 0) {
+
+            $notes = array();
+
+            while ($row = $result->fetch_assoc()) {
+                array_push($students, "" . $row[''] . "," . $row['surname'] . "," . $row['codFisc'] . "");
+            }
+            return $students;
+        }
+    }
 }
 
 class dbTeacher extends db
@@ -1174,11 +1192,12 @@ class dbTeacher extends db
     }
 
 		// NEW 
-	public function getAssignmentsByClassAndDate($codTeacher, $class, $date) {
-		
-		$codTeacher = $this->sanitizeString($codTeacher);
-		$class = $this->sanitizeString($class);
-		$date = $this->sanitizeString($date);
+    public function getAssignmentsByClassAndDate($codTeacher, $class, $date)
+    {
+
+        $codTeacher = $this->sanitizeString($codTeacher);
+        $class = $this->sanitizeString($class);
+        $date = $this->sanitizeString($date);
 
 
         $result = $this->query("SELECT * FROM Assignments a, TeacherClassSubjectTable t WHERE t.codFisc='$codTeacher' AND t.subject = a.subject AND a.classID = '$class' AND a.date='$date' ORDER BY date DESC");
@@ -1189,7 +1208,7 @@ class dbTeacher extends db
         if ($result->num_rows > 0) {
             $assignments = array();
             while ($row = $result->fetch_assoc()) {
-                array_push($assignments,  "" . $row['subject'] . "," . $row['textAssignment']. "");
+                array_push($assignments,  "" . $row['subject'] . "," . $row['textAssignment'] . "");
             }
             return $assignments;
         }
@@ -1652,7 +1671,6 @@ class dbTeacher extends db
 
         return $this->query("DELETE FROM `StudentNotes` WHERE `codFiscStudent`='$ssnStudent' AND`codFiscTeacher`='$ssnTeacher' AND`date`= '$date' AND `subject`='$subject'");
     }
-
 		// NEW
     public function getFinalGrade($ssn, $subject, $date)
     {
