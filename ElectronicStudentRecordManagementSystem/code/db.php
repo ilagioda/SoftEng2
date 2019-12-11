@@ -779,7 +779,7 @@ class dbParent extends db
         /*Retrieves all assignment of the selected child
         @param $codFisc (String): CodFisc of the selected student
         @return (Array): An array containing the requested info, in a format usable by the calendar functions:
-                         $row['date'] = 'subject' : "View assignments:" 'assignment text' ~ 'subject' : "View assignments:" 'assignment text' ...
+                         $array['date'] = 'subject' : "View assignments:" 'assignment text' ~ 'subject' : "View assignments:" 'assignment text' ...
         */
 
         $CodFisc = $this->sanitizeString($codFisc);
