@@ -1171,7 +1171,7 @@ class dbTeacher extends db
         }
     }
 
-		
+		// NEW 
 	public function getAssignmentsByClassAndDate($codTeacher, $class, $date) {
 		
 		$codTeacher = $this->sanitizeString($codTeacher);
@@ -1193,14 +1193,13 @@ class dbTeacher extends db
         }
 	}
 	
-    //tested
-    function insertNewAssignments($date, $class, $codTeacher, $subject, $assignments)
+	    //tested - CHANGED ---> NEW: TO TEST 
+    function insertNewAssignments($date, $class, $subject, $assignments)
     {
         $class = $this->sanitizeString($class);
         $subject = $this->sanitizeString($subject);
         $date = $this->sanitizeString($date);
         $assignments = $this->sanitizeString($assignments);
-        $codTeacher = $this->sanitizeString($codTeacher);
 
         $result = $this->query("SELECT * FROM Assignments WHERE (classID='$class' AND subject='$subject' AND date='$date')");
 
@@ -1208,10 +1207,10 @@ class dbTeacher extends db
             return -1;
         }
 
-        $result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment) 
-								VALUES ('$subject', '$date', '$class', '$assignments')");
+        $result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment, pathFilename) 
+								VALUES ('$subject', '$date', '$class', '$assignments', '')");
 
-        if ($result == FALSE) {
+        if (!$result) {
             die("ERROR: Assignments not inserted.");
         }
     }
@@ -1652,6 +1651,7 @@ class dbTeacher extends db
         return $this->query("DELETE FROM `StudentNotes` WHERE `codFiscStudent`='$ssnStudent' AND`codFiscTeacher`='$ssnTeacher' AND`date`= '$date' AND `subject`='$subject'");
     }
 
+		// NEW
     public function getFinalGrade($ssn, $subject, $date)
     {
 
@@ -1664,6 +1664,8 @@ class dbTeacher extends db
 
         return -1;
     }
+	
+		// NEW 
     public function insertFinalGrade($ssn, $subject, $finalGrade, $date)
     {
 
@@ -1688,6 +1690,11 @@ class dbTeacher extends db
         }
 
         return 0;
+    }
+	
+		// NEW 
+	 function insertAssignmentsMaterial($date, $filename, $class, $subject, $text) {
+        return $this->query("INSERT INTO Assignments VALUES('$subject', '$date', '$class', '$text', '$filename')");
     }
 
     public function viewSlotsAlreadyProvided($CodFisc)

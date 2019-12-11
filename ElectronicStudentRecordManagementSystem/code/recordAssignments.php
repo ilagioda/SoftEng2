@@ -14,6 +14,78 @@ if (!$loggedin) {
 	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
+	$db = new dbTeacher();
+    $err = $msg= "";
+
+	
+if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset($_POST['assignmentstime']) 
+	&& isset($_FILES['file']['name']) && $_FILES['file']['name'] !="" && isset($_POST['comboClass']) && isset($_POST['comboSubject'])){
+		
+    $date = $db->sanitizeString($_POST['assignmentstime']);
+    $text = $db->sanitizeString($_POST['assignments']);
+    $class = $db->sanitizeString($_POST['comboClass']);
+    $subject = $db->sanitizeString($_POST['comboSubject']);
+	
+	$target_dir = "assignmentsMaterial/$class";
+    $file = $_FILES['file']['name'];
+    $path = pathinfo($file);
+    $filename = $path['filename'];
+    $ext = $path['extension'];
+    $temp_name = $_FILES['file']['tmp_name'];
+
+    //check if directory of class exists
+    if(!file_exists($target_dir)){
+        mkdir($target_dir);
+    }
+    $target_dir = $target_dir . "/" . $subject . "/";
+
+    //If directory with the name of the subject does not exist, it will be created
+    if(!file_exists($target_dir)){
+        mkdir($target_dir);
+    }
+
+    $path_filename_ext = $target_dir.$filename.".".$ext;
+
+    // Check if file already exists
+    if (file_exists($path_filename_ext)) {
+        $err = "Sorry, file already exists.";
+    }else{
+        //upload the file
+        move_uploaded_file($temp_name,$path_filename_ext);
+        if(!$db->insertAssignmentsMaterial($date, $path_filename_ext, $class, $subject, $text)){
+			$err = "Some error occurred. Please retry.";
+        } 
+        $msg = "File Uploaded Successfully!";
+    }
+    $_POST = array();
+    
+} elseif(isset($_POST["comboClass"]) && isset($_POST["comboSubject"]) && isset($_POST["assignmentstime"])
+			&& isset($_POST["assignments"]) && !empty($_POST["assignments"])) {
+				
+		$result = $db->insertNewAssignments($_POST['assignmentstime'], $_POST['comboClass'], $_POST['comboSubject'], $_POST['assignments']);
+		if($result == -1) {
+			$err = "Assignments already inserted for that subject! Try to edit the assignments in the section '<a href='viewAllAssignments.php'>View all records</a>";
+		} else {
+			$msg = "Assigments successfully recorded!";
+		}
+}
+?>
+	<div class="row">
+    <?php
+        if($err != ""){
+            echo <<<_ERR
+            <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong><span class="glyphicon glyphicon-send"></span> $err</strong></div>
+_ERR;
+        } 
+        if ($msg != ""){
+            echo <<<_MSG
+            <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong><span class="glyphicon glyphicon-send"></span> $msg</strong></div>
+_MSG;
+        }
     
 ?>
 
@@ -75,6 +147,37 @@ $(document).ready(function(){
 	
 });
 
+
+function bs_input_file() {
+	$(".input-file").before(
+		function() {
+			if ( ! $(this).prev().hasClass('input-ghost') ) {
+				var element = $("<input type='file' class='input-ghost' style='visibility:hidden; height:0'>");
+				element.attr("name",$(this).attr("name"));
+				element.change(function(){
+					element.next(element).find('input').val((element.val()).split('\\').pop());
+				});
+				$(this).find("button.btn-choose").click(function(){
+					element.click();
+				});
+				$(this).find("button.btn-reset").click(function(){
+					element.val(null);
+					$(this).parents(".input-file").find('input').val('');
+				});
+				$(this).find('input').css("cursor","pointer");
+				$(this).find('input').mousedown(function() {
+					$(this).parents('.input-file').prev().click();
+					return false;
+				});
+				return element;
+			}
+		}
+	);
+}
+$(function() {
+	bs_input_file();
+});
+
 </script>
 
 <ul class="nav nav-tabs">
@@ -85,11 +188,11 @@ $(document).ready(function(){
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-	<h1> Record assignments </h1>
+	<h1 class="text-center"> Record assignments </h1>
 	<div class="form-group">
 
-		<form class="navbar-form navbar-left form-inline" method="POST" action="viewRecordedAssignments.php">
-			<table class="table">
+		<form class="navbar-form navbar form-inline" method="POST" action="recordAssignments.php" enctype="multipart/form-data">
+			<table class="table table-hover">
 				<tr><td><label>Class </label></td><td>
 				<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
 				<option value="" disabled selected>Select class...</option>
@@ -109,12 +212,26 @@ $(document).ready(function(){
 				<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
 						min="<?php echo date("Y-m-d");  ?>" max="<?php echo date("Y-m-d", strtotime('2020-06-10')); ?>"
 						style="width:100%" required> </td></tr>
-				<tr><td><label>Assignments</label></td><td>
-				<textarea class="form-control" name="assignments" rows="4" cols="50" placeholder="Assignments..." style="width:100%" required></textarea></td></tr>
-	
-				<tr><td></td><td><button type="reset" class = "btn btn-default">Reset</button>
-				<button type="submit" id="confirm" class="btn btn-success">Confirm</button></td></tr>
+				<tr><td><label>Assignments</label></td>
+					<td><textarea class="form-control" name="assignments" rows="4" cols="50" placeholder="Description..." style="width:100%" required></textarea>
+					<span id="helpBlock" class="help-block">Add a description of the assignments and, optionally, load a file...</span>
+					<div class="form-group" style="width:100%; margin-left:auto; margin-right:auto;">
+						<div class="input-group input-file" name="file">
+							
+							<input type="text" class="form-control" placeholder='No file selected' />
+							<span class="input-group-btn">
+								<button class="btn btn-warning btn-choose" type="button">
+								<span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span>&emsp;
+								Choose </button>
+							</span>
+						</div>
+					</div>
+					
+					</td>
+				</tr>
 			</table>
+			<button type="reset" class = "btn btn-default" style="margin-right:5px">Reset</button>
+			<button type="submit" id="confirm" class="btn btn-success">Confirm</button>
 		</form>
 		</div>
 	</div>

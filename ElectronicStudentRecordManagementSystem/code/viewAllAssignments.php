@@ -61,7 +61,7 @@ $(document).ready(function(){
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 
-	<h1 class="text-center"> View assignments: </h1>
+	<h1> All assignments </h1>
 
 	<div class="form-group">
 		<form class="navbar-form navbar form-inline" method="POST" action="viewAllAssignments.php">
@@ -162,7 +162,7 @@ $(document).ready(function(){
 		if(!empty($assignments)) {
 
 	?>
-	<h1 id="assignmentsTitle"> List <small>Class: <?php echo $selectedClass ?> - Date: <?php echo $selectedDate?></small></h1>
+	<h1 id="assignmentsTitle"> Assignments list <small>Class: <?php echo $selectedClass ?> - Date: <?php echo $selectedDate?></small></h1>
 	<form method='POST' action='' class='form-group'>
 		<table id="assignmentsTable" class="table table-striped">
 			<thead>
@@ -213,7 +213,10 @@ $(document).ready(function(){
 	
 	<?php
 		} else {
-			echo "<h2 id='assignmentsTitle'> No assignments for this day <small> Class: $selectedClass - Date: $selectedDate </small></h2>";
+			echo "<div class='alert alert-warning'>
+					<h4 id='assignmentsTitle'>
+					<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+					No assignments for this day <small> &emsp;Class: $selectedClass - Date: $selectedDate </small></h4></div>";
 		}
 	?>
 	
