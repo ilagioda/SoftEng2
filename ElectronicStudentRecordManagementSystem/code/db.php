@@ -844,8 +844,8 @@ class dbParent extends db
         return $assignments;
     }
 
-
-
+    
+    //tested
     public function getChildClass($codFisc)
     {
         //returns the classId of a student

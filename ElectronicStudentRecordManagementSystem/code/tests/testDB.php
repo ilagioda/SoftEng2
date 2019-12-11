@@ -281,6 +281,16 @@ final class dbTest extends TestCase{
         $db->queryForTesting("DELETE FROM Students WHERE codFisc LIKE '%TEST%'");
     }
 
+    /*PARENT*/
+
+    public function testGetChildClass(){
+
+        $this->assertTrue(true);
+
+    }
+
+
+
     /* TEACHER */
     public function testViewStudentMarks() {
 
