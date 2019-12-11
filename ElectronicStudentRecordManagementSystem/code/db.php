@@ -1410,7 +1410,7 @@ class dbTeacher extends db
         return $this->query("DELETE FROM `Attendance` WHERE `date`= '$date' AND `codFisc` = '$ssn'");
     }
 
-
+    //tested
     function recordLateEntrance($day, $ssn, $hour)
     {
 
