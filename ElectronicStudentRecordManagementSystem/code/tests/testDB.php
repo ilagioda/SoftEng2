@@ -285,7 +285,24 @@ final class dbTest extends TestCase{
 
     public function testGetChildClass(){
 
-        $this->assertTrue(true);
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "test";
+        $db = new dbParent();
+
+        //student in DB, expected class ID
+        $ssn="FRCWTR";
+
+        $result=$db->getChildClass($ssn);
+        $this->assertSame ($result,"1A");
+
+        //The following part of the test is disabled because the function uses the die() function and the tests would stop here.
+
+//        //student not in DB, expected null
+//        $ssn='wrong';
+//
+//        $result=$db->getChildClass($ssn);
+//        $this->assertSame ($result,null);
+
 
     }
 
