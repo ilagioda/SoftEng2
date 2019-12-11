@@ -706,6 +706,7 @@ class dbParent extends db
         return $this->query("SELECT * FROM supportMaterials WHERE Class='$class' and Subject='$subject'");
     }
 
+    //tested
     public function retrieveAttendance($CodFisc)
     {
 
@@ -748,7 +749,7 @@ class dbParent extends db
 
             /**
              * Produces an array as
-             * "YYYY-MM-DD" => "Absent" | "early - Exited at x° hour" | "late - Entered at x° hour" | "late - Entered at x° hour Exited at y° hour"
+             * "YYYY-MM-DD" => "Absent" | "early - Exited: x° hour" | "late - Entered: x° hour" | "late - Entered: x° hour Exited: y° hour"
              * */
 
             if ($row["absence"] == 1 && $row["lateEntry"] == 0 && $row["earlyExit"] == 0) {
@@ -773,7 +774,7 @@ class dbParent extends db
     }
 
 
-
+    //tested
     public function viewChildAssignments($codFisc)
     {
         /*Retrieves all assignment of the selected child

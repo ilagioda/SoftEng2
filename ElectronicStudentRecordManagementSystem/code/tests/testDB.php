@@ -4,6 +4,8 @@ use PHPUnit\Framework\TestCase;
 
 require_once("../classTeacher.php");
 require_once("../db.php");
+require_once("../functions.php");
+
 
 final class dbTest extends TestCase{
 
@@ -339,6 +341,38 @@ final class dbTest extends TestCase{
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2019-12-11' and `classID` = '1D'");
 
     }
+
+
+    public function testRetrieveAttendance(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "cla_9_6@hotmail.it";
+        $db = new dbParent();
+
+        //Student with one entry
+        $CodFisc='BOB';
+        $array=array();
+        $array["2019-12-02"]="Absent";
+
+        
+        $result=$db->retrieveAttendance($CodFisc);
+        $this->assertSame($result, $array);
+
+        //Student with more entries
+        $CodFisc='ILA';
+        $array2=array();
+        
+        $array2["2019-11-25"]="late - Entered: 2° hour Exited: 4° hour";
+        $array2["2019-11-26"]="Absent";
+        $array2["2019-11-27"]="early - Exited: 4° hour";
+        $array2["2019-11-28"]="late - Entered: 3° hour";
+        $array2["2019-12-02"]="late - Entered: 2° hour Exited: 4° hour";
+        
+        $result=$db->retrieveAttendance($CodFisc);
+        $this->assertSame($result, $array2);
+
+
+    }
+    
 
 
 
