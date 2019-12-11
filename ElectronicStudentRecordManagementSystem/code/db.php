@@ -1176,6 +1176,28 @@ class dbTeacher extends db
         }
     }
 
+		
+	public function getAssignmentsByClassAndDate($codTeacher, $class, $date) {
+		
+		$codTeacher = $this->sanitizeString($codTeacher);
+		$class = $this->sanitizeString($class);
+		$date = $this->sanitizeString($date);
+
+
+        $result = $this->query("SELECT * FROM Assignments a, TeacherClassSubjectTable t WHERE t.codFisc='$codTeacher' AND t.subject = a.subject AND a.classID = '$class' AND a.date='$date' ORDER BY date DESC");
+
+        if (!$result)
+            die("Unable to select assignments.");
+
+        if ($result->num_rows > 0) {
+            $assignments = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($assignments,  "" . $row['subject'] . "," . $row['textAssignment']. "");
+            }
+            return $assignments;
+        }
+	}
+	
     //tested
     function insertNewAssignments($date, $class, $codTeacher, $subject, $assignments)
     {

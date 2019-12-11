@@ -48,11 +48,10 @@ $(document).ready(function(){
 </ul>
 
 <div class="panel panel-default" id="container">
-	<div class="panel-body" >
-	<h1> Record daily lesson topics </h1>
+	<div class="panel-body">
+	<h1 class="text-center"> Record daily lesson topics </h1>
 	<div class="form-group">
-
-		<form class="navbar-form navbar-left form-inline" method="POST" action="viewRecordedLesson.php">
+		<form class="navbar-form navbar form-inline" method="POST" action="viewRecordedLesson.php">
 		
 			<table class="table">
 				<tr><td><label>Class </label></td><td>

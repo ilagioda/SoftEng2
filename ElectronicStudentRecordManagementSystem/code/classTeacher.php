@@ -75,4 +75,10 @@ class Teacher
     function recordStudentNote($ssn,$subject,$note,$date,$hour){
         return $this->db->recordStudentNote($ssn,$subject,$note,$date,$hour);
     }
+	
+	function getAssignmentsByClassAndDate($class, $date) {
+        return $this->db->getAssignmentsByClassAndDate($this->codfisc, $class, $date);
+
+	}
+
 }

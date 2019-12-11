@@ -38,8 +38,12 @@ $(document).ready(function(){
 		});
 	});
 	$("#comboClass").change(function() {
-			document.getElementById('titleStudent').style.display= 'none' ;
-			document.getElementById('studentTable').style.display= 'none' ;
+		document.getElementById('titleStudent').style.display= 'none' ;
+		document.getElementById('studentTable').style.display= 'none' ;
+	});
+	$("#comboSubject").change(function() {
+		document.getElementById('titleStudent').style.display= 'none' ;
+		document.getElementById('studentTable').style.display= 'none' ;
 	});
 	
 	$(function() {
@@ -192,13 +196,14 @@ function modalEdit(obj) {
 		
 			$i = 0; // for a student student
 			$j = 0; // for a mark and date of a specific student 
-			// show students list
-			echo "<form method='POST' action='' class='form-group'>";
 			$selectedClass = $_SESSION["comboClass"];
 			$selectedSubject = $_SESSION["comboSubject"];
+			
+			// show students list
+
 
 	?>
-			
+			<form method='POST' action='' class='form-group'>
 			<h1 id="titleStudent"> Students list  <small>Class: <?php echo $selectedClass ?> - Subject: <?php echo $selectedSubject?></small></h1>
 
 			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
