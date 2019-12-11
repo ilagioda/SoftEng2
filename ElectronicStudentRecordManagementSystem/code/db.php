@@ -437,11 +437,22 @@ class dbAdmin extends db
 
     public function insertStudent($name, $surname, $SSN, $email1, $email2)
     {
+        $name=$this->sanitizeString($name);
+        $surname=$this->sanitizeString($surname);
+        $SSN=$this->sanitizeString($SSN);
+        $email1=$this->sanitizeString($email1);
+        $email2=$this->sanitizeString($email2);
+
         return $this->query("INSERT INTO Students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
     }
 
     public function insertParent($name, $surname, $SSN, $email)
     {
+        $name=$this->sanitizeString($name);
+        $surname=$this->sanitizeString($surname);
+        $SSN=$this->sanitizeString($SSN);
+        $email=$this->sanitizeString($email);
+        
         return $this->query("INSERT INTO Parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
 
