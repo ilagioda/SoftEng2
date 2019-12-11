@@ -435,6 +435,62 @@ final class dbTest extends TestCase{
         $db->queryForTesting("UPDATE attendance SET lateEntry='2' WHERE codFisc='$ssn' AND date='$day'");
 
 
+        //Adding late entrance with hour>early exit (with no late entrance inserted) -> expected false (exception)
+        $day='2019-10-03';
+        $result=$db->recordLateEntrance($day, $ssn, $hour);
+        $this->assertSame($result, false);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '1');
+        $this->assertSame($row['lateEntry'], '0');
+        $this->assertSame($row['earlyExit'], '2');
+        
+
+        //Same as before but with hour<early exit -> true expected
+        $hour=1;
+        $day='2019-10-03';
+        $result=$db->recordLateEntrance($day, $ssn, $hour);
+        $this->assertSame($result, true);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '1');
+        $this->assertSame($row['lateEntry'], '1');
+        $this->assertSame($row['earlyExit'], '2');
+
+        //restoring db
+        $db->queryForTesting("UPDATE attendance SET lateEntry='0' WHERE codFisc='$ssn' AND date='$day'");
+
+        //Adding late entrance to absent student -> expected true, now the student should be present
+        $day='2019-10-09';
+        $result=$db->recordLateEntrance($day, $ssn, $hour);
+        $this->assertSame($result, true);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '0');
+        $this->assertSame($row['lateEntry'], '1');
+        $this->assertSame($row['earlyExit'], '0');
+
+        //restoring db
+        $db->queryForTesting("UPDATE attendance SET absence='1', lateEntry='0' WHERE codFisc='$ssn' AND date='$day'");
+
+
+        //Adding late entrance=0 to an absent student -> true expected (with deleting of tuple)
+        $hour=0;
+        $result=$db->recordLateEntrance($day, $ssn, $hour);
+        $this->assertSame($result, true);
+
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 0);
+        $row = $result->fetch_assoc();
+
+        //restoring db
+        $db->queryForTesting("INSERT INTO `attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`) VALUES ('$day', 'FRCWTR', '1', '0', '0')");
 
 
     }
