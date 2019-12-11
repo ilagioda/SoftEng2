@@ -60,7 +60,7 @@ if (!$loggedin) {
        $ok = 0;
        $ok = $db->enrollStudent($student_name, $student_surname, $student_SSN, $parent1_name, $parent1_surname, $parent1_SSN, $parent1_email, $parent2_name, $parent2_surname, $parent2_SSN, $parent2_email);
        /* ok = 1 --> student enrolled correctly ; ok = 0 --> error*/
-       if($ok == 0){
+       if(!$okW){
             $error = 1;
        }
     }

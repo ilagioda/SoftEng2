@@ -431,12 +431,13 @@ class dbAdmin extends db
 
     public function TakeParentsMail()
     {
-        $result = $this->query("SELECT email, hashedPassword, firstLogin FROM Parents ORDER BY hashedPassword, email");
-        return $result;
+        // NO NEED TO BE TESTED
+        return $this->query("SELECT email, hashedPassword, firstLogin FROM Parents ORDER BY hashedPassword, email");
     }
 
     public function insertStudent($name, $surname, $SSN, $email1, $email2)
     {
+        // NO NEED TO BE TESTED
         $name=$this->sanitizeString($name);
         $surname=$this->sanitizeString($surname);
         $SSN=$this->sanitizeString($SSN);
@@ -448,21 +449,32 @@ class dbAdmin extends db
 
     public function insertParent($name, $surname, $SSN, $email)
     {
+        // NO NEED TO BE TESTED
+
         $name=$this->sanitizeString($name);
         $surname=$this->sanitizeString($surname);
         $SSN=$this->sanitizeString($SSN);
         $email=$this->sanitizeString($email);
-        
+
         return $this->query("INSERT INTO Parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
 
     public function insertLectures($date, $hour, $classID, $codFiscTeacher, $subject, $topic)
     {
+        // NO NEED TO BE TESTED
+
+        $date=$this->sanitizeString($date);
+        $hour=$this->sanitizeString($hour);
+        $classID=$this->sanitizeString($classID);
+        $codFiscTeacher=$this->sanitizeString($codFiscTeacher);
+        $subject=$this->sanitizeString($subject);
+        $topic=$this->sanitizeString($topic);
+        
         return $this->query("INSERT INTO Lectures(date, hour, classID, codFiscTeacher, subject, topic) 
 								VALUES('$date', '$hour', '$classID', '$codFiscTeacher', '$subject', '$topic')");
     }
 
-    public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2, $surname2, $SSN2, $email2)
+    public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2='', $surname2='', $SSN2='', $email2='')
     {
 
         /* Sanitize parameters before inserting them into the DB */
@@ -484,7 +496,7 @@ class dbAdmin extends db
         $result = $this->insertStudent($name, $surname, $SSN, $email1, $email2);
         if (!$result) {
             $this->rollback();
-            return 0;
+            return false;
         }
 
 
@@ -495,7 +507,7 @@ class dbAdmin extends db
         //     return 0;
         // }
 
-        if (!empty($email2)) {
+        if (!empty($name2) && !empty($surname2) && !empty($SSN2) && !empty($email2)) {
             /* Insert parent 2 into the DB */
             $result = $this->insertParent($name2, $surname2, $SSN2, $email2);
             // if(!$result){
@@ -504,8 +516,7 @@ class dbAdmin extends db
             // }
         }
 
-        $this->commit();
-        return 1;
+        return $this->commit();
     }
 
     public function retrieveAllClasses()

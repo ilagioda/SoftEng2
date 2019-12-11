@@ -245,6 +245,42 @@ final class dbTest extends TestCase{
         $db->queryForTesting("UPDATE Students SET classID='' WHERE codFisc='CLDFLCM'");
     }
 
+    public function testEnrollStudent(){
+
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        // add a generic child with two parent
+        $this->assertTrue($db->enrollStudent("childNameTEST","childSurnameTEST","SSNCHILDTEST","nameP1TEST","surnameP1TEST","SSNP1TEST","EmailP1TEST","nameP2TEST","surnameP2TEST","SSNP2TEST","EmailP2TEST"));
+
+        // add a generic child with one parent
+        $this->assertTrue($db->enrollStudent("childNameTEST2P","childSurnameTEST2P","SSNCHILDTEST2P","nameP1TEST1P","surnameP1TEST1P","SSNP1TEST1P","EmailP1TEST1P"));
+
+        // add a student that is already in the DB
+        $this->assertFalse($db->enrollStudent("Bob","Silver","BOB","shouldNotBeHere","shouldNotBeHere","shouldNotBeHere","shouldNotBeHere"));
+
+        // add a student with a parent that is already in the DB
+        $this->assertTrue($db->enrollStudent("TESTexistingParent","TESTexistingParent","TESTexistingParent","nameP1TEST1P","surnameP1TEST1P","SSNP1TEST1P","EmailP1TEST1P"));
+
+        // check the DB
+        $ret = $db->queryForTesting("SELECT COUNT(*) AS OK FROM Students WHERE codFisc='SSNCHILDTEST'");
+        $this->assertNotFalse($ret);
+        $this->assertEquals(1,$ret->fetch_assoc()["OK"]);
+
+        $ret = $db->queryForTesting("SELECT COUNT(*) AS OK FROM Students WHERE codFisc='SSNCHILDTEST2P'");
+        $this->assertNotFalse($ret);
+        $this->assertEquals(1,$ret->fetch_assoc()["OK"]);
+
+        $ret = $db->queryForTesting("SELECT COUNT(*) AS OK FROM Students WHERE codFisc='TESTexistingParent'");
+        $this->assertNotFalse($ret);
+        $this->assertEquals(1,$ret->fetch_assoc()["OK"]);
+
+        // clean the DB
+        $db->queryForTesting("DELETE FROM Parents WHERE codFisc LIKE '%TEST%'");
+        $db->queryForTesting("DELETE FROM Students WHERE codFisc LIKE '%TEST%'");
+    }
+
     /* TEACHER */
     public function testViewStudentMarks() {
 
