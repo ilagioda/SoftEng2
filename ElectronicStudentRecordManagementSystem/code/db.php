@@ -706,6 +706,7 @@ class dbParent extends db
         return $this->query("SELECT * FROM supportMaterials WHERE Class='$class' and Subject='$subject'");
     }
 
+    
     //tested
     public function retrieveAttendance($CodFisc)
     {

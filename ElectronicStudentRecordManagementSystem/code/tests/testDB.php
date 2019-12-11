@@ -345,19 +345,18 @@ final class dbTest extends TestCase{
 
     public function testRetrieveAttendance(){
         $_SESSION['role'] = "parent";
-        $_SESSION['user'] = "cla_9_6@hotmail.it";
+        $_SESSION['user'] = "padre@hotmail.it";
         $db = new dbParent();
 
-        //Student with one entry
-        $CodFisc='BOB';
+        //Student with no entries
+        $CodFisc='JAMBCK';
         $array=array();
-        $array["2019-12-02"]="Absent";
-
         
         $result=$db->retrieveAttendance($CodFisc);
         $this->assertSame($result, $array);
 
-        //Student with more entries
+        //Student with entries
+        $_SESSION['user'] = "cla_9_6@hotmail.it";
         $CodFisc='ILA';
         $array2=array();
         
@@ -373,7 +372,19 @@ final class dbTest extends TestCase{
 
     }
     
+    public function testViewChildMarks(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "parent@parent.it";
+        $db = new dbParent();
 
+        //child with no grades (expected empty string)
+        $ssn="LILYCO";
+        $result=$db->viewChildMarks($ssn);
+        $this->assertSame($result, "");
+
+        //child with grades (expected list of grades separated by ; )
+        
+    }
 
 
     /* TEACHER */
