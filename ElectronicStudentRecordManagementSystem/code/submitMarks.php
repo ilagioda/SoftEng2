@@ -63,7 +63,7 @@ $(document).ready(function(){
 								var name = '<td>' + args[0] + '</td>';
 								var surname = '<td>' + args[1] + '</td>';
 								var ssn = '<td><input type="hidden" name="ssn[]" value="'+args[2]+'">' + args[2] + '</td>';
-								var grade = '<td><select class="form-control" name="comboGrade[]" id="comboGrade[]" style="width:100%"> ';;
+								var grade = '<td><select class="form-control" name="comboGrade[]" id="comboGrade[]" style="width:100%"> ';
 								for(var i=0; i<=10; i++) {
 									j=i+1;
 									grade += '<option value=' +i+ '>'+i+'</option>';
