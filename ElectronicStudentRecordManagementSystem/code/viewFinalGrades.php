@@ -30,11 +30,12 @@ $childSurname = $_SESSION['childSurname'];
 
 <h1 class="display-1 text-center"> <?php echo "$childName $childSurname"; ?>'s final grades </h1>
 <br>
-<table class="table table-striped" id="studentTable" style="border-collapse:collapse;">
 
 <?php
 	if ($finalGrades) {
 ?>	
+<table class="table table-striped" id="studentTable" style="border-collapse:collapse;">
+
 	<thead>
 		<tr>
 			<th class="text-center"> Subject </th>
@@ -50,10 +51,12 @@ $childSurname = $_SESSION['childSurname'];
 		
 			echo "<tr class='text-center'><td>$subject</td><td>$grade</td></tr>";
 		}
+		echo "	</tbody></table>";
+	} else {
+		echo "<p> No grades </p>";
 	}
 ?>
-	</tbody>
-</table>
+
 
 <?php
 	require_once("defaultFooter.php");
