@@ -178,6 +178,7 @@ function build_html_calendar($year, $month, $events = null)
         $draw_event = false;
         if (isset($events) && isset($events[$cur_date])) {
             $draw_event = true;
+            $teacherMeetings=false;
             $assignment = false;
             $event = $events[$cur_date];
             if ($event == "Absent") {
