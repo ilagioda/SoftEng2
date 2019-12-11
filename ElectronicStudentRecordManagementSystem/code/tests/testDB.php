@@ -404,32 +404,36 @@ final class dbTest extends TestCase{
     }
 
     public function testRecordLateEntrance(){
-        // $_SESSION['role'] = "teacher";
-        // $_SESSION['user'] = "test";
-        // $db = new dbTeacher();
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "test";
+        $db = new dbTeacher();
 
-        // //Tuple not present -> exception should be thrown (expected false)
-        // $day='2019-12-11';
-        // $ssn='FRCWTR';
-        // $hour='3';
+        //Tuple not present -> exception should be thrown (expected false)
+        $day='2019-12-11';
+        $ssn='FRCWTR';
+        $hour='3';
 
-        // $result=$db->recordLateEntrance($day, $ssn, $hour);
-        // $this->assertSame($result, false);
+        $result=$db->recordLateEntrance($day, $ssn, $hour);
+        $this->assertSame($result, false);
 
-        // $result=$db->selectAttendanceStudent($day, $ssn);
-        // $this->assertSame($result->num_rows, 0);
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 0);
 
-        // //Tuple present with student not absent -> exception should be thrown (expected false)
-        // $day='2019-11-27';
-        // $result=$db->recordLateEntrance($day, $ssn, $hour);
-        // $this->assertSame($result, true);
+        //Tuple present -> expected true
+        $day='2019-11-27';
+        $result=$db->recordLateEntrance($day, $ssn, $hour);
+        $this->assertSame($result, true);
 
-        // $result=$db->selectAttendanceStudent($day, $ssn);
-        // $this->assertSame($result->num_rows, 1);
-        // $row = $result->fetch_assoc();
-        // $this->assertSame($row['absence'], '1');
-        // $this->assertSame($row['lateEntry'], '3');
-        // $this->assertSame($row['earlyExit'], '4');
+        $result=$db->selectAttendanceStudent($day, $ssn);
+        $this->assertSame($result->num_rows, 1);
+        $row = $result->fetch_assoc();
+        $this->assertSame($row['absence'], '0');
+        $this->assertSame($row['lateEntry'], '3');
+        $this->assertSame($row['earlyExit'], '0');
+
+        //restoring db
+        $db->queryForTesting("UPDATE attendance SET lateEntry='2' WHERE codFisc='$ssn' AND date='$day'");
+
 
 
 
