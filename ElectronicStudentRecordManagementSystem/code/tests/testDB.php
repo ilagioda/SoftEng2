@@ -306,6 +306,28 @@ final class dbTest extends TestCase{
 
     }
 
+    public function testViewChildAssignments(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "padre@hotmail.it";
+        $db = new dbParent();
+
+        $ssn="WRONG";
+        //The following part of the test is disabled because the function uses the die() function and the tests would stop here.
+//        //non existing parent or not associated to the child
+//        $ssn="WRONG";
+//        $result=$db->viewChildAssignments($ssn);
+//        $this->>assertSame($result, null);
+
+
+
+        //No assignment for the child class -> expected empty array
+        $ssn="ISAORA";
+        $result=$db->viewChildAssignments($ssn);
+        $array=array();
+        $this->assertSame($result, $array);
+
+    }
+
 
 
     /* TEACHER */
