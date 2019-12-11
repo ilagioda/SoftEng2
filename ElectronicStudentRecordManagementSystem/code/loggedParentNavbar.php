@@ -19,8 +19,10 @@
                     <li><a href="studentAttendance.php">Attendance</a></li>
                     <li><a href="viewChildAssignment.php">Assignments</a></li>
                     <li><a href="viewSupportMaterial.php">Materials</a></li>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+
                     <?php
                     if (isset($_SESSION['children'])) {
 
@@ -30,32 +32,30 @@
                                 <li><a href='#'>" . $_SESSION['childName'] . " " . $_SESSION['childSurname'] . "</a></li>";
                         } else {
                             //More than one child
-                            if(isset($_SESSION['childName'])&&isset($_SESSION['childSurname'])){
+                            if (isset($_SESSION['childName']) && isset($_SESSION['childSurname'])) {
 
                                 echo '<li role="presentation" class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">'
-                                . $_SESSION["childName"] . ' ' . $_SESSION["childSurname"] . '<span class="caret"></span> </a>
+                                    . $_SESSION["childName"] . ' ' . $_SESSION["childSurname"] . '<span class="caret"></span> </a>
                                 <ul class="dropdown-menu">';
-                            $i = 0;
-                            foreach ($_SESSION['children'] as $child) {
+                                $i = 0;
+                                foreach ($_SESSION['children'] as $child) {
 
-                                if (!(($child['name'] == $_SESSION['childName']) && ($child['surname'] == $_SESSION['childSurname']))) {
-                                    echo <<<_ROW
+                                    if (!(($child['name'] == $_SESSION['childName']) && ($child['surname'] == $_SESSION['childSurname']))) {
+                                        echo <<<_ROW
                                     <li class="nav-item dropdown">
                                     <a class="dropdown-item" href="chooseChild.php?childIndex=$i">$child[name] $child[surname]</a>
                                     </li>
 _ROW;
+                                    }
+                                    $i++;
                                 }
-                                $i++;
-                            }
-                            echo '</ul>
+                                echo '
+                                <li role="separator" class="divider"></li>
+                                <li><a href="viewStudentNote.php">Discplinar Notes</a></li>
+                                </ul>
                                   </li>';
-
-
-
-
                             }
-
                         }
                     }
                     ?>

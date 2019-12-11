@@ -1725,7 +1725,11 @@ class dbTeacher extends db
             $ret[$row["day"]] = "teacherMeetings";
         }
 
-        $this->commit();
+        $r = $this->commit();
+        if(!$r){
+            // Error during the commit => return the empty array
+            $ret = array();
+        }
 
         return $ret;
     }
@@ -1743,8 +1747,41 @@ class dbTeacher extends db
          * "free" --> time slot available for meetings
          * "lesson" --> time slot in which the teacher has a lecture in a certain class
          * "selected" --> time slot already selected for meetings
-         */
+        */
 
-        // TODO ----------------------------------------------------------------------------------------------------------
+        $codFisc = $this->sanitizeString($codFisc);
+        $day = $this->sanitizeString($day);
+
+        $slots = array();
+
+        $this->begin_transaction();
+
+        // Retrieve the lectures of the teacher in the specified day
+        // TODO --------------------------------------------------------------------------------------------------------------
+        // da teacherclasssubjecttable... data un codFisc, retrieve (classId, subject)
+        // da timetable... dati (classId, day, subject) recupero hour
+        // TODO --------------------------------------------------------------------------------------------------------------
+
+        // Retrieve the parent meetings time slots already provided by the teacher in the specified day
+        $query = "SELECT slotNb FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day'";
+        $result = $this->query($query);
+        if (!$result)
+            die("Unable to execute the query!");
+
+        if ($result->num_rows > 0) {
+            while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                $slots[$row["slotNb"]] = "selected";
+            }
+        }
+
+        // Prepare the string to return back
+        // TODO --------------------------------------------------------------------------------------------------------------
+
+        // $r = $this->commit();
+        // if(!$r){
+        //     // Error during the commit => return the empty array
+        //     $ret = array();
+        // }
+
     }
 }

@@ -276,6 +276,6 @@ _MODAL;
   }
 }
 
-
+echo "</div>";
 require_once("defaultFooter.php");
 ?>
