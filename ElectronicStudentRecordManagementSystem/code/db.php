@@ -1675,4 +1675,21 @@ class dbTeacher extends db
 
         return $ret;
     }
+
+    public function showParentMeetingSlotsOfTheDay($codFisc, $day){
+        /**
+         * Retrieve the slots and their availability of a certain date and of a certain teacher.
+         * @param $codFisc (String) CodFisc of the teacher.
+         * @param $day (String in the format "YYYY-MM-DD") 
+         * @return (String) Slots availability in the form: 
+         * "0_lesson,1_free,2_free,3_selected,4_selected,5_lesson"
+         * where the numbers 0..5 correspond to the time slots 8:00-9:00 .. 13:00-14:00
+         * and 
+         * "free" --> time slot available for meetings
+         * "lesson" --> time slot in which the teacher has a lecture in a certain class
+         * "selected" --> time slot already selected for meetings
+         */
+
+         // TODO ----------------------------------------------------------------------------------------------------------
+    }
 }

@@ -172,16 +172,23 @@ require_once("db.php");
         // Update date
         document.getElementById("date").innerHTML = selecteddate;
         
-        // Show the list of time slots 8:00-9:00, 9:00-10:00, 10:00-11:00, 11:00-12:00, 12:00-13:00, 13:00-14:00
-        var slots = document.getElementById("daySlots");
-        var str = "";
-        
-        var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
-        for(let i=0; i<hours.length; i++){
-            str += "<tr><td>"+hours[i]+"</td></tr>";
-        }
+        // Ajax request to retrieve the time slots availability for the selected date
+        $.post("provideParentMeetingSlotsBE.php", ({
+            'day': selecteddate,
+            'codFisc': fiscalCode
+        }), function(text) {
+            
+            // Show the list of time slots 8:00-9:00, 9:00-10:00, 10:00-11:00, 11:00-12:00, 12:00-13:00, 13:00-14:00
+            var slots = document.getElementById("daySlots");
+            var str = "";
+            
+            var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
+            for(let i=0; i<hours.length; i++){
+                str += "<tr><td>"+hours[i]+"</td></tr>";
+            }
 
-        slots.innerHTML = str;
+            slots.innerHTML = str;
+        })
     }
 
     $(document).ready(updateCalendar);

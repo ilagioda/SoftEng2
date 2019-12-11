@@ -19,10 +19,18 @@ require_once("db.php");
 
 if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['year']) || !isset($_REQUEST['month'])){
 
-    // CONTROLLO SECONDA RICHIESTA AJAX ------------------------------------------------------------------------------------------
+    if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['day'])){
+        // TERZA RICHIESTA AJAX?? ----------------------------------------------------------------------------------
+    } else {
+        // Ajax request coming from showDaySlots() 
+        $db = new dbTeacher();
+        $codFisc = $_REQUEST['codFisc'];
+        $day = $_REQUEST['day'];
+        $slots = $db->showParentMeetingSlotsOfTheDay($codFisc, $day);    
+        return $slots;
+    }
 
 } else {
-
     // Ajax request coming from updateCalendar() 
     $db = new dbTeacher();
     $codFisc = $_REQUEST['codFisc'];
