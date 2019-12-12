@@ -383,6 +383,19 @@ final class dbTest extends TestCase{
         $this->assertSame($result, "");
 
         //child with grades (expected list of grades separated by ; )
+
+        $ssn="FRCWTR";
+        $result=$db->viewChildMarks($ssn);
+        $string="";
+        $string.="History,2019-10-10,6;";
+        $string.="Italian,2019-10-15,9;";
+        $string.="Italian,2019-10-14,9/10;";
+        $string.="Italian,2019-10-10,7+;";
+        $string.="Maths,2019-10-11,9-;";
+        $string.="Philosophy,2019-10-10,5/6;";
+        $string.="Physics,2019-10-12,3+"; //The last one doesn't have ; at the end
+
+        $this->assertSame($result, $string);
         
     }
 

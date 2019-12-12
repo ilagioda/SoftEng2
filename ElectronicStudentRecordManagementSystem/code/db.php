@@ -653,6 +653,7 @@ class dbParent extends db
         return $res;
     }
 
+    //tested
     public function viewChildMarks($CodFisc)
     {
         /** 
