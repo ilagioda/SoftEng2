@@ -177,19 +177,39 @@ require_once("db.php");
             'day': selecteddate,
             'codFisc': fiscalCode
         }), function(text) {
+            if(text === ""){
+                // Error
+                window.alert("Oh no! Something went wrong...");
+            } else {
+                // "text" contains the slots availability in the form: "1_lesson,2_free,3_free,4_selected,5_selected,6_lesson"
 
-            // TODO ----------------------------------------------------------------------------------------------------------------
+                // Split the string and prepare an array
+                var availability = [];
+                var arr = text.split(",");  // After this split, we have an array (arr) in the form ["1_lesson" , "2_free", "3_free", "4_selected", "5_selected", "6_lesson"]
+                for(let i=0; i<6; i++){
+                    var tmp = arr[i].split("_");  // After this split, we have an array (tmp) in the form ["1", "lesson"]
+                    availability[parseInt(tmp[0])] = tmp[1];
+                }
 
-            // Show the list of time slots 8:00-9:00, 9:00-10:00, 10:00-11:00, 11:00-12:00, 12:00-13:00, 13:00-14:00
-            var slots = document.getElementById("daySlots");
-            var str = "";
-            
-            var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
-            for(let i=0; i<hours.length; i++){
-                str += "<tr><td>"+hours[i]+"</td></tr>";
+                // Show the list of time slots 8:00-9:00, 9:00-10:00, 10:00-11:00, 11:00-12:00, 12:00-13:00, 13:00-14:00
+                var slots = document.getElementById("daySlots");
+                var str = "";
+                
+                var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
+                for(let i=0; i<hours.length; i++){
+                    var freeOrNotFree = availability[i+1];
+                    var color = "white";
+                    if(freeOrNotFree === "lesson"){
+                        color = "#bfbfbf";
+                    } else if(freeOrNotFree === "selected"){
+                        color = "#b3ffcc";
+                    }
+                    
+                    str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
+                }
+
+                slots.innerHTML = str;
             }
-
-            slots.innerHTML = str;
         })
     }
 

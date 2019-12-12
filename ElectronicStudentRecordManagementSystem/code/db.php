@@ -1747,6 +1747,7 @@ class dbTeacher extends db
             die("Unable to execute the query!");
 
         $ret = array();
+        $ret["1996-07-25"] = "teacherMeetings";
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
 
             /**
@@ -1773,26 +1774,80 @@ class dbTeacher extends db
          * @param $codFisc (String) CodFisc of the teacher.
          * @param $day (String in the format "YYYY-MM-DD") 
          * @return (String) Slots availability in the form: 
-         * "0_lesson,1_free,2_free,3_selected,4_selected,5_lesson"
-         * where the numbers 0..5 correspond to the time slots 8:00-9:00 .. 13:00-14:00
+         * "1_lesson,2_free,3_free,4_selected,5_selected,6_lesson"
+         * where the numbers 1..6 correspond to the time slots 8:00-9:00 .. 13:00-14:00
          * and 
          * "free" --> time slot available for meetings
          * "lesson" --> time slot in which the teacher has a lecture in a certain class
          * "selected" --> time slot already selected for meetings
+         * In case of error: ""
         */
 
         $codFisc = $this->sanitizeString($codFisc);
         $day = $this->sanitizeString($day);
 
+        // Initialization of the array which will contain the available/occupied slots
         $slots = array();
-
+        for($i = 1; $i <= 6; $i++){
+            $slots[$i] = "free";
+        }
+        
         $this->begin_transaction();
 
         // Retrieve the lectures of the teacher in the specified day
-        // TODO --------------------------------------------------------------------------------------------------------------
-        // da teacherclasssubjecttable... data un codFisc, retrieve (classId, subject)
-        // da timetable... dati (classId, day, subject) recupero hour
-        // TODO --------------------------------------------------------------------------------------------------------------
+        // Recupero le coppie (classe, materia) che mostrano quali materie la teacher insegna nelle diverse classi
+        $query0 = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$codFisc'";
+        $result0 = $this->query($query0);
+        if (!$result0)
+            die("Unable to execute the query!");
+
+        if ($result0->num_rows > 0) {
+            // Per ogni coppia (classe, materia)...
+            while (($row0 = $result0->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                $currentClass = $row0["classID"];
+                $currentSubject = $row0["subject"];
+                // ... controllo se nel giorno d'interesse ($day) e' presente una qualche lezione tenuta dalla teacher
+                // Retrieve which day of the week is the date under consideration
+                        // Convert the date string into a unix timestamp
+                        $unixTimestamp = strtotime($day);
+                        // Get the day of the week using PHP's date function
+                        $dayOfWeek = date("l", $unixTimestamp);
+                        // Convert in the form of the DB
+                        switch ($dayOfWeek) {
+                            case "Monday":
+                                $dayOfTheWeekDB = "mon";
+                                break;
+                            case "Tuesday":
+                                $dayOfTheWeekDB = "tue";
+                                break;
+                            case "Wednesday":
+                                $dayOfTheWeekDB = "wed";
+                                break;
+                            case "Thursday":
+                                $dayOfTheWeekDB = "thu";
+                                break;
+                            case "Friday":
+                                $dayOfTheWeekDB = "fri";
+                                break;
+                            case "Saturday":
+                                $dayOfTheWeekDB = "sat";
+                                break;
+                            case "Sunday":
+                                $dayOfTheWeekDB = "sun";
+                                break;
+                        }
+                $query1 = "SELECT * FROM `Timetable` WHERE `classID`='$currentClass' AND `day`='$dayOfTheWeekDB' AND `subject`='$currentSubject'";
+                $result1 = $this->query($query1);
+                if (!$result1)
+                    die("Unable to execute the query!");
+                if ($result1->num_rows > 0) {
+                    // La teacher ha almeno una lezione nel giorno d'interesse => mi salvo gli slot occupati
+                    while (($row1 = $result1->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                        $slots[$row1["hour"]] = "lesson";
+                    }
+                }
+            }
+        }
 
         // Retrieve the parent meetings time slots already provided by the teacher in the specified day
         $query = "SELECT slotNb FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day'";
@@ -1806,14 +1861,18 @@ class dbTeacher extends db
             }
         }
 
-        // Prepare the string to return back
-        // TODO --------------------------------------------------------------------------------------------------------------
+        // Prepare the string that has to be returned
+        $str = "";
+        for($i = 1; $i <= 6; $i++){
+            $str = $str.$i."_".$slots[$i].",";
+        }
 
-        // $r = $this->commit();
-        // if(!$r){
-        //     // Error during the commit => return the empty array
-        //     $ret = array();
-        // }
+        $r = $this->commit();
+        if(!$r){
+            // Error during the commit => return the empty array
+            $str = "";
+        }
 
+        return $str;
     }
 }

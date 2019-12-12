@@ -170,6 +170,13 @@ function build_html_calendar($year, $month, $events = null)
         $calendar .= "<td class='{$css_cal_day_blank}'> </td>";
     }
 
+    // Check if coming from Parent Meeetings
+    if(isset($events["1996-07-25"])){
+        $ila = true;
+    } else {
+        $ila = false;
+    }
+
     // Keep going with days...
     for ($day = 1; $day <= $days_in_month; $day++) {
 
@@ -214,9 +221,14 @@ function build_html_calendar($year, $month, $events = null)
             if($draw_event == true && $teacherMeetings == true){
                 $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
             } else {
-                  // Day cell
-                $calendar .= $draw_event ?
-                "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+
+                if($ila){
+                    $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
+                } else {
+                    // Day cell
+                    $calendar .= $draw_event ?
+                    "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+                }
             }
         }
      
@@ -232,7 +244,7 @@ function build_html_calendar($year, $month, $events = null)
             } else $assignmentClass="";
 
             if($teacherMeetings){
-                $events[$cur_date] = '<div class="glyphicon glyphicon-cog"></div>';
+                $events[$cur_date] = '<div class="glyphicon glyphicon-user"></div>';
             }
 
             $calendar .=

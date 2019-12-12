@@ -27,7 +27,7 @@ if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['year']) || !isset($_REQUEST
         $codFisc = $_REQUEST['codFisc'];
         $day = $_REQUEST['day'];
         $slots = $db->showParentMeetingSlotsOfTheDay($codFisc, $day);    
-        return $slots;
+        echo $slots;
     }
 
 } else {
