@@ -400,30 +400,41 @@ final class dbTest extends TestCase{
     }
 
    public function testRetrieveChildren(){
-       $_SESSION['role'] = "parent";
-       $_SESSION['user'] = "mrc@gmail.it";
-       $db = new dbParent();
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "mrc@gmail.it";
+        $db = new dbParent();
 
-       //Parent with child without a class
-       $array=array();
-       $result=$db->retrieveChildren($_SESSION['user']);
-       $this->assertSame($result, $array);
+        //Parent with child without a class
+        $array=array();
+        $result=$db->retrieveChildren($_SESSION['user']);
+        $this->assertSame($result, $array);
 
-       //Parent with child with class
-       $_SESSION['user']="gigimarzullo@genitore1.it";
-       $result=$db->retrieveChildren($_SESSION['user']);
-       $array[0]["codFisc"]="HRRWHI";
-       $array[0]["name"]="Harry";
-       $array[0]["surname"]="White";
-       $array[0]["classID"]="1D";
-       $array[1]["codFisc"]="JEPPL";
-       $array[1]["name"]="Jessica";
-       $array[1]["surname"]="Purple";
-       $array[1]["classID"]="1D";
-       $this->assertSame($result, $array);
+        //Parent with child with class
+        $_SESSION['user']="gigimarzullo@genitore1.it";
+        $result=$db->retrieveChildren($_SESSION['user']);
+        $array[0]["codFisc"]="HRRWHI";
+        $array[0]["name"]="Harry";
+        $array[0]["surname"]="White";
+        $array[0]["classID"]="1D";
+        $array[1]["codFisc"]="JEPPL";
+        $array[1]["name"]="Jessica";
+        $array[1]["surname"]="Purple";
+        $array[1]["classID"]="1D";
+        $this->assertSame($result, $array);
 
    }
 
+   //Protected function, can't be tested
+//    public function testCheckIfAuthorisedForChild(){
+//         $_SESSION['role'] = "parent";
+//         $_SESSION['user'] = "mrc@gmail.it";
+//         $db = new dbParent();
+
+//         //parent is not autorized -> expected "No student with ID $CodFisc"
+//         $ssn="WRONG";
+//         $result=$db->checkIfAuthorisedForChild($ssn);
+//         $this->assertSame($result, "No student with ID $ssn");
+//    }
 
     /* TEACHER */
     public function testViewStudentMarks() {

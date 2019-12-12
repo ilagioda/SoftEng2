@@ -477,6 +477,7 @@ class dbAdmin extends db
 								VALUES('$date', '$hour', '$classID', '$codFiscTeacher', '$subject', '$topic')");
     }
 
+    //tested
     public function enrollStudent($name, $surname, $SSN, $name1, $surname1, $SSN1, $email1, $name2 = '', $surname2 = '', $SSN2 = '', $email2 = '')
     {
 
@@ -522,6 +523,7 @@ class dbAdmin extends db
         return $this->commit();
     }
 
+    //NEW, TO BE TESTED
     public function retrieveAllClasses()
     {
         $sql = "SELECT classID FROM Classes";
@@ -535,6 +537,7 @@ class dbAdmin extends db
         }
     }
 
+    //NEW, TO BE TESTED
     public function storeTimetable($class, $timetable)
     {
 
@@ -591,11 +594,10 @@ class dbParent extends db
         if ($_SESSION['role'] != "parent") throw new Exception("Creating DbParent object for an user who is NOT logged in as a parent");
         parent::__construct();
     }
-
     
+
     protected function checkIfAuthorisedForChild($CodFisc)
     {
-
 
         /**
          * 
