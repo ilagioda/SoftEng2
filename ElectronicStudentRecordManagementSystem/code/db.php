@@ -592,6 +592,7 @@ class dbParent extends db
         parent::__construct();
     }
 
+    
     protected function checkIfAuthorisedForChild($CodFisc)
     {
 
@@ -625,7 +626,7 @@ class dbParent extends db
         return true;
     }
 
-
+    //tested
     public function retrieveChildren($email)
     {
 
