@@ -1,4 +1,7 @@
 <?php
+
+require_once("functions.php");
+
 class db
 {
 
@@ -622,6 +625,7 @@ class dbParent extends db
         return true;
     }
 
+
     public function retrieveChildren($email)
     {
 
@@ -636,7 +640,7 @@ class dbParent extends db
                                 ORDER BY name,surname;");
 
         if (!$result)
-            die("Unable to select children for $email");
+            return array();
 
         $children = array();
 
@@ -646,6 +650,8 @@ class dbParent extends db
 
         return $children;
     }
+
+
     public function getInternalAnnouncements($classID)
     {
         $sql = "SELECT * FROM internalCommunications WHERE classID='$classID' ORDER BY Timestamp DESC";

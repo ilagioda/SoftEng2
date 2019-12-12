@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once("../classTeacher.php");
 require_once("../db.php");
-require_once("../functions.php");
+
 
 
 final class dbTest extends TestCase{
@@ -398,6 +398,25 @@ final class dbTest extends TestCase{
         $this->assertSame($result, $string);
         
     }
+
+//    public function testRetrieveChildren(){
+//        $_SESSION['role'] = "parent";
+//        $_SESSION['user'] = "mrc@gmail.it";
+//        $db = new dbParent();
+//
+//        //Parent with child without a class
+//        $array=array();
+//        $result=$db->retrieveChildren($_SESSION['user']);
+//        $this->assertSame($result, $array);
+//
+//        //Parent with child with class
+//        $_SESSION['user']="gigimarzullo@genitore1.it";
+//        $result=$db->retrieveChildren($_SESSION['user']);
+//        $array[0][codFisc]="HRRWHI";
+//        $array[0][name]="Harry";
+//        $this->assertSame($result, $array);
+
+//    }
 
 
     /* TEACHER */
