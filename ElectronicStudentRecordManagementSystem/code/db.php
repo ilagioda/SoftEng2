@@ -1729,7 +1729,6 @@ class dbTeacher extends db
 
     public function viewSlotsAlreadyProvided($CodFisc)
     {
-
         /**
          * Retrieve the days in which a teacher has already provided at least one time slot for parent meetings in the current semester.
          * @param $CodFisc (String) CodFisc of the teacher.
@@ -1737,9 +1736,7 @@ class dbTeacher extends db
          * "YYYY-MM-DD" => "" | "teacherMeetings" 
          */
 
-        $this->begin_transaction();
-
-        $CodFisc = $this->sanitizeString($CodFisc);
+        $CodFisc = $this->sanitizeString($CodFisc);  
 
         $query = "SELECT DISTINCT `day` FROM `ParentMeetings` WHERE teacherCodFisc='$CodFisc'";
         $result = $this->query($query);
@@ -1749,19 +1746,11 @@ class dbTeacher extends db
         $ret = array();
         $ret["1996-07-25"] = "teacherMeetings";
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-
             /**
              * Produces an array as
              * "YYYY-MM-DD" => "teacherMeetings" 
              * */
-
             $ret[$row["day"]] = "teacherMeetings";
-        }
-
-        $r = $this->commit();
-        if(!$r){
-            // Error during the commit => return the empty array
-            $ret = array();
         }
 
         return $ret;
@@ -1771,7 +1760,7 @@ class dbTeacher extends db
     {
         /**
          * Retrieve the slots and their availability of a certain date and of a certain teacher.
-         * @param $codFisc (String) CodFisc of the teacher.
+         * @param $codFisc (String) CodFisc of the teacher
          * @param $day (String in the format "YYYY-MM-DD") 
          * @return (String) Slots availability in the form: 
          * "1_lesson,2_free,3_free,4_selected,5_selected,6_lesson"
@@ -1798,8 +1787,10 @@ class dbTeacher extends db
         // Recupero le coppie (classe, materia) che mostrano quali materie la teacher insegna nelle diverse classi
         $query0 = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$codFisc'";
         $result0 = $this->query($query0);
-        if (!$result0)
-            die("Unable to execute the query!");
+        if (!$result0){
+            $this->rollback();
+            return "";
+        }
 
         if ($result0->num_rows > 0) {
             // Per ogni coppia (classe, materia)...
@@ -1838,8 +1829,10 @@ class dbTeacher extends db
                         }
                 $query1 = "SELECT * FROM `Timetable` WHERE `classID`='$currentClass' AND `day`='$dayOfTheWeekDB' AND `subject`='$currentSubject'";
                 $result1 = $this->query($query1);
-                if (!$result1)
-                    die("Unable to execute the query!");
+                if (!$result1){
+                    $this->rollback();
+                    return "";
+                }
                 if ($result1->num_rows > 0) {
                     // La teacher ha almeno una lezione nel giorno d'interesse => mi salvo gli slot occupati
                     while (($row1 = $result1->fetch_array(MYSQLI_ASSOC)) != NULL) {
@@ -1852,8 +1845,10 @@ class dbTeacher extends db
         // Retrieve the parent meetings time slots already provided by the teacher in the specified day
         $query = "SELECT slotNb FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day'";
         $result = $this->query($query);
-        if (!$result)
-            die("Unable to execute the query!");
+        if (!$result){
+            $this->rollback();
+            return "";
+        }
 
         if ($result->num_rows > 0) {
             while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
@@ -1869,10 +1864,69 @@ class dbTeacher extends db
 
         $r = $this->commit();
         if(!$r){
-            // Error during the commit => return the empty array
-            $str = "";
+            // Error during the commit => return the empty string
+            return "";
         }
 
         return $str;
+    }
+
+    public function provideSlot($codFisc, $day, $slotNb){
+        /**
+         * Retrieve the slots and their availability of a certain date and of a certain teacher.
+         * @param $codFisc (String) CodFisc of the teacher
+         * @param $day (String in the format "YYYY-MM-DD") 
+         * @param $slotNb (String, which is actually an int) Target time slot for parent meetings
+         * @return (String) "white" if ($codFisc, $day, $slotNb) was already present in the DB, so the teacher has clicked that 
+         *                          slot in order to cancel the availability for parent meetings (then the slot has to be colored in white)
+         *                   "#b3ffcc" if ($codFisc, $day, $slotNb) wasn't in the DB, so the teacher has clicked that 
+         *                            slot in order to make it available for parent meetings (then the slot has to be colored in green)
+         *                   "error" if some error occured during the execution of this function
+        */
+
+        $codFisc = $this->sanitizeString($codFisc);
+        $day = $this->sanitizeString($day);
+        $slotNb = $this->sanitizeString($slotNb);
+        $nb = intval($slotNb);
+
+        // Initialization of the return value
+        $color = "white";
+
+        $this->begin_transaction();
+
+        // Check if the ($codFisc, $day, $slotNb) is already in the DB
+        $query = "SELECT * FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day' AND slotNb=$nb";
+        $result = $this->query($query);
+        if (!$result){
+            $this->rollback();
+            return "error";
+        }
+
+        if ($result->num_rows > 0) {
+            // The ($codFisc, $day, $slotNb) is present in the DB => delete the row => "white" has to be returned
+            $query1 = "DELETE FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day' AND slotNb=$nb";
+            $result1 = $this->query($query1);
+            if (!$result1){
+                $this->rollback();
+                return "error";
+            }
+        } else {
+            // The ($codFisc, $day, $slotNb) is not in the DB => insert the row => "#b3ffcc" has to be returned
+            $query2 = "INSERT INTO `ParentMeetings`(`teacherCodFisc`, `day`, `slotNb`, `emailParent`) VALUES('$codFisc','$day',$nb,'')";
+            $result2 = $this->query($query2);
+            if (!$result2){
+                $this->rollback();
+                return "error";
+            }
+            $color = "#b3ffcc";
+        }
+
+        $result = $this->commit();
+        if(!$result){
+            // Error during the commit
+            return "error";
+        }
+
+        return $color;
     }
 }

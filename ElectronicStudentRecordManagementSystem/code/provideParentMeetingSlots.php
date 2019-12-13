@@ -176,7 +176,7 @@ require_once("db.php");
         $.post("provideParentMeetingSlotsBE.php", ({
             'day': selecteddate,
             'codFisc': fiscalCode
-        }), function(text) {
+        }), function(text){
             if(text === ""){
                 // Error
                 window.alert("Oh no! Something went wrong...");
@@ -205,12 +205,40 @@ require_once("db.php");
                         color = "#b3ffcc";
                     }
                     
-                    str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
+                    // str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
+                    var slotNb = i+1;
+                    if(freeOrNotFree !== "lesson"){
+                        str += "<tr><td style='background-color:"+color+"; cursor: pointer;' id='"+selecteddate+"_"+slotNb+"' onclick='provideSlotParentMeetings(this)'>"+hours[i]+"</td></tr>";
+                    } else {
+                        str += "<tr><td style='background-color:"+color+"' id='"+selecteddate+"_"+slotNb+"'>"+hours[i]+"</td></tr>";
+                    }
                 }
-
+                
                 slots.innerHTML = str;
             }
         })
+    }
+
+    function provideSlotParentMeetings(element){
+        elementID = element.id;         // The id is in the form "YYYY-MM-DD_slotNb"
+
+        // Split the id and retrieve the separate values
+        var arr = elementID.split("_");
+        var day = arr[0];
+        var slotNb = arr[1];
+
+        // $.post("provideParentMeetingSlotsBE.php", ({
+        //     'codFisc': fiscalCode
+        //     'day': day, 
+        //     'slotNb': slotNb
+        // }), function(text) {
+        //     if(text === "error"){
+        //         // Error
+        //         window.alert("Oh no! Something went wrong...");
+        //     } else {
+        //         element.style.background-color = text;
+        //     }
+        // })
     }
 
     $(document).ready(updateCalendar);
