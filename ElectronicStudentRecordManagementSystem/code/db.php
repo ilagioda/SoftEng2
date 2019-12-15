@@ -868,10 +868,9 @@ class dbParent extends db
             return $row['classID'];
     }
 
+    //TESTED
     public function retrieveChildTimetable($class)
     {
-        //TODO: TEST
-
         // returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
 
         $class = $this->sanitizeString($class);

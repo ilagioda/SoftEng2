@@ -312,10 +312,10 @@ final class dbTest extends TestCase{
         $class="1A";
         $timetable=array();
         $timetable[0]=array();
-        $timetable[0][0]="Monday";
+        $timetable[0][0]="mon";
         $timetable[0][1]="1";
         $timetable[0][2]="Italian";
-        $timetable[1][0]="Tuesday";
+        $timetable[1][0]="tue";
         $timetable[1][1]="3";
         $timetable[1][2]="Maths";
 
@@ -330,14 +330,14 @@ final class dbTest extends TestCase{
 
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $array["classID"]="1A";
-        $array["day"]="Monday";
+        $array["day"]="mon";
         $array["hour"]="1";
         $array["subject"]="Italian";
         $this->assertSame($row, $array);
 
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $array["classID"]="1A";
-        $array["day"]="Tuesday";
+        $array["day"]="tue";
         $array["hour"]="3";
         $array["subject"]="Maths";
         $this->assertSame($row, $array);
@@ -357,14 +357,14 @@ final class dbTest extends TestCase{
         
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $array["classID"]="1A";
-        $array["day"]="Monday";
+        $array["day"]="mon";
         $array["hour"]="4";
         $array["subject"]="History";
         $this->assertSame($row, $array);
 
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $array["classID"]="1A";
-        $array["day"]="Tuesday";
+        $array["day"]="tue";
         $array["hour"]="3";
         $array["subject"]="Maths";
         $this->assertSame($row, $array);
@@ -529,6 +529,29 @@ final class dbTest extends TestCase{
 //         $result=$db->checkIfAuthorisedForChild($ssn);
 //         $this->assertSame($result, "No student with ID $ssn");
 //    }
+
+    public function testRetrieveChildTimetable(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "mrc@gmail.it";
+        $db = new dbParent();
+
+        $class="1A";
+        $array=array();
+
+        //no timetable -> expected null
+        $result=$db->retrieveChildTimetable($class);
+        $this->assertSame($result, $array);
+
+        //inserting timetable -> expected array
+        $db->queryForTesting("INSERT INTO `timetable` (`classID`, `day`, `hour`, `subject`) VALUES ('1A', 'mon', '1', 'Italian'), ('1A', 'tue', '3', 'Maths')");
+
+        $array[1]["mon"]="Italian";
+        $array[3]["tue"]="Maths";
+
+        $result=$db->retrieveChildTimetable($class);
+        $this->assertSame($result, $array);
+    }
+
 
     /* TEACHER */
     public function testViewStudentMarks() {
