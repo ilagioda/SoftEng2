@@ -43,6 +43,9 @@ function convertMark($rawMark)
      * @return float 
      */
 
+    if(!preg_match("/^([0-9]|[1][0]|[0-9]\+|[0-9]\.5|([1-9]|10)\-|0\/1|1\/2|2\/3|3\/4|4\/5|5\/6|6\/7|7\/8|8\/9|9\/10)$/", $rawMark))
+        return -1;
+
     if (strpos($rawMark, "/") == true) {
         // mark is of type 7/8
 
