@@ -935,20 +935,27 @@ class dbParent extends db
 
 
     //TODO: TEST
+      //NEW for the current sprint
+    /**
+     * This function has the aim of retrieving the disciplinar notes of a particular student
+     * @param $ssnStudent 
+     * @return $notes: associative vector containing for each row all the information of a note. 
+     * 
+     */
     function retrieveStudentNotes($ssnStudent)
     {
         $ssnStudent = $this->sanitizeString($ssnStudent);
-        return $result = $this->query("");
+        return $result = $this->query("SELECT * FROM `StudentNotes` WHERE `codFiscStudent` = '$ssnStudent'");
+
+        $notes = array();
 
         if ($result->num_rows > 0) {
 
-            $notes = array();
-
             while ($row = $result->fetch_assoc()) {
-                array_push($students, "" . $row[''] . "," . $row['surname'] . "," . $row['codFisc'] . "");
+                array_push($notes, $row);
             }
-            return $students;
         }
+        return $notes;
     }
 }
 
