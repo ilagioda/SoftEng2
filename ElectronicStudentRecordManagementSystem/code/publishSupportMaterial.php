@@ -51,11 +51,15 @@ if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] !
         $err = "Sorry, file already exists.";
     }else{
         //upload the file
-        move_uploaded_file($temp_name,$path_filename_ext);
-        if(!$db->insertSupportMaterial($title, $path_filename_ext, $_FILES['file']['size'], $class, $subject)){
-            $err = "Some error occurred. Please retry.";
+        if(!move_uploaded_file($temp_name,$path_filename_ext)){
+            $err = "Some error occurred while uploading the file. Please retry.";
         }
-        $msg = "Congratulations! File Uploaded Successfully.";
+        else{
+            if(!$db->insertSupportMaterial($title, $path_filename_ext, $_FILES['file']['size'], $class, $subject)){
+                $err = "Some error occurred. Please retry.";
+            }
+            $msg = "Congratulations! File Uploaded Successfully.";
+        }
     }
     $_POST = array();
     
