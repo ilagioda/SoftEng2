@@ -389,6 +389,16 @@ CREATE TABLE `Timetable` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
+--
+-- Struttura della tabella `ParentMeetings`
+--
+
+CREATE TABLE `ParentMeetings` (
+  `teacherCodFisc` varchar(64) NOT NULL,
+  `day` date NOT NULL,
+  `slotNb` tinyint(1) NOT NULL,
+  `emailParent` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 --
@@ -399,7 +409,7 @@ CREATE TABLE `FinalGrades` (
   `codFisc` varchar(64) NOT NULL,
   `subject` varchar(32) NOT NULL,
   `finalTerm` date NOT NULL,
-  `finalGrade` int(2) NOT NULL
+  `finalGrade` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -411,6 +421,19 @@ CREATE TABLE `FinalGrades` (
 --
 ALTER TABLE `Timetable`
   ADD PRIMARY KEY (`classID`,`day`,`hour`);
+
+--
+-- Indici per le tabelle `ParentMeetings`
+--
+ALTER TABLE `ParentMeetings`
+  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`);
+
+
+--
+-- Indici per le tabelle `FinalGrades`
+--
+ALTER TABLE `FinalGrades`
+  ADD PRIMARY KEY (`finalTerm`,`subject`,`codFisc`);
 
 --
 -- Indici per le tabelle `Admins`

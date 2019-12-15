@@ -34,8 +34,8 @@ function checkIfLogged()
 
 function convertMark($rawMark)
 {
-    //TODO: TEST
-    
+    //TESTED
+
     /**
      * Converts a literal mark (7,7+,7-,7/8,7.5) in the correspondent float value
      * 
@@ -43,7 +43,7 @@ function convertMark($rawMark)
      * @return float 
      */
 
-    if(!preg_match("/^([0-9]|[1][0]|[0-9]\+|[0-9]\.5|([1-9]|10)\-|0\/1|1\/2|2\/3|3\/4|4\/5|5\/6|6\/7|7\/8|8\/9|9\/10)$/", $rawMark))
+    if (!preg_match("/^([0-9]|[1][0]|[0-9]\+|[0-9]\.5|([1-9]|10)\-|0\/1|1\/2|2\/3|3\/4|4\/5|5\/6|6\/7|7\/8|8\/9|9\/10)$/", $rawMark))
         return -1;
 
     if (strpos($rawMark, "/") == true) {
@@ -98,7 +98,7 @@ function getCurrentSemester()
         // second semester
         $beginningDate = $year . "-02-01"; // from February
         $endingDate = $year . "-06-30"; // to June
-    }    
+    }
 
     return array($beginningDate, $endingDate);
 }
@@ -175,7 +175,7 @@ function build_html_calendar($year, $month, $events = null)
     }
 
     // Check if coming from Parent Meeetings
-    if(isset($events["1996-07-25"])){
+    if (isset($events["1996-07-25"])) {
         $ila = true;
     } else {
         $ila = false;
@@ -189,15 +189,15 @@ function build_html_calendar($year, $month, $events = null)
         $draw_event = false;
         if (isset($events) && isset($events[$cur_date])) {
             $draw_event = true;
-            $teacherMeetings=false;
+            $teacherMeetings = false;
             $assignment = false;
             $event = $events[$cur_date];
             if ($event == "Absent") {
                 // absent
                 $color = "style='background-color:orange'";
-            } else if (strpos($event, 'View assignments:') !== false){
+            } else if (strpos($event, 'View assignments:') !== false) {
                 //assignment
-                $assignment=true;
+                $assignment = true;
                 $color = "style='background-color:lightblue'";
             } else if (strpos($event, 'early') !== false) {
                 // exits early
@@ -208,46 +208,45 @@ function build_html_calendar($year, $month, $events = null)
                 // enters late
                 $events[$cur_date] = explode("-", $event)[1];
                 $color = "style='background-color:yellow'";
-            } else if (strpos($event, 'teacherMeetings') !== false){
+            } else if (strpos($event, 'teacherMeetings') !== false) {
                 // Parent meeting timeslots (Teacher's side)
-                $teacherMeetings=true;
+                $teacherMeetings = true;
                 $color = "style='background-color:#b3ffcc'";
             } else $color = "";
         } else $color = "";
 
         //Day cell with assignment (clickable)
-        if($draw_event == true && $assignment == true){
-            $assText = ltrim($events[$cur_date], 'View assignments:'); 
-            $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\" $color>";
-        }
-        else{
+        if ($draw_event == true && $assignment == true) {
+            $assText = ltrim($events[$cur_date], 'View assignments:');
+            $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\" $color>";
+        } else {
             // Day cell with parent meetings time slots (clickable)
-            if($draw_event == true && $teacherMeetings == true){
-                $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
+            if ($draw_event == true && $teacherMeetings == true) {
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
             } else {
 
-                if($ila){
-                    $calendar.="<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
+                if ($ila) {
+                    $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
                 } else {
                     // Day cell
                     $calendar .= $draw_event ?
-                    "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+                        "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
                 }
             }
         }
-     
+
 
         // Add the day number
         $calendar .= "<div class='{$css_cal_day_number}'>" . $day . "</div>";
 
         // Insert an event for this day
         if ($draw_event) {
-            if($assignment){
+            if ($assignment) {
                 $events[$cur_date] = '<div class="glyphicon glyphicon-book"></div> Assignments';
-                $assignmentClass="assignment"; 
-            } else $assignmentClass="";
+                $assignmentClass = "assignment";
+            } else $assignmentClass = "";
 
-            if($teacherMeetings){
+            if ($teacherMeetings) {
                 $events[$cur_date] = '<div class="glyphicon glyphicon-user"></div>';
             }
 
@@ -291,5 +290,3 @@ function build_html_calendar($year, $month, $events = null)
     // All done, return result
     return $calendar;
 }
-
-

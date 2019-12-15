@@ -539,7 +539,7 @@ class dbAdmin extends db
 
     //TESTED
     public function storeTimetable($class, $timetable)
-    {  
+    {
         $class = $this->sanitizeString($class);
 
         $this->begin_transaction();
@@ -593,7 +593,7 @@ class dbParent extends db
         if ($_SESSION['role'] != "parent") throw new Exception("Creating DbParent object for an user who is NOT logged in as a parent");
         parent::__construct();
     }
-    
+
 
     protected function checkIfAuthorisedForChild($CodFisc)
     {
@@ -715,7 +715,7 @@ class dbParent extends db
         return $this->query("SELECT * FROM supportMaterials WHERE Class='$class' and Subject='$subject'");
     }
 
-    
+
     //tested
     public function retrieveAttendance($CodFisc)
     {
@@ -850,7 +850,7 @@ class dbParent extends db
         return $assignments;
     }
 
-    
+
     //tested
     public function getChildClass($codFisc)
     {
@@ -898,7 +898,7 @@ class dbParent extends db
     public function viewChildFinalGrades($codFisc)
     {
 
-        //TODO: TEST
+        //TESTED
         $codFisc = $this->sanitizeString($codFisc);
 
         $this->begin_transaction();
@@ -927,15 +927,14 @@ class dbParent extends db
 
 
         while ($row = $result->fetch_assoc()) {
-            array_push($finalGrades,  "" . $row['subject'] . "," . $row['finalGrade'] . "");
+
+            array_push($finalGrades, $row['subject'] . "," . $row['finalGrade']);
         }
 
         return $finalGrades;
     }
 
 
-    //TODO: TEST
-      //NEW for the current sprint
     /**
      * This function has the aim of retrieving the disciplinar notes of a particular student
      * @param $ssnStudent 
@@ -944,6 +943,8 @@ class dbParent extends db
      */
     function retrieveStudentNotes($ssnStudent)
     {
+        // NO NEED TO BE TESTED
+
         $ssnStudent = $this->sanitizeString($ssnStudent);
         return $result = $this->query("SELECT * FROM `StudentNotes` WHERE `codFiscStudent` = '$ssnStudent'");
 
@@ -955,6 +956,7 @@ class dbParent extends db
                 array_push($notes, $row);
             }
         }
+
         return $notes;
     }
 }
@@ -1208,7 +1210,7 @@ class dbTeacher extends db
         }
     }
 
-	//TESTED
+    //TESTED
     public function getAssignmentsByClassAndDate($codTeacher, $class, $date)
     {
 
@@ -1229,11 +1231,12 @@ class dbTeacher extends db
             }
             return $assignments;
         }
-	}
-	
-	//TODO: TEST (maybe already existing, but has been changed)
+    }
+
+
     function insertNewAssignments($date, $class, $subject, $assignments)
     {
+        // NO NEED TO BE TESTED
         $class = $this->sanitizeString($class);
         $subject = $this->sanitizeString($subject);
         $date = $this->sanitizeString($date);
@@ -1253,7 +1256,7 @@ class dbTeacher extends db
         }
     }
 
-    //tested
+    //NO NEED TO BE TESTED
     function updateAssignments($date, $class, $subject, $assignments)
     {
 
@@ -1265,12 +1268,12 @@ class dbTeacher extends db
         $result = $this->query("UPDATE Assignments SET textAssignment='$assignments'
 							WHERE date='$date' AND subject='$subject' AND classID='$class'");
 
-        if ($result == FALSE) {
+        if (!$result) {
             die("ERROR: Assignments not updated.");
         }
     }
 
-    //tested
+    //NO NEED TO BE TESTED
     function deleteAssignments($date, $subject, $class)
     {
 
@@ -1280,7 +1283,7 @@ class dbTeacher extends db
 
         $result = $this->query("DELETE FROM Assignments WHERE date='$date' AND subject='$subject' AND classID='$class'");
 
-        if ($result == FALSE) {
+        if (!$result) {
             die("ERROR: Assignments not deleted.");
         }
     }
@@ -1297,9 +1300,10 @@ class dbTeacher extends db
         if (!$result)
             die("Unable to select students");
 
-        if ($result->num_rows > 0) {
 
+        if ($result->num_rows > 0) {
             $students = array();
+
             while ($row = $result->fetch_assoc()) {
                 array_push($students, "" . $row['name'] . "," . $row['surname'] . "," . $row['codFisc'] . "");
             }
@@ -1703,10 +1707,10 @@ class dbTeacher extends db
 
         return -1;
     }
-	
-	//TODO: TEST
+
     public function insertFinalGrade($ssn, $subject, $finalGrade, $date)
     {
+        // no need to be tested
 
         /* This function allows to insert the final grade of the term of the student */
 
@@ -1730,13 +1734,14 @@ class dbTeacher extends db
 
         return 0;
     }
-	
-		// NEW 
-	 function insertAssignmentsMaterial($date, $filename, $class, $subject, $text) {
+
+    // NO NEED TO BE TESTED
+    function insertAssignmentsMaterial($date, $filename, $class, $subject, $text)
+    {
         return $this->query("INSERT INTO Assignments VALUES('$subject', '$date', '$class', '$text', '$filename')");
     }
 
-    //TODO: TEST
+    //TESTED
     public function viewSlotsAlreadyProvided($CodFisc)
     {
         /**
@@ -1746,7 +1751,7 @@ class dbTeacher extends db
          * "YYYY-MM-DD" => "" | "teacherMeetings" 
          */
 
-        $CodFisc = $this->sanitizeString($CodFisc);  
+        $CodFisc = $this->sanitizeString($CodFisc);
 
         $query = "SELECT DISTINCT `day` FROM `ParentMeetings` WHERE teacherCodFisc='$CodFisc'";
         $result = $this->query($query);
@@ -1766,7 +1771,7 @@ class dbTeacher extends db
         return $ret;
     }
 
-    //TODO: TEST
+    //TESTED
     public function showParentMeetingSlotsOfTheDay($codFisc, $day)
     {
         /**
@@ -1781,24 +1786,24 @@ class dbTeacher extends db
          * "lesson" --> time slot in which the teacher has a lecture in a certain class
          * "selected" --> time slot already selected for meetings
          * In case of error: ""
-        */
+         */
 
         $codFisc = $this->sanitizeString($codFisc);
         $day = $this->sanitizeString($day);
 
         // Initialization of the array which will contain the available/occupied slots
         $slots = array();
-        for($i = 1; $i <= 6; $i++){
+        for ($i = 1; $i <= 6; $i++) {
             $slots[$i] = "free";
         }
-        
+
         $this->begin_transaction();
 
         // Retrieve the lectures of the teacher in the specified day
         // Recupero le coppie (classe, materia) che mostrano quali materie la teacher insegna nelle diverse classi
         $query0 = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$codFisc'";
         $result0 = $this->query($query0);
-        if (!$result0){
+        if (!$result0) {
             $this->rollback();
             return "";
         }
@@ -1810,37 +1815,37 @@ class dbTeacher extends db
                 $currentSubject = $row0["subject"];
                 // ... controllo se nel giorno d'interesse ($day) e' presente una qualche lezione tenuta dalla teacher
                 // Retrieve which day of the week is the date under consideration
-                        // Convert the date string into a unix timestamp
-                        $unixTimestamp = strtotime($day);
-                        // Get the day of the week using PHP's date function
-                        $dayOfWeek = date("l", $unixTimestamp);
-                        // Convert in the form of the DB
-                        switch ($dayOfWeek) {
-                            case "Monday":
-                                $dayOfTheWeekDB = "mon";
-                                break;
-                            case "Tuesday":
-                                $dayOfTheWeekDB = "tue";
-                                break;
-                            case "Wednesday":
-                                $dayOfTheWeekDB = "wed";
-                                break;
-                            case "Thursday":
-                                $dayOfTheWeekDB = "thu";
-                                break;
-                            case "Friday":
-                                $dayOfTheWeekDB = "fri";
-                                break;
-                            case "Saturday":
-                                $dayOfTheWeekDB = "sat";
-                                break;
-                            case "Sunday":
-                                $dayOfTheWeekDB = "sun";
-                                break;
-                        }
+                // Convert the date string into a unix timestamp
+                $unixTimestamp = strtotime($day);
+                // Get the day of the week using PHP's date function
+                $dayOfWeek = date("l", $unixTimestamp);
+                // Convert in the form of the DB
+                switch ($dayOfWeek) {
+                    case "Monday":
+                        $dayOfTheWeekDB = "mon";
+                        break;
+                    case "Tuesday":
+                        $dayOfTheWeekDB = "tue";
+                        break;
+                    case "Wednesday":
+                        $dayOfTheWeekDB = "wed";
+                        break;
+                    case "Thursday":
+                        $dayOfTheWeekDB = "thu";
+                        break;
+                    case "Friday":
+                        $dayOfTheWeekDB = "fri";
+                        break;
+                    case "Saturday":
+                        $dayOfTheWeekDB = "sat";
+                        break;
+                    case "Sunday":
+                        $dayOfTheWeekDB = "sun";
+                        break;
+                }
                 $query1 = "SELECT * FROM `Timetable` WHERE `classID`='$currentClass' AND `day`='$dayOfTheWeekDB' AND `subject`='$currentSubject'";
                 $result1 = $this->query($query1);
-                if (!$result1){
+                if (!$result1) {
                     $this->rollback();
                     return "";
                 }
@@ -1856,7 +1861,7 @@ class dbTeacher extends db
         // Retrieve the parent meetings time slots already provided by the teacher in the specified day
         $query = "SELECT slotNb FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day'";
         $result = $this->query($query);
-        if (!$result){
+        if (!$result) {
             $this->rollback();
             return "";
         }
@@ -1869,12 +1874,12 @@ class dbTeacher extends db
 
         // Prepare the string that has to be returned
         $str = "";
-        for($i = 1; $i <= 6; $i++){
-            $str = $str.$i."_".$slots[$i].",";
+        for ($i = 1; $i <= 6; $i++) {
+            $str = $str . $i . "_" . $slots[$i] . ",";
         }
 
         $r = $this->commit();
-        if(!$r){
+        if (!$r) {
             // Error during the commit => return the empty string
             return "";
         }
@@ -1882,8 +1887,9 @@ class dbTeacher extends db
         return $str;
     }
 
-    //TODO: TEST
-    public function provideSlot($codFisc, $day, $slotNb){
+    //TESTED
+    public function provideSlot($codFisc, $day, $slotNb)
+    {
         /**
          * Retrieve the slots and their availability of a certain date and of a certain teacher.
          * @param $codFisc (String) CodFisc of the teacher
@@ -1894,7 +1900,7 @@ class dbTeacher extends db
          *                   "#b3ffcc" if ($codFisc, $day, $slotNb) wasn't in the DB, so the teacher has clicked that 
          *                            slot in order to make it available for parent meetings (then the slot has to be colored in green)
          *                   "error" if some error occured during the execution of this function
-        */
+         */
 
         $codFisc = $this->sanitizeString($codFisc);
         $day = $this->sanitizeString($day);
@@ -1909,7 +1915,7 @@ class dbTeacher extends db
         // Check if the ($codFisc, $day, $slotNb) is already in the DB
         $query = "SELECT * FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day' AND slotNb=$nb";
         $result = $this->query($query);
-        if (!$result){
+        if (!$result) {
             $this->rollback();
             return "error";
         }
@@ -1918,7 +1924,7 @@ class dbTeacher extends db
             // The ($codFisc, $day, $slotNb) is present in the DB => delete the row => "white" has to be returned
             $query1 = "DELETE FROM `ParentMeetings` WHERE teacherCodFisc='$codFisc' AND `day`='$day' AND slotNb=$nb";
             $result1 = $this->query($query1);
-            if (!$result1){
+            if (!$result1) {
                 $this->rollback();
                 return "error";
             }
@@ -1926,7 +1932,7 @@ class dbTeacher extends db
             // The ($codFisc, $day, $slotNb) is not in the DB => insert the row => "#b3ffcc" has to be returned
             $query2 = "INSERT INTO `ParentMeetings`(`teacherCodFisc`, `day`, `slotNb`, `emailParent`) VALUES('$codFisc','$day',$nb,'')";
             $result2 = $this->query($query2);
-            if (!$result2){
+            if (!$result2) {
                 $this->rollback();
                 return "error";
             }
@@ -1934,7 +1940,7 @@ class dbTeacher extends db
         }
 
         $result = $this->commit();
-        if(!$result){
+        if (!$result) {
             // Error during the commit
             return "error";
         }
