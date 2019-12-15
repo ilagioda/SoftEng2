@@ -387,16 +387,29 @@ CREATE TABLE `Timetable` (
   `subject` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+
+--
+-- Struttura della tabella `FinalGrades`
+--
+
+CREATE TABLE `FinalGrades` (
+  `codFisc` varchar(64) NOT NULL,
+  `subject` varchar(32) NOT NULL,
+  `finalTerm` date NOT NULL,
+  `finalGrade` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indici per le tabelle scaricate
+--
+
 --
 -- Indici per le tabelle `Timetable`
 --
 ALTER TABLE `Timetable`
   ADD PRIMARY KEY (`classID`,`day`,`hour`);
-
-
---
--- Indici per le tabelle scaricate
---
 
 --
 -- Indici per le tabelle `Admins`
