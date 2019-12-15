@@ -34,7 +34,8 @@ function checkIfLogged()
 
 function convertMark($rawMark)
 {
-
+    //TODO: TEST
+    
     /**
      * Converts a literal mark (7,7+,7-,7/8,7.5) in the correspondent float value
      * 

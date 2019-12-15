@@ -523,7 +523,7 @@ class dbAdmin extends db
         return $this->commit();
     }
 
-    //NEW, TO BE TESTED
+    //TODO: TEST
     public function retrieveAllClasses()
     {
         $sql = "SELECT classID FROM Classes";
@@ -537,7 +537,7 @@ class dbAdmin extends db
         }
     }
 
-    //NEW, TO BE TESTED
+    //TODO: TEST
     public function storeTimetable($class, $timetable)
     {
 
@@ -871,6 +871,7 @@ class dbParent extends db
 
     public function retrieveChildTimetable($class)
     {
+        //TODO: TEST
 
         // returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
 
@@ -899,6 +900,7 @@ class dbParent extends db
     public function viewChildFinalGrades($codFisc)
     {
 
+        //TODO: TEST
         $codFisc = $this->sanitizeString($codFisc);
 
         $this->begin_transaction();
@@ -934,7 +936,7 @@ class dbParent extends db
     }
 
 
-    //NEW for the current sprint
+    //TODO: TEST
     function retrieveStudentNotes($ssnStudent)
     {
         $ssnStudent = $this->sanitizeString($ssnStudent);
@@ -1201,7 +1203,7 @@ class dbTeacher extends db
         }
     }
 
-		// NEW 
+	//TODO: TEST
     public function getAssignmentsByClassAndDate($codTeacher, $class, $date)
     {
 
@@ -1224,7 +1226,7 @@ class dbTeacher extends db
         }
 	}
 	
-	    //tested - CHANGED ---> NEW: TO TEST 
+	//TODO: TEST (maybe already existing, but has been changed)
     function insertNewAssignments($date, $class, $subject, $assignments)
     {
         $class = $this->sanitizeString($class);
@@ -1681,9 +1683,11 @@ class dbTeacher extends db
 
         return $this->query("DELETE FROM `StudentNotes` WHERE `codFiscStudent`='$ssnStudent' AND`codFiscTeacher`='$ssnTeacher' AND`date`= '$date' AND `subject`='$subject'");
     }
-		// NEW
+
+
     public function getFinalGrade($ssn, $subject, $date)
     {
+        // no need to be tested
 
         $result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
 
@@ -1695,7 +1699,7 @@ class dbTeacher extends db
         return -1;
     }
 	
-		// NEW 
+	//TODO: TEST
     public function insertFinalGrade($ssn, $subject, $finalGrade, $date)
     {
 
@@ -1727,6 +1731,7 @@ class dbTeacher extends db
         return $this->query("INSERT INTO Assignments VALUES('$subject', '$date', '$class', '$text', '$filename')");
     }
 
+    //TODO: TEST
     public function viewSlotsAlreadyProvided($CodFisc)
     {
         /**
@@ -1756,6 +1761,7 @@ class dbTeacher extends db
         return $ret;
     }
 
+    //TODO: TEST
     public function showParentMeetingSlotsOfTheDay($codFisc, $day)
     {
         /**
@@ -1871,6 +1877,7 @@ class dbTeacher extends db
         return $str;
     }
 
+    //TODO: TEST
     public function provideSlot($codFisc, $day, $slotNb){
         /**
          * Retrieve the slots and their availability of a certain date and of a certain teacher.
