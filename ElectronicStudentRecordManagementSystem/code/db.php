@@ -523,7 +523,7 @@ class dbAdmin extends db
         return $this->commit();
     }
 
-    //TODO: TEST
+    //TESTED
     public function retrieveAllClasses()
     {
         $sql = "SELECT classID FROM Classes";
@@ -537,10 +537,9 @@ class dbAdmin extends db
         }
     }
 
-    //TODO: TEST
+    //TESTED
     public function storeTimetable($class, $timetable)
-    {
-
+    {  
         $class = $this->sanitizeString($class);
 
         $this->begin_transaction();

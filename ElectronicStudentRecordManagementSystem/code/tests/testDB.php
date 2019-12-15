@@ -283,6 +283,100 @@ final class dbTest extends TestCase{
         $db->queryForTesting("DELETE FROM Students WHERE codFisc LIKE '%TEST%'");
     }
 
+    public function testRetrieveAllClasses(){
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        //no classes in db -> expetced null
+        $result=$db->retrieveAllClasses();
+        $this->assertSame($result, null);
+
+        //inserting classes in db -> expected array of classes
+        $db->queryForTesting("INSERT INTO `classes` (`classID`, `coordinatorSSN`) VALUES ('1A', 'FRCWTR'), ('1B', 'MRC')");
+        $result=$db->retrieveAllClasses();
+        $array=array();
+        $array[0]="1A";
+        $array[1]="1B";
+        $this->assertSame($result, $array);
+        $db->queryForTesting("DELETE FROM `classes` WHERE 1");
+
+    }
+
+    public function testStoreTimetable(){
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        //no timetables -> expected 1
+        $class="1A";
+        $timetable=array();
+        $timetable[0]=array();
+        $timetable[0][0]="Monday";
+        $timetable[0][1]="1";
+        $timetable[0][2]="Italian";
+        $timetable[1][0]="Tuesday";
+        $timetable[1][1]="3";
+        $timetable[1][2]="Maths";
+
+
+        $result=$db->storeTimetable($class, $timetable);
+        $this->assertSame($result, 1);
+
+        $result=$db->queryForTesting("SELECT * FROM Timetable");
+        if(!$result)   
+            $this->assertTrue(false);
+        $array=array();
+
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $array["classID"]="1A";
+        $array["day"]="Monday";
+        $array["hour"]="1";
+        $array["subject"]="Italian";
+        $this->assertSame($row, $array);
+
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $array["classID"]="1A";
+        $array["day"]="Tuesday";
+        $array["hour"]="3";
+        $array["subject"]="Maths";
+        $this->assertSame($row, $array);
+
+        if($result->fetch_array(MYSQLI_ASSOC))
+            $this->assertTrue(false);
+
+        //timetables present -> expected removal and insert
+        $timetable[0][1]="4";
+        $timetable[0][2]="History";
+
+        $result=$db->storeTimetable($class, $timetable);
+        $this->assertSame($result, 1);
+        $result=$db->queryForTesting("SELECT * FROM Timetable");
+        if(!$result)   
+            $this->assertTrue(false);
+        
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $array["classID"]="1A";
+        $array["day"]="Monday";
+        $array["hour"]="4";
+        $array["subject"]="History";
+        $this->assertSame($row, $array);
+
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $array["classID"]="1A";
+        $array["day"]="Tuesday";
+        $array["hour"]="3";
+        $array["subject"]="Maths";
+        $this->assertSame($row, $array);
+
+        if($result->fetch_array(MYSQLI_ASSOC))
+            $this->assertTrue(false);
+
+        //restoring DB
+        $db->queryForTesting("DELETE FROM Timetable WHERE 1");
+    }
+    
+
     /*PARENT*/
 
     public function testGetChildClass(){

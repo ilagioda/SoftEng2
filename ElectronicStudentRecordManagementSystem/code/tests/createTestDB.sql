@@ -381,11 +381,18 @@ INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `princip
 --
 
 CREATE TABLE `Timetable` (
-  `class` varchar(32) NOT NULL,
-  `day` int(1) NOT NULL,
+  `classID` varchar(32) NOT NULL,
+  `day` varchar(8) NOT NULL,
   `hour` int(1) NOT NULL,
   `subject` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indici per le tabelle `Timetable`
+--
+ALTER TABLE `Timetable`
+  ADD PRIMARY KEY (`classID`,`day`,`hour`);
+
 
 --
 -- Indici per le tabelle scaricate
