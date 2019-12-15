@@ -19,7 +19,7 @@ require_once("db.php");
 <script>
     let d = new Date();
     var year = d.getFullYear();
-    var month = d.getMonth()+1;
+    var month = d.getMonth() + 1;
     var startingYear;
     var endingYear;
     var semester;
@@ -85,7 +85,7 @@ require_once("db.php");
             }
         }
 
-    }      
+    }
 
     function updateCalendar() {
         $.post("provideParentMeetingSlotsBE.php", ({
@@ -94,7 +94,10 @@ require_once("db.php");
             'codFisc': fiscalCode
         }), function(text) {
             $("#calendar").replaceWith(text);
+            document.getElementById("date").innerHTML = "";
+            document.getElementById("daySlots").innerHTML = "";
             updateLabels();
+
         })
     }
 
@@ -137,7 +140,7 @@ require_once("db.php");
 
         if (semester == 1) {
             // first semester
-            if(month==1){
+            if (month == 1) {
                 // first semester is ended 
                 return;
             }
@@ -153,7 +156,7 @@ require_once("db.php");
             if (month == 6) {
                 // you want to see July lectures => no reason
                 return;
-            } else month+=1;
+            } else month += 1;
         }
 
         updateCalendar();
@@ -171,13 +174,13 @@ require_once("db.php");
 
         // Update date
         document.getElementById("date").innerHTML = selecteddate;
-        
+
         // Ajax request to retrieve the time slots availability for the selected date
         $.post("provideParentMeetingSlotsBE.php", ({
             'day': selecteddate,
             'codFisc': fiscalCode
-        }), function(text){
-            if(text === ""){
+        }), function(text) {
+            if (text === "") {
                 // Error
                 window.alert("Oh no! Something went wrong...");
             } else {
@@ -185,64 +188,107 @@ require_once("db.php");
 
                 // Split the string and prepare an array
                 var availability = [];
-                var arr = text.split(",");  // After this split, we have an array (arr) in the form ["1_lesson" , "2_free", "3_free", "4_selected", "5_selected", "6_lesson"]
-                for(let i=0; i<6; i++){
-                    var tmp = arr[i].split("_");  // After this split, we have an array (tmp) in the form ["1", "lesson"]
+                var arr = text.split(","); // After this split, we have an array (arr) in the form ["1_lesson" , "2_free", "3_free", "4_selected", "5_selected", "6_lesson"]
+                for (let i = 0; i < 6; i++) {
+                    var tmp = arr[i].split("_"); // After this split, we have an array (tmp) in the form ["1", "lesson"]
                     availability[parseInt(tmp[0])] = tmp[1];
                 }
 
                 // Show the list of time slots 8:00-9:00, 9:00-10:00, 10:00-11:00, 11:00-12:00, 12:00-13:00, 13:00-14:00
                 var slots = document.getElementById("daySlots");
                 var str = "";
-                
+
                 var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
-                for(let i=0; i<hours.length; i++){
-                    var freeOrNotFree = availability[i+1];
+                for (let i = 0; i < hours.length; i++) {
+                    var freeOrNotFree = availability[i + 1];
                     var color = "white";
-                    if(freeOrNotFree === "lesson"){
+                    if (freeOrNotFree === "lesson") {
                         color = "#bfbfbf";
-                    } else if(freeOrNotFree === "selected"){
+                    } else if (freeOrNotFree === "selected") {
                         color = "#b3ffcc";
                     }
-                    
+
                     // str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
-                    var slotNb = i+1;
-                    if(freeOrNotFree !== "lesson"){
-                        str += "<tr><td style='background-color:"+color+"; cursor: pointer;' id='"+selecteddate+"_"+slotNb+"' onclick='provideSlotParentMeetings(this)'>"+hours[i]+"</td></tr>";
+                    var slotNb = i + 1;
+                    if (freeOrNotFree !== "lesson") {
+                        str += "<tr><td style='background-color:" + color + "; cursor: pointer;' id='" + selecteddate + "_" + slotNb + "' onclick='provideSlotParentMeetings(this)'>" + hours[i] + "</td></tr>";
                     } else {
-                        str += "<tr><td style='background-color:"+color+"' id='"+selecteddate+"_"+slotNb+"'>"+hours[i]+"</td></tr>";
+                        str += "<tr><td style='background-color:" + color + "' id='" + selecteddate + "_" + slotNb + "'>" + hours[i] + "</td></tr>";
                     }
                 }
-                
+
                 slots.innerHTML = str;
             }
         })
     }
 
-    function provideSlotParentMeetings(element){
-        elementID = element.id;         // The id is in the form "YYYY-MM-DD_slotNb"
+    function provideSlotParentMeetings(element) {
+        elementID = element.id; // The id is in the form "YYYY-MM-DD_slotNb"
 
         // Split the id and retrieve the separate values
         var arr = elementID.split("_");
         var day = arr[0];
         var slotNb = arr[1];
 
-        // $.post("provideParentMeetingSlotsBE.php", ({
-        //     'codFisc': fiscalCode
-        //     'day': day, 
-        //     'slotNb': slotNb
-        // }), function(text) {
-        //     if(text === "error"){
-        //         // Error
-        //         window.alert("Oh no! Something went wrong...");
-        //     } else {
-        //         element.style.background-color = text;
-        //     }
-        // })
+        $.post("provideParentMeetingSlotsBE.php", ({
+            'codFisc': fiscalCode,
+            'day': day,
+            'slotNb': slotNb
+        }), function(text) {
+            if (text === "error") {
+                // Error
+                window.alert("Oh no! Something went wrong...");
+            } else {
+                
+                element.style.backgroundColor=text; // element should have the right color
+
+                let rootID = elementID.split("_")[0];
+                let calendarElement = document.getElementById(rootID);
+
+                if (calendarElement == undefined) return; // the user has already changed window
+
+                if (text == "#b3ffcc") {
+
+                    if (calendarElement.style.backgroundColor.includes("rgb(179")) return; // the element of the table is already ok
+
+                    element.style.backgroundColor = text;
+                    calendarElement.style.backgroundColor = "#b3ffcc";
+
+                    let userIcon = document.createElement("div");
+                    userIcon.classList.add("glyphicon");
+                    userIcon.classList.add("glyphicon-user");
+
+                    let container = document.createElement("div");
+                    container.classList.add("calendar-event");
+                    container.classList.add("text-center");
+
+                    container.appendChild(userIcon);
+                    calendarElement.appendChild(container);
+
+                } else {
+
+                    for (let i = 1; i <= 6; i++) {
+                        // check if there are other slots in the same day
+
+                        let row = document.getElementById(rootID + "_" + i);
+                        let color = row.style.backgroundColor;
+
+                        if (row == undefined || color.includes("rgb(179")) {
+                            // row undefined => the user has already changed the window
+                            // or there is another element with background color different from white => another appointment
+                            return;
+                        }
+                    }
+
+                    // no other appointments => remove the color from the day
+                    calendarElement.style.backgroundColor = "white";
+                    calendarElement.lastChild.remove()
+                }
+            }
+        })
     }
 
     $(document).ready(updateCalendar);
-
 </script>
 
 <?php
