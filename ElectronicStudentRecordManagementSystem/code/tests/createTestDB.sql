@@ -90,6 +90,7 @@ INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`) VALUE
 ('Maths', '2019-11-28', '1A', 'Equations'),
 ('Physics', '2019-11-27', '1A', 'Vectors');
 
+
 -- --------------------------------------------------------
 
 --

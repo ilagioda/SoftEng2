@@ -1201,7 +1201,7 @@ class dbTeacher extends db
         }
     }
 
-	//TODO: TEST
+	//TESTED
     public function getAssignmentsByClassAndDate($codTeacher, $class, $date)
     {
 

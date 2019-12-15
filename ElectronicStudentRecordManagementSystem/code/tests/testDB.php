@@ -552,6 +552,28 @@ final class dbTest extends TestCase{
         $this->assertSame($result, $array);
     }
 
+    // public function testViewChildFinalGrades(){
+    //     $_SESSION['role'] = "parent";
+    //     $_SESSION['user'] = "mrc@gmail.it";
+    //     $db = new dbParent();
+    //     $codFisc="MRC";
+    //     $array=array();
+
+    //     //no final grade -> expected empty array
+    //     $result=$db->viewChildFinalGrades($codFisc);
+    //     $this->assertSame($result, $array);
+
+    //     //inserting grades -> expecting filled array
+    //     $db->queryForTesting("INSERT INTO `finalgrades` (`codFisc`, `subject`, `finalTerm`, `finalGrade`) VALUES ('MRC', 'History', '2020-06-19', '4'), ('MRC', 'Maths', '2020-06-19', '10')");
+    //     $result=$db->viewChildFinalGrades($codFisc);
+        
+    //     $this->assertSame(count($result), 2);
+    //     $this->assertContains("Maths: 10", $result);
+    //     $this->assertContains("History: 4", $result);
+        
+        
+    // }
+
 
     /* TEACHER */
     public function testViewStudentMarks() {
@@ -909,6 +931,25 @@ final class dbTest extends TestCase{
         $result=$db->getAssignments("iAmNotHere");
         $this->assertSame($result, null);
 
+    }
+
+    public function testGetAssignmentsByClassAndDate(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+        $class="1A";
+        $date="2019-12-03";
+        $array=array();
+
+        //teacher with no assignment, expected null
+        $result=$db->getAssignmentsByClassAndDate($_SESSION['user'], $class, $date);
+        $this->assertSame($result, null);
+
+        //teacher with assignment, expected filled array
+        $_SESSION['user'] = "TEA";
+        $array[0]="History,WWII";
+        $result=$db->getAssignmentsByClassAndDate($_SESSION['user'], $class, $date);
+        $this->assertSame($result, $array);
     }
 
     //NOT VALID ANYMORE, THE FUNCTION IS CHANGED
