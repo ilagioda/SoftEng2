@@ -327,10 +327,8 @@ CREATE TABLE `StudentNotes` (
 --
 
 INSERT INTO `StudentNotes` (`codFiscStudent`, `codFiscTeacher`, `date`, `hour`, `subject`, `Note`) VALUES
-('FRCWTR', 'TEA', '2019-12-15', 1, 'Maths', 'ciao'),
 ('LILYCO', 'TEA', '2019-12-12', 1, 'History', 'The student behaved incorrectly.'),
-('LILYCO', 'TEA', '2019-12-12', 2, 'History', 'The student has thrown a rock to the window.'),
-('LILYCO', 'TEA', '2019-12-15', 1, 'History', 'Lo studente &egrave; un coglione');
+('LILYCO', 'TEA', '2019-12-12', 2, 'History', 'The student has thrown a rock to the window.');
 
 -- --------------------------------------------------------
 
