@@ -1210,7 +1210,7 @@ class dbTeacher extends db
         }
     }
 
-    //TESTED
+    //TESTED - CHANGED --> TO TEST
     public function getAssignmentsByClassAndDate($codTeacher, $class, $date)
     {
 
@@ -1227,7 +1227,7 @@ class dbTeacher extends db
         if ($result->num_rows > 0) {
             $assignments = array();
             while ($row = $result->fetch_assoc()) {
-                array_push($assignments,  "" . $row['subject'] . "," . $row['textAssignment'] . "");
+                array_push($assignments,  "" . $row['subject'] . "," . $row['textAssignment'] . "," . $row['pathFilename'] . "");
             }
             return $assignments;
         }
@@ -1947,4 +1947,23 @@ class dbTeacher extends db
 
         return $color;
     }
+	
+		// NEW 
+	function isCoordinator($codTeacher, $class) {
+		
+        $codTeacher = $this->sanitizeString($codTeacher);
+		$class = $this->sanitizeString($class);
+		
+		 $result = $this->query("SELECT * FROM Classes WHERE classID='$class' AND coordinatorSSN='$codTeacher'");
+
+        if (!$result)
+            die("Unable to select coordinator");
+
+        if ($result->num_rows > 0) {
+			return true;
+		} 
+		
+		return false;
+
+	}
 }
