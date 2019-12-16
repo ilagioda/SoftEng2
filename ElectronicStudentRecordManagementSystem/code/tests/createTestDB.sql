@@ -78,17 +78,18 @@ CREATE TABLE `Assignments` (
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `classID` varchar(50) NOT NULL,
-  `textAssignment` varchar(50) NOT NULL
+  `textAssignment` varchar(50) NOT NULL,
+  `pathFilename` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `Assignments`
 --
 
-INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`) VALUES
-('History', '2019-12-03', '1A', 'WWII'),
-('Maths', '2019-11-28', '1A', 'Equations'),
-('Physics', '2019-11-27', '1A', 'Vectors');
+INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`, `pathFilename`) VALUES
+('History', '2019-12-03', '1A', 'WWII', ''),
+('Maths', '2019-11-28', '1A', 'Equations', ''),
+('Physics', '2019-11-27', '1A', 'Vectors', '');
 
 
 -- --------------------------------------------------------

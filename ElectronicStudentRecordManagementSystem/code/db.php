@@ -547,6 +547,7 @@ class dbAdmin extends db
         // Check inconsistencies (e.g. the timetable has at least a lesson with a teacher that shouldn't be there because
         // he/she has already another lesson in another class at that time)
         foreach ($timetable as $line) {
+
             // Retrieve the fields
             $day = $line[0];
             $hour = $line[1];
@@ -604,6 +605,7 @@ class dbAdmin extends db
         return 1;
     }
 
+    //TODO: TEST
     public function checkIfTeacherHasLesson($day, $hour, $subject, $classID){
         /*
         *  Funzione che controlla se una teacher ha già lezione in una classe ad una certa ora di un certo giorno della settimana
@@ -1307,7 +1309,7 @@ class dbTeacher extends db
         if ($result->num_rows > 0) {
             $assignments = array();
             while ($row = $result->fetch_assoc()) {
-                array_push($assignments,  "" . $row['subject'] . "," . $row['textAssignment'] . "," . $row['pathFilename'] . "");
+                array_push($assignments,  $row['subject'] . "," . $row['textAssignment'] . "," . $row['pathFilename']);
             }
             return $assignments;
         }

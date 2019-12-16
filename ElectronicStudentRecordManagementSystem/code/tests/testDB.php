@@ -260,6 +260,10 @@ final class dbTest extends TestCase
         $_SESSION['user'] = "test";
         $db = new dbAdmin();
 
+        // clean the DB
+        $db->queryForTesting("DELETE FROM Parents WHERE codFisc LIKE '%TEST%'");
+        $db->queryForTesting("DELETE FROM Students WHERE codFisc LIKE '%TEST%'");
+
         // add a generic child with two parent
         $this->assertTrue($db->enrollStudent("childNameTEST", "childSurnameTEST", "SSNCHILDTEST", "nameP1TEST", "surnameP1TEST", "SSNP1TEST", "EmailP1TEST", "nameP2TEST", "surnameP2TEST", "SSNP2TEST", "EmailP2TEST"));
 
@@ -316,20 +320,33 @@ final class dbTest extends TestCase
         $_SESSION['user'] = "test";
         $db = new dbAdmin();
 
-        //no timetables -> expected 1
+        //restoring DB
+        $db->queryForTesting("DELETE FROM Timetable");
+
+        //no timetables but in 1A "Italian" is not defined
+
         $class = "1A";
         $timetable = array();
-        $timetable[0] = array();
         $timetable[0][0] = "mon";
         $timetable[0][1] = "1";
         $timetable[0][2] = "Italian";
         $timetable[1][0] = "tue";
         $timetable[1][1] = "3";
         $timetable[1][2] = "Maths";
+        
+        $this->assertSame(0,$db->storeTimetable($class, $timetable));
 
+        //no timetables -> everything should be ok => expected 1
+        $class = "1A";
+        $timetable = array();
+        $timetable[0][0] = "mon";
+        $timetable[0][1] = "1";
+        $timetable[0][2] = "History";
+        $timetable[1][0] = "tue";
+        $timetable[1][1] = "3";
+        $timetable[1][2] = "Maths";
 
-        $result = $db->storeTimetable($class, $timetable);
-        $this->assertSame($result, 1);
+        $this->assertSame(1, $db->storeTimetable($class, $timetable));
 
         $result = $db->queryForTesting("SELECT * FROM Timetable");
         if (!$result)
@@ -340,7 +357,7 @@ final class dbTest extends TestCase
         $array["classID"] = "1A";
         $array["day"] = "mon";
         $array["hour"] = "1";
-        $array["subject"] = "Italian";
+        $array["subject"] = "History";
         $this->assertSame($row, $array);
 
         $row = $result->fetch_array(MYSQLI_ASSOC);
@@ -381,7 +398,7 @@ final class dbTest extends TestCase
             $this->assertTrue(false);
 
         //restoring DB
-        $db->queryForTesting("DELETE FROM Timetable WHERE 1");
+        $db->queryForTesting("DELETE FROM Timetable");
     }
 
 
@@ -434,7 +451,7 @@ final class dbTest extends TestCase
 
         //Assignment for the child class -> expected filled array
 
-        $db->queryForTesting("INSERT INTO `assignments` (`subject`, `date`, `classID`, `textAssignment`) VALUES ('History', '2019-12-11', '1D', 'Number one'), ('Math', '2019-12-11', '1D', 'Second')");
+        $db->queryForTesting("INSERT INTO `assignments` (`subject`, `date`, `classID`, `textAssignment`,`pathFilename`) VALUES ('History', '2019-12-11', '1D', 'Number one',''), ('Math', '2019-12-11', '1D', 'Second','')");
 
         $result = $db->viewChildAssignments($ssn);
 
@@ -558,7 +575,12 @@ final class dbTest extends TestCase
         $array[3]["tue"] = "Maths";
 
         $result = $db->retrieveChildTimetable($class);
-        $this->assertSame($result, $array);
+        $this->assertSame($array,$result);
+
+        //restoring DB
+        $db->queryForTesting("DELETE FROM Timetable");
+
+        
     }
 
     public function testViewChildFinalGrades()
@@ -1045,9 +1067,10 @@ final class dbTest extends TestCase
 
         //teacher with assignment, expected filled array
         $_SESSION['user'] = "TEA";
-        $array[0] = "History,WWII";
+        $array[0] = "History,WWII,";
         $result = $db->getAssignmentsByClassAndDate($_SESSION['user'], $class, $date);
-        $this->assertSame($result, $array);
+        $this->assertNotNull($result);
+        $this->assertSame($array,$result);
     }
 
 
