@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 11, 2019 alle 15:09
+-- Creato il: Dic 16, 2019 alle 19:40
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -78,17 +78,18 @@ CREATE TABLE `Assignments` (
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `classID` varchar(50) NOT NULL,
-  `textAssignment` varchar(50) NOT NULL
+  `textAssignment` varchar(50) NOT NULL,
+  `pathFilename` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `Assignments`
 --
 
-INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`) VALUES
-('History', '2019-12-03', '1A', 'WWII'),
-('Maths', '2019-11-28', '1A', 'Equations'),
-('Physics', '2019-11-27', '1A', 'Vectors');
+INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`, `pathFilename`) VALUES
+('History', '2019-12-03', '1A', 'WWII', ''),
+('Maths', '2019-11-28', '1A', 'Equations', ''),
+('Physics', '2019-11-27', '1A', 'Vectors', '');
 
 -- --------------------------------------------------------
 
@@ -321,6 +322,16 @@ CREATE TABLE `StudentNotes` (
   `Note` varchar(4096) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `StudentNotes`
+--
+
+INSERT INTO `StudentNotes` (`codFiscStudent`, `codFiscTeacher`, `date`, `hour`, `subject`, `Note`) VALUES
+('FRCWTR', 'TEA', '2019-12-15', 1, 'Maths', 'ciao'),
+('LILYCO', 'TEA', '2019-12-12', 1, 'History', 'The student behaved incorrectly.'),
+('LILYCO', 'TEA', '2019-12-12', 2, 'History', 'The student has thrown a rock to the window.'),
+('LILYCO', 'TEA', '2019-12-15', 1, 'History', 'Lo studente &egrave; un coglione');
+
 -- --------------------------------------------------------
 
 --
@@ -495,6 +506,12 @@ ALTER TABLE `Classes`
   ADD PRIMARY KEY (`classID`);
 
 --
+-- Indici per le tabelle `FinalGrades`
+--
+ALTER TABLE `FinalGrades`
+  ADD PRIMARY KEY (`codFisc`,`subject`,`finalTerm`);
+
+--
 -- Indici per le tabelle `InternalCommunications`
 --
 ALTER TABLE `InternalCommunications`
@@ -512,6 +529,12 @@ ALTER TABLE `Lectures`
 ALTER TABLE `Marks`
   ADD PRIMARY KEY (`codFisc`,`date`,`hour`),
   ADD KEY `subjectForeignKey` (`subject`);
+
+--
+-- Indici per le tabelle `ParentMeetings`
+--
+ALTER TABLE `ParentMeetings`
+  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`);
 
 --
 -- Indici per le tabelle `Parents`
