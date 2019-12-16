@@ -298,6 +298,23 @@ echo <<<_TITLE
 
     <div class="text-center">
         <h1>PARENT MEETINGS TIME SLOTS</h1><br>
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-md-offset-4">
+                <div class="thumbnail">
+                <div class="caption">
+                    <h3>Need some help?</h3>
+                    Here you can see...<br><br>
+                    <table class='table table-bordered text-center'>
+                    <tr><td></td><td>Slot free for parent meetings</td></tr>
+                    <tr><td style='background-color:#b3ffcc'></td><td>Slot already selected for parent meetings</td></tr>
+                    <tr><td style='background-color:#bfbfbf'></td><td>Lesson</td></tr>
+                    </table>
+                    Click on a day to provide some slots!
+                </div>
+                </div>
+            </div>
+        </div>
+
         <h2>
         <button class=" btn btn-default calendar-command-left" onClick=monthBefore() id='button-left'>
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>

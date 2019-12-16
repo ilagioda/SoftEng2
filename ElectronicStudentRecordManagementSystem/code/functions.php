@@ -186,11 +186,20 @@ function build_html_calendar($year, $month, $events = null)
 
         // Check if there is an event today
         $cur_date = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
+
+        // Check if the date is in the past
         $today_date = date("Y-m-d");
         if($cur_date < $today_date){
             $past = true;
         } else {
             $past = false;
+        }
+
+        // Check if saturday or sunday
+        if(date('N', strtotime($cur_date)) >= 6){
+            $satsun = true;
+        } else {
+            $satsun = false;
         }
 
         $draw_event = false;
@@ -234,7 +243,7 @@ function build_html_calendar($year, $month, $events = null)
 
                 if ($ila) {
 
-                    if($past){
+                    if($past || $satsun){
                         $color = "style='background-color:#bfbfbf'";
                         $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' $color>";
                     } else {
