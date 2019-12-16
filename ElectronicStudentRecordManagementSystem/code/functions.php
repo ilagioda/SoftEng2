@@ -186,6 +186,13 @@ function build_html_calendar($year, $month, $events = null)
 
         // Check if there is an event today
         $cur_date = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
+        $today_date = date("Y-m-d");
+        if($cur_date < $today_date){
+            $past = true;
+        } else {
+            $past = false;
+        }
+
         $draw_event = false;
         if (isset($events) && isset($events[$cur_date])) {
             $draw_event = true;
@@ -221,12 +228,18 @@ function build_html_calendar($year, $month, $events = null)
             $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\" $color>";
         } else {
             // Day cell with parent meetings time slots (clickable)
-            if ($draw_event == true && $teacherMeetings == true) {
+            if ($draw_event == true && $teacherMeetings == true && !$past) {
                 $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
             } else {
 
                 if ($ila) {
-                    $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
+
+                    if($past){
+                        $color = "style='background-color:#bfbfbf'";
+                        $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' $color>";
+                    } else {
+                        $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
+                    }
                 } else {
                     // Day cell
                     $calendar .= $draw_event ?
