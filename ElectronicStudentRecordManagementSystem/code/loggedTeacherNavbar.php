@@ -67,8 +67,9 @@
 					<li><a href="attendance.php">Attendance</a></li>
                     <li><a href="publishSupportMaterial.php">Publish Material</a></li>
                     <li><a href="writeStudentNote.php">Discplinar note</a></li>
+					<li><a href='publishFinalGrade.php'>Publish final grades</a></li>
 
-                </ul>
+				</ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 </ul>

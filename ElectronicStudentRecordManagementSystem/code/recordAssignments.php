@@ -16,6 +16,27 @@ if (!$loggedin) {
 	$teacher=new Teacher();
 	$db = new dbTeacher();
     $err = $msg= "";
+	
+	// get the current semester:
+	$now = new DateTime('now');
+	// $month = $now->format('m');
+	$year = $now->format('Y');
+	$one_year = new DateInterval('P1Y');
+	$next_year = (new DateTime())->add(new DateInterval('P1Y'));
+
+	if(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-09-01')) 
+		&& strtotime($now->format("Y-m-d")) <= strtotime($next_year->format('Y-01-31'))) {
+			// TODAY IS WITHIN THE FIRST SEMESTER
+		$beginSemester = ($now->format("Y-m-d"));
+		$endSemester = ($next_year->format('Y-01-31'));
+	} elseif(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-02-01')) 
+		&& strtotime($now->format("Y-m-d")) <= strtotime($now->format('Y-06-30'))) {
+			// TODAY IS WITHIN THE SECOND SEMESTER
+		$beginSemester = ($now->format("Y-m-d"));
+		$endSemester = ($now->format('Y-06-30'));
+	} else {
+		// summer holidays
+	}
 
 	
 if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset($_POST['assignmentstime']) 
@@ -192,6 +213,7 @@ $(function() {
 	<div class="form-group">
 
 		<form class="navbar-form navbar form-inline" method="POST" action="recordAssignments.php" enctype="multipart/form-data">
+
 			<table class="table table-hover">
 				<tr><td><label>Class </label></td><td>
 				<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
@@ -210,15 +232,15 @@ $(function() {
 				</select></td></tr>
 				<tr><td><label>Date</label></td><td>  
 				<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
-						min="<?php echo date("Y-m-d");  ?>" max="<?php echo date("Y-m-d", strtotime('2020-06-10')); ?>"
+						min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>"
 						style="width:100%" required> </td></tr>
 				<tr><td><label>Assignments</label></td>
 					<td><textarea class="form-control" name="assignments" rows="4" cols="50" placeholder="Description..." style="width:100%" required></textarea>
-					<span id="helpBlock" class="help-block">Add a description of the assignments and, optionally, load a file...</span>
+					<span id="helpBlock" class="help-block">Add a description of the assignments and, optionally, load a file...</span>	
 					<div class="form-group" style="width:100%; margin-left:auto; margin-right:auto;">
 						<div class="input-group input-file" name="file">
 							
-							<input type="text" class="form-control" placeholder='No file selected' />
+							<input name="inputName[]" type="text" class="upload form-control" placeholder='No file selected' multiple />
 							<span class="input-group-btn">
 								<button class="btn btn-warning btn-choose" type="button">
 								<span class='glyphicon glyphicon-folder-open' aria-hidden='true'></span>&emsp;

@@ -61,12 +61,12 @@ $(document).ready(function(){
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 
-	<h1> All assignments </h1>
+	<h1 class="text-center"> All assignments </h1>
 
 	<div class="form-group">
 		<form class="navbar-form navbar form-inline" method="POST" action="viewAllAssignments.php">
 		
-			<table class="table">
+			<table class="table table-hover">
 						
 				<tr><td><label> Class </label></td><td>
 					<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
@@ -85,9 +85,9 @@ $(document).ready(function(){
 						<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
 							min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>"
 							style="width:100%" required> </td>
-					</tr>
-				<tr><td><button type="submit" name="okAssignemnent" class="btn btn-success">OK</button></td><td></td></tr>
+				</tr>
 			</table>
+			<button type="submit" name="okAssignemnent" class="btn btn-success">OK</button>
 		</form>
 	</div>
 
@@ -158,17 +158,19 @@ $(document).ready(function(){
 		$selectedClass = $_SESSION["comboClass"];
 		$selectedDate = $_SESSION["assignmentstime"];
 		
-		$assignments = $teacher->getAssignmentsByClassAndDate($selectedClass, $selectedDate); // assignments couple subject,assignment,
+		$assignments = $teacher->getAssignmentsByClassAndDate($selectedClass, $selectedDate); // assignments couple subject,assignment,pathFilename
 		if(!empty($assignments)) {
 
 	?>
-	<h1 id="assignmentsTitle"> Assignments list <small>Class: <?php echo $selectedClass ?> - Date: <?php echo $selectedDate?></small></h1>
+	<br><h1 id="assignmentsTitle" class="text-center"> Assignments list <small>Class: <?php echo $selectedClass ?> - Date: <?php echo $selectedDate?></small></h1>
 	<form method='POST' action='' class='form-group'>
-		<table id="assignmentsTable" class="table table-striped">
+		<table id="assignmentsTable" class="table table-hover">
 			<thead>
+			<tr class="active">
 				<th class="text-center">Subject</th>
 				<th class="text-center">Assignment</th>
-				<th></th>
+				<th class="text-center">Edit/Delete</th>
+			</tr>
 			</thead>
 	<?php 
 		foreach((array)$assignments as $value) {
@@ -177,18 +179,27 @@ $(document).ready(function(){
 			<tbody>
 			<?php
 				$args = explode(",",$value);
-				
+				$subject = $args[0];
+				$textAssignment = $args[1];
+				$pathFilename = $args[2];
 			?>
 				<tr class="text-center">
-					<td><?php echo $args[0];?></td>
+					<td><?php echo $subject;?></td>
 					<td>
 						<textarea readonly="readonly" style="border:none; background: none; outline: none;"
-							rows="4"><?php echo $args[1];?>
+							rows="2"><?php echo $textAssignment;?>
 						</textarea>
+						<?php
+							if(!empty($pathFilename)) {
+								echo "<div><span class='glyphicon glyphicon-paperclip' aria-hidden='true'>&emsp;<a href='$pathFilename'>";
+								$end = array_slice(explode('/', $pathFilename), -1)[0];
+								echo $end . "</a></span></div>";
+							}
+						?>
 					</td>
 					<td>
 						<?php 
-							if($selectedDate >= date("Y-m-d", strtotime('monday this week')) && $selectedDate <= date("Y-m-d", strtotime('sunday this week'))) { 
+							//if($selectedDate >= date("Y-m-d", strtotime('monday this week')) && $selectedDate <= date("Y-m-d", strtotime('sunday this week'))) { 
 						?>
 						<button type="button" class="btn btn-default btn-xs" style='width:20%'
 							data-toggle="modal" data-target="#modalEdit"
@@ -200,7 +211,7 @@ $(document).ready(function(){
 							<?php echo "data-subject='$args[0]' data-assignment='$args[1]'"; ?>
 							onclick="modalDelete(this)">Delete</button>
 						<?php 
-							}
+							//}
 						?>
 					</td>
 				</tr>
@@ -230,7 +241,7 @@ $(document).ready(function(){
 	  
 	    <button type="button" class="close" data-dismiss="modal">&times;</button>
 		<form method="POST" action="">
-			<table class="table text-center">
+			<table class="table table-hover text-center">
 				<tr><td><label> Class </label></td>
 					<td><input type="text" name="comboClass" value="<?php echo $selectedClass ?>" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
@@ -271,7 +282,7 @@ $(document).ready(function(){
 	  
 	    <button type="button" class="close" data-dismiss="modal">&times;</button>
 		<form method="POST" action="">
-			<table class="table text-center">
+			<table class="table table-hover text-center">
 					<tr><td><label> Class </label></td>
 					<td><input type="text" name="comboClass" value="<?php echo $selectedClass ?>" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
@@ -287,6 +298,7 @@ $(document).ready(function(){
 					<td><label> Assignments </label></td>
 					<td>
 						<textarea id="modalAssignmentEdit" class="form-control" name="assignments" rows="4" style="width:60%"></textarea>
+						<span id="helpBlock" class="help-block"><small>You can edit only the assignment description</small></span>
 					</td>
 				</tr>
 			</table>

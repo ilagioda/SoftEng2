@@ -68,9 +68,9 @@ $(document).ready(function(){
 									j=i+1;
 									grade += '<option value=' +i+ '>'+i+'</option>';
 									if(i!=10){
-										grade += '<option value='+i+'>'+i+'+</option>';
+										grade += '<option value='+i+'.25>'+i+'+</option>';
 										grade += '<option value='+i+'.5>'+i+'.5</option>';
-										grade += '<option value='+j+'->'+j+'-</option>';
+										grade += '<option value='+j+'.75>'+j+'-</option>';
 									}
 								}
 								grade += '</select></td>';

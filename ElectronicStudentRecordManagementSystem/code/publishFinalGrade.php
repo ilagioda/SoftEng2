@@ -212,17 +212,23 @@ $(document).ready(function(){
 		$_SESSION['okPublish']=$_POST['okPublish'];
 		$_SESSION["comboClass"] = $_POST["comboClass"];
 		$_SESSION["finalTerm"] = $_POST["finalTerm"];
+		
 	}
 	
 	if(isset($_SESSION['okPublish'])) {
-	
+		
+		$selectedClass = $_SESSION["comboClass"];
+		$finalTerm = $_SESSION["finalTerm"];
+		
+		$coordinator = $db->isCoordinator($_SESSION['user'], $selectedClass);
+		
+		if($coordinator) {		
 		
 			$i = 0; // for a student student
 			$idButton = 0;	
 			
 			echo "<form method='POST' action='publishFinalGrade.php' class='form-group'>";
-			$selectedClass = $_SESSION["comboClass"];
-			$finalTerm = $_SESSION["finalTerm"];
+
 	?>
 			
 			<h1 id="titleStudent"> Publish final grades  <small>Class: <?php echo $selectedClass ?> - Final term:  <?php echo $finalTerm ?></small></h1>
@@ -366,6 +372,9 @@ $(document).ready(function(){
 			</table>
 		</form>
 		<?php
+		} else {
+			echo "<div class='alert alert-danger' role='alert'><strong>You are not the coordinator teacher (and you cannot publish final grades) of the class $selectedClass. </strong></div>";
+		}
 	}
 		?>	
 
