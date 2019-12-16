@@ -54,6 +54,11 @@ if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset
     $ext = $path['extension'];
     $temp_name = $_FILES['file']['tmp_name'];
 
+	// check if general directory exists
+	if(!file_exists("assignmentsMaterial")){
+        mkdir("assignmentsMaterial");
+	}
+	
     //check if directory of class exists
     if(!file_exists($target_dir)){
         mkdir($target_dir);
