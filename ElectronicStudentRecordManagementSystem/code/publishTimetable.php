@@ -52,7 +52,7 @@
             if (req.responseText === "error") {
                 document.getElementById("failureMSG").style.display = "block";
             } else {
-                document.getElementById("successMSG").style.display = "block";;
+                document.getElementById("successMSG").style.display = "block";                
             }
         }
     }

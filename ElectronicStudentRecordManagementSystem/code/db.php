@@ -544,6 +544,29 @@ class dbAdmin extends db
 
         $this->begin_transaction();
 
+        // Check inconsistencies (e.g. the timetable has at least a lesson with a teacher that shouldn't be there because
+        // he/she has already another lesson in another class at that time)
+        foreach ($timetable as $line) {
+            // Retrieve the fields
+            $day = $line[0];
+            $hour = $line[1];
+            $subject = $line[2];
+
+            if($subject === "-")
+                continue;
+
+            // Sanitize
+            $day = $this->sanitizeString($day);
+            $hour = $this->sanitizeString($hour);
+            $subject = $this->sanitizeString($subject);
+
+            $checkResult = $this->checkIfTeacherHasLesson($day, $hour, $subject, $class);
+            if(!$checkResult){
+                $this->rollback();
+                return 0;
+            }
+        }
+
         // Ckeck if a timetable for the chosen class is already present in the DB
         $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
         if (!$result) {
@@ -560,7 +583,6 @@ class dbAdmin extends db
         }
 
         foreach ($timetable as $line) {
-
             // Retrieve the fields
             $day = $line[0];
             $hour = $line[1];
@@ -580,6 +602,64 @@ class dbAdmin extends db
 
         $this->commit();
         return 1;
+    }
+
+    public function checkIfTeacherHasLesson($day, $hour, $subject, $classID){
+        /*
+        *  Funzione che controlla se una teacher ha già lezione in una classe ad una certa ora di un certo giorno della settimana
+        *  Ritorno: false ---> la teacher ha già lezione in una certa classe (quindi non può tenere due lezioni in due posti diversi contemporaneamente)
+        *           true ---> la teacher è libera in quello slot temporale
+        */
+
+        // Retrieve the teacher SSN
+        $query0 = "SELECT * FROM TeacherClassSubjectTable WHERE classID='$classID' AND `subject`='$subject'";
+        $result0 = $this->query($query0);
+        if (!$result0) {
+            // error
+            return false;
+        }
+        if ($result0->num_rows == 1) {
+            while (($row0 = $result0->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                $codFisc = $row0["codFisc"];
+            }
+
+            // Retrieve the teacher's subjects
+            $query1 = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$codFisc'";
+            $result1 = $this->query($query1);
+            if (!$result1) {
+                // error
+                return false;
+            }   
+            if ($result1->num_rows > 0) {
+                // For each (classID, subject)... 
+                while (($row1 = $result1->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                    $currentClass = $row1["classID"];
+                    $currentSubject = $row1["subject"];
+                    if($currentClass == $classID && $currentSubject == $subject){
+                        continue;
+                    }
+
+                    // ... check if (classID, subject) is present in the Timetable table at time $day and $hour
+                    // If there's a row => return false
+                    // No rows => return true
+                    $query2 = "SELECT * FROM `Timetable` WHERE `classID`='$currentClass' AND `day`='$day' AND `hour`='$hour' AND `subject`='$currentSubject'";
+                    $result2 = $this->query($query2);
+                    if (!$result2) {
+                        return false;
+                    }
+                    if ($result2->num_rows != 0) {
+                        // The teacher has already a lesson in another class!
+                        return false;
+                    }
+                }
+            }
+
+        } else {
+            // error
+            return false;
+        }
+        
+        return true;
     }
 }
 

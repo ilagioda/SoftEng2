@@ -53,11 +53,10 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
     }
 
     $res = $db->storeTimetable($class, $timetable);
-
     if($res == 0){
-        return "error";
+        echo "error";
     } else {
-        return "ok";
+        echo "ok";
     }
 
 } else {
