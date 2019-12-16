@@ -70,7 +70,7 @@ $(document).ready(function(){
 									if(i!=10){
 										grade += '<option value='+i+'.25>'+i+'+</option>';
 										grade += '<option value='+i+'.5>'+i+'.5</option>';
-										grade += '<option value='+j+'.75>'+j+'-</option>';
+										grade += '<option value='+(j-1)+'.75>'+j+'-</option>';
 									}
 								}
 								grade += '</select></td>';

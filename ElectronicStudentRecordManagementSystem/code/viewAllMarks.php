@@ -375,7 +375,7 @@ function modalEdit(obj) {
 									if($i!=10){
 										echo "<option value=" . $i . ".25>" . $i . "+</option>";
 										echo "<option value=" . $i . ".5>" . $i . ".5</option>";
-										echo "<option value=" . $j . ".75>" . $j . "-</option>";
+										echo "<option value=" . ($j-1) . ".75>" . $j . "-</option>";
 									} 
 								}
 							?>	
