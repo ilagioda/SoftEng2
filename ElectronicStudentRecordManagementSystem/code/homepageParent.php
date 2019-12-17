@@ -41,6 +41,9 @@ echo <<< _OPLIST
     <div class="btn-group">
         <a href="seeTimetable.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Timetable</a>
     </div><br>
+	<div class="btn-group">
+        <a href="viewFinalGrades.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Final grades</a>
+    </div><br>
 </div>
 _OPLIST;
 
