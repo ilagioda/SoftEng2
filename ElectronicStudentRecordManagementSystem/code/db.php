@@ -605,7 +605,7 @@ class dbAdmin extends db
         return 1;
     }
 
-    //TODO: TEST
+    //TESTED
     public function checkIfTeacherHasLesson($day, $hour, $subject, $classID){
         /*
         *  Funzione che controlla se una teacher ha già lezione in una classe ad una certa ora di un certo giorno della settimana
@@ -1292,7 +1292,7 @@ class dbTeacher extends db
         }
     }
 
-    //TESTED - CHANGED --> TO TEST
+    //TESTED
     public function getAssignmentsByClassAndDate($codTeacher, $class, $date)
     {
 
