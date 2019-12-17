@@ -33,10 +33,16 @@ if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] !
     $ext = $path['extension'];
     $temp_name = $_FILES['file']['tmp_name'];
 
+    //check if supportMaterial directory of class exists
+    if(!file_exists("supportMaterial")){
+        mkdir($target_dir);
+    }
+
     //check if directory of class exists
     if(!file_exists($target_dir)){
         mkdir($target_dir);
     }
+
     $target_dir = $target_dir . "/" . $subject . "/";
 
     //If directory with the name of the subject does not exist, it will be created
