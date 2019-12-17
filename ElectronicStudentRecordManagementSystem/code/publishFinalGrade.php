@@ -168,12 +168,6 @@ $(document).ready(function(){
 
 </script>
 
-<ul class="nav nav-tabs">
-  <li role="presentation"><a href="submitMarks.php">New record</a></li>
-  <li role="presentation" class="active"><a href="#">View all records</a></li>
-</ul>
-
-
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 		<div class="form-group">
