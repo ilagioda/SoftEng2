@@ -20,6 +20,8 @@
                     <li><a href="viewChildAssignment.php">Assignments</a></li>
                     <li><a href="viewSupportMaterial.php">Materials</a></li>
                     <li><a href="viewFinalGrades.php">Final grades</a></li>
+                    <li><a href="viewStudentNote.php">Discplinar Notes</a></li>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
@@ -50,10 +52,7 @@ _ROW;
                                     }
                                     $i++;
                                 }
-                                echo '
-                                <li role="separator" class="divider"></li>
-                                <li><a href="viewStudentNote.php">Discplinar Notes</a></li>
-                                </ul>
+                                echo '</ul>
                                   </li>';
                             }
                         }
