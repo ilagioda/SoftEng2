@@ -35,12 +35,21 @@ if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] !
 
     //check if supportMaterial directory of class exists
     if(!file_exists("supportMaterial")){
-        mkdir($target_dir);
+        mkdir("supportMaterial");
+        $f = fopen("supportMaterial/index.html",'w');
+        if($f){
+            fclose($f);
+        }
+
     }
 
     //check if directory of class exists
     if(!file_exists($target_dir)){
         mkdir($target_dir);
+        $f = fopen($target_dir."/index.html",'w');
+        if($f){
+            fclose($f);
+        }
     }
 
     $target_dir = $target_dir . "/" . $subject . "/";
@@ -48,6 +57,10 @@ if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] !
     //If directory with the name of the subject does not exist, it will be created
     if(!file_exists($target_dir)){
         mkdir($target_dir);
+        $f = fopen($target_dir."/index.html",'w');
+        if($f){
+            fclose($f);
+        }
     }
 
     $path_filename_ext = $target_dir.$filename.".".$ext;

@@ -56,18 +56,31 @@ if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset
 
 	// check if general directory exists
 	if(!file_exists("assignmentsMaterial")){
-        mkdir("assignmentsMaterial");
+		mkdir("assignmentsMaterial");
+		$f = fopen("assignmentsMaterial/index.html",'w');
+        if($f){
+            fclose($f);
+        }
 	}
 	
     //check if directory of class exists
     if(!file_exists($target_dir)){
-        mkdir($target_dir);
-    }
+		mkdir($target_dir);
+		$f = fopen($target_dir."/index.html",'w');
+        if($f){
+            fclose($f);
+        }
+	}
+	
     $target_dir = $target_dir . "/" . $subject . "/";
 
     //If directory with the name of the subject does not exist, it will be created
     if(!file_exists($target_dir)){
-        mkdir($target_dir);
+		mkdir($target_dir);
+		$f = fopen($target_dir."/index.html",'w');
+        if($f){
+            fclose($f);
+        }
     }
 
     $path_filename_ext = $target_dir.$filename.".".$ext;
