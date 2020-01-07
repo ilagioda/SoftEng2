@@ -1029,17 +1029,6 @@ class dbParent extends db
 
         $ssnStudent = $this->sanitizeString($ssnStudent);
         return $result = $this->query("SELECT * FROM `StudentNotes` WHERE `codFiscStudent` = '$ssnStudent'");
-
-        $notes = array();
-
-        if ($result->num_rows > 0) {
-
-            while ($row = $result->fetch_assoc()) {
-                array_push($notes, $row);
-            }
-        }
-
-        return $notes;
     }
 }
 
