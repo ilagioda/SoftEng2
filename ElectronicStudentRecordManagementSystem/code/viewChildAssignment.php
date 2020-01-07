@@ -48,11 +48,9 @@ require_once("db.php");
         month = 6;
     }
 
-    if (month > 8) {
+    if (month > 8 || month==1) {
         // first semester
         semester = 1;
-        endingYear = year + 1;
-        startingYear = year;
     } else {
         // second semester
         semester = 2;
