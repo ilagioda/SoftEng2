@@ -87,9 +87,14 @@ function getCurrentSemester()
     $year = intval(date("Y"));
     $month = intval(date("m"));
 
-    if ($month > 8) {
-        // first semester
+    if($month == 1){
+        // first semester, but new year => put it back to make it work
+        $endingDate = $year . "-01-31"; // to January
+        $year = $year-1;
+        $beginningDate = $year . "-09-01"; // from September
 
+    }elseif($month > 8) {
+        // first semester
         $beginningDate = $year . "-09-01"; // from September
         $year = $year + 1;
         $endingDate = $year . "-01-31"; // to January

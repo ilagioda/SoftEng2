@@ -488,7 +488,7 @@ final class dbTest extends TestCase
         $array2["2019-12-02"] = "late - Entered: 2° hour Exited: 4° hour";
 
         $result = $db->retrieveAttendance($CodFisc);
-        $this->assertSame($result, $array2);
+        $this->assertSame($array2,$result);
     }
 
     public function testViewChildMarks()
