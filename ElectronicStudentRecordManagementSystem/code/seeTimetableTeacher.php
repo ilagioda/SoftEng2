@@ -25,9 +25,9 @@ echo "<h1>TIMETABLES</h1><br>";
 if (isset($_REQUEST['class'])) {
 
     $chosenClass = $_REQUEST['class'];
+    $teacherSSN = $_SESSION['user'];
 
     $db = new dbTeacher();
-    $teacherSSN = $_SESSION['user'];
 
     echo "<div class=text-center style='margin-bottom: 30px;'>";
     echo "<h2>Class $chosenClass</h2><br>";
@@ -74,9 +74,12 @@ if (isset($_REQUEST['class'])) {
         echo <<<_CLOSETABLE
             </table>
             </div>
+        </div>
     _CLOSETABLE;
     
     }
+
+    echo "</div>";
 
 } else {
     // The class hasn't been chosen yet, so the list of classes must be shown

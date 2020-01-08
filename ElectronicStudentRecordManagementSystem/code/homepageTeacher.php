@@ -71,7 +71,7 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-		<a href="publishFinalGrade.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Publish final grades</a>
+		<a href="publishFinalGrade.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Publish final grades</a>
 	</div>
 	<br>
 	<div class="btn-group">

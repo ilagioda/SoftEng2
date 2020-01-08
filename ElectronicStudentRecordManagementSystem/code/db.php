@@ -2047,9 +2047,9 @@ class dbTeacher extends db
         $teacherSSN = $this->sanitizeString($teacherSSN);
         $timetableToReturn = array();
         $authorized = true;
-
+        
         // Check if the teacher is authorized to see the timetable of the requested class
-       // $authorized = checkIfAuthorized($class, $teacherSSN);
+        $authorized = $this->checkIfAuthorized($class, $teacherSSN);
         if($authorized){
 
             $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
@@ -2077,7 +2077,7 @@ class dbTeacher extends db
         // Check if a certain teacher teaches in a specified class
         // Return true if the teacher has lessons in that class
         //        false if the teacher has no lessons in that class
-
+        
         $class = $this->sanitizeString($class);
         $teacherSSN = $this->sanitizeString($teacherSSN);
 
