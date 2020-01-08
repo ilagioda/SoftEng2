@@ -457,7 +457,7 @@ input:checked+.slider:before {
 /* View student attendance */
 
 #Date {
-  width: 20%;
+  min-width: 20%;
   display: inline-block;
 }
 
