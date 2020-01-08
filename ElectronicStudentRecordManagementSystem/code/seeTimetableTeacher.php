@@ -7,7 +7,6 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
     $loggedin = true;
 }
 if (!$loggedin) {
-    //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
     require_once "loggedTeacherNavbar.php";
@@ -24,7 +23,8 @@ echo "<h1>TIMETABLES</h1><br>";
 
 if (isset($_REQUEST['class'])) {
 
-    $chosenClass = $_REQUEST['class'];
+    $chosenClass = $_REQUEST['class'];    
+    $chosenClass = htmlspecialchars($chosenClass);
     $teacherSSN = $_SESSION['user'];
 
     $db = new dbTeacher();
