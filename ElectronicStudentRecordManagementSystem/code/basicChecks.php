@@ -2,8 +2,9 @@
 require_once("redirectHTTPS.php");
 require_once("functions.php");
 
-if(!isset($_SESSION))
+if(!isset($_SESSION)){
     session_start();
+}
 require_once("inactivity.php");
 
 ?>

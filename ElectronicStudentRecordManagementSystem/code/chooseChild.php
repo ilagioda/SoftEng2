@@ -7,25 +7,27 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "parent") {
 }
 if (!$loggedin) {
     header("Location: login.php");
-} else {
-    require_once "loggedParentNavbar.php";
+    exit;
 }
 
 require_once "db.php";
+$CHILDINDEX='childIndex';
 
-if (isset($_REQUEST['childIndex'])) {
+
+if (isset($_REQUEST[$CHILDINDEX])) {
     /* coming from the same page, choosing the child */
-    //checkIfLogged();
-    $index = $_REQUEST['childIndex'];
+    $index = $_REQUEST[$CHILDINDEX];
     $_SESSION['child'] = $_SESSION['children'][$index]['codFisc'];
     $_SESSION['childName'] = $_SESSION['children'][$index]['name'];
     $_SESSION['childSurname'] = $_SESSION['children'][$index]['surname'];
     $_SESSION['class'] = $_SESSION['children'][$index]['classID'];
-    $_SESSION['childIndex'] = $index;
+    $_SESSION[$CHILDINDEX] = $index;
     header('HTTP/1.1 307 Temporary Redirect');
     header('Location: homepageParent.php');
     exit;
 }
+
+require_once "loggedParentNavbar.php";
 
 if (isset($_SESSION['user'])) {
 
@@ -52,7 +54,7 @@ _ERROR;
             $_SESSION['class'] = $children[0]['classID'];
             $_SESSION['numChild'] = 1;
             $_SESSION['children'] = $children;
-            $_SESSION['childIndex'] = 0;
+            $_SESSION['$CHILDINDEX'] = 0;
             header('HTTP/1.1 307 Temporary Redirect');
             header('Location: homepageParent.php');
             break;
@@ -69,8 +71,6 @@ _ERROR;
     header('Location: index.php');
     exit;
 }
-
-//require_once "defaultNavbar.php";
 
 ?>
 
@@ -97,7 +97,7 @@ foreach ($_SESSION['children'] as $child) {
                     <td>$child[surname]</td>
                     <td>$child[codFisc]</td>
                     <td>$child[classID]</td>
-                    <td><button type="submit" class="btn btn-default btn-sm" name='childIndex' value=$i>Select</td>
+                    <td><button type="submit" class="btn btn-default btn-sm" name='$CHILDINDEX' value=$i>Select</td>
                 </tr>
 _CHILDROW;
     $i++;

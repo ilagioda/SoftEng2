@@ -112,8 +112,11 @@ foreach ($preprocessed_data as $subject => $marks) {
     } elseif($mean<6){
 
     // print the row with a different color in case of mark lower than 6
-        if($mean < 5 ) $modifier = "danger visibleRowMarks";
-        else $modifier = "warning visibleRowMarks";
+        if($mean < 5 ){
+            $modifier = "danger visibleRowMarks";
+        } else {
+            $modifier = "warning visibleRowMarks";
+        }
 
     } else {
         // average > 6 
@@ -150,7 +153,9 @@ _HIDDENLEGEND;
 
         foreach($marks as $date => $mark){
             
-            if($date=='mean') continue;
+            if($date=='mean') {
+                continue;
+            }
 
             echo <<<_HIDDENROWS
             <tr>
