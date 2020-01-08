@@ -73,6 +73,11 @@ if (!$loggedin) {
 	<div class="btn-group">
 		<a href="publishFinalGrade.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-calendar pull-left" aria-hidden="true"></span>&emsp;Publish final grades</a>
 	</div>
+	<br>
+	<div class="btn-group">
+        <a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Timetables</a>
+    </div>
+	<br>
 </div>
 <?php
 require_once("defaultFooter.php")
