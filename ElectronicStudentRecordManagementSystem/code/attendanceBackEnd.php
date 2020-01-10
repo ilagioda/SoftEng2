@@ -53,7 +53,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             $teacher = new Teacher();
             $ret = $teacher->recordLateEntrance($day, $ssn, $hour);
             if ($ret) {
-                echo "$hour";
+                echo htmlspecialchars($hour);
             } else {
                 echo "false";
             }
@@ -66,7 +66,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "teacher") {
             $teacher = new Teacher();
             $ret = $teacher->recordEarlyExit($day, $ssn, $hour);
             if ($ret) {
-                echo "$hour";
+                echo htmlspecialchars($hour);
             } else {
                 echo "false";
             }
