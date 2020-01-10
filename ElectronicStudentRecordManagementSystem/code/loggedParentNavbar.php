@@ -21,6 +21,7 @@
                     <li><a href="viewSupportMaterial.php">Materials</a></li>
                     <li><a href="viewFinalGrades.php">Final grades</a></li>
                     <li><a href="viewStudentNote.php">Discplinar Notes</a></li>
+                    <li><a href="selectTeacherForBooking.php">Teacher Meetings</a></li>
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

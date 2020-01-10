@@ -44,6 +44,9 @@ echo <<< _OPLIST
 	<div class="btn-group">
         <a href="viewFinalGrades.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Final grades</a>
     </div><br>
+    <div class="btn-group">
+        <a href="selectTeacherForBooking.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Teacher meetings</a>
+    </div><br>
 </div>
 _OPLIST;
 

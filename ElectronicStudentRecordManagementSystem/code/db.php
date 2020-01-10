@@ -1034,6 +1034,66 @@ class dbParent extends db
         $ssnStudent = $this->sanitizeString($ssnStudent);
         return $result = $this->query("SELECT * FROM `StudentNotes` WHERE `codFiscStudent` = '$ssnStudent'");
     }
+
+    //NEW 
+    public function viewTeacherSlots($CodFisc)
+    {
+        //TODO: add comments + add check if authorized
+ 
+        $CodFisc = $this->sanitizeString($CodFisc);
+
+        $query = "SELECT DISTINCT `day` FROM `ParentMeetings` WHERE teacherCodFisc='$CodFisc'";
+        $result = $this->query($query);
+        if (!$result)
+            return false;
+
+        $ret = array();
+        $ret["1996-07-25"] = "teacherMeetings";
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+            /**
+             * Produces an array as
+             * "YYYY-MM-DD" => "teacherMeetings" 
+             * */
+            $ret[$row["day"]] = "teacherMeetings";
+        }
+
+        return $ret;
+    }
+
+    //NEW
+    public function getTeachersByChild($codFisc){
+        //TODO: add comments
+        $codFisc=$this->sanitizeString($codFisc);
+
+        
+
+        $authorised = $this->checkIfAuthorisedForChild($codFisc);
+
+        if ($authorised !== true) {
+            // not authorised to see the child
+            return false;
+        }
+
+        $class=$this->getChildClass($codFisc);
+
+
+        $query = "SELECT DISTINCT t.codFisc, t.surname, t.name FROM teacherclasssubjecttable AS s, teachers AS t WHERE s.classID='$class' AND s.codFisc=t.codFisc";
+        $result = $this->query($query);
+        if (!$result)
+            return false;
+        
+        $ret=array();
+        $i=0;
+        while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                $ret[$i]["codFisc"]=$row["codFisc"];
+                $ret[$i]["surname"]=$row["surname"];
+                $ret[$i]["name"]=$row["name"];
+                $i++;
+        }
+
+        return $ret;
+
+    }
 }
 
 class dbTeacher extends db
