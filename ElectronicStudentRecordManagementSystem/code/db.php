@@ -2107,55 +2107,75 @@ class dbTeacher extends db
 
     }
     
-    //TESTED
-    public function retrieveTimetableTeacher($class, $teacherSSN) {
+    // NEED TO BE TESTED !!!
+    public function retrieveTimetableTeacher($teacherSSN) {
 
-        // Returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
+        // Returns the timetable of a certain teacher in the form | hour, mon, tue, wed, thu, fri |
+        // NOTE: if the teacher has no lessons at all the timetable will be filled with '-'
 
-        $class = $this->sanitizeString($class);
         $teacherSSN = $this->sanitizeString($teacherSSN);
         $timetableToReturn = array();
-        $authorized = true;
         
-        // Check if the teacher is authorized to see the timetable of the requested class
-        $authorized = $this->checkIfAuthorized($class, $teacherSSN);
-        if($authorized){
-
-            $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
-
-            if (!$result)
-                die("Unable to select timetable for class $class");
-
-            if ($result->num_rows > 0) {
-                while ($lecture = $result->fetch_assoc()) {
-                    // Store the row with the format: $timetableToReturn[1]["mon"] = "Math"
-                    // $lecture[0] = class
-                    $day = $lecture["day"];
-                    $hour = $lecture["hour"];
-                    $subject = $lecture["subject"];
-                    $timetableToReturn[$hour][$day] = $subject;
-                }
+        // Initialization of the timetable: filling it with all '-'
+        $days = array("mon", "tue", "wed", "thu", "fri");
+        for($i=1; $i<=6; $i++){
+            for($j=0; $j<5; $j++){
+                $timetableToReturn[$i][$days[$j]] = "-";
             }
-        } 
+        }
+        
+        // Check if the teacher exists in the DB
+        $exist = $this->checkIfExist($teacherSSN);
 
+        if($exist){
+
+            // Select the subjects teached by the teacher 
+            $result0 = $this->query("SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$teacherSSN'");
+            if (!$result0)
+                die("Unable to select timetable for teacher $teacherSSN");
+
+            if ($result0->num_rows > 0) {
+                while ($teachedSubject = $result0->fetch_assoc()) {
+                    $class = $teachedSubject["classID"];
+                    $subject = $teachedSubject["subject"];
+
+                    $result1 = $this->query("SELECT * FROM Timetable WHERE classID='$class' AND `subject`='$subject'");
+                    if (!$result1)
+                        die("Unable to select the timetable for the teacher $teacherSSN");
+
+                    if ($result1->num_rows > 0) {
+                        while ($lecture = $result1->fetch_assoc()) {
+                            // Store the row with the format: $timetableToReturn[1]["mon"] = "Math in class 1A"
+                            $day = $lecture["day"];
+                            $hour = $lecture["hour"];
+                            $subject = $lecture["subject"];
+                            $timetableToReturn[$hour][$day] = "$subject in class $class";
+                        }
+                    }    
+                }
+            } 
+        } else {
+            // Empty the timetable to report an error
+            $timetableToReturn = array();
+        }
+        
         return $timetableToReturn;
     }
 
-    //TESTED
-    public function checkIfAuthorized($class, $teacherSSN){
-        // Check if a certain teacher teaches in a specified class
-        // Return true if the teacher has lessons in that class
-        //        false if the teacher has no lessons in that class
-        
-        $class = $this->sanitizeString($class);
+    // NEED TO BE TESTED !!!
+    public function checkIfExist($teacherSSN){
+        // Check if a certain teacher exists in the DB
+        // Return true if the teacher exists in the DB
+        //        false if the teacher is not present in the DB
+
         $teacherSSN = $this->sanitizeString($teacherSSN);
 
-        $result = $this->query("SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$teacherSSN' AND classID='$class'");
+        $result = $this->query("SELECT * FROM Teachers WHERE codFisc='$teacherSSN'");
 
         if (!$result)
-            die("Unable to execute the query in checkIfAuthorized function");
+            die("Unable to execute the query in checkIfExist function");
 
-        if ($result->num_rows > 0) {
+        if ($result->num_rows == 1) {
             return true;
         } else {
             return false;
