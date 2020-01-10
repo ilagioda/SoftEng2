@@ -1038,7 +1038,10 @@ class dbParent extends db
     //NEW 
     public function viewTeacherSlots($CodFisc)
     {
-        //TODO: add comments + add check if authorized
+        /**
+         * This function returns an array as "YYYY-MM-DD" => "teacherMeetings", in order to be used in the calendar functions
+         *  @param $CodFisc: the SSN of the teacher
+         */
  
         $CodFisc = $this->sanitizeString($CodFisc);
 
@@ -1048,12 +1051,7 @@ class dbParent extends db
             return false;
 
         $ret = array();
-        $ret["1996-07-25"] = "teacherMeetings";
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-            /**
-             * Produces an array as
-             * "YYYY-MM-DD" => "teacherMeetings" 
-             * */
             $ret[$row["day"]] = "teacherMeetings";
         }
 
@@ -1062,10 +1060,9 @@ class dbParent extends db
 
     //NEW
     public function getTeachersByChild($codFisc){
-        //TODO: add comments
-        $codFisc=$this->sanitizeString($codFisc);
+        //This functions returns array of teacher who teach in a given child class
 
-        
+        $codFisc=$this->sanitizeString($codFisc);
 
         $authorised = $this->checkIfAuthorisedForChild($codFisc);
 
