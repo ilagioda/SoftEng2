@@ -471,24 +471,24 @@ final class dbTest extends TestCase
 
         //Student with no entries
         $CodFisc = 'JAMBCK';
-        $array = array();
 
         $result = $db->retrieveAttendance($CodFisc);
-        $this->assertSame($result, $array);
+        $this->assertSame($result, array());
 
         //Student with entries
         $_SESSION['user'] = "cla_9_6@hotmail.it";
         $CodFisc = 'ILA';
-        $array2 = array();
+        $array = array();
 
-        $array2["2019-11-25"] = "late - Entered: 2° hour Exited: 4° hour";
-        $array2["2019-11-26"] = "Absent";
-        $array2["2019-11-27"] = "early - Exited: 4° hour";
-        $array2["2019-11-28"] = "late - Entered: 3° hour";
-        $array2["2019-12-02"] = "late - Entered: 2° hour Exited: 4° hour";
+        $array["2019-11-25"] = "late and early - 2 - 4";
+        $array["2019-11-26"] = "absent";
+        $array["2019-11-27"] = "early - 4";
+        $array["2019-11-28"] = "late - 3";
+        $array["2019-12-02"] = "late and early - 2 - 4";
 
         $result = $db->retrieveAttendance($CodFisc);
-        $this->assertSame($array2,$result);
+        $this->assertSame($array,$result);
+
     }
 
     public function testViewChildMarks()
@@ -725,7 +725,7 @@ final class dbTest extends TestCase
         $_SESSION['user'] = "test";
         $db = new dbTeacher();
 
-        $this->assertEquals("#b3ffcc", $db->provideSlot("TEA", "2019-10-11", "1"));
+        $this->assertEquals("lightgreen", $db->provideSlot("TEA", "2019-10-11", "1"));
         $this->assertEquals("white", $db->provideSlot("TEA", "2019-10-11", "1"));
     }
 

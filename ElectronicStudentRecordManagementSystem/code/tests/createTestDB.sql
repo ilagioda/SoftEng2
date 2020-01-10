@@ -404,6 +404,7 @@ CREATE TABLE `ParentMeetings` (
   `teacherCodFisc` varchar(64) NOT NULL,
   `day` date NOT NULL,
   `slotNb` tinyint(1) NOT NULL,
+  `quarter` int(1) NOT NULL,
   `emailParent` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -433,7 +434,7 @@ ALTER TABLE `Timetable`
 -- Indici per le tabelle `ParentMeetings`
 --
 ALTER TABLE `ParentMeetings`
-  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`);
+  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`,`quarter`);
 
 
 --
