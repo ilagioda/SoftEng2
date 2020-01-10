@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 16, 2019 alle 19:40
+-- Creato il: Gen 10, 2020 alle 12:28
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -78,6 +78,7 @@ CREATE TABLE `Assignments` (
   `subject` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `classID` varchar(50) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `textAssignment` varchar(50) NOT NULL,
   `pathFilename` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -86,10 +87,13 @@ CREATE TABLE `Assignments` (
 -- Dump dei dati per la tabella `Assignments`
 --
 
-INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`, `pathFilename`) VALUES
-('History', '2019-12-03', '1A', 'WWII', ''),
-('Maths', '2019-11-28', '1A', 'Equations', ''),
-('Physics', '2019-11-27', '1A', 'Vectors', '');
+INSERT INTO `Assignments` (`subject`, `date`, `classID`, `timestamp`, `textAssignment`, `pathFilename`) VALUES
+('History', '2019-12-03', '1A', '2020-01-10 11:27:52', 'WWII', ''),
+('History', '2019-12-17', '1A', '2020-01-10 11:27:52', 'ciao', 'assignmentsMaterial/1A/History/Schema Generale.png'),
+('Maths', '2019-11-28', '1A', '2020-01-10 11:27:52', 'Equations', ''),
+('Maths', '2019-12-17', '1A', '2020-01-10 11:27:52', 'WWII', 'assignmentsMaterial/1A/Maths/Schema Generale.png'),
+('Maths', '2019-12-18', '1A', '2020-01-10 11:27:52', 'pd', 'assignmentsMaterial/1A/Maths/FirstSprintDBStructure.md'),
+('Physics', '2019-11-27', '1A', '2020-01-10 11:27:52', 'Vectors', '');
 
 -- --------------------------------------------------------
 
@@ -489,7 +493,7 @@ ALTER TABLE `Admins`
 -- Indici per le tabelle `Assignments`
 --
 ALTER TABLE `Assignments`
-  ADD PRIMARY KEY (`subject`,`date`,`classID`);
+  ADD PRIMARY KEY (`subject`,`date`,`classID`,`timestamp`);
 
 --
 -- Indici per le tabelle `Attendance`
