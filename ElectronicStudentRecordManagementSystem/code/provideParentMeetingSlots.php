@@ -290,8 +290,8 @@ echo <<<_TITLE
                     Here you can see...<br><br>
                     <table class='table table-bordered text-center'>
                     <tr><td></td><td>Slot free for parent meetings</td></tr>
-                    <tr><td style='background-color:#b3ffcc'></td><td>Slot already selected for parent meetings</td></tr>
-                    <tr><td style='background-color:#bfbfbf'></td><td>Lesson</td></tr>
+                    <tr><td class='lightgreen'></td><td>Slot already selected for parent meetings</td></tr>
+                    <tr><td class='gray'></td><td>Lesson</td></tr>
                     </table>
                     Click on a day to provide some slots!
                 </div>

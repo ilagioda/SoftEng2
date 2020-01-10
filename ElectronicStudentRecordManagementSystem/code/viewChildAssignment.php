@@ -221,6 +221,22 @@ echo <<<_TITLE
     <div class="text-center">
         <h1>$_SESSION[childName] $_SESSION[childSurname]'s assignments</h1>
         <br>
+
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-md-offset-4">
+                <div class="thumbnail">
+                <div class="caption">
+                    <h3>Need some help?</h3>
+                    Here you can see...<br><br>
+                    <table class='table table-bordered text-center'>
+                    <tr><td></td><td>No assignments!</td></tr>
+                    <tr><td class='orange'></td><td>Assignments due for that day! </br>Press on it for more informations!</td></tr>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
+        
         <h2>
             
         <button class=" btn btn-default calendar-command-left" onClick=monthBefore() id='button-left'>
