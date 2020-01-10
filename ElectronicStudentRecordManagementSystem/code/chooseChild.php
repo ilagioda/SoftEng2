@@ -16,6 +16,14 @@ $CHILDINDEX='childIndex';
 
 if (isset($_REQUEST[$CHILDINDEX])) {
     /* coming from the same page, choosing the child */
+
+    if(!ctype_digit($_REQUEST[$CHILDINDEX])){
+        // trying to hack the page => redirect to homepage
+        header('HTTP/1.1 307 Temporary Redirect');
+        header('Location: index.php');
+        exit;
+    }
+
     $index = $_REQUEST[$CHILDINDEX];
     $_SESSION['child'] = $_SESSION['children'][$index]['codFisc'];
     $_SESSION['childName'] = $_SESSION['children'][$index]['name'];
