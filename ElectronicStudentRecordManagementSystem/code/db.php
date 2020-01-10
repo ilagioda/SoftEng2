@@ -2086,12 +2086,15 @@ class dbTeacher extends db
             }
         } else {
             // The ($codFisc, $day, $slotNb) is not in the DB => insert the row => "#b3ffcc" has to be returned
-            $query2 = "INSERT INTO `ParentMeetings`(`teacherCodFisc`, `day`, `slotNb`, `emailParent`) VALUES('$codFisc','$day',$nb,'')";
-            $result2 = $this->query($query2);
-            if (!$result2) {
-                $this->rollback();
-                return "error";
+            for($i=1; $i<=4; $i++){
+                $query2 = "INSERT INTO `ParentMeetings`(`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES('$codFisc','$day',$nb,$i,'')";
+                $result2 = $this->query($query2);
+                if (!$result2) {
+                    $this->rollback();
+                    return "error";
+                }
             }
+            
             $color = "#b3ffcc";
         }
 
