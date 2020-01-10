@@ -390,6 +390,10 @@ class dbAdmin extends db
         $query = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$ssn'";
         return $this->query($query);
     }
+    //NEEDS TO BE TESTED
+    public function getSubjects(){
+        return $this->query("SELECT name FROM Subjects");
+    }
 
 
     /**

@@ -68,16 +68,7 @@ $db = new dbAdmin();
       // var surname = $("#teacherSurname").text();
       var ssn = $("#teacherSSN").text();
       var classID = $("#modal-Class").text();
-      var note = $("#note").val();
-      var hour = $("#hour").val();
       var selectedSubject = $("#selectSubject").val();
-
-      // alert(name);
-      // alert(surname);
-      // alert(ssn);
-      // alert(classID);
-      // alert(note);
-      // alert(hour);
 
       // INSERISCI NEL DB LA NOTA
       $.post("manageTeacherBackEnd.php", {
@@ -172,8 +163,55 @@ $db = new dbAdmin();
           } else {
             document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
           }
+        }) ;
+    }
+    function addClassSubjectFunction(obj, ssn){
+        //console.log(table.children[0]);
+        var table = document.getElementById("classSubjectTable");
+        var selectedClass = document.getElementById("selectedClass").value;
+        var selectedSubject = document.getElementById("selectedSubject").value;
+            //console.log("lunghezza tabella " + table.rows.length); 
+            //table.rows.length counts header too
+            var lastChild = table.rows.length -1;
+            var lastRow = table.rows[lastChild];
+            var whereToAdd = lastChild;
+            table.deleteRow(lastChild);
+            newRow = table.insertRow(whereToAdd);
+            newRow.id = "tr_"+ whereToAdd;
+            var cell0 = newRow.insertCell(0);
+            var cell1 = newRow.insertCell(1);
+            var cell2 = newRow.insertCell(2);
+            cell0.className = "text-center";
+            cell0.innerHTML = selectedClass; 
+
+            cell1.className = "text-center";
+            cell1.innerHTML = selectedSubject;
+
+            cell2.className = "text-center";
+            // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
+            cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd +  '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+            cell2.addEventListener("click",trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject) );
+            table.append(lastRow);
+        $.post("manageTeacherBackEnd.php", {
+          event: "addClassSubjectPost",
+          codFisc: ssn,
+          class: selectedClass,
+          subject: selectedSubject
+        },
+        function(data, status) {
+          if (data == 1) {
+              
+            //var oldID = parseInt(document.getElementById("thPlus").innerHTML);
+            //document.getElementById("thPlus").innerHTML = oldID + 1;
+
+          } else {
+
+          }
         });
-}
+    }
+    function trashButtonClassSubjectClicked(obj, ssn, classID, subject){
+        //TO BE IMPLEMENTED
+    }
 </script>
 
 
@@ -247,10 +285,9 @@ _ROWS;
                                       <input type="text" class="form-control manageTeachers text-center" id="teacherSurname">
                                   </div>
                             </div>
-                            <table class="table">
+                            <table id="classSubjectTable" class="table">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
                                             <th scope="col">CLASS</th>
                                             <th scope="col">SUBJECT</th>
                                         </tr>
@@ -263,36 +300,41 @@ _MODAL;
                             $class = $row['classID'];
                             $subject = $row['subject'];
                             echo <<<_CLASS_SUBJECT
-                                        <tr>
-                                            <th scope="row" class="text-center">$j</th>
+                                        <tr id="tr_$j">
                                             <td class="text-center">$class</td>
                                             <td class="text-center">$subject</td>
-                                            <td class="text-center"><button type="button" id="trashButtonClassSubject$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
+                                            <td class="text-center"><button type="button" id="trashButtonClassSubject_$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                                         </tr>
 _CLASS_SUBJECT;
                             $j++;
                             }
                             echo <<<_LASTROW
-                            <tr>
-                            <th></th>
-                            <td><select>
+                            <tr id="rowPlus">
+                            <td class='text-center'><select id='selectedClass'>
 _LASTROW;
                             $classes = $db->getClasses();    
                             foreach($classes as $c){
-                                echo "<option>$c</option>";
+                                $c = $c['classID'];
+                                echo "<option value=$c>$c</option>";
                             }
                             echo"</select> </td>";
 
-                            $subjects = $db->getClasses();    
+                            $subjects = $db->getSubjects();  
+                            echo"<td class='text-center'><select id='selectedSubject'>";
+                            foreach($subjects as $s){
+                                $s = $s['name'];
+                                echo "<option value=$s>$s</option>";
+                            }
+                            // HO il dubbio che $ssn passato alla funzione addClassSubjectFunction non sia quello del professore di cui si è cliccato il tasto "modifica", ma semplicemente l'ultimo professore stampato dal foreach
+                            echo <<<_ENDMODAL
+                            </select></td>
+                            
+                            <td class="text-center"><button type="button" id="addClassSubject" class="btn btn-success btn-lg" onclick='addClassSubjectFunction(this, "$ssn")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
+                            </tr>
 
-                           
-                            <td></td>
-                            <td class="text-center"><button type="button" id="addClassSubject$j" class="btn btn-success btn-lg" onclick='addClassSubject(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
-                            </tr>;
+                            </tbody>
+                            </table>
 
-                            echo "</tbody>
-                            </table>";
-echo <<<_ENDMODAL
                             <div class="form-group text-center">
                               <label class="control-label text-center">Principal:</label>
                               <div>
@@ -309,6 +351,7 @@ echo <<<_ENDMODAL
               </div>
           </div>
 _ENDMODAL;
+
 
 require_once("defaultFooter.php");
 
