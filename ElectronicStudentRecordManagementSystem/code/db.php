@@ -2125,6 +2125,61 @@ class dbTeacher extends db
 		return false;
 
     }
+
+    //TESTED
+    public function retrieveTimetableOfAClass($class, $teacherSSN) {
+
+        // Returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
+
+        $class = $this->sanitizeString($class);
+        $teacherSSN = $this->sanitizeString($teacherSSN);
+        $timetableToReturn = array();
+        $authorized = true;
+        
+        // Check if the teacher is authorized to see the timetable of the requested class
+        $authorized = $this->checkIfAuthorized($class, $teacherSSN);
+        if($authorized){
+
+            $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
+
+            if (!$result)
+                die("Unable to select timetable for class $class");
+
+            if ($result->num_rows > 0) {
+                while ($lecture = $result->fetch_assoc()) {
+                    // Store the row with the format: $timetableToReturn[1]["mon"] = "Math"
+                    // $lecture[0] = class
+                    $day = $lecture["day"];
+                    $hour = $lecture["hour"];
+                    $subject = $lecture["subject"];
+                    $timetableToReturn[$hour][$day] = $subject;
+                }
+            }
+        } 
+
+        return $timetableToReturn;
+    }
+
+    //TESTED
+    public function checkIfAuthorized($class, $teacherSSN){
+        // Check if a certain teacher teaches in a specified class
+        // Return true if the teacher has lessons in that class
+        //        false if the teacher has no lessons in that class
+        
+        $class = $this->sanitizeString($class);
+        $teacherSSN = $this->sanitizeString($teacherSSN);
+
+        $result = $this->query("SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$teacherSSN' AND classID='$class'");
+
+        if (!$result)
+            die("Unable to execute the query in checkIfAuthorized function");
+
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     // NEED TO BE TESTED !!!
     public function retrieveTimetableTeacher($teacherSSN) {

@@ -19,8 +19,9 @@ $teacher = new Teacher();
 $teacherSSN = $_SESSION['user'];
 $db = new dbTeacher();
 
-echo "<div class='text-center' style='margin-bottom: 30px;'>";
-echo "<h1>$teacherSSN TIMETABLE</h1><br>";
+// Print the teacher's timetable 
+echo "<div class='text-center'>";
+echo "<h2>Your TIMETABLE</h2><br>";
 
 $timetableToShow = $db->retrieveTimetableTeacher($teacherSSN); 
 
@@ -44,6 +45,43 @@ _OPENTABLE;
         </table>
     </div>
 _CLOSETABLE;
+
+}
+
+// Print the timetable of the teacher's classes
+$classes = $teacher->getClassesByTeacher();
+foreach ($classes as $chosenClass) {
+
+    echo "<div class=text-center>";
+    echo "<h2>Class $chosenClass TIMETABLE</h2><br>";
+
+    $timetableToShow = $db->retrieveTimetableOfAClass($chosenClass, $teacherSSN); 
+
+    if(empty($timetableToShow)){
+        echo <<<_ALERTMSG
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <strong>No timetable</strong> has been uploaded yet for class $chosenClass.
+        </div> 
+    _ALERTMSG;
+    } else {
+        echo <<<_OPENTABLE
+        <div class="table-responsive">
+        <table class="table table-striped table-bordered text-center">
+        <tr style="font-size: 20px;"><td></td><td><b>Monday</b></td><td><b>Tuesday</b></td><td><b>Wednesday</b></td><td><b>Thursday</b></td><td><b>Friday</b></td></tr>
+    _OPENTABLE;
+    
+        // Call the function that prints the timetable
+        printTimetable($timetableToShow);
+    
+        echo <<<_CLOSETABLE
+            </table>
+            </div>
+        </div>
+    _CLOSETABLE;
+    
+    }
+
+    echo "</div>";
 
 }
 
