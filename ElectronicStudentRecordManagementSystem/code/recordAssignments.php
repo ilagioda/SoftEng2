@@ -18,30 +18,18 @@ if (!$loggedin) {
 }
 	
 	require_once("classTeacher.php");
+	require_once("functions.php");
 	$teacher=new Teacher();
 	$db = new dbTeacher();
     $err = $msg= "";
-	
-	// get the current semester:
-	$now = new DateTime('now');
-	// $month = $now->format('m');
-	$year = $now->format('Y');
-	$one_year = new DateInterval('P1Y');
-	$next_year = (new DateTime())->add(new DateInterval('P1Y'));
 
-	if(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-09-01')) 
-		&& strtotime($now->format("Y-m-d")) <= strtotime($next_year->format('Y-01-31'))) {
-			// TODAY IS WITHIN THE FIRST SEMESTER
+	$days = getCurrentSemester();
+
+	if($days) {
+		$now = new DateTime('now');
 		$beginSemester = ($now->format("Y-m-d"));
-		$endSemester = ($next_year->format('Y-01-31'));
-	} elseif(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-02-01')) 
-		&& strtotime($now->format("Y-m-d")) <= strtotime($now->format('Y-06-30'))) {
-			// TODAY IS WITHIN THE SECOND SEMESTER
-		$beginSemester = ($now->format("Y-m-d"));
-		$endSemester = ($now->format('Y-06-30'));
-	} else {
-		// summer holidays
-	}
+		$endSemester = $days[1];
+	} // else --> summer holidays 
 
 	
 if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset($_POST['assignmentstime']) 
