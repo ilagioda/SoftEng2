@@ -1413,4 +1413,22 @@ final class dbTest extends TestCase
         $this->assertSame(count($result), 1);
         $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
     }
+
+    function testIsCoordinator(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        $class="1A";
+
+        $result=$db->isCoordinator($_SESSION['user'], $class);
+        $this->assertSame(false, $result);
+
+        $db->queryForTesting("INSERT INTO `classes` (`classID`, `coordinatorSSN`) VALUES ('1A', 'GNV')");
+
+        $result=$db->isCoordinator($_SESSION['user'], $class);
+        $this->assertSame(true, $result);
+
+        $db->queryForTesting("DELETE FROM `classes` WHERE `classes`.`classID` = '1A';");
+    }
 }

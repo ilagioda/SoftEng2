@@ -138,10 +138,16 @@ INSERT INTO `Attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`
 -- Struttura della tabella `Classes`
 --
 
+--
+-- Struttura della tabella `Classes`
+--
+
 CREATE TABLE `Classes` (
   `classID` varchar(32) NOT NULL,
   `coordinatorSSN` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
 -- --------------------------------------------------------
 
@@ -510,6 +516,12 @@ ALTER TABLE `TeacherClassSubjectTable`
 --
 ALTER TABLE `Teachers`
   ADD PRIMARY KEY (`codFisc`);
+
+--
+-- Indici per le tabelle `Classes`
+--
+ALTER TABLE `Classes`
+  ADD PRIMARY KEY (`classID`);
 
 --
 -- Limiti per le tabelle scaricate

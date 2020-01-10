@@ -2019,7 +2019,7 @@ class dbTeacher extends db
         return $color;
     }
 	
-		// NEW 
+	//TESTED
 	function isCoordinator($codTeacher, $class) {
 		
         $codTeacher = $this->sanitizeString($codTeacher);
