@@ -18,7 +18,36 @@ if (!$loggedin) {
 	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
+	$db = new dbTeacher();
+	$class = $_SESSION["comboClass"];
+	
     
+	if(isset($_POST["comboSubject"]) && isset($_POST["lessontime"]) && isset($_POST["comboHour"]) && isset($_POST["topics"]) 
+		&& !empty($_REQUEST["topics"])){
+			
+		$subject = $_POST['comboSubject'];
+		$date = $_POST['lessontime'];
+		$hour = $_POST['comboHour'];
+		$topics = $_POST['topics'];
+		
+		$result = $db->insertDailyLesson($date, $hour, $class, $_SESSION['user'], $subject, $topics);
+		
+		if($result == -1) {
+			?>
+			<div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong><span class="glyphicon glyphicon-send"></span>Lecture already inserted! </strong>
+			</div>
+			<?php
+		} else {
+			?> 
+			<div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong><span class="glyphicon glyphicon-send"></span> Daily lesson successfully recorded!</strong>
+				</div>
+			<?php 
+		}
+	}
 ?>
 
 <ul class="nav nav-tabs">
@@ -31,7 +60,7 @@ if (!$loggedin) {
 	<div class="panel-body">
 	<h1> Record daily lesson topics </h1>
 	<div class="form-group">
-		<form class="navbar-form navbar form-inline" method="POST" action="viewRecordedLesson.php">
+		<form class="navbar-form navbar form-inline" method="POST" action="recordLesson.php">
 		
 			<table class="table table-hover">
 				<tr><td><label>Subject </label></td>

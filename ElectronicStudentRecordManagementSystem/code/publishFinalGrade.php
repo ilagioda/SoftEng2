@@ -153,7 +153,7 @@ $(document).ready(function(){
 			<?php
 		}
 	} else { 
-		$_SESSION['okPublish']=htmlspecialchars($_POST['okPublish']);
+		$_SESSION['okPublish']=$_POST['okPublish'];
 		$_SESSION["finalTerm"] = htmlspecialchars($_POST["finalTerm"]);
 		
 	}
@@ -258,7 +258,7 @@ $(document).ready(function(){
 													echo "<option value='$k'>$k</option>"; 
 												}
 											echo "</select></td>";	
-										echo "<td><button type='button' class='btn btn-success btn-xs confirmButton' style='width:25%'
+										echo "<td><button type='button' class='btn btn-success btn-xs confirmButton' style='width:25%' title='You can confirm after changing the final grade to an integer value'
 												data-student='$args[2]' data-subject='$subject' data-select='$idButton' data-finalTerm='$finalTerm'
 												id='confirmButton$idButton' disabled>Confirm</button></td>";
 									}
@@ -266,7 +266,7 @@ $(document).ready(function(){
 								} else {
 									// if the final grade has been inserted, then the value confirmed before is loaded
 										echo "<td><p class='form-control comboGrade' name='comboGrade' style='width:60%'>$resultFinalGrade</p></td>";		
-										echo "<td><button class='btn btn-success btn-xs' type='button' style='width:25%' disabled>Done</button></td>";
+										echo "<td><button class='btn btn-success btn-xs' type='button' style='width:25%' title='Final grade assigned' disabled>Done</button></td>";
 								}
 
 								?>

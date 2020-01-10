@@ -9,6 +9,10 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }	
 	require_once("classTeacher.php");
@@ -16,6 +20,7 @@ if (!$loggedin) {
 
 	$teacher=new Teacher();
 	$db = new dbTeacher();
+	$class = $_SESSION["comboClass"];
     
 	if(isset($_POST['yesDelete'])) {
 		if(!isset($_POST["lessontime"]) || !isset($_POST["comboHour"]) 
@@ -23,7 +28,7 @@ if (!$loggedin) {
 ?>
 			<div class="alert alert-danger alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<p class="alert-link"> Oh no! Something went wrong...</p>
+				<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
 			</div>
 <?php
 		} else {
@@ -31,7 +36,7 @@ if (!$loggedin) {
 ?>
 			<div class="alert alert-success alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<p class="alert-link">  Daily lesson successfully deleted!</p>
+				<strong><span class="glyphicon glyphicon-send"></span> Daily lesson successfully deleted!</strong>
 			</div>
 <?php	
 		} 
@@ -45,7 +50,7 @@ if (!$loggedin) {
 ?>
 			<div class="alert alert-danger alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<p class="alert-link"> Oh no! Something went wrong...</p>
+				<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
 			</div>
 <?php
 		} else {		
@@ -53,7 +58,7 @@ if (!$loggedin) {
 ?>
 			<div class="alert alert-success alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<p class="alert-link"> Daily lesson successfully updated!</p>
+				<strong><span class="glyphicon glyphicon-send"></span> Daily lesson successfully updated!</strong>
 			</div>
 <?php	
 		} 
@@ -61,7 +66,13 @@ if (!$loggedin) {
 ?>
 
 <script>
+$(document).ready(function(){	
 
+	$('a[data-toggle="tab"]').click(function(e) {
+		var target = $(e.target).attr("href"); // activated tab
+	});
+
+});
 function modalDelete(obj) {
 	
 	var classID = obj.getAttribute("data-class");
@@ -106,69 +117,100 @@ function modalEdit(obj) {
   <li role="presentation"><a href="recordLesson.php">New record</a></li>
   <li role="presentation" class="active"><a href="#">View all records</a></li>
 </ul>
+
+
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 
 <h1> All lectures: </h1>
 
-	<?php 
-		$lectures = $teacher->getLectures();
+<?php 
+	$subjects = $db->getSubjectsByTeacherAndClass2($_SESSION["user"], $class);
+	if(count($subjects) > 0) { 
+		echo "<ul id='myTab' class='nav nav-pills' style='justify-content: center; display: flex;'>";
+		echo "<li class='text-center active' style='width:20%;'><a href='#$subjects[0]' data-toggle='tab'>$subjects[0]</a></li>";
+		foreach($subjects as $subject) {
+			if($subject != $subjects[0])
+				echo "<li class='text-center' style='width:20%;'><a href='#$subject' data-toggle='tab'>$subject</a></li>";
+		}
+		echo "</ul><br>";				
+
+		echo "<div id='myTabContent' class='tab-content'>";
+		foreach($subjects as $subject) {
+			if($subject == $subjects[0]) {
+				echo "<div class='tab-pane fade active in' id='$subject'>";
+			} else {
+				echo "<div class='tab-pane fade' id='$subject'>";
+			}
+
+?>
+
+	<table class="table table-hover text-center" style="border-collapse:collapse;">
+		<thead><tr>
+			<th>Date</th>
+			<th>Hour</th>
+			<th>Topics</th>
+			<th></th>
+		</tr></thead>
+		<tbody>
+<?php
+		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $subject);
 		foreach((array)$lectures as $value) {
-	?>	
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<form role="class" method="POST" action="">
-					<table class="table">
-					<?php
-						$args = explode(",",$value);
-					?>
-						<tr><td> Class: </td><td><?php echo $args[0];?></td></tr>
-						<input type="hidden" name="comboClass" value="<?php echo $args[0];?>">
+				
+			$args = explode(",",$value);
+			$date = $args[0];
+			$hour = $args[1];
+			$topics = $args[2];
+				
+?>	
+		<tr>
+			<td> 	
+			
+			<?php echo $date;?></td>
+		<input type="hidden" name="lessontime" value="<?php echo $args[2];?>">
 
-						<tr><td> Subject: </td><td><?php echo $args[1];?></td></tr>
-						<input type="hidden" name="comboSubject" value="<?php echo $args[1];?>">
-
-						<tr><td> Date: </td><td><?php echo $args[2];?></td></tr>
-						<input type="hidden" name="lessontime" value="<?php echo $args[2];?>">
-
-						<tr><td> Hour: </td><td><?php echo $args[3];?></td></tr>
+			<td> <?php echo $hour;?></td>
 						<input type="hidden" name="comboHour" value="<?php echo $args[3];?>">
 
-						<tr><td> Topics: </td><td><?php echo $args[4];?></td></tr>
+			<td><?php echo $topics;?></td>
 						<input type="hidden" name="topics" value="<?php echo $args[4];?>">
-					</table>
-					<?php
-						$dateLesson = $args[2];
-						if($dateLesson >= date("Y-m-d", strtotime('monday this week')) && $dateLesson <= date("Y-m-d", strtotime('sunday this week'))) { 
-					?>
-						<button type="button" class="btn btn-default btn-xs" style='width:20%'
-							data-toggle="modal" data-target="#modalEdit"
-							<?php 
-								echo "data-class='$args[0]' data-subject='$args[1]' data-date='$args[2]' data-hour='$args[3]' data-topics='$args[4]'"; 
-							 ?>
-							onclick="modalEdit(this)">Edit</button>
+						
+			<td>
+			<?php
+				if($date >= date("Y-m-d", strtotime('monday this week')) && $date <= date("Y-m-d", strtotime('sunday this week'))) { 
+			?>
+				<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalEdit"
+					<?php echo "data-class='$class' data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>
+					onclick="modalEdit(this)"> 
+					Edit
+				</button>
 							
-						<button type="button" class="btn btn-danger btn-xs" style='width:20%'
-							data-toggle="modal" data-target="#modalDelete"
-							<?php 
-							echo "data-class='$args[0]' data-subject='$args[1]' data-date='$args[2]' data-hour='$args[3]' data-topics='$args[4]'"; 
-							?>	
-							onclick="modalDelete(this)">Delete</button>
-					<?php	
-						} else { ?>
-							<div class="alert alert-warning" role="alert"> 
-								<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-								 This lecture is not editable/erasable as it relates to past weeks...
-							</div> <?php
-						}
-					?>
-				</form>
-			</div>
-		</div>
-	<?php
+				<button type="button" class="btn btn-danger btn-xs"	data-toggle="modal" data-target="#modalDelete"
+					<?php echo "data-class='$class' data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>	
+					onclick="modalDelete(this)">
+					Delete
+				</button>
+			<?php
+				} else {
+					echo "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true' title='Not editable/erasable as it relates to past weeks...'></span>";
+				}
+			?>
+			</td>
+		</tr>
+		<?php
 		}
+		?>
+		</tbody>
+	</table>
+	<?php
+			echo "</div>";
+		}
+		echo "</div>";
+	}
 	?>
-	
+					
+</div>
+</div>
 	
 	<!-- Modal -->
 <div id="modalDelete" class="modal fade" role="dialog">

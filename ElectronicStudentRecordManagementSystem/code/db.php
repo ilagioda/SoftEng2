@@ -2255,4 +2255,26 @@ class dbTeacher extends db
             return false;
         }
     }
+	
+			// NEW 
+	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject)
+    {
+        $codTeacher = $this->sanitizeString($codTeacher);
+		$class = $this->sanitizeString($class);
+		$subject = $this->sanitizeString($subject);
+
+
+        $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class' AND subject='$subject' ORDER BY date DESC");
+
+        if (!$result)
+            die("Unable to select lectures.");
+
+        if ($result->num_rows > 0) {
+            $lectures = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($lectures, $row['date'] . "," . $row['hour'] . "," . $row['topic']);
+            }
+            return $lectures;
+        }
+    }
 }

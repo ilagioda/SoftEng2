@@ -142,8 +142,7 @@ _MSG;
 									echo "<option value='$i'>$i</option>";
 									if($i!=10){
 										echo "<option value='$i.25'>$i+</option>";
-										echo "<option value='$i.5'>$i</option>";
-										echo "<option value='($j-1).75'>$j-</option>";
+										echo "<option value='$i.75'>$j-</option>";
 									}
 								} 
 								

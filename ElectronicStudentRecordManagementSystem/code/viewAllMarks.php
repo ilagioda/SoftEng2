@@ -149,27 +149,21 @@ function modalEdit(obj) {
 				echo "<li class='text-center' style='width:20%;'><a href='#$subject' data-toggle='tab'>$subject</a></li>";
 		}
 		echo "</ul>";				
-	}
-	// show students list
+		
+		echo "<div id='myTabContent' class='tab-content'>";
 	
+		foreach($subjects as $subject) {
+			if($subject == $subjects[0]) {
+				echo "<div class='tab-pane fade active in' id='$subject'>";
+			} else {
+				echo "<div class='tab-pane fade' id='$subject'>";
+			}
 
 ?>
-	<div id="myTabContent" class="tab-content">
-		<?php
-		if(count($subjects) > 0) {
-			echo "<div class='tab-pane fade active in' id='$subjects[0]'>";
-			foreach($subjects as $subject) {
-				if($subject != $subjects[0]) {
-					echo "<div class='tab-pane fade' id='$subject'>";
-				}
-
-		?>
 			<form method='POST' action='' class='form-group'>
-			
-			<h2 class="pull-left"> Students list </h2>
-			
+			<h2> Students list </h2>
+		
 			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
-
 				<tbody>
 	<?php
 			$i = 0; // for a student student
@@ -246,12 +240,14 @@ function modalEdit(obj) {
 			</tbody>
 			</table>
 			</form>
-		</div>
 		<?php 
-			}
 			echo "</div>";
 		}
+		echo "</div>";
+	}
 ?>
+
+</div></div>
 <!-- Trigger the modal with a button -->
 			
 			
