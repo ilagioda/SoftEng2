@@ -204,8 +204,8 @@ $(document).ready(function(){
 		}
 	} else { 
 		$_SESSION['okPublish']=$_POST['okPublish'];
-		$_SESSION["comboClass"] = $_POST["comboClass"];
-		$_SESSION["finalTerm"] = $_POST["finalTerm"];
+		$_SESSION["comboClass"] = htmlspecialchars($_POST["comboClass"]);
+		$_SESSION["finalTerm"] = htmlspecialchars($_POST["finalTerm"]);
 		
 	}
 	
