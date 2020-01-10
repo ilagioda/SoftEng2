@@ -50,6 +50,9 @@ _SETUPACCOUNTSBUTTON;
     <div class="btn-group">
         <a href="publishTimetable.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Publish timetables</a>
     </div><br>
+    <div class="btn-group">
+        <a href="manageTeachers.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Manage Teachers</a>
+    </div><br>
 </div>
 
 <?php

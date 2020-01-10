@@ -558,3 +558,11 @@ th {
   text-align: center;
 }
 /*****************************/
+
+/***************MANAGE TEACHERS*************/
+.form-control.manageTeachers{
+  min-width : 50%;
+}
+
+
+/****************************/

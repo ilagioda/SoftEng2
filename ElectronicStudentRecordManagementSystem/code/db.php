@@ -374,6 +374,22 @@ class dbAdmin extends db
 
         return $this->query("INSERT INTO internalCommunications VALUES('$newID', '$class', CURRENT_TIMESTAMP, '$title', '$text') ");
     }
+    //NEEDS TO BE TESTED
+    public function deleteTeacher($ssn){
+
+        $ssn = $this->sanitizeString($ssn);
+        
+        return false;
+    }
+    //NEEDS TO BE TESTED
+    public function getTeachers(){
+        return $this->query('SELECT * FROM Teachers');
+    }
+    //NEEDS TO BE TESTED
+    public function getClassSubject($ssn){
+        $query = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$ssn'";
+        return $this->query($query);
+    }
 
 
     /**
