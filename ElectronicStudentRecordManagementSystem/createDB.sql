@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Gen 10, 2020 alle 12:28
+-- Creato il: Gen 10, 2020 alle 16:40
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -242,6 +242,7 @@ CREATE TABLE `ParentMeetings` (
   `teacherCodFisc` varchar(64) NOT NULL,
   `day` date NOT NULL,
   `slotNb` tinyint(1) NOT NULL,
+  `quarter` int(1) NOT NULL,
   `emailParent` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
