@@ -9,6 +9,11 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	
+    if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }
 	
@@ -40,11 +45,11 @@ if (!$loggedin) {
 
 	
 if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset($_POST['assignmentstime']) 
-	&& isset($_FILES['file']['name']) && $_FILES['file']['name'] !="" && isset($_POST['comboClass']) && isset($_POST['comboSubject'])){
+	&& isset($_FILES['file']['name']) && $_FILES['file']['name'] !="" && isset($_POST['comboSubject'])){
 		
     $date = $db->sanitizeString($_POST['assignmentstime']);
     $text = $db->sanitizeString($_POST['assignments']);
-    $class = $db->sanitizeString($_POST['comboClass']);
+    $class = $db->sanitizeString($_SESSION['comboClass']);
     $subject = $db->sanitizeString($_POST['comboSubject']);
 	
 	$target_dir = "assignmentsMaterial/$class";
@@ -98,19 +103,17 @@ if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset
     }
     $_POST = array();
     
-} elseif(isset($_POST["comboClass"]) && isset($_POST["comboSubject"]) && isset($_POST["assignmentstime"])
+} elseif(isset($_POST["comboSubject"]) && isset($_POST["assignmentstime"])
 			&& isset($_POST["assignments"]) && !empty($_POST["assignments"])) {
 				
-		$result = $db->insertNewAssignments($_POST['assignmentstime'], $_POST['comboClass'], $_POST['comboSubject'], $_POST['assignments']);
+		$result = $db->insertNewAssignments($_POST['assignmentstime'], $_SESSION['comboClass'], $_POST['comboSubject'], $_POST['assignments']);
 		if($result == -1) {
 			$err = "Assignments already inserted for that subject! Try to edit the assignments in the section '<a href='viewAllAssignments.php'>View all records</a>";
 		} else {
 			$msg = "Assigments successfully recorded!";
 		}
 }
-?>
-	<div class="row">
-    <?php
+
         if($err != ""){
             echo <<<_ERR
             <div class="alert alert-danger alert-dismissible">
@@ -227,27 +230,23 @@ $(function() {
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-	<h1 class="text-center"> Record assignments </h1>
+	<h1> Record assignments </h1>
 	<div class="form-group">
 
 		<form class="navbar-form navbar form-inline" method="POST" action="recordAssignments.php" enctype="multipart/form-data">
 
 			<table class="table table-hover">
-				<tr><td><label>Class </label></td><td>
-				<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
-				<option value="" disabled selected>Select class...</option>
-
-				<?php 
-					$classes=$teacher->getClassesByTeacher();
-					foreach($classes as $value) {
-						echo "<option value=".$value.">".$value."</option>";
-					}
-				?>
-				</select></td></tr>
+				
 				<tr><td><label>Subject </label></td><td>
 				<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
-				<option value="" disabled selected>Select subject...</option>
-				</select></td></tr>
+					<option value="" disabled selected>Select subject...</option>
+					<?php
+						$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
+						foreach($subjects as $subject) {
+							echo "<option value=".$subject.">".$subject."</option>";
+						}
+					?>
+					</select></td></tr>
 				<tr><td><label>Date</label></td><td>  
 				<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
 						min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>"

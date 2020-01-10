@@ -41,7 +41,7 @@ if (isset($_POST['user'])) {
                             header("Location: homepagePrincipal.php?view=$user");
                             exit;
                         }
-                        header("Location: homepageTeacher.php?view=$user");
+                        header("Location: chooseClass.php?view=$user");
                         exit;
                     }
                 }

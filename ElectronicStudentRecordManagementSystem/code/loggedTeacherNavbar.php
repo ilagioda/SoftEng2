@@ -70,7 +70,41 @@
 					<li><a href='publishFinalGrade.php'>Publish final grades</a></li>
 
 				</ul>
-                <ul class="nav navbar-nav navbar-right">
+				<ul class="nav navbar-nav navbar-right">
+
+<?php
+                    if (isset($_SESSION['classes'])) {
+
+                        if (count($_SESSION['classes']) == 1) {
+                            //One class
+                            echo "
+                                <li><a href='#'>" . $_SESSION['comboClass'] . "</a></li>";
+                        } else {
+                            //More than one class
+							if (isset($_SESSION['comboClass'])) {
+								echo '<li role="presentation" class="dropdown">
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">'
+										. $_SESSION["comboClass"] . '<span class="caret"></span> </a>
+									<ul class="dropdown-menu">';
+									$i = 0;
+									foreach ($_SESSION['classes'] as $class) {
+
+										if (!(($class == $_SESSION['comboClass']))) {
+											echo <<<_ROW
+										<li class="nav-item dropdown">
+										<a class="dropdown-item" href="chooseClass.php?classIndex=$i">$class</a>
+										</li>
+_ROW;
+										}
+										$i++;
+									}
+									echo '</ul>
+									  </li>';
+							}
+                        }
+                    }
+                    
+?>
                     <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 </ul>
             </div>

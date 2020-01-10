@@ -9,13 +9,11 @@ if (!$loggedin) {
 	//require_once("defaultNavbar.php");
 	header("Location: login.php");
 } else {
-	require_once "loggedTeacherNavbar.php";
-}
-
-/* FIXME remove the next lines when login is implemented */
-
-//$_SESSION['user'] = 'GNV';
-//$_SESSION['role'] = 'teacher';
+	if(!isset($_SESSION['comboClass'])){
+		header("Location: chooseClass.php");
+		exit;
+	}
+    require_once "loggedTeacherNavbar.php";}
 
 /* End lines to be changed*/
 ?>

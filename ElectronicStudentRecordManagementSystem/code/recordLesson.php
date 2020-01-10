@@ -9,6 +9,10 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }
 	
@@ -16,30 +20,6 @@ if (!$loggedin) {
 	$teacher=new Teacher();
     
 ?>
-
-<script>
-
-$(document).ready(function(){
-	$("#comboClass").change(function() {
-		var comboClass = $("option:selected", this).val();
-
-		$.ajax({
-			type:		"POST",
-			dataType:	"text",
-			url:		"selectSubjects.php",
-			data:		"comboClass="+comboClass,
-			cache:		false,
-			success:	function(response){
-							$('#comboSubject').html(response);
-						},
-			error: 		function(){
-							alert("Error: subjects not loaded");
-						}
-		});
-	});
-});
-
-</script>
 
 <ul class="nav nav-tabs">
 
@@ -49,26 +29,21 @@ $(document).ready(function(){
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-	<h1 class="text-center"> Record daily lesson topics </h1>
+	<h1> Record daily lesson topics </h1>
 	<div class="form-group">
 		<form class="navbar-form navbar form-inline" method="POST" action="viewRecordedLesson.php">
 		
-			<table class="table">
-				<tr><td><label>Class </label></td><td>
-				<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
-				<option value="" disabled selected>Select class...</option>
-
-				<?php 
-					$classes=$teacher->getClassesByTeacher();
-					foreach($classes as $value) {
-						echo "<option value=".$value.">".$value."</option>";
-					}
-				?>
-				</select></td></tr>
+			<table class="table table-hover">
 				<tr><td><label>Subject </label></td>
 				<td>
 					<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
-						<option value="" disabled selected>Select subject...</option>
+					<option value="" disabled selected>Select subject...</option>
+					<?php
+						$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
+						foreach($subjects as $subject) {
+							echo "<option value=".$subject.">".$subject."</option>";
+						}
+					?>
 					</select>
 				</td></tr>
 				<tr><td><label>Date</label></td><td>  

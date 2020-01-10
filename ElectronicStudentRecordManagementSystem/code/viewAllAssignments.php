@@ -9,11 +9,38 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
+	$selectedClass = $_SESSION['comboClass'];
     require_once "loggedTeacherNavbar.php";
 }
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
     $db = new dbTeacher();
+	
+		// get the current semester:
+	$now = new DateTime('now');
+	// $month = $now->format('m');
+	$year = $now->format('Y');
+	$one_year = new DateInterval('P1Y');
+	$next_year = (new DateTime())->add(new DateInterval('P1Y'));
+
+	if(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-09-01')) 
+		&& strtotime($now->format("Y-m-d")) <= strtotime($next_year->format('Y-01-31'))) {
+			// TODAY IS WITHIN THE FIRST SEMESTER
+		$beginSemester = ($now->format("Y-m-d"));
+		$endSemester = ($next_year->format('Y-01-31'));
+	} elseif(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-02-01')) 
+		&& strtotime($now->format("Y-m-d")) <= strtotime($now->format('Y-06-30'))) {
+			// TODAY IS WITHIN THE SECOND SEMESTER
+		$beginSemester = ($now->format("Y-m-d"));
+		$endSemester = ($now->format('Y-06-30'));
+	} else {
+		// summer holidays
+	}
 ?>
 
 <script>
@@ -37,19 +64,161 @@ function modalEdit(obj) {
 	document.getElementById("modalAssignmentEdit").value = assignment;
 	
 }
-$(document).ready(function(){
 
-	$("#comboClass").change(function() {
-		document.getElementById('assignmentsTitle').style.display= 'none' ;
-		document.getElementById('assignmentsTable').style.display= 'none' ;
+$(document).ready(function(){
+	
+	$("#assignmentsDate").change(function() {
+		var date = $("#assignmentsDate").val();
+
+		var today = new Date().toISOString().split('T')[0];  
+		
+		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+		if(date >= today) {
+			flag = 0;
+		}
+		
+		$.ajax({
+			type:		"POST",
+			dataType:	"json",
+			url:		"loadAssignments.php",
+			data:		"date="+date,
+			cache:		false,
+			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
+							$('#assignmentsTable').empty();
+							if(response) {
+								$('#assignmentsTable').append(updateTableAssignments(response, flag));
+							} else {
+								
+								$('#assignmentsTable').append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for this day </h4></div>");
+						
+							}
+						},
+			error: 		function(){
+							alert("Error: assignments not loaded");
+						}
+		});
 	});
 	
-	$("#assignmentstime").change(function() {
-		document.getElementById('assignmentsTitle').style.display= 'none' ;
-		document.getElementById('assignmentsTable').style.display= 'none' ;
+	$(".previous").click(function() {
+		
+		var actualDay = document.getElementById("assignmentsDate").value;
+		actualDay = new Date(actualDay);
+		var previousDay = actualDay.setDate(actualDay.getDate() - 1);
+		previousDay = new Date(previousDay);
+		$('#assignmentsDate').val(previousDay.toISOString().split('T')[0]);
+		
+		var date = $("#assignmentsDate").val();
+
+		var today = new Date().toISOString().split('T')[0];  
+		
+		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+		if(date >= today) {
+			flag = 0;
+		}
+		
+		$.ajax({
+			type:		"POST",
+			dataType:	"json",
+			url:		"loadAssignments.php",
+			data:		"date="+date,
+			cache:		false,
+			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
+							$('#assignmentsTable').empty();
+							if(response) {
+								$('#assignmentsTable').append(updateTableAssignments(response, flag));
+							} else {
+								
+								$('#assignmentsTable').append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for this day </h4></div>");
+						
+							}
+						},
+			error: 		function(){
+							alert("Error: assignments not loaded");
+						}
+		});
 	});
+	
+		$(".next").click(function() {
+		
+		var actualDay = document.getElementById("assignmentsDate").value;
+		actualDay = new Date(actualDay);
+		var nextDay = actualDay.setDate(actualDay.getDate() +1);
+		nextDay = new Date(nextDay);
+		$('#assignmentsDate').val(nextDay.toISOString().split('T')[0]);
+		
+		var date = $("#assignmentsDate").val();
+
+		var today = new Date().toISOString().split('T')[0];  
+		
+		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+		if(date >= today) {
+			flag = 0;
+		}
+		
+		$.ajax({
+			type:		"POST",
+			dataType:	"json",
+			url:		"loadAssignments.php",
+			data:		"date="+date,
+			cache:		false,
+			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
+							$('#assignmentsTable').empty();
+							if(response) {
+								$('#assignmentsTable').append(updateTableAssignments(response, flag));
+							} else {
+								
+								$('#assignmentsTable').append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for this day </h4></div>");
+						
+							}
+						},
+			error: 		function(){
+							alert("Error: assignments not loaded");
+						}
+		});
+	});
+
 	
 });
+
+function updateTableAssignments(response, flag) {
+
+	var output = "<thead><tr class='active'><th class='text-center'>Subject</th><th class='text-center'>Assignment</th><th class='text-center'>Edit/Delete</th></tr></thead><tbody>";
+	
+	for(var i=0; i<Object.keys(response).length; i++) {
+		res = response[i].split(",");
+	
+		output += "<tr class='text-center'><td>"+res[0]+"</td><td>"+
+					"<textarea readonly='readonly' style='border:none; background: none; outline: none;' rows='2'>"+
+					res[1]+"</textarea>";
+									
+		if(res[2]) {
+			// if pathfilename exists and it is not null or empty 
+			output += "<div><span class='glyphicon glyphicon-paperclip' aria-hidden='true'>&emsp;<a href="+res[2]+">";
+			var path = res[2].split('/');
+			var end = path.slice(-1);
+			output += end+"</a></span></div>";
+		}
+		
+		output += "</td><td>";
+
+		if(flag === 0) {
+			// assignments editable/erasable
+			output += "<button type='button' class='btn btn-default btn-xs' style='width:20%'";
+			output += "data-toggle='modal' data-target='#modalEdit'";
+			output += "data-subject='"+res[0]+"' data-assignment='"+res[1]+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
+			output += "<button type='button' class='btn btn-danger btn-xs' style='width:20%'";
+			output += "data-toggle='modal' data-target='#modalDelete'";
+			output += "data-subject='"+res[0]+"' data-assignment='"+res[1]+"' onclick='modalDelete(this)'>Delete</button>";
+		} else {
+			output += "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true' title='Not editable/erasable as it relates to past weeks...'></span>";
+		}
+
+		output += "</td></tr>";
+	}
+
+	output += "</tbody>";
+	return output;
+}
 
 </script>
 
@@ -61,54 +230,13 @@ $(document).ready(function(){
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 
-	<h1 class="text-center"> All assignments </h1>
-
-	<div class="form-group">
-		<form class="navbar-form navbar form-inline" method="POST" action="viewAllAssignments.php">
-		
-			<table class="table table-hover">
-						
-				<tr><td><label> Class </label></td><td>
-					<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
-						<option value="" disabled selected>Select class...</option>
-
-						<?php 
-							$classes=$teacher->getClassesByTeacher();
-							foreach($classes as $value) {
-								echo "<option value=".$value.">".$value."</option>";
-							}
-						?>
-					</select></td>
-				</tr>
-				
-				<tr><td><label> Date </label></td><td>
-						<input class="form-control" type="date" name="assignmentstime" id="assignmentstime"
-							min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>"
-							style="width:100%" required> </td>
-				</tr>
-			</table>
-			<button type="submit" name="okAssignemnent" class="btn btn-success">OK</button>
-		</form>
-	</div>
+	<h1>All assignments </h1>
 
 	<?php 
-	if(!isset($_POST["okAssignemnent"])) {
-		if(!isset($_SESSION['okAssignemnent'])) {
-			$error = 1;
-		}
-	} else { 
-		$_SESSION['okAssignemnent']=$_POST['okAssignemnent'];
-		$_SESSION["comboClass"] = $_POST["comboClass"];
-		$_SESSION["assignmentstime"] = $_POST["assignmentstime"];
-
-	}
-	
-	if(isset($_SESSION['okAssignemnent'])) {
-		
 
 		if(isset($_POST['yesDelete'])) {
-			if(!isset($_POST["assignments"]) || !isset($_POST["assignmentstime"]) 
-				|| !isset($_POST["comboClass"]) || !isset($_POST["comboSubject"])) {
+			if(!isset($_POST["assignments"]) || !isset($_POST["assignmentsDate"]) 
+			 || !isset($_POST["comboSubject"])) {
 		?>
 			<div class="alert alert-danger alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -116,7 +244,7 @@ $(document).ready(function(){
 			</div>
 		<?php
 			} else {
-				$db->deleteAssignments($_POST['assignmentstime'], $_POST['comboSubject'], $_POST['comboClass']);
+				$db->deleteAssignments($_POST['assignmentsDate'], $_POST['comboSubject'], $selectedClass);
 
 				?>
 
@@ -131,8 +259,7 @@ $(document).ready(function(){
 		}
 		
 		if(isset($_POST['editButton'])) {
-			if(!isset($_POST["assignments"]) || !isset($_POST["assignmentstime"]) 
-				|| !isset($_POST["comboClass"]) || !isset($_POST["comboSubject"])) {
+			if(!isset($_POST["assignments"]) || !isset($_POST["assignmentsDate"]) || !isset($_POST["comboSubject"])) {
 		?>
 			<div class="alert alert-danger alert-dismissible">
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -141,7 +268,7 @@ $(document).ready(function(){
 		<?php
 			} else {
 				
-				$db->updateAssignments($_POST['assignmentstime'], $_POST['comboClass'], $_POST['comboSubject'], $_POST['assignments']);
+				$db->updateAssignments($_POST['assignmentsDate'], $selectedClass, $_POST['comboSubject'], $_POST['assignments']);
 
 				?>
 
@@ -155,14 +282,38 @@ $(document).ready(function(){
 
 		}
 		
-		$selectedClass = $_SESSION["comboClass"];
-		$selectedDate = $_SESSION["assignmentstime"];
+			if(!isset($_SESSION["assignmentsDate"])) {
+				$_SESSION["assignmentsDate"] = $now->format("Y-m-d");
+			}
+			$selectedDate = $_SESSION["assignmentsDate"];
+			
+			/*$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
+			if(count($subjects) > 1) { 
+				echo "<ul class='nav nav-pills' style='justify-content: center; display: flex;'>";
+				
+				foreach($subjects as $subject) {
+					echo "<li><a href='#$subject' data-toggle='tab'>$subject</a></li>";
+				}
+				echo "</ul>";
+						
+			}*/
+			
+		?>
 		
-		$assignments = $teacher->getAssignmentsByClassAndDate($selectedClass, $selectedDate); // assignments couple subject,assignment,pathFilename
+
+		
+		<input class="form-control assignmentsDate" name="assignmentsDate" id="assignmentsDate" type="date" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>" value="<?php echo $selectedDate; ?>">
+
+		<ul class="pager">
+			<li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+			<li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+		</ul>
+	
+		<?php
+		$assignments = $teacher->getAssignmentsByClassAndDate($selectedClass, $selectedDate); // assignments subject,assignment,pathFilename
 		if(!empty($assignments)) {
 
 	?>
-	<br><h1 id="assignmentsTitle" class="text-center"> Assignments list <small>Class: <?php echo $selectedClass ?> - Date: <?php echo $selectedDate?></small></h1>
 	<form method='POST' action='' class='form-group'>
 		<table id="assignmentsTable" class="table table-hover">
 			<thead>
@@ -172,11 +323,12 @@ $(document).ready(function(){
 				<th class="text-center">Edit/Delete</th>
 			</tr>
 			</thead>
+			<tbody>
+
 	<?php 
 		foreach((array)$assignments as $value) {
 	?>		
 
-			<tbody>
 			<?php
 				$args = explode(",",$value);
 				$subject = $args[0];
@@ -199,26 +351,28 @@ $(document).ready(function(){
 					</td>
 					<td>
 						<?php 
-							//if($selectedDate >= date("Y-m-d", strtotime('monday this week')) && $selectedDate <= date("Y-m-d", strtotime('sunday this week'))) { 
+							if($selectedDate >= date("Y-m-d")) {  // if the date is in the future, then the assignments can be editable/erasable
 						?>
 						<button type="button" class="btn btn-default btn-xs" style='width:20%'
 							data-toggle="modal" data-target="#modalEdit"
 							<?php echo "data-subject='$args[0]' data-assignment='$args[1]'"; ?>
 							onclick="modalEdit(this)">Edit</button>
-							
+							&emsp;
 						<button type="button" class="btn btn-danger btn-xs" style='width:20%'
 							data-toggle="modal" data-target="#modalDelete"
 							<?php echo "data-subject='$args[0]' data-assignment='$args[1]'"; ?>
 							onclick="modalDelete(this)">Delete</button>
 						<?php 
-							//}
+							} else {
+								echo "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span>";
+							}
 						?>
 					</td>
 				</tr>
-			</tbody>
 	<?php
 		}
 	?>
+		</tbody>
 		</table>
 	</form>
 	
@@ -226,8 +380,8 @@ $(document).ready(function(){
 		} else {
 			echo "<div class='alert alert-warning'>
 					<h4 id='assignmentsTitle'>
-					<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
-					No assignments for this day <small> &emsp;Class: $selectedClass - Date: $selectedDate </small></h4></div>";
+					<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;
+					No assignments for this day </h4></div>";
 		}
 	?>
 	
@@ -243,11 +397,11 @@ $(document).ready(function(){
 		<form method="POST" action="">
 			<table class="table table-hover text-center">
 				<tr><td><label> Class </label></td>
-					<td><input type="text" name="comboClass" value="<?php echo $selectedClass ?>" readonly="readonly" style="border:none; outline: none;"></td>
+					<td><input type="text" name="comboClass" value="<?php echo $selectedClass; ?>" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Date </label></td>
-					<td><input type="text" name="assignmentstime" value="<?php echo $selectedDate ?>" readonly="readonly" style="border:none; outline: none;"></td>
+					<td><input type="text" name="assignmentsDate" value="<?php echo $selectedDate; ?>" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Subject </label></td>
@@ -284,11 +438,11 @@ $(document).ready(function(){
 		<form method="POST" action="">
 			<table class="table table-hover text-center">
 					<tr><td><label> Class </label></td>
-					<td><input type="text" name="comboClass" value="<?php echo $selectedClass ?>" readonly="readonly" style="border:none; outline: none;"></td>
+					<td><input type="text" name="comboClass" value="<?php echo $selectedClass; ?>" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Date </label></td>
-					<td><input type="text" name="assignmentstime" value="<?php echo $selectedDate ?>" readonly="readonly" style="border:none; outline: none;"></td>
+					<td><input type="text" name="assignmentsDate" value="<?php echo $selectedDate; ?>" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Subject </label></td>
@@ -312,7 +466,7 @@ $(document).ready(function(){
 </div>
 
 <?php
-	}
+	//}
 	?>
 </div>
 </div>
