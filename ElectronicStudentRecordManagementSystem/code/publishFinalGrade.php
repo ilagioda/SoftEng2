@@ -153,7 +153,7 @@ $(document).ready(function(){
 			<?php
 		}
 	} else { 
-		$_SESSION['okPublish']=$_POST['okPublish'];
+		$_SESSION['okPublish']=htmlspecialchars($_POST['okPublish']);
 		$_SESSION["finalTerm"] = htmlspecialchars($_POST["finalTerm"]);
 		
 	}
