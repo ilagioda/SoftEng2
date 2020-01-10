@@ -12,6 +12,10 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }
 require_once("db.php");
@@ -20,10 +24,10 @@ $teacher=new Teacher();
 $db = new dbTeacher();
 $err = $msg= "";
 
-if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] != "" && $_FILES['file']['name'] !="" && isset($_POST['comboClass']) && isset($_POST['comboSubject'])){
+if(isset($_POST['title']) && isset($_FILES['file']['name']) && $_POST['title'] != "" && $_FILES['file']['name'] !="" && isset($_POST['comboSubject'])){
     $title = $db->sanitizeString($_POST['title']);
     //$file = $db->sanitizeString($_POST['file']);
-    $class = $db->sanitizeString($_POST['comboClass']);
+    $class = $_SESSION['comboClass'];
     $subject = $db->sanitizeString($_POST['comboSubject']);
 
     $target_dir = "supportMaterial/$class";
@@ -102,26 +106,20 @@ _MSG;
         }
         ?>
         <form class="form-horizontal" method="POST" action="publishSupportMaterial.php" enctype="multipart/form-data">
-        <h3 class="text-center">Publish support material</h3><br>
-        <div class="form-group text-center">
-        <label for="comboClass">CLASS: </label>
-            <select class="form-control" id="comboClass" name="comboClass" required> 
-                    <option value="" disabled selected>Select class...</option>
-                    <?php 
-                        $classes=$teacher->getClassesByTeacher();
-                        foreach($classes as $value) {
-                            echo "<option value=".$value.">".$value."</option>";
-                        }
-                    ?>
-            </select>
-        </div>
+        <h1 class="text-center">Publish support material</h1><br>
 
         <div class="form-group text-center">
         <label for="Subject">SUBJECT: </label>
         <select class="form-control" id="comboSubject" name="comboSubject" required>
                 <option value="" disabled selected>Select subject...</option>
+			<?php
+				$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
+				foreach($subjects as $subject) {
+					echo "<option value=".$subject.">".$subject."</option>";
+				}
+			?>
         </select>
-                    </div>
+        </div>
 
         <div class="form-group text-center">
 			<label for="title">TITLE: </label>

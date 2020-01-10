@@ -78,12 +78,10 @@ _ERROR;
 
 <div>
     <h2 class="text-center"> Choose a class</h2>
-    <form action="chooseClass.php" method="POST">
-        <table class="table table-striped">
-            <tr>
-                <th></th>
-				<th></th>
-            </tr>
+    <form class="form-horizontal" action="chooseClass.php" method="POST">
+	<div class="form-group text-center">
+        <table class="table table-hover">
+
 
 <?php
 $i = 0;
@@ -92,14 +90,13 @@ foreach ($_SESSION['classes'] as $class) {
     echo <<<_CLASSROW
 
                 <tr>
-                    <td>$class</td>
-                    <td><button type="submit" class="btn btn-default btn-sm" name=$CLASSINDEX value=$i>Select</td>
+                    <td><button type="submit" class="btn btn-default" name=$CLASSINDEX value=$i style="border:none; background: none; outline: none !important; width:100%">$class</td>
                 </tr>
 _CLASSROW;
     $i++;
 }
 ?>
-
+		</div>
         </table>
     </form>
 </div>

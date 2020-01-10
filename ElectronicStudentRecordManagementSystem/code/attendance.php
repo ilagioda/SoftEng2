@@ -10,6 +10,10 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }
 
@@ -18,11 +22,11 @@ require_once("classTeacher.php");
 // Create a Teacher object
 $teacher = new Teacher();
 $classes = $teacher->getClassesByTeacher();
+$class = $_SESSION['comboClass'];
 
 echo "<div class=text-center>";
 echo "<h1>ATTENDANCE</h1><br><br>";
 
-if (isset($_REQUEST['class'])) {
 
     // Print all the information about the students belonging to the selected class
 
@@ -73,7 +77,7 @@ if (isset($_REQUEST['class'])) {
         <form class="form" method="POST" action="attendance.php" id="formDate">
             Choose the day:
             <input class="form-control text-center attendanceDate" type="date" name="dateRequest" min="<?php echo $minWeek; ?>" max="<?php echo $currentMax ?>" value="<?php echo $date; ?>" style="line-height: 30px; line-height: 20px;font-size: 20px;">
-            <input type="hidden" id="classID" name="class" value="<?php echo htmlspecialchars($_REQUEST['class']) ?>">
+            <input type="hidden" id="classID" name="class" value="<?php echo $class; ?>">
             <button type="submit" class="btn btn-success">Confirm date</button>
         </form>
 
@@ -90,7 +94,7 @@ if (isset($_REQUEST['class'])) {
         //echo $_REQUEST['class'];
 
         // Store in a variable the name of the selected class
-        $chosenClass = htmlspecialchars($_REQUEST['class']);
+        $chosenClass = $class;
 
         // Retrieve the student of the selected class
         $students = $teacher->getStudents2($chosenClass);
@@ -568,23 +572,6 @@ _MODALENTRANCE;
         </div>
 _MODALEXIT;
     }
-} else {
-
-    // The class hasn't been chosen yet, so the list of classes must be shown
-    echo <<<_LIST
-            <ul class="list-group">
-_LIST;
-
-    foreach ($classes as $class) {
-        echo <<<_ROW
-            <a href="attendance.php?class=$class" class="list-group-item">$class</a>     
-_ROW;
-    }
-
-    echo <<<_ENDLIST
-        </ul>
-_ENDLIST;
-}
 
 echo "</div>";
 

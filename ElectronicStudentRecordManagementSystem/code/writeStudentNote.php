@@ -11,6 +11,10 @@ if (!$loggedin) {
   //require_once("defaultNavbar.php");
   header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
   require_once("loggedTeacherNavbar.php");
 }
 ?>
@@ -128,40 +132,13 @@ if (!$loggedin) {
 
 <?php
 
-if (!isset($_REQUEST["class"])) {
-
-  // DEVE SELEZIONARE LA CLASSE
-
-  require_once("classTeacher.php");
-
-  $teacher = new Teacher();
-
-  $classes = $teacher->getClassesByTeacher();
-
-  if (isset($classes)) {
-
-    if (is_array($classes)) {
-
-      echo '<div class="col-md-12 text-center">
-      <h2>Classes</h2>';
-      foreach ($classes as $class) {
-        echo <<<_ROW
-            <a href="writeStudentNote.php?class=$class" class="list-group-item">$class</a>     
-_ROW;
-      }
-    } else {
-      echo "<h2> There is not class for this teacher.</h2>";
-    }
-  }
-  echo "</div>";
-} else {
   // LA CLASSE E' STATA SELEZIONATA
 
   require_once("classTeacher.php");
 
   $teacher = new Teacher();
 
-  $chosenClass = $_REQUEST['class'];
+  $chosenClass = $_SESSION['comboClass'];
   // echo $class;
   echo '<div class="col-md-12 text-center">
   <h2>Insert notes</h2>';
@@ -274,7 +251,7 @@ _MODAL;
 _MODAL;
     }
   }
-}
+
 
 echo "</div>";
 require_once("defaultFooter.php");
