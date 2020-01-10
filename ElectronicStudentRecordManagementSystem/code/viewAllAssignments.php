@@ -270,6 +270,7 @@ function updateTableAssignments(response, flag) {
 		}
 		
 			if(!isset($_SESSION["assignmentsDate"])) {
+				$now = new DateTime('now');
 				$_SESSION["assignmentsDate"] = $now->format("Y-m-d");
 			}
 			$selectedDate = $_SESSION["assignmentsDate"];

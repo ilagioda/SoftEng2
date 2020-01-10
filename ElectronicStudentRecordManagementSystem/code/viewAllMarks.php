@@ -9,43 +9,71 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
 	$db = new dbTeacher();
+	
+	$selectedClass = $_SESSION["comboClass"];
+
+		if(isset($_POST['yesDelete'])) {
+		if(!isset($_POST["comboStudent"]) || !isset($_POST["lessontime"]) 
+			|| !isset($_POST["comboHour"]) || !isset($_POST["comboSubject"])) {
+?>
+			<div class="alert alert-danger alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
+			</div>
+		<?php
+			} else {
+				$ssn = explode(" ", $_POST['comboStudent']);
+				$result = $db->deleteMark($ssn[2], $_POST['lessontime'], $_POST['comboHour'], $_POST['comboSubject']);
+				?>
+
+				<div class="alert alert-success alert-dismissible">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong><span class="glyphicon glyphicon-send"></span> Mark successfully deleted!</strong>
+				</div>
+
+		<?php	
+		} 
+	}
+		
+		if(isset($_POST['editButton'])) {
+			if(!isset($_POST["comboStudent"]) || !isset($_POST["lessontime"]) 
+				|| !isset($_POST["comboHour"]) || !isset($_POST["comboSubject"]) || !isset($_POST["comboGrade"])) {
+		?>
+			<div class="alert alert-danger alert-dismissible">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
+			</div>
+		<?php
+			} else {
+				
+				$ssn = explode(" ", $_POST['comboStudent']);
+				$result = $db->updateMark($ssn[2], $_POST['comboSubject'], $_POST['lessontime'], $_POST['comboHour'], $_POST['comboGrade']);
+				?>
+
+				<div class="alert alert-success alert-dismissible">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong><span class="glyphicon glyphicon-send"></span> Mark successfully updated!</strong>
+				</div>
+
+			<?php	
+			} 
+
+		}
+				
+	
 ?>
 
 <script>
-$(document).ready(function(){
-	$("#comboClass").change(function() {
-		
-
-		var comboClass = $("option:selected", this).val();
-
-		$.ajax({
-			type:		"POST",
-			dataType:	"text",
-			url:		"selectSubjects.php",
-			data:		"comboClass="+comboClass,
-			cache:		false,
-			success:	function(response){
-							$('#comboSubject').html(response);
-						},
-			error: 		function(){
-							alert("Error: subjects not loaded");
-						}
-		});
-	});
-	$("#comboClass").change(function() {
-		document.getElementById('titleStudent').style.display= 'none' ;
-		document.getElementById('studentTable').style.display= 'none' ;
-	});
-	$("#comboSubject").change(function() {
-		document.getElementById('titleStudent').style.display= 'none' ;
-		document.getElementById('studentTable').style.display= 'none' ;
-	});
-	
+$(document).ready(function(){	
 	$(function() {
 		$('tr.parent td span.btn').on("click", function(){
 			var idOfParent = $(this).parents('tr').attr('id');
@@ -56,6 +84,10 @@ $(document).ready(function(){
 
 	});
 	
+$('a[data-toggle="tab"]').click(function(e) {
+	var target = $(e.target).attr("href"); // activated tab
+});
+
 });
 
 function modalDelete(obj) {
@@ -71,6 +103,9 @@ function modalDelete(obj) {
 	
 	var hour = obj.getAttribute("data-hour");
 	document.getElementById("modalHourDelete").value = hour;
+	
+	var subject = obj.getAttribute("data-subject");
+	document.getElementById("modalSubjectDelete").value = subject;
 	
 }
 
@@ -88,6 +123,8 @@ function modalEdit(obj) {
 	var hour = obj.getAttribute("data-hour");
 	document.getElementById("modalHourEdit").value = hour;
 	
+	var subject = obj.getAttribute("data-subject");
+	document.getElementById("modalSubjectEdit").value = subject;	
 }
 
 </script>
@@ -101,122 +138,48 @@ function modalEdit(obj) {
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 	<h1> View all marks </h1>
-		<div class="form-group">
-		<form class="navbar-form navbar form-inline" method="POST" action="viewAllMarks.php">
-		
-			<table class="table">
-						
-				<tr><td><label> Class </label></td><td>
-					<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
-						<option value="" disabled selected>Select class...</option>
-
-						<?php 
-							$classes=$teacher->getClassesByTeacher();
-							foreach($classes as $value) {
-								echo "<option value=".$value.">".$value."</option>";
-							}
-						?>
-					</select></td>
-				</tr>
-				
-				<tr><td><label>Subject </label></td><td>
-					<select class="form-control" id="comboSubject" name="comboSubject" style="width:100%" required>
-						<option value="" disabled selected>Select subject...</option>
-					</select></td>
-				</tr>	
-				<tr><td><button type="submit" name="ok" class="btn btn-success">OK</button></td><td></td></tr>
-			</table>
-		</form>
-	</div>
-
-	<?php 
-	if(!isset($_POST["ok"])) {
-		if(!isset($_SESSION['ok'])) {
-			$error = 1;
-		}
-	} else { 
-		$_SESSION['ok']=$_POST['ok'];
-		$_SESSION["comboClass"] = $_POST["comboClass"];
-		$_SESSION["comboSubject"] = $_POST["comboSubject"];
-
-	}
 	
-	if(isset($_SESSION['ok'])) {
-		
-		
-
-		if(isset($_POST['yesDelete'])) {
-			if(!isset($_POST["comboStudent"]) || !isset($_POST["lessontime"]) 
-				|| !isset($_POST["comboHour"]) || !isset($_POST["comboSubject"])) {
-		?>
-			<div class="alert alert-danger alert-dismissible">
-				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<p class="alert-link"> Oh no! Something went wrong...</p>
-			</div>
-		<?php
-			} else {
-				$ssn = explode(" ", $_POST['comboStudent']);
-				$result = $db->deleteMark($ssn[2], $_POST['lessontime'], $_POST['comboHour'], $_POST['comboSubject']);
-				?>
-
-				<div class="alert alert-success alert-dismissible">
-					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-					<p class="alert-link"> Mark successfully deleted!</p>
-				</div>
-
-			<?php	
-			} 
-
+<?php
+	$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
+	if(count($subjects) > 0) { 
+		echo "<ul id='myTab' class='nav nav-pills' style='justify-content: center; display: flex;'>";
+		echo "<li class='text-center active' style='width:20%;'><a href='#$subjects[0]' data-toggle='tab'>$subjects[0]</a></li>";
+		foreach($subjects as $subject) {
+			if($subject != $subjects[0])
+				echo "<li class='text-center' style='width:20%;'><a href='#$subject' data-toggle='tab'>$subject</a></li>";
 		}
-		
-		if(isset($_POST['editButton'])) {
-			if(!isset($_POST["comboStudent"]) || !isset($_POST["lessontime"]) 
-				|| !isset($_POST["comboHour"]) || !isset($_POST["comboSubject"]) || !isset($_POST["comboGrade"])) {
-		?>
-			<div class="alert alert-danger alert-dismissible">
-				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				<p class="alert-link"> Oh no! Something went wrong...</p>
-			</div>
+		echo "</ul>";				
+	}
+	// show students list
+	
+
+?>
+	<div id="myTabContent" class="tab-content">
 		<?php
-			} else {
-				
-				$ssn = explode(" ", $_POST['comboStudent']);
-				$result = $db->updateMark($ssn[2], $_POST['comboSubject'], $_POST['lessontime'], $_POST['comboHour'], $_POST['comboGrade']);
-				?>
+		if(count($subjects) > 0) {
+			echo "<div class='tab-pane fade active in' id='$subjects[0]'>";
+			foreach($subjects as $subject) {
+				if($subject != $subjects[0]) {
+					echo "<div class='tab-pane fade' id='$subject'>";
+				}
 
-				<div class="alert alert-success alert-dismissible">
-					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-					<p class="alert-link"> Mark successfully updated!</p>
-				</div>
-
-			<?php	
-			} 
-
-		}
-		
-			$i = 0; // for a student student
-			$j = 0; // for a mark and date of a specific student 
-			$selectedClass = $_SESSION["comboClass"];
-			$selectedSubject = $_SESSION["comboSubject"];
-			
-			// show students list
-
-
-	?>
+		?>
 			<form method='POST' action='' class='form-group'>
-			<h1 id="titleStudent"> Students list  <small>Class: <?php echo $selectedClass ?> - Subject: <?php echo $selectedSubject?></small></h1>
-
+			
+			<h2 class="pull-left"> Students list </h2>
+			
 			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
 
 				<tbody>
 	<?php
-
+			$i = 0; // for a student student
+			$j = 0; // for a mark and date of a specific student 
 			$students = $teacher->getStudents2($selectedClass);
 			foreach($students as $student) {
 				$args = explode(",",$student);
 
 				// VISIBLE ROWS
-	?> 			<tr class="parent active" id="<?php echo $args[2] ?>">
+	?> 			<tr class="parent active" id="<?php echo $args[2]."-".$subject; ?>">
 
 					<td>
 					<?php 
@@ -230,10 +193,10 @@ function modalEdit(obj) {
 				</tr>
 			
 			<?php 
-				$marks = $teacher->viewStudentMarks($args[2], $selectedSubject);
+				$marks = $teacher->viewStudentMarks($args[2], $subject);
 				if ($marks) {
 			?>
-				<tr class="child-<?php echo $args[2] ?>">
+				<tr class="child-<?php echo $args[2]."-".$subject; ?>">
 					<td class="text-center"> <strong> Date </strong>  </td>
 					<td><strong> Specific marks </strong>  </td>
 					<td></td>
@@ -247,7 +210,7 @@ function modalEdit(obj) {
 						$hour[$j] = $argm[2];
 
 				?>
-				<tr class="child-<?php echo $args[2] ?>">
+				<tr class="child-<?php echo $args[2]."-".$subject; ?>">
 					<td class="text-center"> <?php echo $date[$j] ?> </td>
 					<td><?php echo $specificMark[$j] ?> </td>
 					<td>
@@ -256,12 +219,12 @@ function modalEdit(obj) {
 						?>
 						<button type="button" class="btn btn-default btn-xs" 
 							data-toggle="modal" data-target="#modalEdit"
-							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]'"; ?>
+							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$subject'"; ?>
 							onclick="modalEdit(this)">Edit</button>
 							
 						<button type="button" class="btn btn-danger btn-xs" 
 							data-toggle="modal" data-target="#modalDelete"
-							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]'"; ?>
+							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$subject'"; ?>
 							onclick="modalDelete(this)">Delete</button>
 						<?php 
 							}
@@ -272,7 +235,7 @@ function modalEdit(obj) {
 						$j++;
 					}
 				} else { ?>
-				<tr class="child-<?php echo $args[2] ?>">
+				<tr class="child-<?php echo $args[2]."-".$subject; ?>">
 						<td></td><td>No marks </td>
 					</tr>
 				<?php
@@ -283,7 +246,13 @@ function modalEdit(obj) {
 			</tbody>
 			</table>
 			</form>
-			<!-- Trigger the modal with a button -->
+		</div>
+		<?php 
+			}
+			echo "</div>";
+		}
+?>
+<!-- Trigger the modal with a button -->
 			
 			
 <!-- Modal -->
@@ -302,7 +271,7 @@ function modalEdit(obj) {
 				</tr>
 				<tr>
 					<td><label> Subject </label></td>
-					<td><input type="text" name="comboSubject" value="<?php echo $selectedSubject ?>" readonly="readonly" style="border:none; outline: none;"></td>
+					<td><input type="text" name="comboSubject" id="modalSubjectDelete" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Student </label></td>
@@ -348,7 +317,7 @@ function modalEdit(obj) {
 				</tr>
 				<tr>
 					<td><label> Subject </label></td>
-					<td><input type="text" name="comboSubject" value="<?php echo $selectedSubject ?>" readonly="readonly" style="border:none; outline: none;"></td>
+					<td><input type="text" name="comboSubject" id="modalSubjectEdit" readonly="readonly" style="border:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Student </label></td>
@@ -391,9 +360,7 @@ function modalEdit(obj) {
 
   </div>
 </div>
-			<?php
-	}
-			?>
+
 	</div>
 </div>
 
