@@ -170,7 +170,11 @@ class db
          * @param $first_time (bool) value used to know if the password is being changed by the "sendmail.php"(false) file or when logging in for the first time (true)
          * @return (bool) 
          */
-        if ($first_time) return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
+
+        $user = $this->sanitizeString($user);
+
+        if ($first_time) 
+            return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
 
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
     }
@@ -875,7 +879,7 @@ class dbParent extends db
                          $array['date'] = 'subject' : "View assignments:" 'assignment text' ~ 'subject' : "View assignments:" 'assignment text' ...
         */
 
-        $CodFisc = $this->sanitizeString($codFisc);
+        $codFisc = $this->sanitizeString($codFisc);
         $this->begin_transaction();
 
         /* Verify if the user logged in is actually allowed to see the assignments of the requested child */
@@ -883,7 +887,7 @@ class dbParent extends db
         if (!$result)
             die("Unable to select student $codFisc");
         if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
-            die("No student with ID $CodFisc ");
+            die("No student with ID $codFisc ");
         }
         $class = $this->getChildClass($codFisc);
         $parent1 = $row['emailP1'];
@@ -908,7 +912,7 @@ class dbParent extends db
 
         if (!$result) {
             $this->rollback();
-            die("Unable to select assignments for student $CodFisc");
+            die("Unable to select assignments for student $codFisc");
         }
 
         $assignments = array();
@@ -1062,6 +1066,12 @@ class dbTeacher extends db
 
     function insertSupportMaterial($title, $filename, $dimension, $class, $subject)
     {
+        $title = $this->sanitizeString($title);
+        $filename = $this->sanitizeString($filename);
+        $dimension = $this->sanitizeString($dimension);
+        $class = $this->sanitizeString($class);
+        $subject = $this->sanitizeString($subject);
+
         return $this->query("INSERT INTO supportmaterials VALUES(CURRENT_TIMESTAMP, '$title', '$filename', '$dimension', '$class', '$subject')");
     }
 
@@ -1768,7 +1778,9 @@ class dbTeacher extends db
     public function getFinalGrade($ssn, $subject, $date)
     {
         // no need to be tested
-
+        $ssn = $this->sanitizeString($ssn);
+        $subject = $this->sanitizeString($subject);
+        $date = $this->sanitizeString($date);
         $result = $this->query("SELECT finalGrade FROM FinalGrades WHERE (codFisc='$ssn' AND subject='$subject' AND finalTerm='$date')");
 
         if ($result->num_rows > 0) {

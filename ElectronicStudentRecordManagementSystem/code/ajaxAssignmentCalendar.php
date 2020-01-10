@@ -25,9 +25,9 @@ require_once("functions.php");
 require_once("db.php");
 
 $db = new dbParent();
-$codFisc = $_REQUEST['codFisc'];
-$year = $_REQUEST['year'];
-$month = $_REQUEST['month'];
+$codFisc = htmlspecialchars($_REQUEST['codFisc']);
+$year = htmlspecialchars($_REQUEST['year']);
+$month = htmlspecialchars($_REQUEST['month']);
 
 echo build_html_calendar($year,$month,$db->viewChildAssignments($codFisc));
 
