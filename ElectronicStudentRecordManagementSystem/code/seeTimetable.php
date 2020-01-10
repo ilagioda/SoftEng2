@@ -43,29 +43,8 @@ _ALERTMSG;
     <tr style="font-size: 20px;"><td></td><td><b>Monday</b></td><td><b>Tuesday</b></td><td><b>Wednesday</b></td><td><b>Thursday</b></td><td><b>Friday</b></td></tr>
 _OPENTABLE;
 
-    // Prepare arrays which will be useful when filling the HTML table 
-    $hours = array("8:00","9:00", "10:00", "11:00", "12:00", "13:00");
-    $cont = 0;
-
-    for($i=1; $i<=6; $i++){
-        $hour = $hours[$i-1];
-        $mon = $timetableToShow[$i]["mon"];
-        $tue = $timetableToShow[$i]["tue"];
-        $wed = $timetableToShow[$i]["wed"];
-        $thu = $timetableToShow[$i]["thu"];
-        $fri = $timetableToShow[$i]["fri"];
-
-        echo <<<_ROW
-        <tr>
-        <td style="vertical-align: middle;"><b>$hour<b></td>
-        <td style="vertical-align: middle;" id="mon_$i">$mon</td>
-        <td style="vertical-align: middle;" id="tue_$i">$tue</td>
-        <td style="vertical-align: middle;" id="wed_$i">$wed</td>
-        <td style="vertical-align: middle;" id="thu_$i">$thu</td>
-        <td style="vertical-align: middle;" id="fri_$i">$fri</td>
-        </tr>
-_ROW;
-    }
+    // Call the function that prints the timetable
+    printTimetable($timetableToShow);
 
     echo <<<_CLOSETABLE
         </table>
