@@ -11,12 +11,21 @@ if (!$loggedin) {
 } 
 
 require_once "db.php";
+$CLASSINDEX='classIndex';
 
-if (isset($_REQUEST['classIndex'])) {
+if (isset($_REQUEST[$CLASSINDEX])) {
+
+    if(!ctype_digit($_REQUEST[$CLASSINDEX])){
+        // trying to hack the page => redirect to homepage
+        header('HTTP/1.1 307 Temporary Redirect');
+        header('Location: index.php');
+        exit;
+    }
+
     /* coming from the same page, choosing the class */
-    $index = $_REQUEST['classIndex'];
+    $index = $_REQUEST[$CLASSINDEX];
     $_SESSION['comboClass'] = $_SESSION['classes'][$index];
-    $_SESSION['classIndex'] = $index;
+    $_SESSION[$CLASSINDEX] = $index;
     header('HTTP/1.1 307 Temporary Redirect');
     header('Location: homepageTeacher.php');
     exit;
@@ -45,7 +54,7 @@ _ERROR;
             $_SESSION['comboClass'] = $classes[0];
             $_SESSION['numClasses'] = 1;
             $_SESSION['classes'] = $classes;
-            $_SESSION['classIndex'] = 0;
+            $_SESSION[$CLASSINDEX] = 0;
             header('HTTP/1.1 307 Temporary Redirect');
             header('Location: homepageTeacher.php');
             break;
@@ -84,7 +93,7 @@ foreach ($_SESSION['classes'] as $class) {
 
                 <tr>
                     <td>$class</td>
-                    <td><button type="submit" class="btn btn-default btn-sm" name='classIndex' value=$i>Select</td>
+                    <td><button type="submit" class="btn btn-default btn-sm" name=$CLASSINDEX value=$i>Select</td>
                 </tr>
 _CLASSROW;
     $i++;
