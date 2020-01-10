@@ -9,35 +9,23 @@ if (!$loggedin) {
     //require_once("defaultNavbar.php");
     header("Location: login.php");
 } else {
+	if (!isset($_SESSION['comboClass'])) {
+        header("Location: chooseClass.php");
+        exit;
+    }
     require_once "loggedTeacherNavbar.php";
 }	
 	require_once("classTeacher.php");
 	$teacher=new Teacher();
 	$db = new dbTeacher();
-	
-	// get the current semester:
-	$now = new DateTime('now');
-	// $month = $now->format('m');
-	$year = $now->format('Y');
-	$one_year = new DateInterval('P1Y');
-	$next_year = (new DateTime())->add(new DateInterval('P1Y'));
+	$selectedClass = $_SESSION["comboClass"];
 
-	if(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-09-01')) 
-		&& strtotime($now->format("Y-m-d")) <= strtotime($next_year->format('Y-01-31'))) {
-			// TODAY IS WITHIN THE FIRST SEMESTER
-			// the teacher can select a date within January for inserting the final grades of the term
-		$beginSemester = ($next_year->format('Y-01-01'));
-		$endSemester = ($next_year->format('Y-01-31'));
-	} elseif(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-02-01')) 
-		&& strtotime($now->format("Y-m-d")) <= strtotime($now->format('Y-06-30'))) {
-			// TODAY IS WITHIN THE SECOND SEMESTER
-			// the teacher can select a date within June for inserting the final grades of the term
-		$beginSemester = ($now->format('Y-06-01'));
-		$endSemester = ($now->format('Y-06-30'));
-	} else {
-		// summer holidays
-	}
+	require_once("functions.php");
 	
+	$semester = getCurrentSemester();
+	$now = new DateTime('now');
+	$beginSemester = ($now->format('Y-m-d'));
+	$endSemester = $semester[1];
 	
 ?>
 
@@ -66,29 +54,6 @@ function checkIfHoliday(day) {
 
 
 $(document).ready(function(){
-	$("#comboClass").change(function() {
-	
-		var comboClass = $("option:selected", this).val();
-
-		$.ajax({
-			type:		"POST",
-			dataType:	"text",
-			url:		"selectSubjects.php",
-			data:		"comboClass="+comboClass,
-			cache:		false,
-			success:	function(response){
-							$('#comboSubject').html(response);
-						},
-			error: 		function(){
-							alert("Error: subjects not loaded");
-						}
-		});
-	});
-	
-	$("#comboClass").change(function() { 
-			document.getElementById('titleStudent').style.display= 'none' ;
-			document.getElementById('studentTable').style.display= 'none' ;
-	});
 	
 	$(function() {
 		// this function allows to open/hide the window that shows the rows subject-grade
@@ -170,48 +135,31 @@ $(document).ready(function(){
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-		<div class="form-group">
-			<form class="navbar-form navbar form-inline" method="POST" action="publishFinalGrade.php">
-			
-				<table class="table">
-							
-					<tr><td><label> Class </label></td><td>
-						<select class="form-control" id="comboClass" name="comboClass" style="width:100%" required> 
-							<option value="" disabled selected>Select class...</option>
-
-							<?php 
-								$classes=$teacher->getClassesByTeacher();
-								foreach($classes as $value) {
-									echo "<option value=".$value.">".$value."</option>";
-								}
-							?>
-						</select></td>
-					</tr>
-					<tr><td><label> Final term </label></td><td>
-						<input class="form-control" type="date" name="finalTerm" id="finalTerm"
-							min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>"
-							style="width:100%" required> </td>
-					</tr>
-					<tr><td><button type="submit" name="okPublish" id="okPublish" class="btn btn-success">OK</button></td><td></td></tr>
-				</table>
-			</form>
-		</div>
 	
 	<?php 
 	if(!isset($_POST["okPublish"])) {
 		if(!isset($_SESSION['okPublish'])) {
-			$error = 1;
+			?>
+					<form class="form-horizontal" method="POST" action="publishFinalGrade.php" enctype="multipart/form-data">
+			<h1 class="text-center">Publish final grades</h1><br>
+			<div class="form-group text-center">
+			<label> Select the date of the term </label>
+			<input class="form-control" type="date" name="finalTerm" id="finalTerm"
+					min="<?php echo $beginSemester;  ?>" max="<?php echo $endSemester; ?>" required>
+			<button type="submit" name="okPublish" id="okPublish" class="btn btn-success">OK</button>
+			</div>
+
+		</form>
+			<?php
 		}
 	} else { 
 		$_SESSION['okPublish']=$_POST['okPublish'];
-		$_SESSION["comboClass"] = htmlspecialchars($_POST["comboClass"]);
 		$_SESSION["finalTerm"] = htmlspecialchars($_POST["finalTerm"]);
 		
 	}
 	
 	if(isset($_SESSION['okPublish'])) {
 		
-		$selectedClass = $_SESSION["comboClass"];
 		$finalTerm = $_SESSION["finalTerm"];
 		
 		$coordinator = $db->isCoordinator($_SESSION['user'], $selectedClass);
@@ -225,7 +173,7 @@ $(document).ready(function(){
 
 	?>
 			
-			<h1 id="titleStudent"> Publish final grades  <small>Class: <?php echo $selectedClass ?> - Final term:  <?php echo $finalTerm ?></small></h1>
+			<h1 id="titleStudent"> Publish final grades  <small> Final term:  <?php echo $finalTerm ?></small></h1>
 			<table class="table table-condensed" id="studentTable" style="border-collapse:collapse;">
 	<?php
 
@@ -269,8 +217,10 @@ $(document).ready(function(){
 						if ($rows) {
 							foreach($rows as $row) {
 								$mark = explode(",", $row);
+								
 								$marks[$j] = $mark[1];
 								$j++;
+								
 							}
 							
 							$average = array_sum($marks) / count($marks);
