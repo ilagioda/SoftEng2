@@ -24,7 +24,7 @@ if (!$loggedin) {
 if(isset($_POST["comboSubject"]) && isset($_POST["lessontime"]) && isset($_POST["comboHour"]) && isset($_POST["comboGrade"]) && isset($_POST["ssn"])){
 	
 	foreach($_POST['ssn'] as $key => $value) {
-		
+		$value = htmlspecialchars($value);
 		if($_POST['comboGrade'][$key] > 0) {
 
 			$result = $db->insertGrade($_POST['lessontime'], $_POST['comboHour'], $value, $_POST['comboSubject'], $_POST['comboGrade'][$key]);

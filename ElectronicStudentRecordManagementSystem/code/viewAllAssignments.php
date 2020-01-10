@@ -18,29 +18,16 @@ if (!$loggedin) {
     require_once "loggedTeacherNavbar.php";
 }
 	require_once("classTeacher.php");
+	require_once("functions.php");
 	$teacher=new Teacher();
     $db = new dbTeacher();
 	
-		// get the current semester:
-	$now = new DateTime('now');
-	// $month = $now->format('m');
-	$year = $now->format('Y');
-	$one_year = new DateInterval('P1Y');
-	$next_year = (new DateTime())->add(new DateInterval('P1Y'));
+	$days = getCurrentSemester();
 
-	if(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-09-01')) 
-		&& strtotime($now->format("Y-m-d")) <= strtotime($next_year->format('Y-01-31'))) {
-			// TODAY IS WITHIN THE FIRST SEMESTER
-		$beginSemester = ($now->format("Y-m-d"));
-		$endSemester = ($next_year->format('Y-01-31'));
-	} elseif(strtotime($now->format("Y-m-d")) >= strtotime($now->format('Y-02-01')) 
-		&& strtotime($now->format("Y-m-d")) <= strtotime($now->format('Y-06-30'))) {
-			// TODAY IS WITHIN THE SECOND SEMESTER
-		$beginSemester = ($now->format("Y-m-d"));
-		$endSemester = ($now->format('Y-06-30'));
-	} else {
-		// summer holidays
-	}
+	if($days) {
+		$beginSemester = $days[0];
+		$endSemester = $days[1];
+	} // else --> summer holidays 
 ?>
 
 <script>
