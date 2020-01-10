@@ -2050,7 +2050,7 @@ class dbTeacher extends db
 
     }
     
-    // NEED TO BE TESTED !!!!!
+    //TESTED
     public function retrieveTimetableTeacher($class, $teacherSSN) {
 
         // Returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
@@ -2084,7 +2084,7 @@ class dbTeacher extends db
         return $timetableToReturn;
     }
 
-    // NEED TO BE TESTED !!!!!
+    //TESTED
     public function checkIfAuthorized($class, $teacherSSN){
         // Check if a certain teacher teaches in a specified class
         // Return true if the teacher has lessons in that class

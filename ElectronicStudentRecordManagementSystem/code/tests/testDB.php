@@ -1421,14 +1421,67 @@ final class dbTest extends TestCase
 
         $class="1A";
 
+        //teacher is not a coordinator -> expected false
         $result=$db->isCoordinator($_SESSION['user'], $class);
         $this->assertSame(false, $result);
 
         $db->queryForTesting("INSERT INTO `classes` (`classID`, `coordinatorSSN`) VALUES ('1A', 'GNV')");
 
+        //teacher is a coordinator -> expected true
         $result=$db->isCoordinator($_SESSION['user'], $class);
         $this->assertSame(true, $result);
 
         $db->queryForTesting("DELETE FROM `classes` WHERE `classes`.`classID` = '1A';");
+
+    }
+
+    function testRetrieveTimetableTeacher(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //preparing DB
+        $db->queryForTesting("DELETE FROM Timetable");
+
+        $class="1A";
+        $array=array();
+        
+        //class has no timetable -> expected empty array
+        $result=$db->retrieveTimetableTeacher($class, $_SESSION['user']);
+        $this->assertSame($array, $result);
+
+        //teacher has no right to see class timetable -> expected empty array
+        $class="1B";
+        $result=$db->retrieveTimetableTeacher($class, $_SESSION['user']);
+        $this->assertSame($array, $result);
+
+        $db->queryForTesting("INSERT INTO `timetable` (`classID`, `day`, `hour`, `subject`) VALUES ('1A', 'Mon', '1', 'Physics'), ('1B', 'Mon', '2', 'History')");
+
+        //class has timetable and teacher can see it -> expected filled array in the format [hour][day]="subject"
+        $class="1A";
+        $array[1]["Mon"]="Physics";
+        $result=$db->retrieveTimetableTeacher($class, $_SESSION['user']);
+        $this->assertSame($array, $result);
+
+        //restoring DB
+        $db->queryForTesting("DELETE FROM Timetable");
+        
+    }
+    
+    function testCheckIfAuthorized(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+        
+        $class="1B";
+
+        //not authorized -> expected false
+        $result=$db->checkIfAuthorized($class, $_SESSION['user']);
+        $this->assertSame(false, $result);
+
+        $class="1A";
+        //authorized -> expected true
+        $result=$db->checkIfAuthorized($class, $_SESSION['user']);
+        $this->assertSame(true, $result);
     }
 }
