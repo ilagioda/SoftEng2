@@ -87,13 +87,13 @@ function getCurrentSemester()
     $year = intval(date("Y"));
     $month = intval(date("m"));
 
-    if($month == 1){
+    if ($month == 1) {
         // first semester, but new year => put it back to make it work
         $endingDate = $year . "-01-31"; // to January
-        $year = $year-1;
+        $year = $year - 1;
         $beginningDate = $year . "-09-01"; // from September
 
-    }elseif($month > 8) {
+    } elseif ($month > 8) {
         // first semester
         $beginningDate = $year . "-09-01"; // from September
         $year = $year + 1;
@@ -194,14 +194,14 @@ function build_html_calendar($year, $month, $events = null)
 
         // Check if the date is in the past
         $today_date = date("Y-m-d");
-        if($cur_date < $today_date){
+        if ($cur_date < $today_date) {
             $past = true;
         } else {
             $past = false;
         }
 
         // Check if saturday or sunday
-        if(date('N', strtotime($cur_date)) >= 6){
+        if (date('N', strtotime($cur_date)) >= 6) {
             $satsun = true;
         } else {
             $satsun = false;
@@ -212,54 +212,88 @@ function build_html_calendar($year, $month, $events = null)
             $draw_event = true;
             $teacherMeetings = false;
             $assignment = false;
+            $attendance = false; // to store the hour/hours
+            $late = false; // to say if the user entered late or exited early
+
             $event = $events[$cur_date];
-            if ($event == "Absent") {
+
+            if ($event == "absent") {
                 // absent
-                $color = "style='background-color:orange'";
+                $attendance = $event;
+                $color = "darkred";
+            } else if (strpos($event, 'early') === 0) { //begins with
+                // exits early
+                // someone came for him => no problem
+
+                $attendance = explode("-", $event)[1];
+                $color = "lightblue";
+            } else if (strpos($event, 'late') === 0) {
+                // enters late
+                $hours = explode("-", $event);
+                $late = true;
+                if (count($hours) == 3) {
+                    //entered late and exited early
+                    $attendance = $hours[1] . " - " . $hours[2]; // late - early
+                    $color = "orange";
+                } else {
+                    $attendance = $hours[1];
+                    $color = "yellow";
+                }
             } else if (strpos($event, 'View assignments:') !== false) {
                 //assignment
                 $assignment = true;
-                $color = "style='background-color:lightblue'";
-            } else if (strpos($event, 'early') !== false) {
-                // exits early
-                // someone came for him => no problem
-                $events[$cur_date] = explode("-", $event)[1];
-                $color = "style='background-color:lightblue'";
-            } else if (strpos($event, 'late') !== false) {
-                // enters late
-                $events[$cur_date] = explode("-", $event)[1];
-                $color = "style='background-color:yellow'";
+                $color = "orange";
             } else if (strpos($event, 'teacherMeetings') !== false) {
                 // Parent meeting timeslots (Teacher's side)
                 $teacherMeetings = true;
-                $color = "style='background-color:#b3ffcc'";
+                $color = "lightgreen";
             } else $color = "";
         } else $color = "";
 
+        //style='background-color:#b3ffcc'
+
         //Day cell with assignment (clickable)
-        if ($draw_event == true && $assignment == true) {
-            $assText = ltrim($events[$cur_date], 'View assignments:');
-            $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\" $color>";
-        } else {
-            // Day cell with parent meetings time slots (clickable)
-            if ($draw_event == true && $teacherMeetings == true && !$past) {
-                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
-            } else {
-
-                if ($ila) {
-
-                    if($past || $satsun){
-                        $color = "style='background-color:#bfbfbf'";
-                        $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' $color>";
-                    } else {
-                        $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event}' id='$cur_date' onclick=\"showDaySlots(this.id)\" $color>";
-                    }
+        if ($draw_event) {
+            if ($assignment) {
+                $assText = ltrim($event, 'View assignments:');
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\">";
+            } else if ($teacherMeetings == true && !$past) {
+                // Day cell with parent meetings time slots (clickable)
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
+            } else if ($attendance !== false) {
+                // Day cell with attendance (clickable)
+                if ($attendance == "absent") {
+                    $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date'>";
                 } else {
-                    // Day cell
-                    $calendar .= $draw_event ?
-                        "<td class='{$css_cal_day} {$css_cal_day_event}' $color>" : "<td class='{$css_cal_day}'>";
+                    $hours = explode("-", $attendance);
+                    if ($late) {
+                        // the student is late or both entered late and exited early
+                        $assText = 'The student entered at ' . strval($hours[0]) . '° hour';
+                        if (count($hours) == 2) {
+                            // exited early AND entered late
+                            $assText .= " and exited at " . strval($hours[1]) . '°hour';
+                        }
+                    } else {
+                        // the student exited early
+                        $assText = 'The student exited at ' . strval($hours[0]);
+                    }
+                    $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showAttendance(this.id, '$assText')\">";
                 }
+            } else {
+                // you should not be here
+                return false;
             }
+        } else if ($ila) {
+            // provide parent meetings
+            if ($past || $satsun) {
+                $color = "gray";
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date'>";
+            } else {
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
+            }
+        } else {
+            // Day cell - in case the event is simply absent
+            $calendar .= "<td class='{$css_cal_day}'>";
         }
 
 
@@ -269,18 +303,10 @@ function build_html_calendar($year, $month, $events = null)
         // Insert an event for this day
         if ($draw_event) {
             if ($assignment) {
-                $events[$cur_date] = '<div class="glyphicon glyphicon-book"></div> Assignments';
                 $assignmentClass = "assignment";
             } else $assignmentClass = "";
 
-            if ($teacherMeetings) {
-                $events[$cur_date] = '<div class="glyphicon glyphicon-user"></div>';
-            }
-
-            $calendar .=
-                "<div class='{$css_cal_event} text-center $assignmentClass'>" .
-                $events[$cur_date] .
-                "</div>";
+            $calendar .= "<div class='{$css_cal_event} $assignmentClass'></div>";
         }
 
         // Close day cell
@@ -318,16 +344,17 @@ function build_html_calendar($year, $month, $events = null)
     return $calendar;
 }
 
-function printTimetable($timetableToShow){
+function printTimetable($timetableToShow)
+{
 
     // Function that prints a given timetable 
 
     // Prepare arrays which will be useful when filling the HTML table 
-    $hours = array("8:00","9:00", "10:00", "11:00", "12:00", "13:00");
+    $hours = array("8:00", "9:00", "10:00", "11:00", "12:00", "13:00");
 
-    for($i=1; $i<=6; $i++){
-        
-        $hour = $hours[$i-1];
+    for ($i = 1; $i <= 6; $i++) {
+
+        $hour = $hours[$i - 1];
         $mon = $timetableToShow[$i]["mon"];
         $tue = $timetableToShow[$i]["tue"];
         $wed = $timetableToShow[$i]["wed"];

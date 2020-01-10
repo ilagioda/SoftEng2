@@ -1,3 +1,30 @@
+/*COLORS*/
+
+.orange{
+  background-color: orange;
+}
+
+.lightblue{
+  background-color: lightblue;
+}
+
+.lightgreen {
+  background-color:#b3ffcc
+}
+
+.yellow{
+  background-color: yellow;
+}
+
+.gray{
+  background-color: #bfbfbf;
+}
+
+.darkred{
+  background-color: #8B0000;
+}
+
+
 .form-control {
   margin-bottom: 10px;
   width: 30%;
@@ -476,8 +503,9 @@ table.calendar {
 }
 
 td.calendar-day {
-  min-height: 80px;
-  font-size: 11px;
+
+  /*min-height: 80px;*/
+  font-size: 1.6vh;
   position: relative;
 }
 
@@ -512,7 +540,6 @@ div.day-number {
   font-weight: bold;
   float: right;
   margin: -5px -5px 0 0;
-  width: 20px;
   text-align: center;
 }
 
@@ -530,8 +557,8 @@ td.calendar-day-event {
 }
 
 .calendar-event {
-  font-weight: bold;
-  font-size: 25px;
+  font-size: 2.6;
+  cursor: pointer;
 }
 
 /*************************************/

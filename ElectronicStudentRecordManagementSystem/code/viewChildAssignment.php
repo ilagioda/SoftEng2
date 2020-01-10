@@ -180,7 +180,6 @@ require_once("db.php");
         // insert new cards
         var assignments = document.getElementById("assignmentList");
         var str = "";
-        console.log($text);
         let rows = $text.split("~");
 
         for (let i = 0; i < rows.length; i++) {

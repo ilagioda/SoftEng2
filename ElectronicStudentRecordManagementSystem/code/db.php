@@ -818,7 +818,7 @@ class dbParent extends db
     }
 
 
-    //tested
+    //changed -- NEED TO BE TESTED
     public function retrieveAttendance($CodFisc)
     {
 
@@ -826,7 +826,7 @@ class dbParent extends db
          * Retrieve the attendance of a given student in the current semester.
          * @param $codFisc (String) CodFisc of the searched student, e.g. 2015.
          * @return (Array) The attendance to the lectures of the given student in the form: 
-         * "YYYY-MM-DD" => "Absent" | "early - Exited at x° hour" | "late - Entered at x° hour" | "late - Entered at x° hour Exited at y° hour" 
+         * "YYYY-MM-DD" => "absent" | "early - x" | "late - x" | "late and early - x - y" 
          * 
          */
 
@@ -861,21 +861,21 @@ class dbParent extends db
 
             /**
              * Produces an array as
-             * "YYYY-MM-DD" => "Absent" | "early - Exited: x° hour" | "late - Entered: x° hour" | "late - Entered: x° hour Exited: y° hour"
+             * "YYYY-MM-DD" => "Absent" | "early - x" | "late - x" | "late and early - x - y"
              * */
 
             if ($row["absence"] == 1 && $row["lateEntry"] == 0 && $row["earlyExit"] == 0) {
                 // the student was absent that day
-                $value = "Absent";
+                $value = "absent";
             } elseif ($row["lateEntry"] != 0 && $row["earlyExit"] != 0) {
                 // student both entered late and exited early
-                $value = "late - Entered: " . strval($row["lateEntry"]) . "° hour Exited: " . strval($row["earlyExit"]) . "° hour";
+                $value = "late and early - ". strval($row["lateEntry"]) . " - " . strval($row["earlyExit"]);
             } elseif ($row["lateEntry"] != 0) {
                 //entered late
-                $value = "late - Entered: " . strval($row["lateEntry"]) . "° hour";
+                $value = "late - " . strval($row["lateEntry"]);
             } else {
                 //no late entry,neither absence => exited early
-                $value = "early - Exited: " . strval($row["earlyExit"]) . "° hour";
+                $value = "early - " . strval($row["earlyExit"]);
             }
             $attendance[$row["date"]] = $value;
         }
@@ -2053,7 +2053,7 @@ class dbTeacher extends db
          * @param $slotNb (String, which is actually an int) Target time slot for parent meetings
          * @return (String) "white" if ($codFisc, $day, $slotNb) was already present in the DB, so the teacher has clicked that 
          *                          slot in order to cancel the availability for parent meetings (then the slot has to be colored in white)
-         *                   "#b3ffcc" if ($codFisc, $day, $slotNb) wasn't in the DB, so the teacher has clicked that 
+         *                   "#lightgreen" if ($codFisc, $day, $slotNb) wasn't in the DB, so the teacher has clicked that 
          *                            slot in order to make it available for parent meetings (then the slot has to be colored in green)
          *                   "error" if some error occured during the execution of this function
          */
@@ -2095,7 +2095,7 @@ class dbTeacher extends db
                 }
             }
             
-            $color = "#b3ffcc";
+            $color = "lightgreen";
         }
 
         $result = $this->commit();

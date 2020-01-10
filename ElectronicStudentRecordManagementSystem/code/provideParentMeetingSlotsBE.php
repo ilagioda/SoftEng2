@@ -20,7 +20,7 @@ require_once("db.php");
 if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['year']) || !isset($_REQUEST['month'])){
 
     if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['day'])){
-        echo "not an ajax re quest";
+        echo "not an ajax request";
         exit;
     } else {
         if(!isset($_REQUEST['slotNb'])){

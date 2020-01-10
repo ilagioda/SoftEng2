@@ -199,19 +199,19 @@ require_once("db.php");
                 var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
                 for (let i = 0; i < hours.length; i++) {
                     var freeOrNotFree = availability[i + 1];
-                    var color = "white";
+                    var color = "";
                     if (freeOrNotFree === "lesson") {
-                        color = "#bfbfbf";
+                        color = "gray";
                     } else if (freeOrNotFree === "selected") {
-                        color = "#b3ffcc";
+                        color = "lightgreen";
                     }
 
                     // str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
                     var slotNb = i + 1;
                     if (freeOrNotFree !== "lesson") {
-                        str += "<tr><td style='background-color:" + color + "; cursor: pointer;' id='" + selecteddate + "_" + slotNb + "' onclick='provideSlotParentMeetings(this)'>" + hours[i] + "</td></tr>";
+                        str += "<tr><td class='" + color + "' id='" + selecteddate + "_" + slotNb + "' onclick='provideSlotParentMeetings(this)'>" + hours[i] + "</td></tr>";
                     } else {
-                        str += "<tr><td style='background-color:" + color + "' id='" + selecteddate + "_" + slotNb + "'>" + hours[i] + "</td></tr>";
+                        str += "<tr><td class='" + color + "' id='" + selecteddate + "_" + slotNb + "'>" + hours[i] + "</td></tr>";
                     }
                 }
 
@@ -238,40 +238,27 @@ require_once("db.php");
                 window.alert("Oh no! Something went wrong...");
             } else {
                 
-                element.style.backgroundColor=text; // element should have the right color
-
+                let alreadyProvidedColor = "lightgreen";
                 let rootID = elementID.split("_")[0];
                 let calendarElement = document.getElementById(rootID);
 
                 if (calendarElement == undefined) return; // the user has already changed window
 
-                if (text == "#b3ffcc") {
+                if (text == alreadyProvidedColor) {
+                    element.classList.add(text); // element should have the right color
 
-                    if (calendarElement.style.backgroundColor.includes("rgb(179")) return; // the element of the table is already ok
-
-                    element.style.backgroundColor = text;
-                    calendarElement.style.backgroundColor = "#b3ffcc";
-
-                    let userIcon = document.createElement("div");
-                    userIcon.classList.add("glyphicon");
-                    userIcon.classList.add("glyphicon-user");
-
-                    let container = document.createElement("div");
-                    container.classList.add("calendar-event");
-                    container.classList.add("text-center");
-
-                    container.appendChild(userIcon);
-                    calendarElement.appendChild(container);
+                    if (calendarElement.classList.contains(alreadyProvidedColor)) return; // the element of the table is already ok
+                    calendarElement.classList.add(text);
 
                 } else {
+                    element.classList.remove(alreadyProvidedColor); // element should have the right color
 
                     for (let i = 1; i <= 6; i++) {
                         // check if there are other slots in the same day
 
                         let row = document.getElementById(rootID + "_" + i);
-                        let color = row.style.backgroundColor;
 
-                        if (row == undefined || color.includes("rgb(179")) {
+                        if (row == undefined || row.classList.contains(alreadyProvidedColor)) {
                             // row undefined => the user has already changed the window
                             // or there is another element with background color different from white => another appointment
                             return;
@@ -279,8 +266,7 @@ require_once("db.php");
                     }
 
                     // no other appointments => remove the color from the day
-                    calendarElement.style.backgroundColor = "white";
-                    calendarElement.lastChild.remove()
+                    calendarElement.classList.remove(alreadyProvidedColor);
                 }
             }
         })

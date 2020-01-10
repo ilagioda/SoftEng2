@@ -161,7 +161,24 @@ require_once("db.php");
         updateCalendar();
     }
 
+    function showAttendance($date, $text) {
+        var old_date = document.getElementById("date").innerHTML;
+        document.getElementById("attendanceInformations").innerHTML = "";
+
+        if (old_date.includes($date)) {
+            // clear date
+            document.getElementById("date").innerHTML = "";
+            return;
+        }
+        // Update date
+        document.getElementById("date").innerHTML = $date;
+        // insert new cards
+        var attendance = document.getElementById("attendanceInformations");        
+        attendance.innerHTML = '<div class="card-index"><div class="card-body-index"><p>' + $text + '</p></div></div>';
+    }
+
     $(document).ready(updateCalendar);
+
 </script>
 
 <?php
@@ -199,6 +216,16 @@ var fiscalCode="$_SESSION[child]";
 </script>
 
 _storeCodFisc;
+
+?>
+
+
+<h2 id="date" class="text-center"></h2>
+<div id="attendanceInformations">
+
+</div>
+
+<?php
 
 require_once("defaultFooter.php");
 
