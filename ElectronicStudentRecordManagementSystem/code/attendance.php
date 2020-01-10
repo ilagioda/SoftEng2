@@ -45,7 +45,7 @@ if (isset($_REQUEST['class'])) {
         $lessMax = $_REQUEST['dateRequest'] <= $maxWeek;
 
         if ($greaterMin && $lessMax) {
-            $date = $_REQUEST['dateRequest'];                    // Format: 2019-11-22 --> to be put into the DB
+            $date = htmlspecialchars($_REQUEST['dateRequest']);                    // Format: 2019-11-22 --> to be put into the DB
             $day = date('l, jS \of F Y', strtotime($date));      // Format: Friday, 22nd of November 2019 --> to be shown on the screen
         } else {
             $date = date("Y-m-d", strtotime('friday this week'));                   // Format: 2019-11-22 --> to be put into the DB
@@ -73,7 +73,7 @@ if (isset($_REQUEST['class'])) {
         <form class="form" method="POST" action="attendance.php" id="formDate">
             Choose the day:
             <input class="form-control text-center attendanceDate" type="date" name="dateRequest" min="<?php echo $minWeek; ?>" max="<?php echo $currentMax ?>" value="<?php echo $date; ?>" style="line-height: 30px; line-height: 20px;font-size: 20px;">
-            <input type="hidden" id="classID" name="class" value="<?php echo $_REQUEST['class'] ?>">
+            <input type="hidden" id="classID" name="class" value="<?php echo htmlspecialchars($_REQUEST['class']) ?>">
             <button type="submit" class="btn btn-success">Confirm date</button>
         </form>
 
@@ -90,7 +90,7 @@ if (isset($_REQUEST['class'])) {
         //echo $_REQUEST['class'];
 
         // Store in a variable the name of the selected class
-        $chosenClass = $_REQUEST['class'];
+        $chosenClass = htmlspecialchars($_REQUEST['class']);
 
         // Retrieve the student of the selected class
         $students = $teacher->getStudents2($chosenClass);
