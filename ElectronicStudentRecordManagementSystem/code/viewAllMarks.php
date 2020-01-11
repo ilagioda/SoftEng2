@@ -211,12 +211,12 @@ function modalEdit(obj) {
 						<?php 
 							if($date[$j] >= date("Y-m-d", strtotime('monday this week')) && $date[$j] <= date("Y-m-d", strtotime('sunday this week'))) { 
 						?>
-						<button type="button" class="btn btn-default btn-xs" 
+						<button type="button" class="btn btn-default btn-xs" style="width:20%"
 							data-toggle="modal" data-target="#modalEdit"
 							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$subject'"; ?>
 							onclick="modalEdit(this)">Edit</button>
 							
-						<button type="button" class="btn btn-danger btn-xs" 
+						<button type="button" class="btn btn-danger btn-xs" style="width:20%"
 							data-toggle="modal" data-target="#modalDelete"
 							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$subject'"; ?>
 							onclick="modalDelete(this)">Delete</button>

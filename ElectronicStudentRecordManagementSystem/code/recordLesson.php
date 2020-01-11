@@ -96,10 +96,9 @@ if (!$loggedin) {
 				</select></td></tr>	
 				<tr><td><label>Topic(s)</label></td><td>
 				<textarea class="form-control" name="topics" rows="4" cols="50" placeholder="Daily lesson topics..." style="width:100%" required></textarea></td></tr>
-	
-				<tr><td></td><td><button type="reset" class = "btn btn-default">Reset</button>
-				<button type="submit" class="btn btn-success">Confirm</button></td></tr>
 			</table>
+			<button type="reset" class="btn btn-default" style="margin-right:5px">Reset</button>
+			<button type="submit" class="btn btn-success">Confirm</button>
 		</form>
 		</div>
 	</div>
