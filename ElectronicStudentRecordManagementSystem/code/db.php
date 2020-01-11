@@ -1334,7 +1334,7 @@ class dbParent extends db
                 $this->query("UPDATE ParentMeetings SET emailParent='' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
             }
             else{
-                $color="darkred";
+                $color="lightred";
             }
         }
         

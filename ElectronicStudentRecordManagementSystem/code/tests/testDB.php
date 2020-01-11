@@ -689,7 +689,7 @@ final class dbTest extends TestCase
         //entry with other mail -> expected 'darkred'
         $db->queryForTesting("UPDATE ParentMeetings SET emailParent='other' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
         $result=$db->bookSlot($teacher, $_SESSION['user'], $day, $slot, $quarter);
-        $this->assertSame('darkred', $result);
+        $this->assertSame('lightred', $result);
 
         //restoring DB
         $db->queryForTesting("DELETE FROM ParentMeetings");
