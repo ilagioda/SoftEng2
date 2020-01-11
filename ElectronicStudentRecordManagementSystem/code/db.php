@@ -1179,32 +1179,48 @@ class dbParent extends db
         return $ret;
     }
 
-    //NEED TO BE TESTED
+    //TESTED
     public function getTeacherSlotsByDay($teacher, $day, $parentMail)
     {
-        //TODO add comments
+        //This function gets the status of meeting slots of a given teacher for a given day, from the perspective of a given parent.
+        //It returns a string in the format slot_quarter_status,slot_quarter_status...
+        //where status may be "no" if there is no slot set, "free" if the quarter is free, "selected" if it is booked
+        //by the parent or "full" if it is booked from another parent
 
-        $codFisc = $this->sanitizeString($teacher);
+        $teacher = $this->sanitizeString($teacher);
         $day = $this->sanitizeString($day);
         $parentMail = $this->sanitizeString($parentMail);
 
-        $result=$this->query("SELECT * from parentmeetings WHERE day='$day' AND teacherCodFisc='$codFisc' ORDER BY slotNb ASC, quarter ASC");
+        
+        $array=array();
+
+        for($i=1; $i<=6; $i++){
+            for($j=1; $j<=4; $j++){
+                $array[$i][$j]="no";
+            }
+        }
+
+        $result=$this->query("SELECT * from ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' ORDER BY slotNb ASC, quarter ASC");
         if (!$result)
             return null;
-        
-        $res='';
-
+            
         while($row = $result->fetch_array(MYSQLI_ASSOC)){
-            $res.=$row['slotNb'] . "_" . $row['quarter'] . "_";
-            if(empty($row['emailParent']))
-                $res.="free,";
-            elseif($row['emailParent']==$parentMail)
-                $res.="selected,";
-            else
-                $res.="full,";
+                if(empty($row['emailParent']))
+                    $array[$row['slotNb']][$row['quarter']]="free";
+                elseif($row['emailParent']==$parentMail)
+                    $array[$row['slotNb']][$row['quarter']]="selected";
+                else
+                    $array[$row['slotNb']][$row['quarter']]="full";
         }
         
-        echo $res;
+        $res="";
+
+        for($i=1; $i<=6; $i++){
+            for($j=1; $j<=4; $j++){
+                $res.=$i . "_" . $j . "_" . $array[$i][$j] . ",";
+            }
+        }
+
         return $res;
     
     }     
