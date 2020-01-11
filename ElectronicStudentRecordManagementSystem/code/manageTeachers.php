@@ -136,10 +136,9 @@ $db = new dbAdmin();
     var teachSSN = obj.getAttribute("data-ssn");
     var teachPrincipal = obj.getAttribute("data-princ");
     var isPrincipal;
-    if(teachPrincipal == "PRINCIPAL"){
-        isPrincipal = true;
-    }
-    else isPrincipal = false;
+    if (teachPrincipal == "PRINCIPAL") {
+      isPrincipal = true;
+    } else isPrincipal = false;
 
     // Fill the modal with the student information
     document.getElementById("teacherName").value = teachName;
@@ -147,83 +146,113 @@ $db = new dbAdmin();
     document.getElementById("teacherSSN").value = teachSSN;
     document.getElementById("teacherPrincipal").checked = !isPrincipal;
   }
+
   function trashButtonClicked(obj, ssn) {
 
     // Retrieve and store the button id from which this function has been called 
     buttonID = obj.id;
     $.post("manageTeacherBackEnd.php", {
-          event: "delete",
-          codFisc: ssn
-        },
-        function(data, status) {
-          if (data == 1) {
-            //alert(ssn + " has been correctly deleted.")
-            document.getElementById("answer").innerHTML = document.getElementById("answer").innerHTML + '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Success!'+ ssn + ' has been correctly deleted.</strong></div>';
+        event: "delete",
+        codFisc: ssn
+      },
+      function(data, status) {
+        if (data == 1) {
+          // alert(data);
+          document.getElementById("answer").innerHTML = document.getElementById("answer").innerHTML + '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Success!' + ssn + ' has been correctly deleted.</strong></div>';
 
-          } else {
-            document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
-          }
-        }) ;
-    }
-    function addClassSubjectFunction(obj, ssn){
-        //console.log(table.children[0]);
-        var table = document.getElementById("classSubjectTable");
-        var selectedClass = document.getElementById("selectedClass").value;
-        var selectedSubject = document.getElementById("selectedSubject").value;
-            //console.log("lunghezza tabella " + table.rows.length); 
-            //table.rows.length counts header too
-            var lastChild = table.rows.length -1;
-            var lastRow = table.rows[lastChild];
-            var whereToAdd = lastChild;
-            table.deleteRow(lastChild);
-            newRow = table.insertRow(whereToAdd);
-            newRow.id = "tr_"+ whereToAdd;
-            var cell0 = newRow.insertCell(0);
-            var cell1 = newRow.insertCell(1);
-            var cell2 = newRow.insertCell(2);
-            cell0.className = "text-center";
-            cell0.innerHTML = selectedClass; 
+        } else {
+          // alert(data);
+          document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
+        }
+      });
+  }
 
-            cell1.className = "text-center";
-            cell1.innerHTML = selectedSubject;
+  function addClassSubjectFunction(obj, ssn) {
+    //console.log(table.children[0]);
+    var table = document.getElementById("classSubjectTable");
+    var selectedClass = document.getElementById("selectedClass").value;
+    var selectedSubject = document.getElementById("selectedSubject").value;
+    //console.log("lunghezza tabella " + table.rows.length); 
+    //table.rows.length counts header too
+    var lastChildIndex = table.rows.length - 1;
+    var lastRow = table.rows[lastChildIndex];
+    var whereToAdd = lastChildIndex;
+    table.deleteRow(lastChildIndex);
+    newRow = table.insertRow(whereToAdd);
+    newRow.id = "tr_" + whereToAdd;
+    var cell0 = newRow.insertCell(0);
+    var cell1 = newRow.insertCell(1);
+    var cell2 = newRow.insertCell(2);
+    cell0.className = "text-center";
+    cell0.innerHTML = selectedClass;
 
-            cell2.className = "text-center";
-            // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
-            cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd +  '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-            cell2.addEventListener("click",trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject) );
-            table.append(lastRow);
-        $.post("manageTeacherBackEnd.php", {
-          event: "addClassSubjectPost",
-          codFisc: ssn,
-          class: selectedClass,
-          subject: selectedSubject
-        },
-        function(data, status) {
-          if (data == 1) {
-              
-            //var oldID = parseInt(document.getElementById("thPlus").innerHTML);
-            //document.getElementById("thPlus").innerHTML = oldID + 1;
+    cell1.className = "text-center";
+    cell1.innerHTML = selectedSubject;
 
-          } else {
+    cell2.className = "text-center";
+    // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
+    cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+    cell2.addEventListener("click", trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject));
+    table.append(lastRow);
+    $.post("manageTeacherBackEnd.php", {
+        event: "addClassSubjectPost",
+        codFisc: ssn,
+        class: selectedClass,
+        subject: selectedSubject
+      },
+      function(data, status) {
+        if (data == 1) {
 
-          }
-        });
-    }
-    function trashButtonClassSubjectClicked(obj, ssn, classID, subject){
+          //var oldID = parseInt(document.getElementById("thPlus").innerHTML);
+          //document.getElementById("thPlus").innerHTML = oldID + 1;
+
+        } else {
+
+        }
+      });
+  }
+
+  function trashButtonClassSubjectClicked(obj, ssn, classID, subject) {
+    // Retrieve and store the button id from which this function has been called 
+    buttonID = obj.id;
+    $.post("manageTeacherBackEnd.php", {
+        event: "deleteClassSubjectForATeacher",
+        codFisc: ssn,
+        classID: classID,
+        subject: subject
+      },
+      function(data, status) {
         //TO BE IMPLEMENTED
-    }
+        // Front end modification:
+        // the table should be adjusted.
+        if (data == 1) {
+          //alert(ssn + " has been correctly deleted.")
+          window.location.replace('manageTeachers.php?success=true&ssn='+ssn);
+        } else {
+          document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
+        }
+      });
+  }
 </script>
 
 
 <?php
-    echo '<div id="answer"> </div>';
 
-    $teachers = $db->getTeachers();
-    echo <<<_TABLEHEAD
+if (isset($_GET['success']) && $_GET['success'] == "true" && isset($_GET['ssn'])) {
+  echo <<<_SUCCESS
+  <div id="answer"> <div class="alert alert-success alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong><span class="glyphicon glyphicon-send"></span> 
+  Success! $_GET[ssn] has been correctly deleted.</strong></div></div>
+_SUCCESS;
+} else
+  echo '<div id="answer"> </div>';
+
+$teachers = $db->getTeachers();
+echo <<<_TABLEHEAD
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">SSN</th>
                 <th scope="col">NAME</th>
                 <th scope="col">SURNAME</th>
@@ -233,17 +262,15 @@ $db = new dbAdmin();
         <tbody>
 _TABLEHEAD;
 $i = 1;
-    foreach($teachers as $teacher){
-    if($teacher['principal'] == 1){
-        $princ = 'PRINCIPAL';
-    }
-    else $princ = '';
-    $ssn = $teacher['codFisc'];
-    $name = $teacher['name'];
-    $surname = $teacher['surname'];
-    echo <<<_ROWS
+foreach ($teachers as $teacher) {
+  if ($teacher['principal'] == 1) {
+    $princ = 'PRINCIPAL';
+  } else $princ = '';
+  $ssn = $teacher['codFisc'];
+  $name = $teacher['name'];
+  $surname = $teacher['surname'];
+  echo <<<_ROWS
                 <tr>
-                    <th scope="row" class="text-center">$i</th>
                     <td class="text-center">$ssn</td>
                     <td class="text-center">$name</td>
                     <td class="text-center">$surname</td>
@@ -252,12 +279,12 @@ $i = 1;
                     <td class="text-center"><button type="button" id="trashButton$i" class="btn btn-danger btn-lg" onclick='trashButtonClicked(this,"$ssn")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                 </tr>
 _ROWS;
-    $i++;
-    }
-    echo "</tbody>
+  $i++;
+}
+echo "</tbody>
     </table>";
 
-      echo <<<_MODAL
+echo <<<_MODAL
           <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myEntrancelabel">
               <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -294,39 +321,39 @@ _ROWS;
                                     </thead>
                                     <tbody>
 _MODAL;
-                        $rowsClassSubject = $db->getClassSubject($ssn);    
-                        $j=1; 
-                        foreach($rowsClassSubject as $row){
-                            $class = $row['classID'];
-                            $subject = $row['subject'];
-                            echo <<<_CLASS_SUBJECT
+$rowsClassSubject = $db->getClassSubject($ssn);
+$j = 1;
+foreach ($rowsClassSubject as $row) {
+  $class = $row['classID'];
+  $subject = $row['subject'];
+  echo <<<_CLASS_SUBJECT
                                         <tr id="tr_$j">
                                             <td class="text-center">$class</td>
                                             <td class="text-center">$subject</td>
                                             <td class="text-center"><button type="button" id="trashButtonClassSubject_$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                                         </tr>
 _CLASS_SUBJECT;
-                            $j++;
-                            }
-                            echo <<<_LASTROW
+  $j++;
+}
+echo <<<_LASTROW
                             <tr id="rowPlus">
                             <td class='text-center'><select id='selectedClass'>
 _LASTROW;
-                            $classes = $db->getClasses();    
-                            foreach($classes as $c){
-                                $c = $c['classID'];
-                                echo "<option value=$c>$c</option>";
-                            }
-                            echo"</select> </td>";
+$classes = $db->getClasses();
+foreach ($classes as $c) {
+  $c = $c['classID'];
+  echo "<option value=$c>$c</option>";
+}
+echo "</select> </td>";
 
-                            $subjects = $db->getSubjects();  
-                            echo"<td class='text-center'><select id='selectedSubject'>";
-                            foreach($subjects as $s){
-                                $s = $s['name'];
-                                echo "<option value=$s>$s</option>";
-                            }
-                            // HO il dubbio che $ssn passato alla funzione addClassSubjectFunction non sia quello del professore di cui si è cliccato il tasto "modifica", ma semplicemente l'ultimo professore stampato dal foreach
-                            echo <<<_ENDMODAL
+$subjects = $db->getSubjects();
+echo "<td class='text-center'><select id='selectedSubject'>";
+foreach ($subjects as $s) {
+  $s = $s['name'];
+  echo "<option value=$s>$s</option>";
+}
+// HO il dubbio che $ssn passato alla funzione addClassSubjectFunction non sia quello del professore di cui si è cliccato il tasto "modifica", ma semplicemente l'ultimo professore stampato dal foreach
+echo <<<_ENDMODAL
                             </select></td>
                             
                             <td class="text-center"><button type="button" id="addClassSubject" class="btn btn-success btn-lg" onclick='addClassSubjectFunction(this, "$ssn")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>

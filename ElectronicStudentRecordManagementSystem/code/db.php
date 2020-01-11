@@ -173,7 +173,7 @@ class db
 
         $user = $this->sanitizeString($user);
 
-        if ($first_time) 
+        if ($first_time)
             return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw', firstLogin=0 WHERE email='$user'");
 
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
@@ -352,7 +352,7 @@ class dbAdmin extends db
 
     public function getClasses()
     {
-        return $this->query("SELECT classID FROM classes ORDER BY classID");
+        return $this->query("SELECT classID FROM Classes ORDER BY classID");
     }
 
     public function insertInternalCommunication($class, $title, $text)
@@ -375,23 +375,89 @@ class dbAdmin extends db
         return $this->query("INSERT INTO internalCommunications VALUES('$newID', '$class', CURRENT_TIMESTAMP, '$title', '$text') ");
     }
     //NEEDS TO BE TESTED
-    public function deleteTeacher($ssn){
+    /**
+     * This function has the aim of removing the information about a teacher in tables Teachers and TeacherClassSubjectTable
+     * The remove is possible if:
+     *  1) He is not a coordinator
+     *  2) There is another professor that can substitute the one that is removed in the same class for the same subject.
+     *  3) 
+     * 
+     */
+    public function deleteTeacher($ssn)
+    {
 
         $ssn = $this->sanitizeString($ssn);
-        
-        return false;
+
+        //WE NEED TO CANCEL THE INFORMATION ABOUT A TEACHER IF AND ONLY IF:
+        /*
+        1) He is not a coordinator
+        2) There is another professor that can substitute the one that is removed in the same class for the same subject.
+        3) 
+        */
+        $this->begin_transaction();
+        // Check if he is a coordinator
+        $coordinatorCheck = $this->query("SELECT COUNT(*) FROM Classes WHERE coordinatorSSN = $ssn");
+        if ($coordinatorCheck == 0) {
+            // The teacher is not a coordinator
+            // Check if he is the only one to teach that particular subject in that particular class
+            // First you have to retrieve all the subjects teached by that particular teacher from TeacherClassSubjectTable
+            $list_class_subject = $this->query("SELECT `classID`, `subject` FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn' ");
+
+
+            foreach ($list_class_subject as $class_subject) {
+
+                // For each class and subject we have to check if there is at least another prof that teaches that subject
+                $numberOfTeacherThatTeachesSubjectInClass = $this->query("SELECT COUNT(*) FROM `TeacherClassSubjectTable` WHERE `codFisc` <> '$ssn' AND `classID` = '$class_subject[classID]' AND `subject` = '$class_subject[subject]'");
+
+                if ($numberOfTeacherThatTeachesSubjectInClass == '0') {
+                    // canBeRemoved = false;
+                    $this->rollback();
+                    return false;
+                }
+            }
+
+            // The teacher can be removed: Teachers , TeacherClassSubjectTable, 
+
+            if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'") && $this->query("DELETE FROM `Teachers` WHERE `codFisc` = '$ssn'")) {
+                $this->commit();
+                return true;
+            } else {
+                $this->rollback();
+                return false;
+            }
+        } else {
+            $this->rollback();
+            return false;
+        }
+    }
+
+    //NEEDS TO BE TESTED
+    /**
+     * The aim of deleteSubjectTeachedInAClassByATeacher is to remove the information about the subject that is teached by a teacher in a particular class
+     * 
+     */
+    public function deleteSubjectTeachedInAClassByATeacher($ssn, $classID, $subject)
+    {
+
+        $ssn = $this->sanitizeString($ssn);
+        $classID = $this->sanitizeString($classID);
+        $subject = $this->sanitizeString($subject);
     }
     //NEEDS TO BE TESTED
-    public function getTeachers(){
+    public function getTeachers()
+    {
         return $this->query('SELECT * FROM Teachers');
     }
     //NEEDS TO BE TESTED
-    public function getClassSubject($ssn){
+    public function getClassSubject($ssn)
+    {
+        $ssn = $this->sanitizeString($ssn);
         $query = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$ssn'";
         return $this->query($query);
     }
     //NEEDS TO BE TESTED
-    public function getSubjects(){
+    public function getSubjects()
+    {
         return $this->query("SELECT name FROM Subjects");
     }
 
@@ -577,7 +643,7 @@ class dbAdmin extends db
             $hour = $line[1];
             $subject = $line[2];
 
-            if($subject === "-")
+            if ($subject === "-")
                 continue;
 
             // Sanitize
@@ -586,7 +652,7 @@ class dbAdmin extends db
             $subject = $this->sanitizeString($subject);
 
             $checkResult = $this->checkIfTeacherHasLesson($day, $hour, $subject, $class);
-            if(!$checkResult){
+            if (!$checkResult) {
                 $this->rollback();
                 return 0;
             }
@@ -630,7 +696,8 @@ class dbAdmin extends db
     }
 
     //TESTED
-    public function checkIfTeacherHasLesson($day, $hour, $subject, $classID){
+    public function checkIfTeacherHasLesson($day, $hour, $subject, $classID)
+    {
         /*
         *  Funzione che controlla se una teacher ha già lezione in una classe ad una certa ora di un certo giorno della settimana
         *  Ritorno: false ---> la teacher ha già lezione in una certa classe (quindi non può tenere due lezioni in due posti diversi contemporaneamente)
@@ -655,13 +722,13 @@ class dbAdmin extends db
             if (!$result1) {
                 // error
                 return false;
-            }   
+            }
             if ($result1->num_rows > 0) {
                 // For each (classID, subject)... 
                 while (($row1 = $result1->fetch_array(MYSQLI_ASSOC)) != NULL) {
                     $currentClass = $row1["classID"];
                     $currentSubject = $row1["subject"];
-                    if($currentClass == $classID && $currentSubject == $subject){
+                    if ($currentClass == $classID && $currentSubject == $subject) {
                         continue;
                     }
 
@@ -679,12 +746,11 @@ class dbAdmin extends db
                     }
                 }
             }
-
         } else {
             // error
             return false;
         }
-        
+
         return true;
     }
 }
@@ -873,7 +939,7 @@ class dbParent extends db
                 $value = "absent";
             } elseif ($row["lateEntry"] != 0 && $row["earlyExit"] != 0) {
                 // student both entered late and exited early
-                $value = "late and early - ". strval($row["lateEntry"]) . " - " . strval($row["earlyExit"]);
+                $value = "late and early - " . strval($row["lateEntry"]) . " - " . strval($row["earlyExit"]);
             } elseif ($row["lateEntry"] != 0) {
                 //entered late
                 $value = "late - " . strval($row["lateEntry"]);
@@ -1062,7 +1128,7 @@ class dbParent extends db
          * This function returns an array as "YYYY-MM-DD" => "teacherMeetings", in order to be used in the calendar functions
          *  @param $CodFisc: the SSN of the teacher
          */
- 
+
         $CodFisc = $this->sanitizeString($CodFisc);
 
         $query = "SELECT DISTINCT `day` FROM `ParentMeetings` WHERE teacherCodFisc='$CodFisc'";
@@ -1080,10 +1146,11 @@ class dbParent extends db
     }
 
     //NEW
-    public function getTeachersByChild($codFisc){
+    public function getTeachersByChild($codFisc)
+    {
         //This functions returns array of teacher who teach in a given child class
 
-        $codFisc=$this->sanitizeString($codFisc);
+        $codFisc = $this->sanitizeString($codFisc);
 
         $authorised = $this->checkIfAuthorisedForChild($codFisc);
 
@@ -1092,25 +1159,24 @@ class dbParent extends db
             return false;
         }
 
-        $class=$this->getChildClass($codFisc);
+        $class = $this->getChildClass($codFisc);
 
 
         $query = "SELECT DISTINCT t.codFisc, t.surname, t.name FROM teacherclasssubjecttable AS s, teachers AS t WHERE s.classID='$class' AND s.codFisc=t.codFisc";
         $result = $this->query($query);
         if (!$result)
             return false;
-        
-        $ret=array();
-        $i=0;
+
+        $ret = array();
+        $i = 0;
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
-                $ret[$i]["codFisc"]=$row["codFisc"];
-                $ret[$i]["surname"]=$row["surname"];
-                $ret[$i]["name"]=$row["name"];
-                $i++;
+            $ret[$i]["codFisc"] = $row["codFisc"];
+            $ret[$i]["surname"] = $row["surname"];
+            $ret[$i]["name"] = $row["name"];
+            $i++;
         }
 
         return $ret;
-
     }
 
     //NEED TO BE TESTED
@@ -2122,7 +2188,7 @@ class dbTeacher extends db
             }
         } else {
             // The ($codFisc, $day, $slotNb) is not in the DB => insert the row => "#b3ffcc" has to be returned
-            for($i=1; $i<=4; $i++){
+            for ($i = 1; $i <= 4; $i++) {
                 $query2 = "INSERT INTO `ParentMeetings`(`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES('$codFisc','$day',$nb,$i,'')";
                 $result2 = $this->query($query2);
                 if (!$result2) {
@@ -2130,7 +2196,7 @@ class dbTeacher extends db
                     return "error";
                 }
             }
-            
+
             $color = "lightgreen";
         }
 
@@ -2142,28 +2208,29 @@ class dbTeacher extends db
 
         return $color;
     }
-	
-	//TESTED
-	function isCoordinator($codTeacher, $class) {
-		
+
+    //TESTED
+    function isCoordinator($codTeacher, $class)
+    {
+
         $codTeacher = $this->sanitizeString($codTeacher);
-		$class = $this->sanitizeString($class);
-		
-		 $result = $this->query("SELECT * FROM Classes WHERE classID='$class' AND coordinatorSSN='$codTeacher'");
+        $class = $this->sanitizeString($class);
+
+        $result = $this->query("SELECT * FROM Classes WHERE classID='$class' AND coordinatorSSN='$codTeacher'");
 
         if (!$result)
             die("Unable to select coordinator");
 
         if ($result->num_rows > 0) {
-			return true;
-		} 
-		
-		return false;
+            return true;
+        }
 
+        return false;
     }
 
     //TESTED
-    public function retrieveTimetableOfAClass($class, $teacherSSN) {
+    public function retrieveTimetableOfAClass($class, $teacherSSN)
+    {
 
         // Returns the timetable of a certain class in the form | hour, mon, tue, wed, thu, fri |
 
@@ -2171,10 +2238,10 @@ class dbTeacher extends db
         $teacherSSN = $this->sanitizeString($teacherSSN);
         $timetableToReturn = array();
         $authorized = true;
-        
+
         // Check if the teacher is authorized to see the timetable of the requested class
         $authorized = $this->checkIfAuthorized($class, $teacherSSN);
-        if($authorized){
+        if ($authorized) {
 
             $result = $this->query("SELECT * FROM Timetable WHERE classID='$class'");
 
@@ -2191,17 +2258,18 @@ class dbTeacher extends db
                     $timetableToReturn[$hour][$day] = $subject;
                 }
             }
-        } 
+        }
 
         return $timetableToReturn;
     }
 
     //TESTED
-    public function checkIfAuthorized($class, $teacherSSN){
+    public function checkIfAuthorized($class, $teacherSSN)
+    {
         // Check if a certain teacher teaches in a specified class
         // Return true if the teacher has lessons in that class
         //        false if the teacher has no lessons in that class
-        
+
         $class = $this->sanitizeString($class);
         $teacherSSN = $this->sanitizeString($teacherSSN);
 
@@ -2225,19 +2293,19 @@ class dbTeacher extends db
 
         $teacherSSN = $this->sanitizeString($teacherSSN);
         $timetableToReturn = array();
-        
+
         // Initialization of the timetable: filling it with all '-'
         $days = array("mon", "tue", "wed", "thu", "fri");
-        for($i=1; $i<=6; $i++){
-            for($j=0; $j<5; $j++){
+        for ($i = 1; $i <= 6; $i++) {
+            for ($j = 0; $j < 5; $j++) {
                 $timetableToReturn[$i][$days[$j]] = "-";
             }
         }
-        
+
         // Check if the teacher exists in the DB
         $exist = $this->checkIfExist($teacherSSN);
 
-        if($exist){
+        if ($exist) {
 
             // Select the subjects teached by the teacher 
             $result0 = $this->query("SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$teacherSSN'");
@@ -2261,14 +2329,14 @@ class dbTeacher extends db
                             $subject = $lecture["subject"];
                             $timetableToReturn[$hour][$day] = "$subject in class $class";
                         }
-                    }    
+                    }
                 }
-            } 
+            }
         } else {
             // Empty the timetable to report an error
             $timetableToReturn = array();
         }
-        
+
         return $timetableToReturn;
     }
 
@@ -2296,8 +2364,8 @@ class dbTeacher extends db
 	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
-		$class = $this->sanitizeString($class);
-		$subject = $this->sanitizeString($subject);
+        $class = $this->sanitizeString($class);
+        $subject = $this->sanitizeString($subject);
 
 
         $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class' AND subject='$subject' ORDER BY date DESC");
