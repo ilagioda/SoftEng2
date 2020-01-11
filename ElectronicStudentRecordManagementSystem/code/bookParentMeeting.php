@@ -239,13 +239,13 @@ require_once("db.php");
                         } else if (freeOrNotFree === "selected") {
                             color = "yellow";
                         } else if (freeOrNotFree === "full") {
-                            color = "darkred";
+                            color = "lightred";
                         }
 
                         var s = i + 1;
                         var q = j + 1;
                         if (freeOrNotFree !== "no" && freeOrNotFree !== "full") {
-                            str += "<td class='" + color + "' id='" + selecteddate + "_" + s + "_" + q + "' onclick='provideSlotParentMeetings(this)'>" + quarters[i][j] + "</td>";
+                            str += "<td class='pointer " + color + "' id='" + selecteddate + "_" + s + "_" + q + "' onclick='provideSlotParentMeetings(this)'>" + quarters[i][j] + "</td>";
                         } else {
                             str += "<td class='" + color + "' id='" + selecteddate + "_" + s + "_" + q + "'>" + quarters[i][j] + "</td>";
                         }
@@ -267,6 +267,10 @@ require_once("db.php");
         var slotNb = arr[1];
         var quarterNb = arr[2];
 
+        // Check if called by a lightred slot
+        if(element.classList.contains("lightred"))
+            return;
+
         $.post("bookParentMeetingBE.php", ({
             'mailPARENT': parentMail,
             'codFiscTEACHER': teacherSSN,
@@ -285,19 +289,27 @@ require_once("db.php");
 
                 if (calendarElement == undefined) return; // the user has already changed window
 
+                // Change the color
+                if(element.classList.contains("lightgreen")){
+                    element.classList.remove("lightgreen");
+                } else if (element.classList.contains("yellow")){
+                    element.classList.remove("yellow");
+                }
+                element.classList.add(text);  
+             
+                // Remove the cursor pointer if the slot is turning to lightred
+                if(element.classList.contains("lightred")){
+                    element.classList.remove("pointer");
+                }
+                
                 if (text == alreadyProvidedColor) {
-                    element.classList.add(text);    // element should have the right color
-
                     if (calendarElement.classList.contains(alreadyProvidedColor)) return; // the element of the table is already ok
                     calendarElement.classList.add(text);
-
                 } else {
-                    element.classList.remove(alreadyProvidedColor); // element should have the right color
 
                     for (let i = 1; i <= 6; i++) {
                         for (let j = 1; j <= 4; j++) {
                             // check if there are other slots in the same day
-
                             let row = document.getElementById(rootID + "_" + i + "_" + j);
 
                             if (row == undefined || row.classList.contains(alreadyProvidedColor)) {
@@ -338,7 +350,7 @@ if(isset($_REQUEST["teacher"])){
                     <table class='table table-bordered text-center'>
                     <tr><td></td><td>Slot not available for parent meetings</td></tr>
                     <tr><td class='lightgreen'></td><td>Slot available</td></tr>
-                    <tr><td class='darkred'></td><td>Slot occupied by another parent</td></tr>
+                    <tr><td class='lightred'></td><td>Slot occupied by another parent</td></tr>
                     <tr><td class='yellow'></td><td>Slot already selected by you</td></tr>
                     </table>
                     Click on a date and select a slot to book a meeting with the teacher!
