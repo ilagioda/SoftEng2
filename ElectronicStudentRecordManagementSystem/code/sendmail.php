@@ -18,6 +18,11 @@ function generateRandomString($length = 10) {
     return $randomString;
 }
 
+if (!filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) {
+    // FIXME: change the action
+    die("invalid mail address");
+}
+
 $to_address = $_POST['mail'];
 
 // echo "my to-address is ".$to_address;
