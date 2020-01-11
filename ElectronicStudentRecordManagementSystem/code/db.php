@@ -2185,7 +2185,7 @@ class dbTeacher extends db
         }
     }
     
-    // NEED TO BE TESTED !!!
+    //TESTED
     public function retrieveTimetableTeacher($teacherSSN) {
 
         // Returns the timetable of a certain teacher in the form | hour, mon, tue, wed, thu, fri |
@@ -2240,7 +2240,7 @@ class dbTeacher extends db
         return $timetableToReturn;
     }
 
-    // NEED TO BE TESTED !!!
+    //TESTED
     public function checkIfExist($teacherSSN){
         // Check if a certain teacher exists in the DB
         // Return true if the teacher exists in the DB

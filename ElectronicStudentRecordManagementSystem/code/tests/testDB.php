@@ -658,8 +658,11 @@ final class dbTest extends TestCase
         $res = $db->viewSlotsAlreadyProvided("TEA");
         $this->assertSame("teacherMeetings", $res["1996-07-25"]);
 
-        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,'')");
-        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-12-11',1,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,1,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,2,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,3,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,4,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-12-11',1,0,'')");
 
         $res = $db->viewSlotsAlreadyProvided("TEA");
         $this->assertSame("teacherMeetings", $res["1996-07-25"]);
@@ -684,9 +687,12 @@ final class dbTest extends TestCase
             $this->assertStringContainsString("free", $var[$i]);
         }
 
-        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,'')");
-        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',2,'')");
-        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',3,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,1,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,2,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,3,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',1,4,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',2,1,'')");
+        $db->queryForTesting("INSERT INTO ParentMeetings VALUES('TEA','2019-10-11',3,3,'')");
 
         $var = explode(",", $db->showParentMeetingSlotsOfTheDay("TEA", "2019-10-11", 1));
 
@@ -1443,29 +1449,46 @@ final class dbTest extends TestCase
         //preparing DB
         $db->queryForTesting("DELETE FROM Timetable");
 
-        $class="1A";
         $array=array();
         
-        //class has no timetable -> expected empty array
-        $result=$db->retrieveTimetableTeacher($class, $_SESSION['user']);
+        //teacher does not exists in db -> expected empty array
+        $result=$db->retrieveTimetableTeacher("wrong");
         $this->assertSame($array, $result);
 
-        //teacher has no right to see class timetable -> expected empty array
-        $class="1B";
-        $result=$db->retrieveTimetableTeacher($class, $_SESSION['user']);
+        //teacher has no timetable -> expected array filled with '-'
+        for($i=1; $i<=6; $i++){
+            $array[$i]["mon"]='-';
+            $array[$i]["tue"]='-';
+            $array[$i]["wed"]='-';
+            $array[$i]["thu"]='-';
+            $array[$i]["fri"]='-';
+        }
+        $result=$db->retrieveTimetableTeacher($_SESSION['user']);
         $this->assertSame($array, $result);
 
-        $db->queryForTesting("INSERT INTO `timetable` (`classID`, `day`, `hour`, `subject`) VALUES ('1A', 'Mon', '1', 'Physics'), ('1B', 'Mon', '2', 'History')");
-
-        //class has timetable and teacher can see it -> expected filled array in the format [hour][day]="subject"
-        $class="1A";
-        $array[1]["Mon"]="Physics";
-        $result=$db->retrieveTimetableTeacher($class, $_SESSION['user']);
+        //teacher has timetable -> expected filled array in the format [hour][day]="*subject* in class *class*"
+        $db->queryForTesting("INSERT INTO `timetable` (`classID`, `day`, `hour`, `subject`) VALUES ('1A', 'mon', '1', 'Physics'), ('1B', 'Mon', '2', 'History')");
+        $array[1]["mon"]="Physics in class 1A";
+        $result=$db->retrieveTimetableTeacher($_SESSION['user']);
         $this->assertSame($array, $result);
 
         //restoring DB
         $db->queryForTesting("DELETE FROM Timetable");
         
+    }
+
+    function testCheckIfExists(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //teache not in db -> expected false
+        $result=$db->checkIfExist("False");
+        $this->assertFalse($result);
+
+        //teacher in db -> expected true
+        $result=$db->checkIfExist("GNV");
+        $this->assertTrue($result);
     }
     
     function testCheckIfAuthorized(){
