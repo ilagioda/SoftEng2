@@ -26,7 +26,7 @@ $parent = new dbParent();
 
 <br><br>
 
-<form action="bookTeacherMeetingSlots.php" method="POST">
+<form action="bookParentMeeting.php" method="POST">
 <table class="table table-striped">
 
 <?php
