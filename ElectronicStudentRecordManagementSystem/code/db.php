@@ -394,21 +394,23 @@ class dbAdmin extends db
         2) There is another professor that can substitute the one that is removed in the same class for the same subject.
         3) 
         */
-        $this->begin_transaction();
         // Check if he is a coordinator
-        $coordinatorCheck = $this->query("SELECT COUNT(*) FROM Classes WHERE coordinatorSSN = $ssn");
-        if ($coordinatorCheck == 0) {
+        //$coordinatorCheck = $this->query("SELECT * FROM Classes WHERE coordinatorSSN = '$ssn'");
+        //$coordinatorCheck = $coordinatorCheck->num_rows;
+        //if ($coordinatorCheck == 0) {
             // The teacher is not a coordinator
             // Check if he is the only one to teach that particular subject in that particular class
             // First you have to retrieve all the subjects teached by that particular teacher from TeacherClassSubjectTable
+            $this->begin_transaction();
+
             $list_class_subject = $this->query("SELECT `classID`, `subject` FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn' ");
 
 
             foreach ($list_class_subject as $class_subject) {
 
                 // For each class and subject we have to check if there is at least another prof that teaches that subject
-                $numberOfTeacherThatTeachesSubjectInClass = $this->query("SELECT COUNT(*) FROM `TeacherClassSubjectTable` WHERE `codFisc` <> '$ssn' AND `classID` = '$class_subject[classID]' AND `subject` = '$class_subject[subject]'");
-
+                $numberOfTeacherThatTeachesSubjectInClass = $this->query("SELECT * FROM `TeacherClassSubjectTable` WHERE `codFisc` <> '$ssn' AND `classID` = '$class_subject[classID]' AND `subject` = '$class_subject[subject]'");
+                $numberOfTeacherThatTeachesSubjectInClass = $numberOfTeacherThatTeachesSubjectInClass->num_rows;
                 if ($numberOfTeacherThatTeachesSubjectInClass == '0') {
                     // canBeRemoved = false;
                     $this->rollback();
@@ -418,17 +420,17 @@ class dbAdmin extends db
 
             // The teacher can be removed: Teachers , TeacherClassSubjectTable, 
 
-            if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'") && $this->query("DELETE FROM `Teachers` WHERE `codFisc` = '$ssn'")) {
+            if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'") && $this->query("DELETE FROM `Teachers` WHERE `codFisc` = '$ssn'") &&  $this->query("DELETE FROM `Classes` WHERE `coordinatorSSN` = '$ssn'")) {
                 $this->commit();
                 return true;
             } else {
                 $this->rollback();
                 return false;
             }
-        } else {
+/*         } else {
             $this->rollback();
             return false;
-        }
+        } */
     }
 
     //NEEDS TO BE TESTED

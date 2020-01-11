@@ -158,8 +158,7 @@ $db = new dbAdmin();
       function(data, status) {
         if (data == 1) {
           // alert(data);
-          document.getElementById("answer").innerHTML = document.getElementById("answer").innerHTML + '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Success!' + ssn + ' has been correctly deleted.</strong></div>';
-
+          window.location.replace('manageTeachers.php?success=true&ssn='+ssn);
         } else {
           // alert(data);
           document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
@@ -245,6 +244,8 @@ if (isset($_GET['success']) && $_GET['success'] == "true" && isset($_GET['ssn'])
   <strong><span class="glyphicon glyphicon-send"></span> 
   Success! $_GET[ssn] has been correctly deleted.</strong></div></div>
 _SUCCESS;
+$_GET['success'] = "";
+$_GET['ssn'] = "";
 } else
   echo '<div id="answer"> </div>';
 
