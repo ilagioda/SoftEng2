@@ -23,7 +23,7 @@ if(!isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['year']) || !isset($_
         echo "not an ajax request";
         exit;
     } else {
-        if(!isset($_REQUEST['slotNb'])){
+        if(!isset($_REQUEST['slotNb']) || !isset($_REQUEST['quarterNb'])){
             // Ajax request coming from showDaySlots() 
             $db = new dbParent();
             $mailPARENT = $_REQUEST['mailPARENT'];
@@ -38,6 +38,7 @@ if(!isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['year']) || !isset($_
             $codFiscTEACHER = $_REQUEST['codFiscTEACHER'];
             $day = $_REQUEST['day'];
             $slotNb = $_REQUEST['slotNb'];
+            $quarterNb = $_REQUEST['quarterNb'];
             $color = $db->provideSlot($codFisc, $day, $slotNb);    // TODO questa 2
             echo $color;
         }
