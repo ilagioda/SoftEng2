@@ -16,108 +16,16 @@ if (!$loggedin) {
 
 require_once("db.php");
 $db = new dbAdmin();
+
+
+
+
+
 ?>
 <script>
   $(document).ready(function() {
-
-    $("#saveButton").click(function() {
-      // Fill the modal with the student information
-
-      // var name = $("#teacherName").text();
-      // var surname = $("#teacherSurname").text();
-      var ssn = $("#teacherSSN").text();
-      var classID = $("#modal-Class").text();
-      var note = $("#note").val();
-      var hour = $("#hour").val();
-      var selectedSubject = $("#selectSubject").val();
-
-      // alert(name);
-      // alert(surname);
-      // alert(ssn);
-      // alert(classID);
-      // alert(note);
-      // alert(hour);
-
-      // INSERISCI NEL DB LA NOTA
-      $.post("manageTeacherBackEnd.php", {
-          event: "add",
-          codFisc: ssn,
-          name: name,
-          surname: surname,
-          principal: principal
-        },
-        function(data, status) {
-          if (data == 1) {
-            alert("");
-          } else {
-            alert("Sorry something has gone wrong, try later.");
-          }
-          // alert(data);
-        });
-
-      // Dismiss manually the modal window
-      $('#modal').modal('hide');
-
-
-    });
-
-    $("#modify").click(function() {
-      // Fill the modal with the student information
-
-      // var name = $("#teacherName").text();
-      // var surname = $("#teacherSurname").text();
-      var ssn = $("#teacherSSN").text();
-      var classID = $("#modal-Class").text();
-      var selectedSubject = $("#selectSubject").val();
-
-      // INSERISCI NEL DB LA NOTA
-      $.post("manageTeacherBackEnd.php", {
-          event: "add",
-          codFisc: ssn,
-          name: name,
-          surname: surname,
-          principal: principal
-        },
-        function(data, status) {
-          if (data == 1) {
-            alert("");
-          } else {
-            alert("Sorry something has gone wrong, try later.");
-          }
-          // alert(data);
-        });
-
-      // Dismiss manually the modal window
-      $('#modal').modal('hide');
-
-
-    });
-
     $("#cancelButton").click(function() {
 
-      var ssn = $("#teacherSSN").text();
-      var classID = $("#modal-Class").text();
-      var note = $("#note").val();
-      var hour = $("#hour").val();
-      var selectedSubject = $("#selectSubject").val();
-      //RIMUOVI LA NOTA
-
-      $.post("manageTeacherBackEnd.php", {
-          event: "remove",
-          codFisc: ssn,
-          name: name,
-          surname: surname,
-          principal: principal
-
-        },
-        function(data, status) {
-          if (data == 1) {
-            alert("All the discplinar notes written by you in the selected subject were removed.");
-          } else {
-            alert("Sorry something has gone wrong, try later.");
-          }
-          // alert(data);
-        });
 
       // Dismiss manually the modal window
       $('#modal').modal('hide');
@@ -206,7 +114,7 @@ $db = new dbAdmin();
           var whereToAdd = lastChildIndex;
           table.deleteRow(lastChildIndex);
           newRow = table.insertRow(whereToAdd);
-          newRow.id = "tr_" + selectedClass+"_"+selectedSubject;
+          newRow.id = "tr_" + selectedClass + "_" + selectedSubject;
           var cell0 = newRow.insertCell(0);
           var cell1 = newRow.insertCell(1);
           var cell2 = newRow.insertCell(2);
@@ -219,11 +127,13 @@ $db = new dbAdmin();
           cell2.className = "text-center";
           // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
           cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-          document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click",function(){ trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject); });
+          document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click", function() {
+            trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject);
+          });
           table.append(lastRow);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! Tuple has been correctly added.</strong></div>';
 
-        }else {
+        } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot add this element. </strong></div>';
         }
       });
@@ -256,6 +166,20 @@ $db = new dbAdmin();
 
 
 <?php
+if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST["teacherSurname"])) {
+
+  $red = false;
+  if (isset($_POST["teacherPrincipal"])) {
+    $red = true;
+  }
+
+  echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " " . $_POST['teacherPrincipal'];
+  $teacherSSN = $_POST['teacherSSN'];
+  $teacherName = $_POST['teacherName'];
+  $teacherSurname =  $_POST['teacherSurname'];
+
+  $db->updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red);
+}
 echo '<div id="answer"> </div>';
 
 $teachers = $db->getTeachers();
@@ -304,40 +228,41 @@ echo <<<_MODAL
                       </div>
                       <div class="modal-body">
                         <div id="answerModal"> </div>
-                          <form class="form-horizontal attendanceForm">
+                          <form class="form-horizontal" action="manageTeachers.php" method="POST">
                             <div class="form-group text-center">
                                 <label class="control-label text-center">SSN:</label>
                                  <div>
-                                    <input type="text" class="form-control manageTeachers text-center" id="teacherSSN">
+                                    <input type="text" class="form-control manageTeachers text-center" name="teacherSSN" id="teacherSSN">
                                 </div>
                             </div>
                             <div class="form-group text-center">
                                   <label control-label text-center">Name:</label>
                                   <div>
-                                      <input type="text" class="form-control manageTeachers text-center" id="teacherName">
+                                      <input type="text" class="form-control manageTeachers text-center" name="teacherName" id="teacherName">
                                   </div>
                             </div>
                             <div class="form-group text-center">
                                   <label class="control-label text-center">Surname:</label>
                                   <div>
-                                      <input type="text" class="form-control manageTeachers text-center" id="teacherSurname">
+                                      <input type="text" class="form-control manageTeachers text-center" name="teacherSurname" id="teacherSurname">
                                   </div>
                             </div>
                             <div id="tableModal">
                             </div>
 
                             <div class="form-group text-center">
-                              <label class="control-label text-center">Principal:</label>
+                              <label class="control-label text-center" for="teacherPrincipal">Principal:</label>
                               <div>
-                                <label class="switch"><input type="checkbox" id="teacherPrincipal"><span class="slider round"></span></label>
+                                <label class="switch"><input type="checkbox" class="form-control" name="teacherPrincipal" id="teacherPrincipal" value="false"><span class="slider round"></span></label>
                             </div>
                           </div>
-                          </form>
+                         
                       </div>
                       <div class="modal-footer">
                           <button type="button" id="cancelButton" class="btn btn-danger col-xs-3 col-md-offset-3">Cancel</button>
-                          <button type="button" id="saveButton" class="btn btn-primary col-xs-3" style="margin-top: 0px">Save changes</button>
-                          </div>
+                          <button type="Submit" id="saveButton" class="btn btn-primary col-xs-3" style="margin-top: 0px">Save changes</button>
+                          </div> 
+                      </form>
                   </div>
               </div>
           </div>
@@ -345,5 +270,4 @@ _MODAL;
 
 
 require_once("defaultFooter.php");
-
 ?>
