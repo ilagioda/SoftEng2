@@ -161,6 +161,9 @@ require_once("db.php");
     }
 
     function showDaySlots(selecteddate) {
+
+        var pressableClass = "pointer";
+
         var old_date = document.getElementById("date").innerHTML;
         document.getElementById("daySlots").innerHTML = "";
 
@@ -208,10 +211,10 @@ require_once("db.php");
 
                     // str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
                     var slotNb = i + 1;
-                    if (freeOrNotFree !== "lesson") {
-                        str += "<tr><td class='" + color + "' id='" + selecteddate + "_" + slotNb + "' onclick='provideSlotParentMeetings(this)'>" + hours[i] + "</td></tr>";
-                    } else {
+                    if (freeOrNotFree === "lesson") {
                         str += "<tr><td class='" + color + "' id='" + selecteddate + "_" + slotNb + "'>" + hours[i] + "</td></tr>";
+                    } else {
+                        str += "<tr><td class='" + pressableClass + " " + color + "' id='" + selecteddate + "_" + slotNb + "' onclick='provideSlotParentMeetings(this)'>" + hours[i] + "</td></tr>";
                     }
                 }
 

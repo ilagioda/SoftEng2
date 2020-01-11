@@ -17,6 +17,16 @@ if (!$loggedin) {
 }	
 	require_once("classTeacher.php");
 	require_once("db.php");
+	require_once("functions.php");
+	
+	$days = getCurrentSemester();
+
+	if($days) {
+		$now = new DateTime('now');
+		$beginSemester = $days[0];
+		$endSemester = $days[1];
+	} // else --> summer holidays 
+
 
 	$teacher=new Teacher();
 	$db = new dbTeacher();
@@ -154,7 +164,7 @@ function modalEdit(obj) {
 		</tr></thead>
 		<tbody>
 <?php
-		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $subject);
+		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $subject, $beginSemester, $endSemester);
 		foreach((array)$lectures as $value) {
 				
 			$args = explode(",",$value);
@@ -164,28 +174,20 @@ function modalEdit(obj) {
 				
 ?>	
 		<tr>
-			<td> 	
-			
-			<?php echo $date;?></td>
-		<input type="hidden" name="lessontime" value="<?php echo $args[2];?>">
-
-			<td> <?php echo $hour;?></td>
-						<input type="hidden" name="comboHour" value="<?php echo $args[3];?>">
-
-			<td><?php echo $topics;?></td>
-						<input type="hidden" name="topics" value="<?php echo $args[4];?>">
-						
+			<td><?php echo $date;?></td>
+			<td><?php echo $hour;?></td>
+			<td><?php echo $topics;?></td>						
 			<td>
 			<?php
 				if($date >= date("Y-m-d", strtotime('monday this week')) && $date <= date("Y-m-d", strtotime('sunday this week'))) { 
 			?>
-				<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalEdit"
+				<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalEdit" style="width:20%"
 					<?php echo "data-class='$class' data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>
 					onclick="modalEdit(this)"> 
 					Edit
 				</button>
 							
-				<button type="button" class="btn btn-danger btn-xs"	data-toggle="modal" data-target="#modalDelete"
+				<button type="button" class="btn btn-danger btn-xs"	data-toggle="modal" data-target="#modalDelete" style="width:20%"
 					<?php echo "data-class='$class' data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>	
 					onclick="modalDelete(this)">
 					Delete

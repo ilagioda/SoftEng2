@@ -1621,6 +1621,32 @@ class dbTeacher extends db
             return $assignments;
         }
     }
+	
+		// NEW
+	public function getAssignmentsByClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
+    {
+
+		/* This function returns the assignments of a specific subject and class, within the current semester */
+        $codTeacher = $this->sanitizeString($codTeacher);
+        $class = $this->sanitizeString($class);
+        $subject = $this->sanitizeString($subject);
+        $beginSemester = $this->sanitizeString($beginSemester);
+        $endSemester = $this->sanitizeString($endSemester);
+
+        $result = $this->query("SELECT * FROM Assignments a, TeacherClassSubjectTable t WHERE t.codFisc='$codTeacher' 
+			AND t.subject = a.subject AND a.subject='$subject' AND a.classID='$class' AND a.date >= '$beginSemester' AND a.date <= '$endSemester' ORDER BY date DESC");
+
+        if (!$result)
+            die("Unable to select assignments.");
+
+        if ($result->num_rows > 0) {
+            $assignments = array();
+            while ($row = $result->fetch_assoc()) {
+                array_push($assignments,  $row['date'] . "," . $row['textAssignment'] . "," . $row['pathFilename']);
+            }
+            return $assignments;
+        }
+    }
 
 
     function insertNewAssignments($date, $class, $subject, $assignments)
@@ -2495,15 +2521,17 @@ class dbTeacher extends db
         }
     }
 
-    //TESTED
-    function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject)
+    //CHANGED
+	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
-        $class = $this->sanitizeString($class);
-        $subject = $this->sanitizeString($subject);
+		$class = $this->sanitizeString($class);
+		$subject = $this->sanitizeString($subject);
+		$beginSemester = $this->sanitizeString($beginSemester);
+		$endSemester = $this->sanitizeString($endSemester);
 
-
-        $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class' AND subject='$subject' ORDER BY date DESC");
+        $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class'
+				AND subject='$subject' AND date >= '$beginSemester' AND date <= '$endSemester'  ORDER BY date DESC");
 
         if (!$result)
             die("Unable to select lectures.");
