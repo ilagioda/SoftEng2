@@ -585,7 +585,6 @@ final class dbTest extends TestCase
 
     public function testViewChildFinalGrades()
     {
-
         $_SESSION['role'] = "parent";
         $_SESSION['user'] = "mrc@gmail.it";
         $db = new dbParent();
@@ -606,6 +605,59 @@ final class dbTest extends TestCase
         $this->assertSame(count($result), 2);
         $this->assertContains("Maths,10", $result);
         $this->assertContains("History,4", $result);
+    }
+
+    
+    public function testGetTeacherSlotsByDay(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "parent@parent.it";
+        $db = new dbParent();
+
+        //preparing db
+        $db->queryForTesting("DELETE FROM parentmeetings");
+
+        $array=array();
+
+        for($i=1; $i<=6; $i++){
+            for($j=1; $j<=4; $j++){
+                $array[$i][$j]="no";
+            }
+        }
+
+        $res="";
+        for($i=1; $i<=6; $i++){
+            for($j=1; $j<=4; $j++){
+                $res.=$i . "_" . $j . "_" . $array[$i][$j] . ",";
+            }
+        }
+
+        //no meetings, ecpexted string in form: 1_1_no, 1_2_no, ...
+        $day="2020-01-07";
+        $teacher="GNV";
+        $result=$db->getTeacherSlotsByDay($teacher, $day, $_SESSION['user']);
+        $this->assertSame($res, $result);
+
+        //inserting meetings
+        $db->queryForTesting("INSERT INTO `ParentMeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-07', '1', '1', 'parent@parent.it'), ('GNV', '2020-01-07', '1', '2', 'wrong'), ('GNV', '2020-01-07', '1', '3', ''), ('GNV', '2020-01-08', '1', '2', ''), ('PIPPO', '2020-01-07', '1', '1', 'parent@parent.it')");
+
+
+        $array[1][1]="selected";
+        $array[1][2]="full";
+        $array[1][3]="free";
+
+        $res="";
+        for($i=1; $i<=6; $i++){
+            for($j=1; $j<=4; $j++){
+                $res.=$i . "_" . $j . "_" . $array[$i][$j] . ",";
+            }
+        }
+
+        //meetings in db, expected string: hour_quarter_status,hour...
+        $result=$db->getTeacherSlotsByDay($teacher, $day, $_SESSION['user']);
+        $this->assertSame($res, $result);
+
+        //restoring DB
+        $db->queryForTesting("DELETE FROM parentmeetings");
     }
 
 

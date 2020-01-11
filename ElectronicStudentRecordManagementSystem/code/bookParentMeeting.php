@@ -164,7 +164,7 @@ require_once("db.php");
         updateCalendar();
     }
 
-    function showDaySlots(selecteddate) {           
+    function showDaySlots(selecteddate) {            // TODO ila - da fixare
         var old_date = document.getElementById("date").innerHTML;
         document.getElementById("daySlots").innerHTML = "";
 
@@ -186,38 +186,71 @@ require_once("db.php");
             if (text === "") {
                 // Error
                 window.alert("Oh no! Something went wrong...");
-            } else {        // TODO ila - da fixare
-                // "text" contains the slots availability in the form: "1_lesson,2_free,3_free,4_selected,5_selected,6_lesson"
+            } else {       
 
-                // Split the string and prepare an array
+                // "text" contains the slots availability in the form: "1_1_free,1_2_free,1_3_selected,1_4_selected,2_1_full..."
+
+                // Split the string and prepare a matrix (rows: slotNbs, columns: quarters)
                 var availability = [];
-                var arr = text.split(","); // After this split, we have an array (arr) in the form ["1_lesson" , "2_free", "3_free", "4_selected", "5_selected", "6_lesson"]
-                for (let i = 0; i < 6; i++) {
-                    var tmp = arr[i].split("_"); // After this split, we have an array (tmp) in the form ["1", "lesson"]
-                    availability[parseInt(tmp[0])] = tmp[1];
+                for(var i=0; i<6; i++) {
+                    availability[i] = new Array(4);
                 }
+                var arr = text.split(",");   // After this split, we have an array (arr) in the form ["1_1_free" , "1_2_free",...]
+                for(let i = 0; i<24; i++){
+                    var tmp = arr[i].split("_");    // After this split, we have an array (tmp) in the form ["1", "1", "free"]
+                    var slotNb = parseInt(tmp[0]);
+                    var quarter = parseInt(tmp[1]);
+                    var str = tmp[2];
+                    availability[slotNb-1][quarter-1] = str;
+                }
+
+                // Prepare a matrix with the quarter hours to be displayed
+                var quarters = [];
+                for(var i=0; i<6; i++) {
+                    quarters[i] = new Array(4);
+                }
+                quarters[0] = ["8:00-8:15", "8:15-8:30", "8:30-8:45", "8:45-9:00"];
+                quarters[1] = ["9:00-9:15", "9:15-9:30", "9:30-9:45", "9:45-10:00"];
+                quarters[2] = ["10:00-10:15", "10:15-10:30", "10:30-10:45", "10:45-11:00"];
+                quarters[3] = ["11:00-11:15", "11:15-11:30", "11:30-11:45", "11:45-12:00"];
+                quarters[4] = ["12:00-12:15", "12:15-12:30", "12:30-12:45", "12:45-13:00"];
+                quarters[5] = ["13:00-13:15", "13:15-13:30", "13:30-13:45", "13:45-14:00"];
 
                 // Show the list of time slots 8:00-9:00, 9:00-10:00, 10:00-11:00, 11:00-12:00, 12:00-13:00, 13:00-14:00
                 var slots = document.getElementById("daySlots");
                 var str = "";
-
                 var hours = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00"];
-                for (let i = 0; i < hours.length; i++) {
-                    var freeOrNotFree = availability[i + 1];
-                    var color = "";
-                    if (freeOrNotFree === "lesson") {
-                        color = "gray";
-                    } else if (freeOrNotFree === "selected") {
-                        color = "lightgreen";
-                    }
 
-                    // str += "<tr><td style='background-color:"+color+"'>"+hours[i]+"</td></tr>";
-                    var slotNb = i + 1;
-                    if (freeOrNotFree !== "lesson") {
-                        str += "<tr><td class='" + color + "' id='" + selecteddate + "_" + slotNb + "' onclick='provideSlotParentMeetings(this)'>" + hours[i] + "</td></tr>";
-                    } else {
-                        str += "<tr><td class='" + color + "' id='" + selecteddate + "_" + slotNb + "'>" + hours[i] + "</td></tr>";
+                var cont = 0;
+                for(let i = 0; i < 6; i++) {
+                    str += "<tr>";
+                    for(let j = -1; j < 4; j++){
+
+                        if(j == -1){
+                            str += "<td><strong>" + hours[cont] + "</strong></td>";
+                            cont++;
+                            continue;
+                        }
+
+                        var freeOrNotFree = availability[i][j];
+                        var color = "";
+                        if (freeOrNotFree === "free") {
+                            color = "lightgreen"; 
+                        } else if (freeOrNotFree === "selected") {
+                            color = "yellow";
+                        } else if (freeOrNotFree === "full") {
+                            color = "darkred";
+                        }
+
+                        var s = i + 1;
+                        var q = j + 1;
+                        if (freeOrNotFree !== "no" && freeOrNotFree !== "full") {
+                            str += "<td class='" + color + "' id='" + selecteddate + "_" + q + "_" + s + "' onclick='provideSlotParentMeetings(this)'>" + quarters[i][j] + "</td>";
+                        } else {
+                            str += "<td class='" + color + "' id='" + selecteddate + "_" + q + "_" + s + "'>" + quarters[i][j] + "</td>";
+                        }
                     }
+                    str += "</tr>";
                 }
 
                 slots.innerHTML = str;
@@ -234,7 +267,7 @@ require_once("db.php");
         var slotNb = arr[1];
 
         $.post("bookParentMeetingBE.php", ({
-            'mnailPARENT': parentMail,
+            'mailPARENT': parentMail,
             'codFiscTEACHER': teacherSSN,
             'day': day,
             'slotNb': slotNb
