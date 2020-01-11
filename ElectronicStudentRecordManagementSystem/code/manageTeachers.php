@@ -173,7 +173,7 @@ $db = new dbAdmin();
           //sessionStorage.setItem("success", "true");
           //sessionStorage.setItem("ssnAnswer", ssn);  
           //window.location.replace('manageTeachers.php?success=true&ssn='+ssn);
-          var row = document.getElementById("row_"+ssn);
+          var row = document.getElementById("row_" + ssn);
           row.parentNode.removeChild(row);
           //var table = document.getElementById("tableTeachers");
           //table.deleteRow(i);
@@ -245,9 +245,9 @@ $db = new dbAdmin();
         // the table should be adjusted.
         if (data == 1) {
           //alert(ssn + " has been correctly deleted.")
-          window.location.replace('manageTeachers.php?success=true&ssn='+ssn);
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + ssn + ' has been correctly deleted.</strong></div>';
         } else {
-          document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
         }
       });
   }
@@ -255,19 +255,7 @@ $db = new dbAdmin();
 
 
 <?php
-
-/* if (isset($_SESSION['success']) && $_SESSION['success'] == "true" && isset($_SESSION['ssnAnswer'])) {
-  echo <<<_SUCCESS
-  <div id="answer"> <div class="alert alert-success alert-dismissible">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong><span class="glyphicon glyphicon-send"></span> 
-  Success! $_SESSION[ssn] has been correctly deleted.</strong></div></div>
-_SUCCESS;
-$_SESSION['success'] = "";
-$_SESSION['ssn'] = "";
-} else*/
-
-  echo '<div id="answer"> </div>';
+echo '<div id="answer"> </div>';
 
 $teachers = $db->getTeachers();
 echo <<<_TABLEHEAD
@@ -314,6 +302,7 @@ echo <<<_MODAL
                           <h4 class="modal-title" id="myEntrancelabel">Manage Teacher Master Data</h4>
                       </div>
                       <div class="modal-body">
+                        <div id="answerModal"> </div>
                           <form class="form-horizontal attendanceForm">
                             <div class="form-group text-center">
                                 <label class="control-label text-center">SSN:</label>

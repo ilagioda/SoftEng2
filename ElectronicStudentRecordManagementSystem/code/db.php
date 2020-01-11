@@ -398,36 +398,36 @@ class dbAdmin extends db
         //$coordinatorCheck = $this->query("SELECT * FROM Classes WHERE coordinatorSSN = '$ssn'");
         //$coordinatorCheck = $coordinatorCheck->num_rows;
         //if ($coordinatorCheck == 0) {
-            // The teacher is not a coordinator
-            // Check if he is the only one to teach that particular subject in that particular class
-            // First you have to retrieve all the subjects teached by that particular teacher from TeacherClassSubjectTable
-            $this->begin_transaction();
+        // The teacher is not a coordinator
+        // Check if he is the only one to teach that particular subject in that particular class
+        // First you have to retrieve all the subjects teached by that particular teacher from TeacherClassSubjectTable
+        $this->begin_transaction();
 
-            $list_class_subject = $this->query("SELECT `classID`, `subject` FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn' ");
+        $list_class_subject = $this->query("SELECT `classID`, `subject` FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn' ");
 
 
-            foreach ($list_class_subject as $class_subject) {
+        foreach ($list_class_subject as $class_subject) {
 
-                // For each class and subject we have to check if there is at least another prof that teaches that subject
-                $numberOfTeacherThatTeachesSubjectInClass = $this->query("SELECT * FROM `TeacherClassSubjectTable` WHERE `codFisc` <> '$ssn' AND `classID` = '$class_subject[classID]' AND `subject` = '$class_subject[subject]'");
-                $numberOfTeacherThatTeachesSubjectInClass = $numberOfTeacherThatTeachesSubjectInClass->num_rows;
-                if ($numberOfTeacherThatTeachesSubjectInClass == '0') {
-                    // canBeRemoved = false;
-                    $this->rollback();
-                    return false;
-                }
-            }
-
-            // The teacher can be removed: Teachers , TeacherClassSubjectTable, 
-
-            if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'") && $this->query("DELETE FROM `Teachers` WHERE `codFisc` = '$ssn'") &&  $this->query("DELETE FROM `Classes` WHERE `coordinatorSSN` = '$ssn'")) {
-                $this->commit();
-                return true;
-            } else {
+            // For each class and subject we have to check if there is at least another prof that teaches that subject
+            $numberOfTeacherThatTeachesSubjectInClass = $this->query("SELECT * FROM `TeacherClassSubjectTable` WHERE `codFisc` <> '$ssn' AND `classID` = '$class_subject[classID]' AND `subject` = '$class_subject[subject]'");
+            $numberOfTeacherThatTeachesSubjectInClass = $numberOfTeacherThatTeachesSubjectInClass->num_rows;
+            if ($numberOfTeacherThatTeachesSubjectInClass == '0') {
+                // canBeRemoved = false;
                 $this->rollback();
                 return false;
             }
-/*         } else {
+        }
+
+        // The teacher can be removed: Teachers , TeacherClassSubjectTable, 
+
+        if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'") && $this->query("DELETE FROM `Teachers` WHERE `codFisc` = '$ssn'") &&  $this->query("DELETE FROM `Classes` WHERE `coordinatorSSN` = '$ssn'")) {
+            $this->commit();
+            return true;
+        } else {
+            $this->rollback();
+            return false;
+        }
+        /*         } else {
             $this->rollback();
             return false;
         } */
@@ -444,6 +444,26 @@ class dbAdmin extends db
         $ssn = $this->sanitizeString($ssn);
         $classID = $this->sanitizeString($classID);
         $subject = $this->sanitizeString($subject);
+
+        $this->begin_transaction();
+
+        $result = $this->query("SELECT COUNT(*) as CNT FROM `TeacherClassSubjectTable` WHERE `codFisc`<> '$ssn' AND `classID` = '$classID' AND `subject` = '$subject'");
+
+        $row = mysqli_fetch_assoc($result);
+
+        if ($row["CNT"] == "0") {
+            $this->rollback();
+            return false;
+        } else {
+            //Remove the subject and the class to the professor
+            if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'  AND `classID` = '$classID' AND `subject` = '$subject'")) {
+                $this->commit();
+                return true;
+            }else{
+                $this->rollback();
+                return false;
+            }
+        }
     }
     //NEEDS TO BE TESTED
     public function getTeachers()
@@ -1193,40 +1213,38 @@ class dbParent extends db
         $day = $this->sanitizeString($day);
         $parentMail = $this->sanitizeString($parentMail);
 
-        
-        $array=array();
 
-        for($i=1; $i<=6; $i++){
-            for($j=1; $j<=4; $j++){
-                $array[$i][$j]="no";
+        $array = array();
+
+        for ($i = 1; $i <= 6; $i++) {
+            for ($j = 1; $j <= 4; $j++) {
+                $array[$i][$j] = "no";
             }
         }
 
-        $result=$this->query("SELECT * from ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' ORDER BY slotNb ASC, quarter ASC");
+        $result = $this->query("SELECT * from ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' ORDER BY slotNb ASC, quarter ASC");
         if (!$result)
             return null;
-            
-        while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                if(empty($row['emailParent']))
-                    $array[$row['slotNb']][$row['quarter']]="free";
-                elseif($row['emailParent']==$parentMail)
-                    $array[$row['slotNb']][$row['quarter']]="selected";
-                else
-                    $array[$row['slotNb']][$row['quarter']]="full";
-        }
-        
-        $res="";
 
-        for($i=1; $i<=6; $i++){
-            for($j=1; $j<=4; $j++){
-                $res.=$i . "_" . $j . "_" . $array[$i][$j] . ",";
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            if (empty($row['emailParent']))
+                $array[$row['slotNb']][$row['quarter']] = "free";
+            elseif ($row['emailParent'] == $parentMail)
+                $array[$row['slotNb']][$row['quarter']] = "selected";
+            else
+                $array[$row['slotNb']][$row['quarter']] = "full";
+        }
+
+        $res = "";
+
+        for ($i = 1; $i <= 6; $i++) {
+            for ($j = 1; $j <= 4; $j++) {
+                $res .= $i . "_" . $j . "_" . $array[$i][$j] . ",";
             }
         }
 
         return $res;
-    
-    }     
-
+    }
 }
 
 class dbTeacher extends db
@@ -2302,9 +2320,10 @@ class dbTeacher extends db
             return false;
         }
     }
-    
+
     //TESTED
-    public function retrieveTimetableTeacher($teacherSSN) {
+    public function retrieveTimetableTeacher($teacherSSN)
+    {
 
         // Returns the timetable of a certain teacher in the form | hour, mon, tue, wed, thu, fri |
         // NOTE: if the teacher has no lessons at all the timetable will be filled with '-'
@@ -2359,7 +2378,8 @@ class dbTeacher extends db
     }
 
     //TESTED
-    public function checkIfExist($teacherSSN){
+    public function checkIfExist($teacherSSN)
+    {
         // Check if a certain teacher exists in the DB
         // Return true if the teacher exists in the DB
         //        false if the teacher is not present in the DB
@@ -2377,9 +2397,9 @@ class dbTeacher extends db
             return false;
         }
     }
-	
-	//TESTED
-	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject)
+
+    //TESTED
+    function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
         $class = $this->sanitizeString($class);

@@ -54,7 +54,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                                             </tr>
                                         </thead>
                                         <tbody>
-    _MODAL;
+_MODAL;
                     $rowsClassSubject = $db->getClassSubject($ssn);
                     $j = 1;
                     foreach ($rowsClassSubject as $row) {
@@ -66,13 +66,13 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                                                                 <td class="text-center">$subject</td>
                                                                 <td class="text-center"><button type="button" id="trashButtonClassSubject_$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                                                             </tr>
-                    _CLASS_SUBJECT;
+_CLASS_SUBJECT;
                     $j++;
                     }
                     echo <<<_LASTROW
                                                 <tr id="rowPlus">
                                                 <td class='text-center'><select id='selectedClass'>
-                    _LASTROW;
+_LASTROW;
                     $classes = $db->getClasses();
                     foreach ($classes as $c) {
                     $c = $c['classID'];
@@ -95,7 +95,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
     
                                                 </tbody>
                                                 </table>
-    _ENDMODAL;
+_ENDMODAL;
 
             }
             else{
