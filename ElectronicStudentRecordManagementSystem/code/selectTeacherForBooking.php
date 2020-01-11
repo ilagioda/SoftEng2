@@ -39,7 +39,7 @@ $parent = new dbParent();
 
         echo "<tr>";
         echo "<td> $t[surname] $t[name] </td>";
-        echo "<td><button type=\"submit\" class=\"btn btn-default btn-sm\" name=\'teacher\' value=\'$t[codFisc]\'>Select</td>";
+        echo "<td><button type=\"submit\" class=\"btn btn-default btn-sm\" name='teacher' value='$t[codFisc]'>Select</td>";
         echo "</tr>";
     }
     
