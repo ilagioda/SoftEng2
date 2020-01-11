@@ -1295,9 +1295,19 @@ class dbParent extends db
         return $res;
     }
 
-    //NEW
+    //TESTED
     public function bookSlot($teacher, $parentMail, $day, $slot, $quarter){
-        //TODO add comments
+        /** *
+        *This function return the status of a quarter of hour for a booking slot, 
+        *coded in color (red=full, yellow=booked, green=free) after a booking attempt
+        *@param $teacher: SSN of teacher
+        *@param $parentMail: mail of parent
+        *@param $day: day of booking slot
+        *@param $slot: booking slot number
+        *@param $quarter: quarter of hour of the slot
+        *@return: a string with the color of the status of the quarter after the (possible) booking
+        */
+
         $teacher = $this->sanitizeString($teacher);
         $day = $this->sanitizeString($day);
         $parentMail = $this->sanitizeString($parentMail);
@@ -1307,9 +1317,9 @@ class dbParent extends db
         $this->begin_transaction();
         
 
-        $result=$this->query("SELECT emailParent FROM ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter");
+        $result=$this->query("SELECT emailParent FROM ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
         if (!$result)
-            return null;
+            return 'error';
 
         $color='error';
         
@@ -1317,11 +1327,11 @@ class dbParent extends db
             $row = $result->fetch_array(MYSQLI_ASSOC);
             if(empty($row['emailParent'])){
                 $color="yellow";
-                $this->query("UPDATE ParentMeetings SET emailParent='$parentMail' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter )");
+                $this->query("UPDATE ParentMeetings SET emailParent='$parentMail' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
             }
             elseif($row['emailParent']==$parentMail){
                 $color="lightgreen";
-                $this->query("UPDATE ParentMeetings SET emailParent='' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter )");
+                $this->query("UPDATE ParentMeetings SET emailParent='' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
             }
             else{
                 $color="darkred";

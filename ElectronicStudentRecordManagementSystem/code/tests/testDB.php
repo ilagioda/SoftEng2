@@ -607,7 +607,7 @@ final class dbTest extends TestCase
         $this->assertContains("History,4", $result);
     }
 
-    
+
     public function testGetTeacherSlotsByDay(){
         $_SESSION['role'] = "parent";
         $_SESSION['user'] = "parent@parent.it";
@@ -658,6 +658,42 @@ final class dbTest extends TestCase
 
         //restoring DB
         $db->queryForTesting("DELETE FROM parentmeetings");
+    }
+
+    public function testBookSlot(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "parent@parent.it";
+        $db = new dbParent();
+
+        $teacher="GNV";
+        $day="2020-01-13";
+        $slot=1;
+        $quarter=1;
+
+        //preparing DB
+        $db->queryForTesting("DELETE FROM ParentMeetings");
+
+        //No entry -> expected 'error'
+        $result=$db->bookSlot($teacher, $_SESSION['user'], $day, $slot, $quarter);
+        $this->assertSame('error', $result);
+
+        //entry with no mail -> expected 'yellow'
+        $db->queryForTesting("INSERT INTO ParentMeetings (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-13', '1', '1', '')");
+        $result=$db->bookSlot($teacher, $_SESSION['user'], $day, $slot, $quarter);
+        $this->assertSame('yellow', $result);
+
+        //entry with own mail -> expected 'lightgreen'
+        $result=$db->bookSlot($teacher, $_SESSION['user'], $day, $slot, $quarter);
+        $this->assertSame('lightgreen', $result);
+
+        //entry with other mail -> expected 'darkred'
+        $db->queryForTesting("UPDATE ParentMeetings SET emailParent='other' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
+        $result=$db->bookSlot($teacher, $_SESSION['user'], $day, $slot, $quarter);
+        $this->assertSame('darkred', $result);
+
+        //restoring DB
+        $db->queryForTesting("DELETE FROM ParentMeetings");
+
     }
 
 
