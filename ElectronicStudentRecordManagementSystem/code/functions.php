@@ -155,6 +155,9 @@ function build_html_calendar($year, $month, $events = null)
     $css_cal_day_event = 'calendar-day-event';
     $css_cal_event = 'calendar-event';
 
+    // CSS class to make the date pressable
+    $pressableClass = "pointer";
+
     // Table headings
     $headings = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
@@ -256,10 +259,10 @@ function build_html_calendar($year, $month, $events = null)
         if ($draw_event) {
             if ($assignment) {
                 $assText = ltrim($event, 'View assignments:');
-                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\">";
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\">";
             } else if ($teacherMeetings == true && !$past) {
                 // Day cell with parent meetings time slots (clickable)
-                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
             } else if ($attendance !== false) {
                 // Day cell with attendance (clickable)
                 if ($attendance == "absent") {
@@ -277,7 +280,7 @@ function build_html_calendar($year, $month, $events = null)
                         // the student exited early
                         $assText = 'The student exited at ' . strval($hours[0]);
                     }
-                    $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showAttendance(this.id, '$assText')\">";
+                    $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showAttendance(this.id, '$assText')\">";
                 }
             } else {
                 // you should not be here
@@ -289,7 +292,7 @@ function build_html_calendar($year, $month, $events = null)
                 $color = "gray";
                 $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date'>";
             } else {
-                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
             }
         } else {
             // Day cell - in case the event is simply absent

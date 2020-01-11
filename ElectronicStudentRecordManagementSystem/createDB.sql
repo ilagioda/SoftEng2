@@ -537,7 +537,7 @@ ALTER TABLE `Marks`
 -- Indici per le tabelle `ParentMeetings`
 --
 ALTER TABLE `ParentMeetings`
-  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`);
+  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`,`quarter`);
 
 --
 -- Indici per le tabelle `Parents`

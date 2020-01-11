@@ -24,6 +24,12 @@
   background-color: #8B0000;
 }
 
+/* GENERAL RULES*/
+
+.pointer{
+  cursor: pointer;
+}
+
 
 .form-control {
   margin-bottom: 10px;
