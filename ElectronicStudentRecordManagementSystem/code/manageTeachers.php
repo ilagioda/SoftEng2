@@ -140,6 +140,7 @@ $db = new dbAdmin();
       isPrincipal = true;
     } else isPrincipal = false;
 
+    document.getElementById("answerModal").innerHTML = "";
     // Fill the modal with the student information
     document.getElementById("teacherName").value = teachName;
     document.getElementById("teacherSurname").value = teachSurname;
@@ -147,16 +148,16 @@ $db = new dbAdmin();
     document.getElementById("teacherPrincipal").checked = !isPrincipal;
 
     $.post("manageTeacherBackEnd.php", {
-          event: "insertTable",
-          codFisc: teachSSN
-        },
-        function(data, status) {
-          if (data == 0) {
-            document.getElementById("tableModal").innerHTML = "Sorry. Something wrong has happened.";
-          } else {
-            document.getElementById("tableModal").innerHTML = data;
-          }
-        });
+        event: "insertTable",
+        codFisc: teachSSN
+      },
+      function(data, status) {
+        if (data == 0) {
+          document.getElementById("tableModal").innerHTML = "Sorry. Something wrong has happened.";
+        } else {
+          document.getElementById("tableModal").innerHTML = data;
+        }
+      });
   }
 
   function trashButtonClicked(obj, ssn) {
@@ -185,47 +186,45 @@ $db = new dbAdmin();
       });
   }
 
-  function addClassSubjectFunction(obj, ssn) {
-    //console.log(table.children[0]);
-    var table = document.getElementById("classSubjectTable");
+  function addClassSubjectFunction(obj, ssn, classID, subject) {
     var selectedClass = document.getElementById("selectedClass").value;
     var selectedSubject = document.getElementById("selectedSubject").value;
-    //console.log("lunghezza tabella " + table.rows.length); 
-    //table.rows.length counts header too
-    var lastChildIndex = table.rows.length - 1;
-    var lastRow = table.rows[lastChildIndex];
-    var whereToAdd = lastChildIndex;
-    table.deleteRow(lastChildIndex);
-    newRow = table.insertRow(whereToAdd);
-    newRow.id = "tr_" + selectedClass+ "_" + selectedSubject;
-    var cell0 = newRow.insertCell(0);
-    var cell1 = newRow.insertCell(1);
-    var cell2 = newRow.insertCell(2);
-    cell0.className = "text-center";
-    cell0.innerHTML = selectedClass;
 
-    cell1.className = "text-center";
-    cell1.innerHTML = selectedSubject;
-
-    cell2.className = "text-center";
-    // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
-    cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-    document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click",function(){ trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject); });
-    table.append(lastRow);
     $.post("manageTeacherBackEnd.php", {
-        event: "addClassSubjectPost",
+        event: "addClassSubjectToATeacher",
         codFisc: ssn,
         class: selectedClass,
         subject: selectedSubject
       },
       function(data, status) {
         if (data == 1) {
+          var table = document.getElementById("classSubjectTable");
+          //console.log("lunghezza tabella " + table.rows.length); 
+          //table.rows.length counts header too
+          var lastChildIndex = table.rows.length - 1;
+          var lastRow = table.rows[lastChildIndex];
+          var whereToAdd = lastChildIndex;
+          table.deleteRow(lastChildIndex);
+          newRow = table.insertRow(whereToAdd);
+          newRow.id = "tr_" + selectedClass+"_"+selectedSubject;
+          var cell0 = newRow.insertCell(0);
+          var cell1 = newRow.insertCell(1);
+          var cell2 = newRow.insertCell(2);
+          cell0.className = "text-center";
+          cell0.innerHTML = selectedClass;
 
-          //var oldID = parseInt(document.getElementById("thPlus").innerHTML);
-          //document.getElementById("thPlus").innerHTML = oldID + 1;
+          cell1.className = "text-center";
+          cell1.innerHTML = selectedSubject;
 
-        } else {
+          cell2.className = "text-center";
+          // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
+          cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+          document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click",function(){ trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject); });
+          table.append(lastRow);
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! Tuple has been correctly added.</strong></div>';
 
+        }else {
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot add this element. </strong></div>';
         }
       });
   }

@@ -459,11 +459,22 @@ class dbAdmin extends db
             if ($this->query("DELETE FROM `TeacherClassSubjectTable` WHERE `codFisc` = '$ssn'  AND `classID` = '$classID' AND `subject` = '$subject'")) {
                 $this->commit();
                 return true;
-            }else{
+            } else {
                 $this->rollback();
                 return false;
             }
         }
+    }
+
+    //NEED TO BE TESTED
+    function addSubjectTeachedInAClassByATeacher($codFisc, $classID, $subject)
+    {
+
+        $codFisc = $this->sanitizeString($codFisc);
+        $classID = $this->sanitizeString($classID);
+        $subject = $this->sanitizeString($subject);
+
+        return $this->query("INSERT INTO `TeacherClassSubjectTable`(`codFisc`, `classID`, `subject`) VALUES ('$codFisc','$classID','$subject')");
     }
     //NEEDS TO BE TESTED
     public function getTeachers()
