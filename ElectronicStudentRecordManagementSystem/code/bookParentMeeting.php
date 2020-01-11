@@ -164,7 +164,7 @@ require_once("db.php");
         updateCalendar();
     }
 
-    function showDaySlots(selecteddate) {            // TODO ila - da fixare
+    function showDaySlots(selecteddate) {           
         var old_date = document.getElementById("date").innerHTML;
         document.getElementById("daySlots").innerHTML = "";
 
@@ -245,9 +245,9 @@ require_once("db.php");
                         var s = i + 1;
                         var q = j + 1;
                         if (freeOrNotFree !== "no" && freeOrNotFree !== "full") {
-                            str += "<td class='" + color + "' id='" + selecteddate + "_" + q + "_" + s + "' onclick='provideSlotParentMeetings(this)'>" + quarters[i][j] + "</td>";
+                            str += "<td class='" + color + "' id='" + selecteddate + "_" + s + "_" + q + "' onclick='provideSlotParentMeetings(this)'>" + quarters[i][j] + "</td>";
                         } else {
-                            str += "<td class='" + color + "' id='" + selecteddate + "_" + q + "_" + s + "'>" + quarters[i][j] + "</td>";
+                            str += "<td class='" + color + "' id='" + selecteddate + "_" + s + "_" + q + "'>" + quarters[i][j] + "</td>";
                         }
                     }
                     str += "</tr>";
@@ -259,19 +259,21 @@ require_once("db.php");
     }
 
     function provideSlotParentMeetings(element) {
-        elementID = element.id; // The id is in the form "YYYY-MM-DD_slotNb"
+        elementID = element.id;      // The id is in the form "YYYY-MM-DD_slotNb_quarterNb"
 
         // Split the id and retrieve the separate values
         var arr = elementID.split("_");
         var day = arr[0];
         var slotNb = arr[1];
+        var quarterNb = arr[2];
 
         $.post("bookParentMeetingBE.php", ({
             'mailPARENT': parentMail,
             'codFiscTEACHER': teacherSSN,
             'day': day,
-            'slotNb': slotNb
-        }), function(text) {
+            'slotNb': slotNb,
+            'quarterNb': quarterNb
+        }), function(text) {                
             if (text === "error") {
                 // Error
                 window.alert("Oh no! Something went wrong...");
@@ -284,7 +286,7 @@ require_once("db.php");
                 if (calendarElement == undefined) return; // the user has already changed window
 
                 if (text == alreadyProvidedColor) {
-                    element.classList.add(text); // element should have the right color
+                    element.classList.add(text);    // element should have the right color
 
                     if (calendarElement.classList.contains(alreadyProvidedColor)) return; // the element of the table is already ok
                     calendarElement.classList.add(text);
@@ -293,15 +295,17 @@ require_once("db.php");
                     element.classList.remove(alreadyProvidedColor); // element should have the right color
 
                     for (let i = 1; i <= 6; i++) {
-                        // check if there are other slots in the same day
+                        for (let j = 1; j <= 4; j++) {
+                            // check if there are other slots in the same day
 
-                        let row = document.getElementById(rootID + "_" + i);
+                            let row = document.getElementById(rootID + "_" + i + "_" + j);
 
-                        if (row == undefined || row.classList.contains(alreadyProvidedColor)) {
-                            // row undefined => the user has already changed the window
-                            // or there is another element with background color different from white => another appointment
-                            return;
-                        }
+                            if (row == undefined || row.classList.contains(alreadyProvidedColor)) {
+                                // row undefined => the user has already changed the window
+                                // or there is another element with background color different from white => another appointment
+                                return;
+                            }
+                        }   
                     }
 
                     // no other appointments => remove the color from the day
@@ -332,11 +336,12 @@ if(isset($_REQUEST["teacher"])){
                     <h3>Need some help?</h3>
                     Here you can see...<br><br>
                     <table class='table table-bordered text-center'>
-                    <tr><td></td><td>Slot free for parent meetings</td></tr>
-                    <tr><td class='lightgreen'></td><td>Slot already selected for parent meetings</td></tr>
-                    <tr><td class='gray'></td><td>Lesson</td></tr>
+                    <tr><td></td><td>Slot not available for parent meetings</td></tr>
+                    <tr><td class='lightgreen'></td><td>Slot available</td></tr>
+                    <tr><td class='darkred'></td><td>Slot occupied by another parent</td></tr>
+                    <tr><td class='yellow'></td><td>Slot already selected by you</td></tr>
                     </table>
-                    Click on a day to select a!
+                    Click on a date and select a slot to book a meeting with the teacher!
                 </div>
                 </div>
             </div>
