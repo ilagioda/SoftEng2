@@ -158,7 +158,14 @@ $db = new dbAdmin();
       function(data, status) {
         if (data == 1) {
           // alert(data);
-          window.location.replace('manageTeachers.php?success=true&ssn='+ssn);
+          //sessionStorage.setItem("success", "true");
+          //sessionStorage.setItem("ssnAnswer", ssn);  
+          //window.location.replace('manageTeachers.php?success=true&ssn='+ssn);
+          var row = document.getElementById("row_"+ssn);
+          row.parentNode.removeChild(row);
+          //var table = document.getElementById("tableTeachers");
+          //table.deleteRow(i);
+          document.getElementById("answer").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + ssn + ' has been correctly deleted.</strong></div>';
         } else {
           // alert(data);
           document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
@@ -237,21 +244,22 @@ $db = new dbAdmin();
 
 <?php
 
-if (isset($_GET['success']) && $_GET['success'] == "true" && isset($_GET['ssn'])) {
+/* if (isset($_SESSION['success']) && $_SESSION['success'] == "true" && isset($_SESSION['ssnAnswer'])) {
   echo <<<_SUCCESS
   <div id="answer"> <div class="alert alert-success alert-dismissible">
   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   <strong><span class="glyphicon glyphicon-send"></span> 
-  Success! $_GET[ssn] has been correctly deleted.</strong></div></div>
+  Success! $_SESSION[ssn] has been correctly deleted.</strong></div></div>
 _SUCCESS;
-$_GET['success'] = "";
-$_GET['ssn'] = "";
-} else
+$_SESSION['success'] = "";
+$_SESSION['ssn'] = "";
+} else*/
+
   echo '<div id="answer"> </div>';
 
 $teachers = $db->getTeachers();
 echo <<<_TABLEHEAD
-    <table class="table table-hover">
+    <table id="tableTeachers" class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">SSN</th>
@@ -271,13 +279,13 @@ foreach ($teachers as $teacher) {
   $name = $teacher['name'];
   $surname = $teacher['surname'];
   echo <<<_ROWS
-                <tr>
+                <tr id="row_$ssn">
                     <td class="text-center">$ssn</td>
                     <td class="text-center">$name</td>
                     <td class="text-center">$surname</td>
                     <td class="text-center">$princ</td>
-                    <td class="text-center"><button type="button" id="entranceButton$i" class="btn btn-default btn-lg" data-toggle="modal" data-target="#modal" data-name="$name" data-surname="$surname" data-ssn="$ssn" data-princ="$princ" onclick="fillModalFieldsENTRANCE(this)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button> </td>
-                    <td class="text-center"><button type="button" id="trashButton$i" class="btn btn-danger btn-lg" onclick='trashButtonClicked(this,"$ssn")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
+                    <td class="text-center"><button type="button" id="entranceButton_$ssn" class="btn btn-default btn-lg" data-toggle="modal" data-target="#modal" data-name="$name" data-surname="$surname" data-ssn="$ssn" data-princ="$princ" onclick="fillModalFieldsENTRANCE(this)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button> </td>
+                    <td class="text-center"><button type="button" id="trashButton_$ssn" class="btn btn-danger btn-lg" onclick='trashButtonClicked(this,"$ssn")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                 </tr>
 _ROWS;
   $i++;
