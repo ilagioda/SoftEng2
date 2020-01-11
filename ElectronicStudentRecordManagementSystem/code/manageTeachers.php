@@ -145,6 +145,18 @@ $db = new dbAdmin();
     document.getElementById("teacherSurname").value = teachSurname;
     document.getElementById("teacherSSN").value = teachSSN;
     document.getElementById("teacherPrincipal").checked = !isPrincipal;
+
+    $.post("manageTeacherBackEnd.php", {
+          event: "insertTable",
+          codFisc: teachSSN
+        },
+        function(data, status) {
+          if (data == 0) {
+            document.getElementById("tableModal").innerHTML = "Sorry. Something wrong has happened.";
+          } else {
+            document.getElementById("tableModal").innerHTML = data;
+          }
+        });
   }
 
   function trashButtonClicked(obj, ssn) {
@@ -321,55 +333,8 @@ echo <<<_MODAL
                                       <input type="text" class="form-control manageTeachers text-center" id="teacherSurname">
                                   </div>
                             </div>
-                            <table id="classSubjectTable" class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">CLASS</th>
-                                            <th scope="col">SUBJECT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-_MODAL;
-$rowsClassSubject = $db->getClassSubject($ssn);
-$j = 1;
-foreach ($rowsClassSubject as $row) {
-  $class = $row['classID'];
-  $subject = $row['subject'];
-  echo <<<_CLASS_SUBJECT
-                                        <tr id="tr_$j">
-                                            <td class="text-center">$class</td>
-                                            <td class="text-center">$subject</td>
-                                            <td class="text-center"><button type="button" id="trashButtonClassSubject_$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
-                                        </tr>
-_CLASS_SUBJECT;
-  $j++;
-}
-echo <<<_LASTROW
-                            <tr id="rowPlus">
-                            <td class='text-center'><select id='selectedClass'>
-_LASTROW;
-$classes = $db->getClasses();
-foreach ($classes as $c) {
-  $c = $c['classID'];
-  echo "<option value=$c>$c</option>";
-}
-echo "</select> </td>";
-
-$subjects = $db->getSubjects();
-echo "<td class='text-center'><select id='selectedSubject'>";
-foreach ($subjects as $s) {
-  $s = $s['name'];
-  echo "<option value=$s>$s</option>";
-}
-// HO il dubbio che $ssn passato alla funzione addClassSubjectFunction non sia quello del professore di cui si è cliccato il tasto "modifica", ma semplicemente l'ultimo professore stampato dal foreach
-echo <<<_ENDMODAL
-                            </select></td>
-                            
-                            <td class="text-center"><button type="button" id="addClassSubject" class="btn btn-success btn-lg" onclick='addClassSubjectFunction(this, "$ssn")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
-                            </tr>
-
-                            </tbody>
-                            </table>
+                            <div id="tableModal">
+                            </div>
 
                             <div class="form-group text-center">
                               <label class="control-label text-center">Principal:</label>
@@ -386,7 +351,7 @@ echo <<<_ENDMODAL
                   </div>
               </div>
           </div>
-_ENDMODAL;
+_MODAL;
 
 
 require_once("defaultFooter.php");
