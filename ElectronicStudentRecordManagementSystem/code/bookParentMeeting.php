@@ -93,7 +93,6 @@ require_once("db.php");
         $.post("bookParentMeetingBE.php", ({
             'year': year,
             'month': month,
-            'codFiscPARENT': parentSSN,
             'codFiscTEACHER': teacherSSN
         }), function(text) {
             $("#calendar").replaceWith(text);
@@ -165,7 +164,7 @@ require_once("db.php");
         updateCalendar();
     }
 
-    function showDaySlots(selecteddate) {
+    function showDaySlots(selecteddate) {           
         var old_date = document.getElementById("date").innerHTML;
         document.getElementById("daySlots").innerHTML = "";
 
@@ -187,7 +186,7 @@ require_once("db.php");
             if (text === "") {
                 // Error
                 window.alert("Oh no! Something went wrong...");
-            } else {
+            } else {        // TODO ila - da fixare
                 // "text" contains the slots availability in the form: "1_lesson,2_free,3_free,4_selected,5_selected,6_lesson"
 
                 // Split the string and prepare an array

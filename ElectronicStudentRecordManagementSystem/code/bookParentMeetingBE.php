@@ -17,7 +17,7 @@ if ( empty($_SERVER['HTTPS']) || ($_SERVER['HTTPS'] === 'off')){
 require_once("functions.php");
 require_once("db.php");
 
-if(!isset($_REQUEST['codFiscPARENT']) !isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['year']) || !isset($_REQUEST['month'])){
+if(!isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['year']) || !isset($_REQUEST['month'])){
 
     if(!isset($_REQUEST['codFiscPARENT']) || !isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['day'])){
         echo "not an ajax request";
@@ -29,7 +29,7 @@ if(!isset($_REQUEST['codFiscPARENT']) !isset($_REQUEST['codFiscTEACHER']) || !is
             $codFiscPARENT = $_REQUEST['codFiscPARENT'];
             $codFiscTEACHER = $_REQUEST['codFiscTEACHER'];
             $day = $_REQUEST['day'];
-            $slots = $db->showParentMeetingSlotsOfTheDay($codFisc, $day);    // TODO questa
+            $slots = $db->showParentMeetingSlotsOfTheDay($codFisc, $day);    // TODO questa 1
             echo $slots;
         } else {
             // Ajax request coming from provideSlotParentMeetings()
@@ -38,7 +38,7 @@ if(!isset($_REQUEST['codFiscPARENT']) !isset($_REQUEST['codFiscTEACHER']) || !is
             $codFiscTEACHER = $_REQUEST['codFiscTEACHER'];
             $day = $_REQUEST['day'];
             $slotNb = $_REQUEST['slotNb'];
-            $color = $db->provideSlot($codFisc, $day, $slotNb);    // TODO questa
+            $color = $db->provideSlot($codFisc, $day, $slotNb);    // TODO questa 2
             echo $color;
         }
     }
@@ -47,11 +47,10 @@ if(!isset($_REQUEST['codFiscPARENT']) !isset($_REQUEST['codFiscTEACHER']) || !is
 
     // Ajax request coming from updateCalendar() 
     $db = new dbParent();
-    $codFiscPARENT = $_REQUEST['codFiscPARENT'];
     $codFiscTEACHER = $_REQUEST['codFiscTEACHER'];
     $year = $_REQUEST['year'];
     $month = $_REQUEST['month'];
-    echo build_html_calendar($year,$month,$db->viewSlotsAlreadyProvided($codFiscPARENT, $codFiscTEACHER));    // TODO questa
+    echo build_html_calendar($year,$month,$db->viewTeacherSlots($codFiscTEACHER));    
 
 }
 

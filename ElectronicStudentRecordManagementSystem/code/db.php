@@ -1071,6 +1071,7 @@ class dbParent extends db
             return false;
 
         $ret = array();
+        $ret["1996-07-25"] = "teacherMeetings";
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
             $ret[$row["day"]] = "teacherMeetings";
         }
