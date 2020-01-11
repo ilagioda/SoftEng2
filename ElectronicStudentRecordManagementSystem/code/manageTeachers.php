@@ -210,7 +210,7 @@ $db = new dbAdmin();
     cell2.className = "text-center";
     // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
     cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-    cell2.addEventListener("click", trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject));
+    document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click",function(){ trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject); });
     table.append(lastRow);
     $.post("manageTeacherBackEnd.php", {
         event: "addClassSubjectPost",
