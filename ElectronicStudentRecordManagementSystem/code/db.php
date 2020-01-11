@@ -1112,6 +1112,37 @@ class dbParent extends db
         return $ret;
 
     }
+
+    //NEED TO BE TESTED
+    public function getTeacherSlotsByDay($teacher, $day, $parentMail)
+    {
+        //TODO add comments
+
+        $codFisc = $this->sanitizeString($teacher);
+        $day = $this->sanitizeString($day);
+        $parentMail = $this->sanitizeString($parentMail);
+
+        $result=$this->query("SELECT from parentmeetings WHERE date='$day' AND teacherCodFisc='$codFisc' ORDER BY date slotNb ASC, quarter ASC");
+        if (!$result)
+            return null;
+        
+        $res='';
+
+        while($row = $result->fetch_array(MYSQLI_ASSOC)){
+            $res.=$row['slotNb'] . "_" . $row['quarter'] . "_";
+            if(empty($row['emailParent']))
+                $res.="free,";
+            elseif($row['emailParent']==$parentMail)
+                $res.="selected,";
+            else
+                $res.="full,";
+        }
+        
+        echo $res;
+        return $res;
+    
+    }     
+
 }
 
 class dbTeacher extends db

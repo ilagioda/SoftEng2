@@ -180,7 +180,7 @@ require_once("db.php");
         // Ajax request to retrieve the time slots availability for the selected date
         $.post("bookParentMeetingBE.php", ({
             'day': selecteddate,
-            'codFiscPARENT': parentSSN,
+            'mailPARENT': parentMail,
             'codFiscTEACHER': teacherSSN
         }), function(text) {
             if (text === "") {
@@ -234,7 +234,7 @@ require_once("db.php");
         var slotNb = arr[1];
 
         $.post("bookParentMeetingBE.php", ({
-            'codFiscPARENT': parentSSN,
+            'mnailPARENT': parentMail,
             'codFiscTEACHER': teacherSSN,
             'day': day,
             'slotNb': slotNb
@@ -329,7 +329,7 @@ _TITLE;
     echo <<<_storeCodFisc
 
     <script>
-    var parentSSN="$_SESSION[user]"; 
+    var parentMail="$_SESSION[user]"; 
     var teacherSSN="$_REQUEST[teacher]";        
     var childClass="$_SESSION[class]";
     </script>

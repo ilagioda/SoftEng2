@@ -19,22 +19,22 @@ require_once("db.php");
 
 if(!isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['year']) || !isset($_REQUEST['month'])){
 
-    if(!isset($_REQUEST['codFiscPARENT']) || !isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['day'])){
+    if(!isset($_REQUEST['mailPARENT']) || !isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['day'])){
         echo "not an ajax request";
         exit;
     } else {
         if(!isset($_REQUEST['slotNb'])){
             // Ajax request coming from showDaySlots() 
             $db = new dbParent();
-            $codFiscPARENT = $_REQUEST['codFiscPARENT'];
+            $mailPARENT = $_REQUEST['mailPARENT'];
             $codFiscTEACHER = $_REQUEST['codFiscTEACHER'];
             $day = $_REQUEST['day'];
-            $slots = $db->showParentMeetingSlotsOfTheDay($codFisc, $day);    // TODO questa 1
+            $slots = $db->getTeacherSlotsByDay($codFiscTEACHER, $day, $mailPARENT);
             echo $slots;
         } else {
             // Ajax request coming from provideSlotParentMeetings()
             $db = new dbParent();
-            $codFiscPARENT = $_REQUEST['codFiscPARENT'];
+            $mailPARENT = $_REQUEST['mailPARENT'];
             $codFiscTEACHER = $_REQUEST['codFiscTEACHER'];
             $day = $_REQUEST['day'];
             $slotNb = $_REQUEST['slotNb'];
