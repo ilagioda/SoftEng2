@@ -95,7 +95,7 @@ if (isset($_REQUEST["class"])) {
     // The admin has selected a class
 
     // Store in a variable the name of the selected class
-    $chosenClass = $_REQUEST["class"];
+    $chosenClass = htmlspecialchars($_REQUEST["class"]);
     echo "<h3><i id='classID'>Class $chosenClass</i></h3><br>";
 
     // Create a local variable which will contain the timetable loaded from the CSV file
