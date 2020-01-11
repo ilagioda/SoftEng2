@@ -1256,6 +1256,44 @@ class dbParent extends db
 
         return $res;
     }
+
+    //NEW
+    public function bookSlot($teacher, $parentMail, $day, $slot, $quarter){
+        //TODO add comments
+        $teacher = $this->sanitizeString($teacher);
+        $day = $this->sanitizeString($day);
+        $parentMail = $this->sanitizeString($parentMail);
+        $slot = $this->sanitizeString($slot);
+        $quarter = $this->sanitizeString($quarter);
+
+        $this->begin_transaction();
+        
+
+        $result=$this->query("SELECT emailParent FROM ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter");
+        if (!$result)
+            return null;
+
+        $color='error';
+        
+        if(mysqli_num_rows($result)==1){
+            $row = $result->fetch_array(MYSQLI_ASSOC);
+            if(empty($row['emailParent'])){
+                $color="yellow";
+                $this->query("UPDATE ParentMeetings SET emailParent='$parentMail' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter )");
+            }
+            elseif($row['emailParent']==$parentMail){
+                $color="lightgreen";
+                $this->query("UPDATE ParentMeetings SET emailParent='' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter )");
+            }
+            else{
+                $color="darkred";
+            }
+        }
+        
+        $this->commit();
+
+        return $color;
+    }
 }
 
 class dbTeacher extends db

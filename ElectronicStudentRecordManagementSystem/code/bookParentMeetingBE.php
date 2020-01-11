@@ -39,7 +39,7 @@ if(!isset($_REQUEST['codFiscTEACHER']) || !isset($_REQUEST['year']) || !isset($_
             $day = $_REQUEST['day'];
             $slotNb = $_REQUEST['slotNb'];
             $quarterNb = $_REQUEST['quarterNb'];
-            $color = $db->provideSlot($codFisc, $day, $slotNb);    // TODO questa 2
+            $color = $db->bookSlot($codFiscTEACHER, $mailPARENT, $day, $slotNb, $quarterNb);
             echo $color;
         }
     }
