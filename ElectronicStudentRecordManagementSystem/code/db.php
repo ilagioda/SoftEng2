@@ -1122,7 +1122,7 @@ class dbParent extends db
         $day = $this->sanitizeString($day);
         $parentMail = $this->sanitizeString($parentMail);
 
-        $result=$this->query("SELECT from parentmeetings WHERE date='$day' AND teacherCodFisc='$codFisc' ORDER BY date slotNb ASC, quarter ASC");
+        $result=$this->query("SELECT * from parentmeetings WHERE day='$day' AND teacherCodFisc='$codFisc' ORDER BY slotNb ASC, quarter ASC");
         if (!$result)
             return null;
         
