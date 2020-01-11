@@ -2260,7 +2260,7 @@ class dbTeacher extends db
         }
     }
 	
-			// NEW 
+	//TESTED
 	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject)
     {
         $codTeacher = $this->sanitizeString($codTeacher);

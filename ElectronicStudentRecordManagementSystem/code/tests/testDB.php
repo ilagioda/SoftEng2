@@ -1441,6 +1441,33 @@ final class dbTest extends TestCase
 
     }
 
+    function testRetrieveTimetableOfAClass(){
+            $_SESSION['role'] = "teacher";
+            $_SESSION['user'] = "GNV";
+            $db = new dbTeacher();
+            //preparing DB
+            $db->queryForTesting("DELETE FROM Timetable");
+            $class="1A";
+            $array=array();
+            
+            //class has no timetable -> expected empty array
+            $result=$db->retrieveTimetableOfAClass($class, $_SESSION['user']);
+            $this->assertSame($array, $result);
+            //teacher has no right to see class timetable -> expected empty array
+            $class="1B";
+            $result=$db->retrieveTimetableOfAClass($class, $_SESSION['user']);
+            $this->assertSame($array, $result);
+            $db->queryForTesting("INSERT INTO `timetable` (`classID`, `day`, `hour`, `subject`) VALUES ('1A', 'Mon', '1', 'Physics'), ('1B', 'Mon', '2', 'History')");
+            //class has timetable and teacher can see it -> expected filled array in the format [hour][day]="subject"
+            $class="1A";
+            $array[1]["Mon"]="Physics";
+            $result=$db->retrieveTimetableOfAClass($class, $_SESSION['user']);
+            $this->assertSame($array, $result);
+            //restoring DB
+            $db->queryForTesting("DELETE FROM Timetable");
+            
+    }
+
     function testRetrieveTimetableTeacher(){
         $_SESSION['role'] = "teacher";
         $_SESSION['user'] = "GNV";
@@ -1506,5 +1533,25 @@ final class dbTest extends TestCase
         //authorized -> expected true
         $result=$db->checkIfAuthorized($class, $_SESSION['user']);
         $this->assertSame(true, $result);
+    }
+
+    function testGetLecturesByTeacherClassAndSubject(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "TEA";
+        $db = new dbTeacher();
+
+        //no assignments -> expected null
+        $class="1A";
+        $subject="Wrong";
+        $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject);
+        $this->assertSame(null, $result);
+
+        //teacher has assignment -> expected filled array
+        $subject="History";
+        $array=array();
+        $array[0]="2019-11-11,1,arg1";
+        $array[1]="2019-11-05,1,arg0";
+        $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject);
+        $this->assertSame($array, $result);
     }
 }
