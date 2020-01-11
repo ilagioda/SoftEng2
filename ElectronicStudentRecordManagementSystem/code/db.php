@@ -494,6 +494,44 @@ class dbAdmin extends db
         return $this->query("SELECT name FROM Subjects");
     }
 
+    public function updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red)
+    {
+        // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
+        // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
+        // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
+        // CASE 4: !isPrincipal && checked (red): NON sto modificando la carica di un vecchio professore (che NON era preside)
+
+        $teacherSSN = $this->sanitizeString($teacherSSN);
+        $teacherName = $this->sanitizeString($teacherName);
+        $teacherSurname = $this->sanitizeString($teacherSurname);
+        $red = $this->sanitizeString($red);
+
+        $result = $this->query("SELECT `principal` FROM `Teachers` WHERE `codFisc` = '$teacherSSN'");
+        $result->fetch_assoc();
+        $isPrincipal = $result['principal'];
+
+        if ($isPrincipal == 0) {
+            // Non è principal
+
+            if ($red) {
+                //CASE 4
+
+            } else {
+                //CASE 3
+            }
+        } else {
+            //E' principal
+
+
+            if ($red) {
+                //CASE 2
+
+            } else {
+                //CASE 1
+            }
+        }
+    }
+
 
     /**
      * This function has the aim to update the class of the students for which the class composition has been accepted.
