@@ -197,7 +197,7 @@ $db = new dbAdmin();
     var whereToAdd = lastChildIndex;
     table.deleteRow(lastChildIndex);
     newRow = table.insertRow(whereToAdd);
-    newRow.id = "tr_" + whereToAdd;
+    newRow.id = "tr_" + selectedClass+ "_" + selectedSubject;
     var cell0 = newRow.insertCell(0);
     var cell1 = newRow.insertCell(1);
     var cell2 = newRow.insertCell(2);
@@ -245,6 +245,8 @@ $db = new dbAdmin();
         // the table should be adjusted.
         if (data == 1) {
           //alert(ssn + " has been correctly deleted.")
+          var row = document.getElementById("tr_" + classID + "_" + subject);
+          row.parentNode.removeChild(row);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + ssn + ' has been correctly deleted.</strong></div>';
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';

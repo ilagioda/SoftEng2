@@ -60,8 +60,10 @@ _MODAL;
                     foreach ($rowsClassSubject as $row) {
                     $class = $row['classID'];
                     $subject = $row['subject'];
+
+                    echo '<tr id="tr_'.$class.'_'.$subject.'">';
+                                                            
                     echo <<<_CLASS_SUBJECT
-                                                            <tr id="tr_$j">
                                                                 <td class="text-center">$class</td>
                                                                 <td class="text-center">$subject</td>
                                                                 <td class="text-center"><button type="button" id="trashButtonClassSubject_$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
