@@ -17,6 +17,7 @@ if (!$loggedin) {
 }
 
 require_once("db.php");
+$db = new dbParent();
 
 ?>
 
@@ -338,11 +339,12 @@ if(isset($_REQUEST[$TEACHER_SSN])){
 
     $teacherSSN = $_REQUEST[$TEACHER_SSN];
     $teacherSSN = htmlspecialchars($teacherSSN);
-    
+    $teacherNameSurname = $db->getTeacherNameSurname($teacherSSN);
+
     echo <<<_TITLE
 
     <div class="text-center">
-        <h1>PARENT MEETINGS with teacher $teacherSSN</h1><br>
+        <h1>PARENT MEETINGS with $teacherNameSurname</h1><br>
         <div class="row">
             <div class="col-sm-6 col-md-4 col-md-offset-4">
                 <div class="thumbnail">
