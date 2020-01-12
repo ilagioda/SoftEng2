@@ -959,7 +959,7 @@ class dbParent extends db
     }
 
 
-    //changed -- NEED TO BE TESTED
+    //TESTED
     public function retrieveAttendance($CodFisc)
     {
 
@@ -1192,7 +1192,7 @@ class dbParent extends db
         return $result = $this->query("SELECT * FROM `StudentNotes` WHERE `codFiscStudent` = '$ssnStudent'");
     }
 
-    //NEW 
+    //TESTED 
     public function viewTeacherSlots($CodFisc)
     {
         /**

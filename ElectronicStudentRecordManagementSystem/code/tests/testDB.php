@@ -595,6 +595,26 @@ final class dbTest extends TestCase
         $this->assertContains("History,4", $result);
     }
 
+    public function testViewTeacherSlots(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "parent@parent.it";
+        $db = new dbParent();
+
+        //no slots -> expected empty array, except for 1996-07-25
+        $array=array();
+        $array["1996-07-25"] = "teacherMeetings";
+        $codFisc="GNV";
+        $result=$db->viewTeacherSlots($codFisc);
+        $this->assertSame($array, $result);
+
+        //slots inserted -> expected filled array
+        $db->queryForTesting("INSERT INTO `parentmeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-13', '1', '3', NULL), ('PIPPO', '2020-01-14', '2', '2', NULL)");
+        $array["2020-01-13"] = "teacherMeetings";
+        $result=$db->viewTeacherSlots($codFisc);
+        $this->assertSame($array, $result);
+        $db->queryForTesting("DELETE FROM 'ParentMeetings'");
+    }
+
     public function testGetTeachersByChild(){
         $_SESSION['role'] = "parent";
         $_SESSION['user'] = "parent@parent.it";
