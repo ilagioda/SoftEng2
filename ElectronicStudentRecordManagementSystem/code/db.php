@@ -1529,15 +1529,16 @@ class dbTeacher extends db
         if (!$result)
             die("Unable to select classes.");
 
+        $classes = array();
 
         if ($result->num_rows > 0) {
 
-            $classes = array();
             while ($row = $result->fetch_assoc()) {
                 array_push($classes, $row["classID"]);
             }
-            return $classes;
         }
+        return $classes;
+
     }
 
     //tested
