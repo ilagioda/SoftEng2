@@ -264,7 +264,7 @@ class dbAdmin extends db
         }
     }
 
-    // TESTED
+    // NEEDS TO BE RE-TESTED
     function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights = 0)
     {
 
@@ -302,8 +302,9 @@ class dbAdmin extends db
 
 
         $sql = "INSERT INTO $who VALUES('$SSN', '$hashedPw', '$name', '$surname', '$rights')";
-        $this->query($sql);
-        return $this->commit();
+        if($this->query($sql))
+            return $this->commit();
+        else return false;
     }
 
     //TESTED
