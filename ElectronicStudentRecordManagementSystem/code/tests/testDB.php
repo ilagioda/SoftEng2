@@ -475,8 +475,6 @@ final class dbTest extends TestCase
         $_SESSION['user'] = "padre@hotmail.it";
         $db = new dbParent();
 
-        $ssn = "WRONG";
-
         //No assignment for the child class (1D) -> expected empty array
         $ssn = "ISAORA";
         $result = $db->viewChildAssignments($ssn);
@@ -510,6 +508,19 @@ final class dbTest extends TestCase
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2019-10-11' and `classID` = '1D'");
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2020-02-11' and `classID` = '1D'");
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2020-05-25' and `classID` = '1D'");
+    }
+
+    public function testViewChildLectures(){
+        
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "padre@hotmail.it";
+        $db = new dbParent();
+
+        //No lectures for the child class (1D) -> expected empty array
+        $ssn = "ISAORA";
+        $result = $db->viewChildLectures($ssn);
+        $array = array();
+        $this->assertSame($array,$result);
     }
 
 
@@ -1309,10 +1320,12 @@ final class dbTest extends TestCase
         //Existing lectures
         $result = $db->getLecturesByTeacher($_SESSION['user']);
         if (!$result)
-            $this->assertTrue(false);
-        $this->assertSame(count($result), 2);
-        $this->assertSame($result[0], "1A,History,2019-11-11,1,arg1");
-        $this->assertSame($result[1], "1A,History,2019-11-05,1,arg0");
+            $this->fail();
+        $this->assertSame(count($result), 4);
+        $this->assertSame($result[0], "1A,History,2019-11-11,1,arg0");
+        $this->assertSame($result[1], "1A,Italian,2019-11-05,3,arg2");
+        $this->assertSame($result[2], "1A,Maths,2019-11-05,2,arg1");
+        $this->assertSame($result[3], "1A,History,2019-11-05,1,arg0");
 
 
         //Non existing lectures (should return null)
@@ -1711,7 +1724,7 @@ final class dbTest extends TestCase
         $_SESSION['user'] = "TEA";
         $db = new dbTeacher();
 
-        //no assignments -> expected null
+        //no lectures -> expected null
         $class="1A";
         $subject="Wrong";
         $beginning="2019-09-01";
@@ -1719,10 +1732,10 @@ final class dbTest extends TestCase
         $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject, $beginning, $end);
         $this->assertSame(null, $result);
 
-        //teacher has assignment -> expected filled array
+        //teacher has lectures -> expected filled array
         $subject="History";
         $array=array();
-        $array[0]="2019-11-11,1,arg1";
+        $array[0]="2019-11-11,1,arg0";
         $array[1]="2019-11-05,1,arg0";
         $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject, $beginning, $end);
         $this->assertSame($array, $result);

@@ -230,8 +230,8 @@ echo <<<_TITLE
                     <h3>Need some help?</h3>
                     Here you can see...<br><br>
                     <table class='table table-bordered text-center'>
-                    <tr><td></td><td>No lectures!</td></tr>
-                    <tr><td class='orange'></td><td>Lectures due for that day! </br>Press on it for more informations!</td></tr>
+                    <tr><td></td><td>No lecture informations</td></tr>
+                    <tr><td class='lightblue'></td><td>Lectures of that day! </br>Press on it for more informations!</td></tr>
                     </table>
                 </div>
                 </div>

@@ -1229,7 +1229,7 @@ class dbParent extends db
     public function viewChildLectures($codFisc)
     {
 
-        /*Retrieves all assignment of the selected child
+        /*Retrieves all lectures of the selected child
         @param $codFisc (String): CodFisc of the selected student
         @return (Array): An array containing the requested info, in a format usable by the calendar functions:
                          $array['date'] = 'subject' : "View lectures:" 'lecture text' ~ 'subject' : "View lectures:" 'lecture text' ...
@@ -1763,7 +1763,7 @@ class dbTeacher extends db
     {
         $codTeacher = $this->sanitizeString($codTeacher);
 
-        $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC");
+        $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' ORDER BY date DESC, hour DESC");
 
         if (!$result)
             die("Unable to select lectures.");

@@ -170,8 +170,11 @@ CREATE TABLE `Lectures` (
 --
 
 INSERT INTO `Lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
+('2019-11-11', 1, '1A', 'TEA', 'History', 'arg0'),
 ('2019-11-05', 1, '1A', 'TEA', 'History', 'arg0'),
-('2019-11-11', 1, '1A', 'TEA', 'History', 'arg1');
+('2019-11-05', 2, '1A', 'TEA', 'Maths', 'arg1'),
+('2019-11-05', 3, '1A', 'TEA', 'Italian', 'arg2');
+
 
 -- --------------------------------------------------------
 
