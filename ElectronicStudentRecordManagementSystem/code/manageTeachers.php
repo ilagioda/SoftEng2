@@ -244,6 +244,21 @@ $db = new dbAdmin();
           //alert(ssn + " has been correctly deleted.")
           var row = document.getElementById("tr_coordinate_" + classID);
           row.parentNode.removeChild(row);
+          var opt = document.createElement('option');
+          var sel = document.getElementById("selectedCoordinatedClass");
+          opt.appendChild(document.createTextNode(classID) );
+          opt.value = classID;
+          sel.appendChild(opt);
+
+          var selectList = $('#selectedCoordinatedClass option');
+
+            selectList.sort(function(a,b){
+            a = a.value;
+            b = b.value;
+
+            return a-b;
+            });
+         $('#selectedCoordinatedClass').html(selectList);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + classID + ' has been correctly deleted from coordinated classes.</strong></div>';
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
@@ -283,9 +298,10 @@ $db = new dbAdmin();
           cell2.className = "text-center";
           cell2.innerHTML = '<button type="button" id="trashButtonCoordinatedClass_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
           document.getElementById('trashButtonCoordinatedClass_' + whereToAdd).addEventListener("click", function() {
-            trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject);
+            trashButtonCoordinatedClass("this", ssn, selectedClass);
           });
           tbody.append(lastRow);
+          $("selectedCoordinatedClass option[value='"+selectedClass+"']").remove();
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' +selectedClass+ ' has been correctly added to coordinated classes.</strong></div>';
 
         } else {
@@ -356,9 +372,9 @@ _ROWS;
 
 echo <<<_PLUSROW
 <tr id="row_plusRow">
-    <td class="text-center"><input type="text" id="newTeacherSSN" class="text-center"/></td>
-    <td class="text-center"><input type="text" id="newTeacherName" class="text-center"/></td>
-    <td class="text-center"><input type="text" id="newTeacherSurname" class="text-center"/></td>
+    <td class="text-center"><input type="text" id="newTeacherSSN" placeholder="new SSN" class="text-center"/></td>
+    <td class="text-center"><input type="text" id="newTeacherName" placeholder="new Name" class="text-center"/></td>
+    <td class="text-center"><input type="text" id="newTeacherSurname" placeholder="new Surname" class="text-center"/></td>
     <td class="text-center"></td>
     <td class="text-center"></td>
     <td class="text-center"><button type="button" id="addTeacherId" class="btn btn-success btn-lg" onclick='addTeacher(this)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
