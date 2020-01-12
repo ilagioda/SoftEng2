@@ -57,7 +57,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                                                 </tr>
                                             </thead>
                                             <tbody id="tbodyCoordinatedClasses">
-    _MODALCOORDINATOR;
+_MODALCOORDINATOR;
                 if($rowsCoordinatedClasses->num_rows){
                     foreach ($rowsCoordinatedClasses as $coordinatedClass) {
                         $class = $coordinatedClass['classID'];
