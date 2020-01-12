@@ -395,8 +395,13 @@ _storeCodFisc;
 _COSE;
 
 } else {
-    // TODO ila - da mettere un alert con MESSAGGIO DI ERRORE
-    echo "ERRORE";
+    echo <<<_ALERTMSG
+    <div class="container text-center">
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        Oh no, something went wrong! <strong>No teacher</strong> has been selected for the parent meetings!
+    </div> 
+    </div> 
+_ALERTMSG;
 }
 
 require_once("defaultFooter.php");
