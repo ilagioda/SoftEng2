@@ -66,7 +66,8 @@ $(document).ready(function(){
 	});
 	
 	$('[id^= "filteredTable-"]').hide();
-	
+	$('[id^= "titleSelectDate-"]').hide();
+
 	$('[id^= "buttonCalendar-"]').click(function(){
 		$(this).hide();
 		var subject = $(this).attr("data-subject");
@@ -75,8 +76,7 @@ $(document).ready(function(){
 		$('#filteredTable-'+subject).show();
 		$('#btnShowAll-'+subject).prop("type", "button");
 		$('#assignmentsTable-'+subject).hide();
-
-		$('#navDiv-'+subject).append("<p class='text-center'><strong>Select a date</strong></p>");
+		$('#titleSelectDate-'+subject).show();
 		$("#inputCalendar-"+subject).prop("type", "date");
 		// $("#inputCalendar-"+subject).after("<ul class='pager'><li class='previous pr-"+subject+"'><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li><li class='next'><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li></ul>");
 
@@ -88,11 +88,10 @@ $(document).ready(function(){
 		$('#boxInfoToday-'+subject).show();
 		$('#buttonCalendar-'+subject).show();
 		$('#btnShowAll-'+subject).prop("type", "hidden");
-		$('#navDiv-'+subject).remove();
 		$("#inputCalendar-"+subject).prop("type", "hidden");
 		$('#filteredTable-'+subject).hide();
 		$('#assignmentsTable-'+subject).show();
-
+		$('#titleSelectDate-'+subject).hide();
 
 	});
 	
@@ -306,11 +305,11 @@ function updateTableAssignments(response, flag, subject) {
 			echo "</div>";
 ?>		
 	
-	<div id="navDiv-<?php echo $subject; ?>">
 		<h2 id="assignmentTitle-<?php echo $subject; ?>">All assignments 
 			<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
 		</h2>
-	</div>
+		<p class='text-center' id="titleSelectDate-<?php echo $subject; ?>"><strong>Select a date</strong></p>
+
 		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
 				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">
 		
