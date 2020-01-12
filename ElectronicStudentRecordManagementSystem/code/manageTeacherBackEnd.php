@@ -48,7 +48,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
 
                 $rowsCoordinatedClasses = $db->getCoordinatedClassesByATeacher($ssn);
                 $k = 1;
-                    echo <<<_MODALCOORDINATOR
+                echo <<<_MODALCOORDINATOR
                     <table id="coordinatedClassesTable" class="table">
                                             <thead>
                                                 <tr>
@@ -58,12 +58,12 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                                             </thead>
                                             <tbody id="tbodyCoordinatedClasses">
 _MODALCOORDINATOR;
-                if($rowsCoordinatedClasses->num_rows){
+                if ($rowsCoordinatedClasses->num_rows) {
                     foreach ($rowsCoordinatedClasses as $coordinatedClass) {
                         $class = $coordinatedClass['classID'];
 
-                         echo '<tr id="tr_coordinate_'.$class.'">';
-                                                            
+                        echo '<tr id="tr_coordinate_' . $class . '">';
+
                         echo <<<_COORDINATED_CLASSES
                                                                 <td class="text-center"></td>
                                                                 <td class="text-center">$class</td>
@@ -74,19 +74,22 @@ _COORDINATED_CLASSES;
                     }
                 }
                 $classes = $db->getNotCoordinatedClasses();
-                if($classes->num_rows > 0){
+
                 echo <<<_LASTROW
                                                 <tr id="rowPlusCoordinatedClass">
                                                 <td class="text-center"></td>
-                                                <td class='text-center'><select id='selectedCoordinatedClass'>
+                                                <td class='text-center'>
+                                                <select id='selectedCoordinatedClass'>
 _LASTROW;
+                if ($classes->num_rows > 0) {
                     foreach ($classes as $c) {
                         $c = $c['classID'];
-                        echo "<option value=$c>$c</option>";
+                        echo "<option value='$c'>$c</option>";
                     }
-                    echo "</select> </td>";
-                    echo <<<_ENDMODAL
-                                                    </select></td>
+                }
+                echo <<<_ENDMODAL
+                                                    </select>
+                                                    </td>
                                                     
                                                     <td class="text-center"><button type="button" id="addCoordinatedClass" class="btn btn-success btn-lg" onclick='addCoordinatedClassFunction(this, "$ssn","$c")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
                                                     </tr>
@@ -94,8 +97,8 @@ _LASTROW;
                                                     </tbody>
                                                     </table>
 _ENDMODAL;
-                }
-                    echo <<<_MODAL
+
+                echo <<<_MODAL
                     <table id="classSubjectTable" class="table">
                                             <thead>
                                                 <tr>
@@ -111,8 +114,8 @@ _MODAL;
                     $class = $row['classID'];
                     $subject = $row['subject'];
 
-                    echo '<tr id="tr_'.$class.'_'.$subject.'">';
-                                                            
+                    echo '<tr id="tr_' . $class . '_' . $subject . '">';
+
                     echo <<<_CLASS_SUBJECT
                                                                 <td class="text-center">$class</td>
                                                                 <td class="text-center">$subject</td>
@@ -128,7 +131,7 @@ _LASTROW;
                 $classes = $db->getClasses();
                 foreach ($classes as $c) {
                     $c = $c['classID'];
-                    echo "<option value=$c>$c</option>";
+                    echo "<option value='$c'>$c</option>";
                 }
                 echo "</select> </td>";
 
@@ -136,7 +139,7 @@ _LASTROW;
                 echo "<td class='text-center'><select id='selectedSubject'>";
                 foreach ($subjects as $s) {
                     $s = $s['name'];
-                    echo "<option value=$s>$s</option>";
+                    echo "<option value='$s'>$s</option>";
                 }
                 // HO il dubbio che $ssn passato alla funzione addClassSubjectFunction non sia quello del professore di cui si è cliccato il tasto "modifica", ma semplicemente l'ultimo professore stampato dal foreach
                 echo <<<_ENDMODAL
@@ -164,45 +167,39 @@ _ENDMODAL;
                 $codFisc = $_POST["codFisc"];
                 $classID = $_POST["class"];
                 $subject = $_POST["subject"];
-                
+
                 if ($db->addSubjectTeachedInAClassByATeacher($codFisc, $classID, $subject))
                     echo 1;
                 else echo 0;
                 exit;
             }
-        }
-        elseif($_POST["event"] == "add") {
+        } elseif ($_POST["event"] == "add") {
             //Delete a teacher
-            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "" ) {
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "") {
                 $hashedPw = password_hash($_POST["codFisc"], PASSWORD_DEFAULT);
-                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0) )
+                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0))
                     echo 1;
                 else echo 0;
                 exit;
-            }
-            else echo 0;
+            } else echo 0;
             exit;
-        }
-        elseif($_POST["event"] == "addCoordinatedClass") {
+        } elseif ($_POST["event"] == "addCoordinatedClass") {
             //Delete a teacher
-            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["class"]) && $_POST["class"] != "" ) {
-                if ($db->insertCoordinatedClass($_POST["codFisc"], $_POST["class"] ))
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["class"]) && $_POST["class"] != "") {
+                if ($db->insertCoordinatedClass($_POST["codFisc"], $_POST["class"]))
                     echo 1;
                 else echo 0;
                 exit;
-            }
-            else echo 0;
+            } else echo 0;
             exit;
-        }
-        elseif($_POST["event"] == "deleteCoordinatedClass") {
+        } elseif ($_POST["event"] == "deleteCoordinatedClass") {
             //Delete a teacher
             if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["classID"]) && $_POST["classID"] != "") {
                 if ($db->deleteClassCoordinator($_POST["codFisc"], $_POST["classID"]))
                     echo 1;
                 else echo 0;
                 exit;
-            }
-            else echo 0;
+            } else echo 0;
             exit;
         }
     }

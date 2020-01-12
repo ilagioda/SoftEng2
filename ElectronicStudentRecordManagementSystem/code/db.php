@@ -517,7 +517,20 @@ class dbAdmin extends db
     {
         $ssn = $this->sanitizeString($ssn);
         $class = $this->sanitizeString($class);
-        return $this->query("UPDATE Classes SET coordinatorSSN= '$ssn' WHERE classID= '$class'");
+        $this->begin_transaction();
+        $check = $this->query("SELECT `coordinatorSSN` FROM `Classes` WHERE `coordinatorSSN` = '$ssn' AND  `classID` ='$class'");
+
+        if ($check->num_rows == 0) {
+            if ($this->query("UPDATE Classes SET coordinatorSSN= '$ssn' WHERE classID= '$class'")) {
+                $this->commit();
+                return true;
+            } else {
+                $this->rollback();
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     //NEEDS TO BE TESTED
@@ -547,6 +560,7 @@ class dbAdmin extends db
                 $this->query("UPDATE `Lectures` SET `codFiscTeacher`= '$teacherSSN' WHERE `codFiscTeacher`= '$oldTeacherSSN'");
                 $this->query("UPDATE `Classes` SET `coordinatorSSN`= '$teacherSSN' WHERE `coordinatorSSN`= '$oldTeacherSSN'");
                 */
+                $this->query("UPDATE `Classes` SET `coordinatorSSN`= '$teacherSSN' WHERE `coordinatorSSN`= '$oldTeacherSSN'");
                 return true;
             } else {
                 return false;
@@ -1173,9 +1187,9 @@ class dbParent extends db
 
         $dates = getCurrentSemester();
 
-		$beginningDate = $dates[0];
-		$endingDate = $dates[1];
-		$class = $this->getChildClass($codFisc);
+        $beginningDate = $dates[0];
+        $endingDate = $dates[1];
+        $class = $this->getChildClass($codFisc);
 
         $result = $this->query("SELECT subject,date,textAssignment FROM Assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
 
@@ -1219,16 +1233,16 @@ class dbParent extends db
         $codFisc = $this->sanitizeString($codFisc);
         $this->begin_transaction();
         $authorised = $this->checkIfAuthorisedForChild($codFisc);
-        
+
         if ($authorised !== true) {
             // not authorised to see the child
             $this->rollback();
             die($authorised);
         }
         $dates = getCurrentSemester();
-		$beginningDate = $dates[0];
-		$endingDate = $dates[1];
-		$class = $this->getChildClass($codFisc);
+        $beginningDate = $dates[0];
+        $endingDate = $dates[1];
+        $class = $this->getChildClass($codFisc);
 
         $result = $this->query("SELECT subject,date,topic FROM Lectures WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
 
@@ -1251,7 +1265,7 @@ class dbParent extends db
         $this->commit();
         return $lectures;
     }
-	
+
     //tested
     public function getChildClass($codFisc)
     {
