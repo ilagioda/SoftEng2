@@ -223,7 +223,7 @@ $db = new dbAdmin();
           //alert(ssn + " has been correctly deleted.")
           var row = document.getElementById("tr_" + classID + "_" + subject);
           row.parentNode.removeChild(row);
-          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + ssn + ' has been correctly deleted.</strong></div>';
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + subject + ' has been correctly deleted.</strong></div>';
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
         }
@@ -303,7 +303,7 @@ $db = new dbAdmin();
             trashButtonCoordinatedClass("this", ssn, selectedClass);
           });
           tbody.append(lastRow);
-          $("selectedCoordinatedClass option[value='" + selectedClass + "']").remove();
+          $("#selectedCoordinatedClass option[value='" + selectedClass + "']").remove();
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + selectedClass + ' has been correctly added to coordinated classes.</strong></div>';
 
         } else {
