@@ -1216,7 +1216,7 @@ class dbParent extends db
         return $ret;
     }
 
-    //NEW
+    //TESTED
     public function getTeachersByChild($codFisc)
     {
         //This functions returns array of teacher who teach in a given child class
@@ -2521,7 +2521,7 @@ class dbTeacher extends db
         }
     }
 
-    //CHANGED
+    //TESTED
 	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
     {
         $codTeacher = $this->sanitizeString($codTeacher);

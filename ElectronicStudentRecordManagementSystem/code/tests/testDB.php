@@ -607,6 +607,32 @@ final class dbTest extends TestCase
         $this->assertContains("History,4", $result);
     }
 
+    public function testGetTeachersByChild(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "parent@parent.it";
+        $db = new dbParent();
+
+        //parent is not authorized -> expected false
+        $codFisc="wrong";
+        $result=$db->getTeachersByChild($codFisc);
+        $this->assertFalse($result);
+
+        //parent is authorized but no teacher -> expected empty array
+        $codFisc="CRS";
+        $db->queryForTesting("DELETE FROM `teacherclasssubjecttable`");
+        $array=array();
+        $result=$db->getTeachersByChild($codFisc);
+        $this->assertSame($array, $result);
+
+        //parent is authorized and there are teacher associated -> expected filled array
+        $db->queryForTesting("INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES ('FLCM', '1A', 'Philosophy'),('GNV', '1A', 'Physics'),('GNV', '1D', 'Geography'),('TEA', '1A', 'History'),('TEA', '1A', 'Maths'),('TEA', '1B', 'Italian');");
+        $array[0]['codFisc']='GNV';
+        $array[0]['surname']='genovese';
+        $array[0]['name']='simona';
+        $result=$db->getTeachersByChild($codFisc);
+        $this->assertSame($array, $result);
+
+    }
 
     public function testGetTeacherSlotsByDay(){
         $_SESSION['role'] = "parent";
@@ -1631,7 +1657,9 @@ final class dbTest extends TestCase
         //no assignments -> expected null
         $class="1A";
         $subject="Wrong";
-        $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject);
+        $beginning="2019-09-01";
+        $end="2020-01-31";
+        $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject, $beginning, $end);
         $this->assertSame(null, $result);
 
         //teacher has assignment -> expected filled array
@@ -1639,7 +1667,7 @@ final class dbTest extends TestCase
         $array=array();
         $array[0]="2019-11-11,1,arg1";
         $array[1]="2019-11-05,1,arg0";
-        $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject);
+        $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject, $beginning, $end);
         $this->assertSame($array, $result);
     }
 }
