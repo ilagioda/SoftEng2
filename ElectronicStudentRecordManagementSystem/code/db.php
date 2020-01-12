@@ -518,14 +518,11 @@ class dbAdmin extends db
                 $e = $this->query("UPDATE `Classes` SET `coordinatorSSN`= '$teacherSSN' WHERE `coordinatorSSN`= '$codFisc'");
 
                 if ($a && $b && $c && $d && $e) {
-                    $this->commit();
                     return true;
                 } else {
-                    $this->rollback();
                     return false;
                 }
             } else {
-                $this->rollback();
                 return false;
             }
         } else {
@@ -550,9 +547,7 @@ class dbAdmin extends db
         $this->begin_transaction();
 
         $result = $this->query("SELECT * FROM `Teachers` WHERE `codFisc` = '$teacherSSN'");
-        $result->fetch_assoc();
-
-
+        $result = $result->fetch_assoc();
         // CURRENT VALUES IN DB
         $codFisc = $result['codFisc'];
         $name = $result['name'];
@@ -562,28 +557,58 @@ class dbAdmin extends db
 
         if ($isPrincipal == 0) {
             // Non è principal
-
             if ($red) {
                 //CASE 4
                 // Non devo modificare la carica
                 // Verifico se c'è qualcosa da modificare 
                 // Confronto i campi: se diversi devo modificare, altrimenti non deve fare nulla.
-
-                if ($codFisc !== $teacherSSN || $name !== $teacherName || $surname !== $teacherSurname) {
-                    $this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc);
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
+                    $this->commit();
+                    return true;
+                } else {
+                    $this->rollback();
+                    return false;
                 }
             } else {
                 // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
-                $this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname);
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
+                    if ($this->query("UPDATE `Teachers` SET `principal`= 1 WHERE `codFisc` ='$codFisc'")) {
+                        $this->commit();
+                        return true;
+                    } else {
+                        $this->rollback();
+                        return false;
+                    }
+                } else {
+                    $this->rollback();
+                    return false;
+                }
             }
         } else {
             //E' principal
-
             if ($red) {
-                //CASE 2
-
+                // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
+                    if ($this->query("UPDATE `Teachers` SET `principal`= 0   WHERE `codFisc` ='$codFisc'")) {
+                        $this->commit();
+                        return true;
+                    } else {
+                        $this->rollback();
+                        return false;
+                    }
+                } else {
+                    $this->rollback();
+                    return false;
+                }
             } else {
-                //CASE 1
+                // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
+                    $this->commit();
+                    return true;
+                } else {
+                    $this->rollback();
+                    return false;
+                }
             }
         }
     }
@@ -1593,7 +1618,6 @@ class dbTeacher extends db
             }
         }
         return $classes;
-
     }
 
     //tested
@@ -2578,7 +2602,7 @@ class dbTeacher extends db
     }
 
     //TESTED
-	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
+    function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
         $class = $this->sanitizeString($class);

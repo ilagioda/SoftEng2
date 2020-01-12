@@ -242,12 +242,12 @@ if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST[
     $red = true;
   }
 
-  echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " " . $_POST['teacherPrincipal'];
+  //echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " " . $_POST['teacherPrincipal'];
   $teacherSSN = $_POST['teacherSSN'];
   $teacherName = $_POST['teacherName'];
   $teacherSurname =  $_POST['teacherSurname'];
 
-  $db->updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red);
+  var_dump($db->updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red));
 }
 
 
