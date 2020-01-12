@@ -110,6 +110,7 @@ $(document).ready(function(){
 	
 	$('[id^= "filteredTable-"]').hide();
 	$('[id^= "titleSelectDate-"]').hide();
+	$('[id^= "divPreviousNext-"]').hide();
 
 	$('[id^= "buttonCalendar-"]').click(function(){
 		$(this).hide();
@@ -121,8 +122,7 @@ $(document).ready(function(){
 		$('#assignmentsTable-'+subject).hide();
 		$('#titleSelectDate-'+subject).show();
 		$("#inputCalendar-"+subject).prop("type", "date");
-		// $("#inputCalendar-"+subject).after("<ul class='pager'><li class='previous pr-"+subject+"'><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li><li class='next'><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li></ul>");
-
+		$("#divPreviousNext-"+subject).show();
 	});
 	
 	$('[id^= "btnShowAll-"]').click(function(){
@@ -135,6 +135,7 @@ $(document).ready(function(){
 		$('#filteredTable-'+subject).hide();
 		$('#assignmentsTable-'+subject).show();
 		$('#titleSelectDate-'+subject).hide();
+		$("#divPreviousNext-"+subject).hide();
 
 	});
 	
@@ -162,6 +163,88 @@ $(document).ready(function(){
 								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, date));
 							} else {
 								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
+							}
+						},
+			error: 		function(){
+							alert("Error: assignments not loaded");
+						}
+		});
+	});
+	
+	$(".previous").click(function() {
+		
+		var subject = $(this).attr("data-subject");
+		
+		var actualDay = $('#inputCalendar-'+subject).val();
+		actualDay = new Date(actualDay);
+		
+		var previousDay = actualDay.setDate(actualDay.getDate() - 1);
+		previousDay = new Date(previousDay).toISOString().split('T')[0];
+		
+		$('#inputCalendar-'+subject).val(previousDay); // set the date in the input field 
+		
+		var today = new Date().toISOString().split('T')[0];  
+		
+		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+		if(previousDay >= today) {
+			flag = 0;
+		}
+		
+		$.ajax({
+			type:		"POST",
+			dataType:	"json",
+			url:		"loadAssignments.php",
+			data:		"date="+previousDay,
+			cache:		false,
+			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
+							$('#filteredTable-'+subject).empty();
+							if(response) {
+								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, previousDay));
+							} else {
+								
+								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
+						
+							}
+						},
+			error: 		function(){
+							alert("Error: assignments not loaded");
+						}
+		});
+	});
+	
+	$(".next").click(function() {
+		
+		var subject = $(this).attr("data-subject");
+		
+		var actualDay = $('#inputCalendar-'+subject).val();
+		actualDay = new Date(actualDay);
+		
+		var nextDay = actualDay.setDate(actualDay.getDate() + 1);
+		nextDay = new Date(nextDay).toISOString().split('T')[0];
+		
+		$('#inputCalendar-'+subject).val(nextDay); // set the date in the input field 
+		
+		var today = new Date().toISOString().split('T')[0];  
+		
+		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+		if(nextDay >= today) {
+			flag = 0;
+		}
+		
+		$.ajax({
+			type:		"POST",
+			dataType:	"json",
+			url:		"loadAssignments.php",
+			data:		"date="+nextDay,
+			cache:		false,
+			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
+							$('#filteredTable-'+subject).empty();
+							if(response) {
+								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, nextDay));
+							} else {
+								
+								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
+						
 							}
 						},
 			error: 		function(){
@@ -220,7 +303,7 @@ function updateTableAssignments(response, flag, subject, date) {
 		}
 	}
 	if(flag2 != 1) {
-		output = "<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected day </h4></div>";
+		output = "<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>";
 	} else {
 		output += "</tbody>";
 	}
@@ -301,7 +384,13 @@ function updateTableAssignments(response, flag, subject, date) {
 
 		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
 				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">			
-
+				
+		<div id="divPreviousNext-<?php echo $subject; ?>">
+			<ul class='pager'>
+				<li class='previous' data-subject="<?php echo $subject; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
+				<li class='next' data-subject="<?php echo $subject; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
+			</ul>
+		</div>
 				<form method='POST' action='' class='form-group'>
 					<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
 					<table id="assignmentsTable-<?php echo $subject; ?>" class="table table-hover">
