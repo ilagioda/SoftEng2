@@ -944,40 +944,42 @@ class dbAdmin extends db
             // error
             return false;
         }
-        if ($result0->num_rows == 1) {
+        if ($result0->num_rows > 0) {
             while (($row0 = $result0->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                
                 $codFisc = $row0["codFisc"];
-            }
 
-            // Retrieve the teacher's subjects
-            $query1 = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$codFisc'";
-            $result1 = $this->query($query1);
-            if (!$result1) {
-                // error
-                return false;
-            }
-            if ($result1->num_rows > 0) {
-                // For each (classID, subject)... 
-                while (($row1 = $result1->fetch_array(MYSQLI_ASSOC)) != NULL) {
-                    $currentClass = $row1["classID"];
-                    $currentSubject = $row1["subject"];
-                    if ($currentClass == $classID && $currentSubject == $subject) {
-                        continue;
-                    }
+                // Retrieve the teacher's subjects
+                $query1 = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$codFisc'";
+                $result1 = $this->query($query1);
+                if (!$result1) {
+                    // error
+                    return false;
+                }
+                if ($result1->num_rows > 0) {
+                    // For each (classID, subject)... 
+                    while (($row1 = $result1->fetch_array(MYSQLI_ASSOC)) != NULL) {
+                        $currentClass = $row1["classID"];
+                        $currentSubject = $row1["subject"];
+                        if ($currentClass == $classID && $currentSubject == $subject) {
+                            continue;
+                        }
 
-                    // ... check if (classID, subject) is present in the Timetable table at time $day and $hour
-                    // If there's a row => return false
-                    // No rows => return true
-                    $query2 = "SELECT * FROM `Timetable` WHERE `classID`='$currentClass' AND `day`='$day' AND `hour`='$hour' AND `subject`='$currentSubject'";
-                    $result2 = $this->query($query2);
-                    if (!$result2) {
-                        return false;
-                    }
-                    if ($result2->num_rows != 0) {
-                        // The teacher has already a lesson in another class!
-                        return false;
+                        // ... check if (classID, subject) is present in the Timetable table at time $day and $hour
+                        // If there's a row => return false
+                        // No rows => return true
+                        $query2 = "SELECT * FROM `Timetable` WHERE `classID`='$currentClass' AND `day`='$day' AND `hour`='$hour' AND `subject`='$currentSubject'";
+                        $result2 = $this->query($query2);
+                        if (!$result2) {
+                            return false;
+                        }
+                        if ($result2->num_rows != 0) {
+                            // The teacher has already a lesson in another class!
+                            return false;
+                        }
                     }
                 }
+
             }
         } else {
             // error
