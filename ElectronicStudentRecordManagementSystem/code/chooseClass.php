@@ -99,6 +99,18 @@ _CLASSROW;
 			</table>
 		</div>
     </form>
+	<div class="text-center">
+
+		<h3> Or... </h3><br>
+		<div class="btn-group">
+			<a href="provideParentMeetingSlots.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-comment pull-left" aria-hidden="true"></span>&emsp;Provide parent meetings</a>
+		</div>
+		<br>
+		<div class="btn-group">
+			<a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Timetables</a>
+		</div>
+		<br>
+	</div>
 </div>
 
 <?php
