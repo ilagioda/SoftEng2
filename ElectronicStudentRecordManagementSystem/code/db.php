@@ -1147,8 +1147,16 @@ class dbParent extends db
 
         $codFisc = $this->sanitizeString($codFisc);
         $this->begin_transaction();
+        $authorised = $this->checkIfAuthorisedForChild($codFisc);
 
-        $dates = $this->verifyStudentAndGetSemesterDates($codFisc);
+        if ($authorised !== true) {
+            // not authorised to see the child
+            $this->rollback();
+            die($authorised);
+        }
+
+        $dates = getCurrentSemester();
+
 		$beginningDate = $dates[0];
 		$endingDate = $dates[1];
 		$class = $this->getChildClass($codFisc);
@@ -1194,8 +1202,14 @@ class dbParent extends db
 
         $codFisc = $this->sanitizeString($codFisc);
         $this->begin_transaction();
-
-        $dates = $this->verifyStudentAndGetSemesterDates($codFisc);
+        $authorised = $this->checkIfAuthorisedForChild($codFisc);
+        
+        if ($authorised !== true) {
+            // not authorised to see the child
+            $this->rollback();
+            die($authorised);
+        }
+        $dates = getCurrentSemester();
 		$beginningDate = $dates[0];
 		$endingDate = $dates[1];
 		$class = $this->getChildClass($codFisc);
@@ -1221,34 +1235,6 @@ class dbParent extends db
         $this->commit();
         return $lectures;
     }
-	
-	// NEW 
-	function verifyStudentAndGetSemesterDates($codFisc) {
-		
-		$result = $this->query("SELECT * FROM Students WHERE codFisc='$codFisc';");
-        if (!$result)
-            die("Unable to select student $codFisc");
-        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
-            die("No student with ID $codFisc ");
-        }
-        $parent1 = $row['emailP1'];
-        $parent2 = $row['emailP2'];
-        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
-            die("You are not authorised to see this information.");
-
-        /* find the current semester in order to show only the required dates*/
-        $year = intval(date("Y"));
-        $month = intval(date("m"));
-        if ($month <= 7) {
-            // second semester
-            $year = $year - 1;
-        }
-		$dates = getCurrentSemester();
-        $beginningDate = $dates[0];
-        $endingDate = $dates[1];
-		
-		return array($beginningDate, $endingDate);
-	}
 	
     //tested
     public function getChildClass($codFisc)
