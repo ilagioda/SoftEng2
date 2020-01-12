@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Gen 10, 2020 alle 16:40
+-- Creato il: Gen 12, 2020 alle 11:03
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -272,9 +272,9 @@ INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, 
 ('gigimarzullo@genitore1.it', '', 'Gigi', 'Marzullo', 'MZRGG65', 1),
 ('hot_9_6@hotmail.it', '', 'Pippo', 'Franco', 'PPPFRNC', 1),
 ('miiiimmo_9_6@hotmail.it', 'provaProvina', 'Mimmo', 'Secondino', 'MMMSCNDN', 1),
+('p1@p1.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Silvia', 'Gertrude', 'SLVGRTD', 0),
 ('padre@hotmail.it', '', 'Pio', 'Amadeo', 'PMD', 0),
-('parent@parent.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'ParentName', 'ParentSurname', 'CCCC', 0),
-('silv_9_6@hotmail.it', '', 'Silvia', 'Gertrude', 'SLVGRTD', 1),
+('parent@parent.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Gianni', 'Morandi', 'GNNMRN', 0),
 ('toro_9_6@hotmail.it', '', 'Tor', 'Ino', 'TRN', 1),
 ('volley.champions@hotmail.it', '', 'Mila', 'Shiro', 'MLSHR', 1);
 
@@ -438,6 +438,7 @@ CREATE TABLE `TeacherClassSubjectTable` (
 
 INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
 ('FLCM', '1A', 'Philosophy'),
+('GNV', '1A', 'Latin'),
 ('GNV', '1A', 'Physics'),
 ('GNV', '1D', 'Geography'),
 ('TEA', '1A', 'History'),
@@ -463,9 +464,9 @@ CREATE TABLE `Teachers` (
 --
 
 INSERT INTO `Teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `principal`) VALUES
-('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Filocamo', 'Claudio', 1),
-('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'simona', 'genovese', 0),
-('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'TeacherName', 'TeacherSurname', 0);
+('FLCM', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Claudio', 'Filocamo', 1),
+('GNV', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Simona', 'Genovese', 0),
+('TEA', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Theodora', 'Avery', 0);
 
 -- --------------------------------------------------------
 
