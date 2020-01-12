@@ -31,8 +31,6 @@ if (isset($_REQUEST[$CLASSINDEX])) {
     exit;
 }
 
-require_once "loggedTeacherNavbar.php";
-
 if (isset($_SESSION['user'])) {
 
     $db = new dbTeacher();
@@ -42,9 +40,10 @@ if (isset($_SESSION['user'])) {
 
         case 0:
             // no classes for that teacher => display error
+            require_once "loggedTeacherNavbar.php";
             echo <<<_ERROR
             <div class="text-center">
-            <h1> No classes assigned. <a></h1>
+            <h1> No classes assigned. Please contact the administrator. </h1>
             </div>
 _ERROR;
             exit;
@@ -72,7 +71,7 @@ _ERROR;
     exit;
 }
 
-//require_once "defaultNavbar.php";
+require_once "loggedTeacherNavbar.php";
 
 ?>
 

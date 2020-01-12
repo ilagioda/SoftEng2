@@ -35,8 +35,6 @@ if (isset($_REQUEST[$CHILDINDEX])) {
     exit;
 }
 
-require_once "loggedParentNavbar.php";
-
 if (isset($_SESSION['user'])) {
 
     $db = new dbParent();
@@ -45,8 +43,9 @@ if (isset($_SESSION['user'])) {
     switch (count($children)) {
 
         case 0:
-            $em = $_SESSION["user"]; //to be substituted with $_SESSION["user"]
+            $em = $_SESSION["user"];
             // no children for that email => display error
+            require_once "loggedParentNavbar.php";
             echo <<<_ERROR
             <div class="text-center">
             <h1> No children registered to a class and related to email $em. Please try later to <a href=login.php>login</a></h1>
@@ -65,6 +64,7 @@ _ERROR;
             $_SESSION['$CHILDINDEX'] = 0;
             header('HTTP/1.1 307 Temporary Redirect');
             header('Location: homepageParent.php');
+            exit;
             break;
 
         default:
@@ -80,6 +80,7 @@ _ERROR;
     exit;
 }
 
+require_once "loggedParentNavbar.php";
 ?>
 
 <div>
