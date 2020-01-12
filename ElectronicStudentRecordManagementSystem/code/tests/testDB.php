@@ -1762,7 +1762,7 @@ final class dbTest extends TestCase
         $beginning="2019-09-01";
         $end="2020-01-31";
         $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject, $beginning, $end);
-        $this->assertSame(null, $result);
+        $this->assertSame(array(), $result);
 
         //teacher has lectures -> expected filled array
         $subject="History";
@@ -1771,5 +1771,33 @@ final class dbTest extends TestCase
         $array[1]="2019-11-05,1,arg0";
         $result=$db->getLecturesByTeacherClassAndSubject($_SESSION['user'], $class, $subject, $beginning, $end);
         $this->assertSame($array, $result);
+    }
+
+    function testGetLecturesByTeacherClassSubjectAndDate(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "TEA";
+        $db = new dbTeacher();
+
+        //no lectures -> expected null
+        $class="1A";
+        $subject="Wrong";
+        $date = '2019-10-11';
+        $result=$db->getLecturesByTeacherClassSubjectAndDate($_SESSION['user'], $class, $subject, $date);
+        $this->assertSame(array(), $result);
+
+        $db->queryForTesting("INSERT INTO `Lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
+                                                            ('2019-12-10', 1, '1A', 'TEA', 'History', 'arg0'),
+                                                            ('2019-12-10', 2, '1A', 'TEA', 'History', 'arg1')");
+
+        //teacher has lectures -> expected filled array
+        $subject="History";
+        $date = '2019-12-10';
+        $array=array();
+        $array[0]="1,arg0";
+        $array[1]="2,arg1";
+        $result=$db->getLecturesByTeacherClassSubjectAndDate($_SESSION['user'], $class, $subject, $date);
+        $this->assertSame($array, $result);
+
+        $db->queryForTesting("DELETE FROM Lectures WHERE date='2019-12-10'");
     }
 }
