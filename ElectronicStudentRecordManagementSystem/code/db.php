@@ -213,9 +213,9 @@ class dbAdmin extends db
         parent::__construct();
     }
 
+    // tested
     function readClassCompositions($classID)
     {
-        // tested
 
         /**
          * Read class composition for a given classID
@@ -264,9 +264,9 @@ class dbAdmin extends db
         }
     }
 
+    // TESTED
     function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights = 0)
     {
-        // TESTED
 
         /**
          * Creates entry in db of an official account (Teacher, Principal, Admin or SysAdmin), checking if a Principal is already present in it.
@@ -306,10 +306,10 @@ class dbAdmin extends db
         return $this->commit();
     }
 
-
+    //TESTED
     function insertCommunication($title, $text)
     {
-        //TESTED 
+         
 
         /**
          * Inserts an official communication incrementing the ID.
@@ -331,9 +331,9 @@ class dbAdmin extends db
         return $this->query("INSERT INTO Announcements VALUES('$newID', CURRENT_TIMESTAMP, '$title', '$text')");
     }
 
+    // TESTED 
     function readAllClassCompositions()
     {
-        // TESTED 
 
         $sql = "SELECT DISTINCT classID FROM ProposedClasses";
 
@@ -355,6 +355,7 @@ class dbAdmin extends db
         return $this->query("SELECT classID FROM Classes ORDER BY classID");
     }
 
+    //NEEDS TO BE TESTED?
     public function insertInternalCommunication($class, $title, $text)
     {
 
@@ -374,6 +375,7 @@ class dbAdmin extends db
 
         return $this->query("INSERT INTO internalCommunications VALUES('$newID', '$class', CURRENT_TIMESTAMP, '$title', '$text') ");
     }
+
     //NEEDS TO BE TESTED
     /**
      * This function has the aim of removing the information about a teacher in tables Teachers and TeacherClassSubjectTable
@@ -1423,7 +1425,7 @@ class dbParent extends db
         return $color;
     }
 
-    // NEED TO BE TESTED !!!
+    //TESTED
     public function getTeacherNameSurname($teacherSSN){
         /** *
         * This function, given a teacher SSN, retrieves his/her name and surname

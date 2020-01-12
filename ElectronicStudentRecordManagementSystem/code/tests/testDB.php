@@ -730,6 +730,22 @@ final class dbTest extends TestCase
 
     }
 
+    public function testGetTeacherNameSurname(){
+        $_SESSION['role'] = "parent";
+        $_SESSION['user'] = "parent@parent.it";
+        $db = new dbParent();
+
+        //teacher existing, expected "name surname"
+        $ssn="GNV";
+        $result=$db->getTeacherNameSurname($ssn);
+        $this->assertSame("simona genovese", $result);
+
+        //teacher not in db, expected empty string
+        $ssn="I'm not here this is not happening";
+        $result=$db->getTeacherNameSurname($ssn);
+        $this->assertSame("", $result);
+    }
+
 
 
 
