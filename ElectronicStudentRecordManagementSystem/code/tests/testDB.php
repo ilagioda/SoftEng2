@@ -1156,6 +1156,28 @@ final class dbTest extends TestCase
         $this->assertSame($array['earlyExit'], '0');
     }
 
+    public function testGetAssignmentsByClassAndSubject(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        //Teacher has not the subject in the class -> expected null
+        $class="1A";
+        $subject="Math";
+        $beginSemester="2019-09-01";
+        $endSemester="2020-01-31";
+        
+        $result=$db->getAssignmentsByClassAndSubject($_SESSION['user'], $class, $subject, $beginSemester, $endSemester);
+        $this->assertSame(null, $result);
+
+        //assignments in db and correct class, subject -> expected filled array
+        $subject="Physics";
+        $array=array();
+        $array[0]="2019-11-27,Vectors,";
+        $result=$db->getAssignmentsByClassAndSubject($_SESSION['user'], $class, $subject, $beginSemester, $endSemester);
+        $this->assertSame($array, $result);
+    }
+
     public function testGetStudentsByClass2()
     {
 

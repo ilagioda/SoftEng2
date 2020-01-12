@@ -1326,7 +1326,7 @@ class dbParent extends db
         return $finalGrades;
     }
 
-
+    // NO NEED TO BE TESTED
     /**
      * This function has the aim of retrieving the disciplinar notes of a particular student
      * @param $ssnStudent 
@@ -1335,8 +1335,6 @@ class dbParent extends db
      */
     function retrieveStudentNotes($ssnStudent)
     {
-        // NO NEED TO BE TESTED
-
         $ssnStudent = $this->sanitizeString($ssnStudent);
         return $result = $this->query("SELECT * FROM `StudentNotes` WHERE `codFiscStudent` = '$ssnStudent'");
     }
@@ -1793,7 +1791,7 @@ class dbTeacher extends db
         }
     }
 
-    // NEW
+    // TESTED
     public function getAssignmentsByClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
     {
 
@@ -1819,10 +1817,9 @@ class dbTeacher extends db
         }
     }
 
-
+    // NO NEED TO BE TESTED
     function insertNewAssignments($date, $class, $subject, $assignments)
     {
-        // NO NEED TO BE TESTED
         $class = $this->sanitizeString($class);
         $subject = $this->sanitizeString($subject);
         $date = $this->sanitizeString($date);
