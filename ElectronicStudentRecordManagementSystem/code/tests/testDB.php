@@ -451,15 +451,21 @@ final class dbTest extends TestCase
 
         //Assignment for the child class -> expected filled array
 
-        $db->queryForTesting("INSERT INTO `assignments` (`subject`, `date`, `classID`, `textAssignment`,`pathFilename`) VALUES ('History', '2019-12-11', '1D', 'Number one',''), ('Math', '2019-12-11', '1D', 'Second','')");
+        $db->queryForTesting("INSERT INTO `assignments` (`subject`, `date`, `classID`, `textAssignment`,`pathFilename`) VALUES ('History', '2019-12-11', '1D', 'Number one',''), ('Math', '2019-12-11', '1D', 'Second',''), ('Math', '2020-02-11', '1D', 'Second','')");
 
         $result = $db->viewChildAssignments($ssn);
 
-        $array["2019-12-11"] = "History:View assignments:Number one~Math:View assignments:Second";
-        $this->assertSame($result, $array);
+        $month = intval(date("m"));
+
+        if($month==1 || $month>8)
+            $array["2019-12-11"] = "History:View assignments:Number one~Math:View assignments:Second";
+        else
+            $array["2020-02-11"] = "Math:View assignments:Second";
+        $this->assertSame($array, $result);
 
         //restoring db
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2019-12-11' and `classID` = '1D'");
+        $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2020-02-11' and `classID` = '1D'");
     }
 
 
@@ -480,11 +486,15 @@ final class dbTest extends TestCase
         $CodFisc = 'ILA';
         $array = array();
 
-        $array["2019-11-25"] = "late and early - 2 - 4";
-        $array["2019-11-26"] = "absent";
-        $array["2019-11-27"] = "early - 4";
-        $array["2019-11-28"] = "late - 3";
-        $array["2019-12-02"] = "late and early - 2 - 4";
+        $month = intval(date("m"));
+
+        if($month==1 || $month>8){
+            $array["2019-11-25"] = "late and early - 2 - 4";
+            $array["2019-11-26"] = "absent";
+            $array["2019-11-27"] = "early - 4";
+            $array["2019-11-28"] = "late - 3";
+            $array["2019-12-02"] = "late and early - 2 - 4";
+        }        
 
         $result = $db->retrieveAttendance($CodFisc);
         $this->assertSame($array,$result);
@@ -506,16 +516,23 @@ final class dbTest extends TestCase
 
         $ssn = "FRCWTR";
         $result = $db->viewChildMarks($ssn);
-        $string = "";
-        $string .= "History,2019-10-10,6;";
-        $string .= "Italian,2019-10-15,9;";
-        $string .= "Italian,2019-10-14,9/10;";
-        $string .= "Italian,2019-10-10,7+;";
-        $string .= "Maths,2019-10-11,9-;";
-        $string .= "Philosophy,2019-10-10,5/6;";
-        $string .= "Physics,2019-10-12,3+"; //The last one doesn't have ; at the end
 
-        $this->assertSame($result, $string);
+        $string = "";
+        
+        $month = intval(date("m"));
+
+        if($month==1 || $month>8){
+            $string .= "History,2019-10-10,6;";
+            $string .= "Italian,2019-10-15,9;";
+            $string .= "Italian,2019-10-14,9/10;";
+            $string .= "Italian,2019-10-10,7+;";
+            $string .= "Maths,2019-10-11,9-;";
+            $string .= "Philosophy,2019-10-10,5/6;";
+            $string .= "Physics,2019-10-12,3+"; //The last one doesn't have ; at the end
+        }
+        
+
+        $this->assertSame($string, $result);
     }
 
     public function testRetrieveChildren()
@@ -585,7 +602,7 @@ final class dbTest extends TestCase
         $this->assertSame($result, $array);
 
         //inserting grades -> expecting filled array
-        $db->queryForTesting("INSERT INTO `finalgrades` (`codFisc`, `subject`, `finalTerm`, `finalGrade`) VALUES ('MRC', 'History', '2019-11-19', '4'), ('MRC', 'Maths', '2019-12-19', '10')");
+        $db->queryForTesting("INSERT INTO `finalgrades` (`codFisc`, `subject`, `finalTerm`, `finalGrade`) VALUES ('MRC', 'History', '2019-11-19', '4'), ('MRC', 'History', '2020-06-19', '4'), ('MRC', 'Maths', '2019-12-19', '10'), ('MRC', 'Maths', '2020-06-19', '10')");
         $result = $db->viewChildFinalGrades($codFisc);
 
         $this->assertNotEmpty($result);
