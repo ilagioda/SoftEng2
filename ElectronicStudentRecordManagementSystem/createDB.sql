@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Gen 12, 2020 alle 11:03
+-- Creato il: Gen 12, 2020 alle 18:38
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -151,9 +151,9 @@ CREATE TABLE `Classes` (
 --
 
 INSERT INTO `Classes` (`classID`, `coordinatorSSN`) VALUES
-('1A', 'TEA'),
+('1A', 'FLCM'),
 ('1B', 'TEA'),
-('1D', 'GNV');
+('1D', 'TEA');
 
 -- --------------------------------------------------------
 
@@ -437,10 +437,11 @@ CREATE TABLE `TeacherClassSubjectTable` (
 --
 
 INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
+('FLCM', '1A', 'Biology and Chemistry'),
+('FLCM', '1A', 'History'),
 ('FLCM', '1A', 'Philosophy'),
 ('GNV', '1A', 'Latin'),
 ('GNV', '1A', 'Physics'),
-('GNV', '1D', 'Geography'),
 ('TEA', '1A', 'History'),
 ('TEA', '1A', 'Maths'),
 ('TEA', '1B', 'Italian');
@@ -507,7 +508,8 @@ ALTER TABLE `Attendance`
 -- Indici per le tabelle `Classes`
 --
 ALTER TABLE `Classes`
-  ADD PRIMARY KEY (`classID`);
+  ADD PRIMARY KEY (`classID`),
+  ADD KEY `codFiscTeacherForeignKey4` (`coordinatorSSN`);
 
 --
 -- Indici per le tabelle `FinalGrades`
@@ -525,7 +527,8 @@ ALTER TABLE `InternalCommunications`
 -- Indici per le tabelle `Lectures`
 --
 ALTER TABLE `Lectures`
-  ADD PRIMARY KEY (`date`,`hour`,`classID`);
+  ADD PRIMARY KEY (`date`,`hour`,`classID`),
+  ADD KEY `codFiscTeacherForeignKey3` (`codFiscTeacher`);
 
 --
 -- Indici per le tabelle `Marks`
@@ -563,7 +566,8 @@ ALTER TABLE `ProposedClasses`
 -- Indici per le tabelle `StudentNotes`
 --
 ALTER TABLE `StudentNotes`
-  ADD PRIMARY KEY (`codFiscStudent`,`codFiscTeacher`,`date`,`hour`);
+  ADD PRIMARY KEY (`codFiscStudent`,`codFiscTeacher`,`date`,`hour`),
+  ADD KEY `codFiscTeacherForeignKey1` (`codFiscTeacher`);
 
 --
 -- Indici per le tabelle `Students`
@@ -607,11 +611,23 @@ ALTER TABLE `Timetable`
 --
 
 --
+-- Limiti per la tabella `Lectures`
+--
+ALTER TABLE `Lectures`
+  ADD CONSTRAINT `codFiscTeacherForeignKey3` FOREIGN KEY (`codFiscTeacher`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE;
+
+--
 -- Limiti per la tabella `Marks`
 --
 ALTER TABLE `Marks`
   ADD CONSTRAINT `codFiscForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`),
   ADD CONSTRAINT `subjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
+
+--
+-- Limiti per la tabella `ParentMeetings`
+--
+ALTER TABLE `ParentMeetings`
+  ADD CONSTRAINT `codFiscTeacherForeignKey2` FOREIGN KEY (`teacherCodFisc`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `ProposedClasses`
@@ -620,11 +636,17 @@ ALTER TABLE `ProposedClasses`
   ADD CONSTRAINT `studentIDForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`);
 
 --
+-- Limiti per la tabella `StudentNotes`
+--
+ALTER TABLE `StudentNotes`
+  ADD CONSTRAINT `codFiscTeacherForeignKey1` FOREIGN KEY (`codFiscTeacher`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE;
+
+--
 -- Limiti per la tabella `TeacherClassSubjectTable`
 --
 ALTER TABLE `TeacherClassSubjectTable`
-  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Teachers` (`codFisc`),
-  ADD CONSTRAINT `subjectTeacherClassSubjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
+  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `subjectTeacherClassSubjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -67,7 +67,7 @@ _MODALCOORDINATOR;
                         echo <<<_COORDINATED_CLASSES
                                                                 <td class="text-center"></td>
                                                                 <td class="text-center">$class</td>
-                                                                <td class="text-center"><button type="button" id="trashButtonCoordinatedClass_$k" class="btn btn-danger btn-lg" onclick='trashButtonCoordinatedClass(this,"$ssn","$class")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
+                                                                <td class="text-center"><button type="button" id="trashButtonCoordinatedClass_$class" class="btn btn-danger btn-lg" onclick='trashButtonCoordinatedClass(this,"$ssn","$class")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                                                             </tr>
 _COORDINATED_CLASSES;
                         $k++;
@@ -114,12 +114,12 @@ _MODAL;
                     $class = $row['classID'];
                     $subject = $row['subject'];
 
-                    echo '<tr id="tr_' . $class . '_' . $subject . '">';
+                    echo '<tr id="tr_' . $class . '-' . $subject . '">';
 
                     echo <<<_CLASS_SUBJECT
                                                                 <td class="text-center">$class</td>
                                                                 <td class="text-center">$subject</td>
-                                                                <td class="text-center"><button type="button" id="trashButtonClassSubject_$j" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
+                                                                <td class="text-center"><button type="button" id="trashButtonClassSubject_$class-$subject" class="btn btn-danger btn-lg" onclick='trashButtonClassSubjectClicked(this,"$ssn","$class","$subject")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
                                                             </tr>
 _CLASS_SUBJECT;
                     $j++;

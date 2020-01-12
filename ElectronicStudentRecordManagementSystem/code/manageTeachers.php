@@ -115,8 +115,8 @@ $db = new dbAdmin();
           var lastChildIndex = table.rows.length - 1;
           var lastRow = table.rows[lastChildIndex];
           var whereToAdd = lastChildIndex;
-          table.deleteRow(lastChildIndex);
-          newRow = table.insertRow(whereToAdd);
+          table.deleteRow(-1);
+          newRow = table.insertRow(-1);
           newRow.id = "tr_" + selectedClass + "_" + selectedSubject;
           var cell0 = newRow.insertCell(0);
           var cell1 = newRow.insertCell(1);
@@ -129,8 +129,8 @@ $db = new dbAdmin();
 
           cell2.className = "text-center";
           // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
-          cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-          document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click", function() {
+          cell2.innerHTML = '<button type="button" id="trashButtonClassSubject_' + selectedClass+"-"+selectedSubject + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+          document.getElementById('trashButtonClassSubject_' + selectedClass+"-"+selectedSubject).addEventListener("click", function() {
             trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject);
           });
           tbody.append(lastRow);
@@ -256,9 +256,14 @@ $db = new dbAdmin();
           selectList.sort(function(a, b) {
             a = a.value;
             b = b.value;
-
-            return a - b;
+            return a.localeCompare(b);
           });
+
+          $(function() {
+           var temp= selectList[0].value; 
+          $("#selectedCoordinatedClass").val(temp);      
+          });
+          sel.value = selectList[0].value;
           $('#selectedCoordinatedClass').html(selectList);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + classID + ' has been correctly deleted from coordinated classes.</strong></div>';
         } else {
@@ -285,8 +290,8 @@ $db = new dbAdmin();
           var lastChildIndex = table.rows.length - 1;
           var lastRow = table.rows[lastChildIndex];
           var whereToAdd = lastChildIndex;
-          table.deleteRow(lastChildIndex);
-          newRow = table.insertRow(whereToAdd);
+          table.deleteRow(-1);
+          newRow = table.insertRow(-1);
           newRow.id = "tr_coordinate_" + selectedClass;
           var cell0 = newRow.insertCell(0);
           var cell1 = newRow.insertCell(1);
@@ -298,8 +303,8 @@ $db = new dbAdmin();
           cell1.innerHTML = selectedClass;
 
           cell2.className = "text-center";
-          cell2.innerHTML = '<button type="button" id="trashButtonCoordinatedClass_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-          document.getElementById('trashButtonCoordinatedClass_' + whereToAdd).addEventListener("click", function() {
+          cell2.innerHTML = '<button type="button" id="trashButtonCoordinatedClass_' + selectedClass + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+          document.getElementById('trashButtonCoordinatedClass_' + selectedClass).addEventListener("click", function() {
             trashButtonCoordinatedClass("this", ssn, selectedClass);
           });
           tbody.append(lastRow);
@@ -311,15 +316,14 @@ $db = new dbAdmin();
         }
       });
   }
-  function fillAns(str){
-    if(str == "OK"){
+
+  function fillAns(str) {
+    if (str == "OK") {
       document.getElementById("answer").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! Teacher has been correctly modified.</strong></div>';
-    }
-    else if (str =="ERR"){
+    } else if (str == "ERR") {
       document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, changes cannot be done. </strong></div>';
-    }
-    else
-      document.getElementById("answer").innerHTML="";
+    } else
+      document.getElementById("answer").innerHTML = "";
   }
 </script>
 
@@ -344,19 +348,18 @@ if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST[
   $teacherSurname =  $_POST['teacherSurname'];
   $oldTeacherSSN = $_POST['saveButton'];
   $db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red);
-  if($db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red) == false){
+  if ($db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red) == false) {
     echo <<<_SCRIPTOK
       <script>
           fillAns("ERR");
       </script>
 _SCRIPTOK;
-  }else{
+  } else {
     echo <<<_SCRIPTNOTOK
     <script>
     fillAns("OK");
     </script>
 _SCRIPTNOTOK;
-    
   }
 }
 
