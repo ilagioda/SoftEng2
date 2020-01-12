@@ -2783,16 +2783,18 @@ class dbTeacher extends db
         if (!$result)
             die("Unable to select lectures.");
 
+        $lectures = array();
+
         if ($result->num_rows > 0) {
-            $lectures = array();
             while ($row = $result->fetch_assoc()) {
                 array_push($lectures, $row['date'] . "," . $row['hour'] . "," . $row['topic']);
             }
-            return $lectures;
         }
+        return $lectures;
+
     }
 	
-	// NEW 
+	// TESTED
     function getLecturesByTeacherClassSubjectAndDate($codTeacher, $class, $subject, $date)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
@@ -2801,7 +2803,7 @@ class dbTeacher extends db
         $date = $this->sanitizeString($date);
 
         $result = $this->query("SELECT hour,topic FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class'
-				AND subject='$subject' AND date = '$date'");
+				AND subject='$subject' AND date = '$date' ORDER BY hour ASC");
 
         if (!$result)
             die("Unable to select lectures.");
