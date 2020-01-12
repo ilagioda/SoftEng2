@@ -230,6 +230,26 @@ final class dbTest extends TestCase
                                                                 ('1C', 'SMN');");
     }
 
+    public function testDeleteTeacher(){
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        //preparing DB
+        $db->queryForTesting("INSERT INTO `teachers` (`codFisc`, `hashedPassword`, `name`, `surname`, `principal`) VALUES ('TEST', 'test', 'TestN', 'TestS', '0')");
+        $db->queryForTesting("INSERT INTO `teacherclasssubjecttable` (`codFisc`, `classID`, `subject`) VALUES ('TEST', '1A', 'Physics')");
+
+        //there is another teacher that teaches his subjects -> expected true
+        $result=$db->deleteTeacher("TEST");
+        $this->assertTrue($result);
+
+        //there is no teacher that teaches his subjects in the same class -> expected false
+        $result=$db->deleteTeacher("TEA");
+        $this->assertFalse($result);
+
+
+    }
+
     public function testUpdateStudentsClass()
     {
         $_SESSION['role'] = "admin";
