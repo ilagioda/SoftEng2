@@ -332,9 +332,11 @@ require_once("db.php");
 
 <?php
 
-if(isset($_REQUEST["teacher"])){
+$TEACHER_SSN = "teacher";
 
-    $teacherSSN = $_REQUEST["teacher"];
+if(isset($_REQUEST[$TEACHER_SSN])){
+
+    $teacherSSN = $_REQUEST[$TEACHER_SSN];
     $teacherSSN = htmlspecialchars($teacherSSN);
     
     echo <<<_TITLE
@@ -374,7 +376,7 @@ _TITLE;
 
     echo "<div id='calendar'></div>";
 
-    $cleanedTeacherSSN = htmlspecialchars($_REQUEST["teacher"]);
+    $cleanedTeacherSSN = htmlspecialchars($_REQUEST[$TEACHER_SSN]);
     echo <<<_storeCodFisc
 
     <script>
