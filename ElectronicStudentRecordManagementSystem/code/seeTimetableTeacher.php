@@ -69,13 +69,13 @@ foreach ($classes as $chosenClass) {
         <div class="alert alert-warning alert-dismissible" role="alert">
             <strong>No timetable</strong> has been uploaded yet for class $chosenClass.
         </div> 
-    _ALERTMSG;
+_ALERTMSG;
     } else {
         echo <<<_OPENTABLE
         <div class="table-responsive">
         <table class="table table-striped table-bordered text-center">
         <tr style="font-size: 20px;"><td></td><td><b>Monday</b></td><td><b>Tuesday</b></td><td><b>Wednesday</b></td><td><b>Thursday</b></td><td><b>Friday</b></td></tr>
-    _OPENTABLE;
+_OPENTABLE;
     
         // Call the function that prints the timetable
         printTimetable($timetableToShow);
@@ -84,7 +84,7 @@ foreach ($classes as $chosenClass) {
             </table>
             </div>
         </div>
-    _CLOSETABLE;
+_CLOSETABLE;
     
     }
 
@@ -95,5 +95,3 @@ foreach ($classes as $chosenClass) {
 echo "</div>";
 
 require_once("defaultFooter.php");
-
-?>
