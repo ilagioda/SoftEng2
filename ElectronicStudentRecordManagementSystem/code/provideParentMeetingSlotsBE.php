@@ -17,25 +17,32 @@ if ( empty($_SERVER['HTTPS']) || ($_SERVER['HTTPS'] === 'off')){
 require_once("functions.php");
 require_once("db.php");
 
-if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['year']) || !isset($_REQUEST['month'])){
+// Define constants
+$TEACHER_SSN = 'codFisc';
+$YEAR = 'year';
+$MONTH = 'month';
+$DAY = 'day';
+$SLOT_NB = 'slotNb';
 
-    if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['day'])){
+if(!isset($_REQUEST[$TEACHER_SSN]) || !isset($_REQUEST[$YEAR]) || !isset($_REQUEST[$MONTH])){
+
+    if(!isset($_REQUEST[$TEACHER_SSN]) || !isset($_REQUEST[$DAY])){
         echo "not an ajax request";
         exit;
     } else {
-        if(!isset($_REQUEST['slotNb'])){
+        if(!isset($_REQUEST[$SLOT_NB])){
             // Ajax request coming from showDaySlots() 
             $db = new dbTeacher();
-            $codFisc = $_REQUEST['codFisc'];
-            $day = $_REQUEST['day'];
+            $codFisc = $_REQUEST[$TEACHER_SSN];
+            $day = $_REQUEST[$DAY];
             $slots = $db->showParentMeetingSlotsOfTheDay($codFisc, $day);    
             echo $slots;
         } else {
             // Ajax request coming from provideSlotParentMeetings()
             $db = new dbTeacher();
-            $codFisc = $_REQUEST['codFisc'];
-            $day = $_REQUEST['day'];
-            $slotNb = $_REQUEST['slotNb'];
+            $codFisc = $_REQUEST[$TEACHER_SSN];
+            $day = $_REQUEST[$DAY];
+            $slotNb = $_REQUEST[$SLOT_NB];
             $color = $db->provideSlot($codFisc, $day, $slotNb);    
             echo $color;
         }
@@ -45,9 +52,9 @@ if(!isset($_REQUEST['codFisc']) || !isset($_REQUEST['year']) || !isset($_REQUEST
 
     // Ajax request coming from updateCalendar() 
     $db = new dbTeacher();
-    $codFisc = $_REQUEST['codFisc'];
-    $year = $_REQUEST['year'];
-    $month = $_REQUEST['month'];
+    $codFisc = $_REQUEST[$TEACHER_SSN];
+    $year = $_REQUEST[$YEAR];
+    $month = $_REQUEST[$MONTH];
     echo build_html_calendar($year,$month,$db->viewSlotsAlreadyProvided($codFisc));    
 
 }
