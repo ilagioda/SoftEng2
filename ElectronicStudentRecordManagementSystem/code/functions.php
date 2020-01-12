@@ -384,3 +384,15 @@ function printTimetable($timetableToShow)
 _ROW;
     }
 }
+
+function navSubjects($subjects) {
+	
+	echo "<ul id='myTab' class='nav nav-pills' style='justify-content: center; display: flex;'>";
+	echo "<li class='text-center active' style='width:20%;'><a href='#$subjects[0]' data-toggle='tab'>$subjects[0]</a></li>";
+	foreach($subjects as $subject) {
+		if($subject != $subjects[0])
+			echo "<li class='text-center' style='width:20%;'><a href='#$subject' data-toggle='tab'>$subject</a></li>";
+	}
+	echo "</ul><br>";
+
+}
