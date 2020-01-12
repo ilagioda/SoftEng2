@@ -190,9 +190,10 @@ function callAjaxLoadLectures(date, subject) {
 function updateTableLectures(response, flag, subject, date) {
 
 	var output = "<thead><tr class='active'><th class='text-center col-xs-6 col-sm-3'>Date</th><th class='text-center col-xs-6 col-sm-3'>Hour</th><th class='col-xs-6 col-sm-3'>Topics</th><th class='text-center col-xs-6 col-sm-3'></th></tr></thead><tbody>";
-	var topics = "";
 	
 	for(var i=0; i<Object.keys(response).length; i++) { // foreach daily lesson topics
+	
+		var topics = "";
 		res = response[i].split(",");
 		var hour = res[0];
 		

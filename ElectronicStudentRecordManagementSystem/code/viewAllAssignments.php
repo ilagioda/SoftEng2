@@ -212,10 +212,10 @@ function callAjaxLoadAssignments(day, subject) {
 function updateTableAssignments(response, flag, subject, date) {
 
 	var output = "<thead><tr class='active'><th class='text-center col-xs-6 col-md-4'>Date</th><th class='text-center col-xs-6 col-md-4'>Assignment</th><th class='text-center col-xs-6 col-md-4'></th></tr></thead><tbody>";
-	var ass = "";
 	var flag2 = 0; 
 	
 	for(var i=0; i<Object.keys(response).length; i++) { // foreach daily assignment
+		var ass = "";
 		res = response[i].split(",");
 		for(var j=1; j<(res.length-1); j++) {
 			ass += res[j]+",";

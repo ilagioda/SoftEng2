@@ -1883,7 +1883,7 @@ class dbTeacher extends db
         }
 
         $result = $this->query("INSERT INTO Assignments(subject, date, classID, textAssignment, pathFilename) 
-								VALUES ('$subject', '$date', '$class', '$assignments', '')");
+								VALUES ('$subject', '$date', '$class', CURRENT_TIMESTAMP, '$assignments', '')");
 
         if (!$result) {
             die("ERROR: Assignments not inserted.");

@@ -93,10 +93,10 @@ if(isset($_POST["assignments"]) && !empty(isset($_POST["assignments"])) && isset
     
 } elseif(isset($_POST["comboSubject"]) && isset($_POST["assignmentstime"])
 			&& isset($_POST["assignments"]) && !empty($_POST["assignments"])) {
-				
-		$result = $db->insertNewAssignments($_POST['assignmentstime'], $_SESSION['comboClass'], $_POST['comboSubject'], $_POST['assignments']);
-		if($result == -1) {
-			$err = "Assignments already inserted for that subject! Try to edit the assignments in the section '<a href='viewAllAssignments.php'>View all records</a>";
+
+		$result = $db->insertAssignmentsMaterial($_POST['assignmentstime'], '', $_SESSION['comboClass'], $_POST['comboSubject'], $_POST['assignments']);
+		if(!$result) {
+			$err = "Oh no! Something went wrong...";
 		} else {
 			$msg = "Assigments successfully recorded!";
 		}
