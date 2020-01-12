@@ -543,18 +543,6 @@ final class dbTest extends TestCase
         $this->assertSame($result, $array);
     }
 
-    //Protected function, can't be tested
-    //    public function testCheckIfAuthorisedForChild(){
-    //         $_SESSION['role'] = "parent";
-    //         $_SESSION['user'] = "mrc@gmail.it";
-    //         $db = new dbParent();
-
-    //         //parent is not autorized -> expected "No student with ID $CodFisc"
-    //         $ssn="WRONG";
-    //         $result=$db->checkIfAuthorisedForChild($ssn);
-    //         $this->assertSame($result, "No student with ID $ssn");
-    //    }
-
     public function testRetrieveChildTimetable()
     {
         $_SESSION['role'] = "parent";
@@ -1193,57 +1181,6 @@ final class dbTest extends TestCase
         $this->assertSame($array,$result);
     }
 
-
-    // public function testUpdateAssignments(){
-    //     $_SESSION['role'] = "teacher";
-    //     $_SESSION['user'] = "FLCM";
-    //     $db = new dbTeacher();
-
-    //     //Existing assignment (should return 1 assignment, modified with the new text)
-    //     $day="2019-12-05";
-    //     $class="1A";
-    //     $subject="Philosophy";
-    //     $assignments="Some NEW Assignments";
-
-    //     $db->updateAssignments($day, $class, $subject, $assignments);
-
-    //     $result=$db->getAssignments($_SESSION['user']);
-    //     if(!$result)
-    //         $this->assertTrue(false);
-    //     $this->assertSame(count($result), 1);
-    //     $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
-
-
-    //     //Non existing assignment (should return the same assignment from before, not modified)
-    //     $day2="2019-12-03";
-    //     $assignments2="Some WRONG Assignments";
-    //     $db->updateAssignments($day2, $class, $subject, $assignments2);
-
-    //     $result=$db->getAssignments($_SESSION['user']);
-    //     if(!$result)
-    //         $this->assertTrue(false);
-    //     $this->assertSame(count($result), 1);
-    //     $this->assertSame($result[0], $class . "," . $subject . "," . $day . "," . $assignments);
-
-
-    // }
-
-    // public function testDeleteAssignments(){
-    //     $_SESSION['role'] = "teacher";
-    //     $_SESSION['user'] = "FLCM";
-    //     $db = new dbTeacher();
-
-    //     $day="2019-12-05";
-    //     $class="1A";
-    //     $subject="Philosophy";
-
-    //     $db->deleteAssignments($day, $subject, $class);
-    //     //Should return no assignment for the current teacher
-    //     $result=$db->getAssignments($_SESSION['user']);
-    //     $this->assertSame($result, null);
-
-    // }
-
     public function testGetLecturesByTeacher()
     {
         $_SESSION['role'] = "teacher";
@@ -1283,7 +1220,7 @@ final class dbTest extends TestCase
         $this->assertSame($result, null);
     }
 
-    public function testgetClassesByTeacher2()
+    public function testGetClassesByTeacher2()
     {
         $_SESSION['role'] = "teacher";
         $_SESSION['user'] = "FLCM";
@@ -1291,12 +1228,13 @@ final class dbTest extends TestCase
 
         //Existing class
         $result = $db->getClassesByTeacher2($_SESSION['user']);
-        $this->assertSame(count($result), 1);
-        $this->assertSame($result[0], "1A");
+        $this->assertSame(1, count($result));
+        $this->assertSame("1A",$result[0]);
 
-        //Non existing class (should return null)
+        //Non existing class (should return empty array)
+        $array=array();
         $result = $db->getClassesByTeacher2("wrong");
-        $this->assertSame($result, null);
+        $this->assertSame($array, $result);
     }
 
     public function testInsertDailyLesson()
