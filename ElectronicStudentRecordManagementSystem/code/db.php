@@ -1125,7 +1125,7 @@ class dbParent extends db
     }
 
 
-    //tested
+    // CHANGED
     public function viewChildAssignments($codFisc)
     {
         /*Retrieves all assignment of the selected child
@@ -1232,9 +1232,9 @@ class dbParent extends db
             // second semester
             $year = $year - 1;
         }
-        $beginningDate = $year . "-08-01";
-        $year = $year + 1;
-        $endingDate = $year . "-07-31";
+		$dates = getCurrentSemester();
+        $beginningDate = $dates[0];
+        $endingDate = $dates[1];
 		
 		return array($beginningDate, $endingDate);
 	}
