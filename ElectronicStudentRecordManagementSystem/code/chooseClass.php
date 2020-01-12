@@ -79,8 +79,8 @@ _ERROR;
 <div>
     <h2 class="text-center"> Choose a class</h2>
     <form class="form-horizontal" action="chooseClass.php" method="POST">
-	<div class="form-group text-center">
-        <table class="table table-hover">
+		<div class="form-group text-center">
+			<table class="table table-hover">
 
 
 <?php
@@ -96,8 +96,8 @@ _CLASSROW;
     $i++;
 }
 ?>
+			</table>
 		</div>
-        </table>
     </form>
 </div>
 

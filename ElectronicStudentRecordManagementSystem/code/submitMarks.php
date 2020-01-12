@@ -63,7 +63,7 @@ _MSG;
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-	<h1> Record mark </h1>
+	<h1> Record marks </h1>
 	<div class="form-group">
 	
 		<form class="navbar-form navbar form-inline" method="POST" action="submitMarks.php">
