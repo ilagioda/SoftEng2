@@ -13,6 +13,7 @@ if (!$loggedin) {
 }
 
 require_once("db.php");
+$db = new dbTeacher();
 
 ?>
 
@@ -230,6 +231,47 @@ require_once("db.php");
         var arr = elementID.split("_");
         var day = arr[0];
         var slotNb = arr[1];
+
+        // Check if the teacher is de-selecting the slot
+        if(element.classList.contains("lightgreen")){
+            var resp = confirm("You are removing a slot that is potentially reserved by one or more parents.\n\nA warning e-mail will be sent to these parents.\n\nDo you wish to continue?");
+            if (resp == true) {
+                // The button "OK" has been pressed
+
+                // Retrieve the email of the parents that have already booked a slot
+                $.post("provideParentMeetingSlotsBE.php", ({
+                    'codFisc': fiscalCode,
+                    'day': day,
+                    'slotNb': slotNb,
+                    'removing': "true"
+                }), function(text) {
+                    if (text === "error") {
+                        // Error
+                        window.alert("Oh no! Something went wrong...");
+                    } else {
+                        // Obtain an array with the emails of the parents
+                        var emails = text.split("_");
+                        // Send the emails
+                        for(let i=0; i<emails.length; i++){
+                            TOaddress = emails[i];
+                            if(TOaddress !== ""){
+                                $.post("sendmailTeacher.php", {
+                                    'mail' : TOaddress,
+                                    'teacher': fiscalCode,
+                                    'day': day
+                                },
+                                function(response){
+                                });
+                            }
+                        }
+                    }
+                });
+
+            } else {
+                // The button "Cancel" has been pressed
+                return;
+            }
+        }
 
         $.post("provideParentMeetingSlotsBE.php", ({
             'codFisc': fiscalCode,

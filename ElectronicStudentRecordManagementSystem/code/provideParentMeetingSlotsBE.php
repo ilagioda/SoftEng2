@@ -43,8 +43,14 @@ if(!isset($_REQUEST[$TEACHER_SSN]) || !isset($_REQUEST[$YEAR]) || !isset($_REQUE
             $codFisc = $_REQUEST[$TEACHER_SSN];
             $day = $_REQUEST[$DAY];
             $slotNb = $_REQUEST[$SLOT_NB];
-            $color = $db->provideSlot($codFisc, $day, $slotNb);    
-            echo $color;
+
+            if(!isset($_REQUEST['removing'])){      // NOT REMOVING the slot
+                $color = $db->provideSlot($codFisc, $day, $slotNb);    
+                echo $color;
+            } else {                                //  REMOVING the slot
+                $emails = $db->retrieveEmailAddresses($codFisc, $day, $slotNb);      
+                echo $emails;
+            }
         }
     }
 

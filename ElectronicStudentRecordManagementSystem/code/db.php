@@ -2521,6 +2521,33 @@ class dbTeacher extends db
         return $color;
     }
 
+    // NEED TO BE TESTED!!!
+    public function retrieveEmailAddresses($codFisc, $day, $slotNb){
+        /**
+        * Retrieves the email of the parents that have booked a certain quarter of the specified slot of a certain day of a certain teacher
+        * @return: a string in the form "email1_email2_email3_email4" or "error"
+        */
+
+        $codFisc = $this->sanitizeString($codFisc);
+        $day = $this->sanitizeString($day);
+        $slotNb = $this->sanitizeString($slotNb);
+
+        $result = $this->query("SELECT emailParent FROM ParentMeetings WHERE teacherCodFisc='$codFisc' AND `day`='$day' AND slotNb='$slotNb'");
+        if (!$result)
+            die("Unable to select the emailParents");
+
+        $emails = "";
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_array(MYSQLI_ASSOC)){
+                $emails .= $row['emailParent']."_";
+            }
+        } else {
+            return "error";
+        } 
+
+        return $emails;
+    }
+
     //TESTED
     function isCoordinator($codTeacher, $class)
     {
