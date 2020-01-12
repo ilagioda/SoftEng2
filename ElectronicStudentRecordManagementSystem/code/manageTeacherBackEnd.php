@@ -15,7 +15,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
 
         if ($_POST["event"] == "delete") {
             //Delete a teacher
-            if (isset($_POST["codFisc"])) {
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "") {
                 $ssn = $_POST["codFisc"];
                 if ($db->deleteTeacher($ssn))
                     echo 1;
@@ -29,7 +29,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                 classID: classID,
                 subject: subject
             */
-            if (isset($_POST["codFisc"]) && isset($_POST["classID"]) && isset($_POST["subject"])) {
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["classID"]) && $_POST["classID"] != "" && isset($_POST["subject"]) && $_POST["subject"] != "") {
 
                 $ssn = $_POST["codFisc"];
                 $classID = $_POST["classID"];
@@ -41,18 +41,71 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                 exit;
             }
         } elseif ($_POST["event"] == "insertTable") {
-            if (isset($_POST['codFisc'])) {
+            if (isset($_POST['codFisc']) && $_POST["codFisc"] != "") {
                 $ssn = $_POST['codFisc'];
                 $ssn = $db->sanitizeString($ssn);
-                echo <<<_MODAL
-                <table id="classSubjectTable" class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">CLASS</th>
-                                                <th scope="col">SUBJECT</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyClassSubject">
+
+
+                $rowsCoordinatedClasses = $db->getCoordinatedClassesByATeacher($ssn);
+                $k = 1;
+                if($rowsCoordinatedClasses->num_rows){
+                    echo <<<_MODALCOORDINATOR
+                    <table id="coordinatedClassesTable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="text-center"></th>
+                                                    <th scope="col" class="text-center">COORDINATED CLASS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyCoordinatedClasses">
+    _MODALCOORDINATOR;
+                    foreach ($rowsCoordinatedClasses as $coordinatedClass) {
+                        $class = $coordinatedClass['classID'];
+
+                         echo '<tr id="tr_coordinate_'.$class.'">';
+                                                            
+                        echo <<<_COORDINATED_CLASSES
+                                                                <td class="text-center"></td>
+                                                                <td class="text-center">$class</td>
+                                                                <td class="text-center"><button type="button" id="trashButtonCoordinatedClass_$k" class="btn btn-danger btn-lg" onclick='trashButtonCoordinatedClass(this,"$ssn","$class")'><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>
+                                                            </tr>
+_COORDINATED_CLASSES;
+                        $k++;
+                    }
+                }
+                else echo "This teacher coordinates no class.<br>";
+                $classes = $db->getNotCoordinatedClasses();
+                if($classes->num_rows > 0){
+                echo <<<_LASTROW
+                                                <tr id="rowPlusCoordinatedClass">
+                                                <td class="text-center"></td>
+                                                <td class='text-center'><select id='selectedCoordinatedClass'>
+_LASTROW;
+                    foreach ($classes as $c) {
+                        $c = $c['classID'];
+                        echo "<option value=$c>$c</option>";
+                    }
+                    echo "</select> </td>";
+                    echo <<<_ENDMODAL
+                                                    </select></td>
+                                                    
+                                                    <td class="text-center"><button type="button" id="addCoordinatedClass" class="btn btn-success btn-lg" onclick='addCoordinatedClassFunction(this, "$ssn","$c")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
+                                                    </tr>
+        
+                                                    </tbody>
+                                                    </table>
+_ENDMODAL;
+                }
+                else echo "No class misses coordinator.";
+                    echo <<<_MODAL
+                    <table id="classSubjectTable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">CLASS</th>
+                                                    <th scope="col">SUBJECT</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyClassSubject">
 _MODAL;
                 $rowsClassSubject = $db->getClassSubject($ssn);
                 $j = 1;
@@ -108,7 +161,7 @@ _ENDMODAL;
                 class: classID,
                 subject: subject
             */
-            if (isset($_POST["codFisc"]) && isset($_POST["class"]) && isset($_POST["subject"])) {
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["class"]) && $_POST["class"] != "" && isset($_POST["subject"]) && $_POST["subject"] != "") {
 
                 $codFisc = $_POST["codFisc"];
                 $classID = $_POST["class"];
@@ -122,10 +175,39 @@ _ENDMODAL;
         }
         elseif($_POST["event"] == "add") {
             //Delete a teacher
-            if (isset($_POST["codFisc"]) && isset($_POST["name"]) && isset($_POST["surname"])) {
-                echo 1;
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "" ) {
+                $hashedPw = password_hash($_POST["codFisc"], PASSWORD_DEFAULT);
+                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0) )
+                    echo 1;
+                else echo 0;
                 exit;
             }
+            else echo 0;
+            exit;
+        }
+        elseif($_POST["event"] == "addCoordinatedClass") {
+            //Delete a teacher
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "" ) {
+                $hashedPw = password_hash($_POST["codFisc"], PASSWORD_DEFAULT);
+                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0) )
+                    echo 1;
+                else echo 0;
+                exit;
+            }
+            else echo 0;
+            exit;
+        }
+        elseif($_POST["event"] == "deleteCoordinatedClass") {
+            //Delete a teacher
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "" ) {
+                $hashedPw = password_hash($_POST["codFisc"], PASSWORD_DEFAULT);
+                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0) )
+                    echo 1;
+                else echo 0;
+                exit;
+            }
+            else echo 0;
+            exit;
         }
     }
 }
