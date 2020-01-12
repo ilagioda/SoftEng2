@@ -2587,7 +2587,7 @@ class dbTeacher extends db
         return $color;
     }
 
-    // NEED TO BE TESTED!!!
+    // TESTED
     public function retrieveEmailAddresses($codFisc, $day, $slotNb)
     {
         /**

@@ -1604,6 +1604,38 @@ final class dbTest extends TestCase
         $this->assertSame($result[0], "1A,FRCWTR,Forcignano,Walter,Physics,2019-10-12,1,3+");
     }
 
+    function testRetrieveEmailAddresses(){
+        $_SESSION['role'] = "teacher";
+        $_SESSION['user'] = "GNV";
+        $db = new dbTeacher();
+
+        $result = $db->retrieveEmailAddresses("notATeacher",'2019-10-11',1); // not a teacher => no email addresses
+        $this->assertSame("error",$result);
+
+        $db->queryForTesting("INSERT INTO `ParentMeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES
+                                                                  ('GNV', '2019-10-11', 1, 1, \"first@parent.it\"),
+                                                                  ('GNV', '2019-10-11', 1, 2, \"second@parent.it\"),
+                                                                  ('GNV', '2019-10-11', 1, 3, \"third@parent.it\"),
+                                                                  ('GNV', '2019-12-11', 4, 1, \"another@parent.it\");");
+
+        $result = $db->retrieveEmailAddresses($_SESSION['user'],"2019-10-11",1); // teacher-data with 3 appointments
+        $emails = explode("_",$result);
+        $this->assertSame(4,count($emails)); // the last _ is left here
+
+        $this->assertSame("first@parent.it",$emails[0]);
+        $this->assertSame("second@parent.it",$emails[1]);
+        $this->assertSame("third@parent.it",$emails[2]);
+        $this->assertSame("",$emails[3]);
+
+        $result = $db->retrieveEmailAddresses($_SESSION['user'],"2019-12-11",4); // teacher-data with 1 appointment
+        $emails = explode("_",$result);
+        $this->assertSame(2,count($emails));
+        $this->assertSame("another@parent.it",$emails[0]);
+        $this->assertSame("",$emails[1]);
+
+        $db->queryForTesting("DELETE FROM `ParentMeetings`;");
+    }
+
     function testIsCoordinator(){
         $_SESSION['role'] = "teacher";
         $_SESSION['user'] = "GNV";
