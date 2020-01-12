@@ -50,6 +50,13 @@ _CLOSETABLE;
 
 // Print the timetable of the teacher's classes
 $classes = $teacher->getClassesByTeacher();
+if(!empty($classes)){
+    echo <<< _INTRO
+        <div class=text-center>
+            <br><h3>Below you can see the timetables of your classes...</h3><br>
+        </div>
+_INTRO;
+}
 foreach ($classes as $chosenClass) {
 
     echo "<div class=text-center>";

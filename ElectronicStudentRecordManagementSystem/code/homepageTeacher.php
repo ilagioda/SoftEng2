@@ -70,7 +70,7 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-        <a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Timetables</a>
+        <a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;See timetables</a>
     </div>
 	<br>
 	<?php 
