@@ -374,11 +374,12 @@ _TITLE;
 
     echo "<div id='calendar'></div>";
 
+    $cleanedTeacherSSN = htmlspecialchars($_REQUEST["teacher"]);
     echo <<<_storeCodFisc
 
     <script>
         var parentMail="$_SESSION[user]"; 
-        var teacherSSN="$_REQUEST[teacher]";        
+        var teacherSSN="$cleanedTeacherSSN";        
         var childClass="$_SESSION[class]";
     </script>
 
