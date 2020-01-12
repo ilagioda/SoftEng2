@@ -507,10 +507,11 @@ class dbAdmin extends db
     }
 
     //NO NEED TO BE TESTED
-    public function getNotCoordinatedClasses(){
+    public function getNotCoordinatedClasses()
+    {
         return $this->query("SELECT `classID` FROM `Classes` WHERE `coordinatorSSN` = '' ORDER BY classID");
     }
-    
+
     //NEEDS TO BE TESTED 
     public function insertCoordinatedClass($ssn, $class)
     {
@@ -525,9 +526,8 @@ class dbAdmin extends db
         $ssn = $this->sanitizeString($ssn);
         $class = $this->sanitizeString($class);
         return $this->query("UPDATE Classes SET coordinatorSSN= '' WHERE classID= '$class' and coordinatorSSN='$ssn' ");
-
     }
-    
+
     //NEEDS TO BE TESTED
     /**
      * This function has the aim to update all the occurrences in the different tables of the information related to the teacher if they were modified. 
@@ -581,6 +581,12 @@ class dbAdmin extends db
         $surname = $result['surname'];
         $isPrincipal = $result['principal'];
 
+        $cnt = $this->query("SELECT COUNT(*) as CNT FROM `Teachers` WHERE `principal` = 1");
+        $cnt = $cnt->fetch_assoc();
+        $cnt = $cnt["CNT"];
+
+
+
 
         if ($isPrincipal == 0) {
             // Non è principal
@@ -594,21 +600,26 @@ class dbAdmin extends db
                     return 4;
                 } else {
                     $this->rollback();
-                    return 4;
+                    return false;
                 }
             } else {
                 // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
                 if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
-                    if ($this->query("UPDATE `Teachers` SET `principal`= 1 WHERE `codFisc` ='$teacherSSN'")) {
-                        $this->commit();
-                        return 3;
+                    if ($cnt == 0) {
+                        if ($this->query("UPDATE `Teachers` SET `principal`= 1 WHERE `codFisc` ='$teacherSSN'")) {
+                            $this->commit();
+                            return 3;
+                        } else {
+                            $this->rollback();
+                            return false;
+                        }
                     } else {
                         $this->rollback();
-                        return 3;
+                        return false;
                     }
                 } else {
                     $this->rollback();
-                    return 3;
+                    return false;
                 }
             }
         } else {
@@ -616,16 +627,21 @@ class dbAdmin extends db
             if ($red) {
                 // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
                 if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
-                    if ($this->query("UPDATE `Teachers` SET `principal`= 0   WHERE `codFisc` ='$teacherSSN'")) {
-                        $this->commit();
-                        return 2;
+                    if ($cnt == 1) {
+                        if ($this->query("UPDATE `Teachers` SET `principal`= 0   WHERE `codFisc` ='$teacherSSN'")) {
+                            $this->commit();
+                            return 2;
+                        } else {
+                            $this->rollback();
+                            return false;
+                        }
                     } else {
                         $this->rollback();
-                        return 2;
+                        return false;
                     }
                 } else {
                     $this->rollback();
-                    return 2;
+                    return false;
                 }
             } else {
                 // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
@@ -634,7 +650,7 @@ class dbAdmin extends db
                     return 1;
                 } else {
                     $this->rollback();
-                    return "Mimmo";
+                    return false;
                 }
             }
         }
@@ -708,7 +724,7 @@ class dbAdmin extends db
     // NO NEED TO BE TESTED
     public function insertStudent($name, $surname, $SSN, $email1, $email2)
     {
-        
+
         $name = $this->sanitizeString($name);
         $surname = $this->sanitizeString($surname);
         $SSN = $this->sanitizeString($SSN);
@@ -721,7 +737,7 @@ class dbAdmin extends db
     // NO NEED TO BE TESTED
     public function insertParent($name, $surname, $SSN, $email)
     {
-        
+
 
         $name = $this->sanitizeString($name);
         $surname = $this->sanitizeString($surname);
@@ -734,7 +750,7 @@ class dbAdmin extends db
     // NO NEED TO BE TESTED
     public function insertLectures($date, $hour, $classID, $codFiscTeacher, $subject, $topic)
     {
-        
+
 
         $date = $this->sanitizeString($date);
         $hour = $this->sanitizeString($hour);
@@ -2531,11 +2547,12 @@ class dbTeacher extends db
     }
 
     // NEED TO BE TESTED!!!
-    public function retrieveEmailAddresses($codFisc, $day, $slotNb){
+    public function retrieveEmailAddresses($codFisc, $day, $slotNb)
+    {
         /**
-        * Retrieves the email of the parents that have booked a certain quarter of the specified slot of a certain day of a certain teacher
-        * @return: a string in the form "email1_email2_email3_email4" or "error"
-        */
+         * Retrieves the email of the parents that have booked a certain quarter of the specified slot of a certain day of a certain teacher
+         * @return: a string in the form "email1_email2_email3_email4" or "error"
+         */
 
         $codFisc = $this->sanitizeString($codFisc);
         $day = $this->sanitizeString($day);
@@ -2547,12 +2564,12 @@ class dbTeacher extends db
 
         $emails = "";
         if ($result->num_rows > 0) {
-            while($row = $result->fetch_array(MYSQLI_ASSOC)){
-                $emails .= $row['emailParent']."_";
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $emails .= $row['emailParent'] . "_";
             }
         } else {
             return "error";
-        } 
+        }
 
         return $emails;
     }

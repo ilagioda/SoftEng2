@@ -229,7 +229,8 @@ $db = new dbAdmin();
         }
       });
   }
-  function trashButtonCoordinatedClass(obj, ssn, classID){
+
+  function trashButtonCoordinatedClass(obj, ssn, classID) {
     buttonID = obj.id;
     $.post("manageTeacherBackEnd.php", {
         event: "deleteCoordinatedClass",
@@ -246,26 +247,27 @@ $db = new dbAdmin();
           row.parentNode.removeChild(row);
           var opt = document.createElement('option');
           var sel = document.getElementById("selectedCoordinatedClass");
-          opt.appendChild(document.createTextNode(classID) );
+          opt.appendChild(document.createTextNode(classID));
           opt.value = classID;
           sel.appendChild(opt);
 
           var selectList = $('#selectedCoordinatedClass option');
 
-            selectList.sort(function(a,b){
+          selectList.sort(function(a, b) {
             a = a.value;
             b = b.value;
 
-            return a-b;
-            });
-         $('#selectedCoordinatedClass').html(selectList);
+            return a - b;
+          });
+          $('#selectedCoordinatedClass').html(selectList);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + classID + ' has been correctly deleted from coordinated classes.</strong></div>';
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
         }
       });
   }
-  function addCoordinatedClassFunction(obj, ssn, classID){
+
+  function addCoordinatedClassFunction(obj, ssn, classID) {
     var selectedClass = document.getElementById("selectedCoordinatedClass").value;
 
     $.post("manageTeacherBackEnd.php", {
@@ -301,13 +303,23 @@ $db = new dbAdmin();
             trashButtonCoordinatedClass("this", ssn, selectedClass);
           });
           tbody.append(lastRow);
-          $("selectedCoordinatedClass option[value='"+selectedClass+"']").remove();
-          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' +selectedClass+ ' has been correctly added to coordinated classes.</strong></div>';
+          $("selectedCoordinatedClass option[value='" + selectedClass + "']").remove();
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + selectedClass + ' has been correctly added to coordinated classes.</strong></div>';
 
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot add this element. </strong></div>';
         }
       });
+  }
+  function fillAns(str){
+    if(str == "OK"){
+      document.getElementById("answer").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! Teacher has been correctly modified.</strong></div>';
+    }
+    else if (str =="ERR"){
+      document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, changes cannot be done. </strong></div>';
+    }
+    else
+      document.getElementById("answer").innerHTML="";
   }
 </script>
 
@@ -317,6 +329,8 @@ $db = new dbAdmin();
 /*
 If the form was submitted you have to update the information about the particular 
 */
+
+echo '<div id="answer"> </div>';
 if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST["teacherSurname"])) {
 
   $red = false;
@@ -324,17 +338,27 @@ if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST[
     $red = true;
   }
 
-  echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " "  . $_POST['saveButton'];
+  //echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " "  . $_POST['saveButton'];
   $teacherSSN = $_POST['teacherSSN'];
   $teacherName = $_POST['teacherName'];
   $teacherSurname =  $_POST['teacherSurname'];
   $oldTeacherSSN = $_POST['saveButton'];
   $db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red);
+  if($db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red) == false){
+    echo <<<_SCRIPTOK
+      <script>
+          fillAns("ERR");
+      </script>
+_SCRIPTOK;
+  }else{
+    echo <<<_SCRIPTNOTOK
+    <script>
+    fillAns("OK");
+    </script>
+_SCRIPTNOTOK;
+    
+  }
 }
-
-
-
-echo '<div id="answer"> </div>';
 
 $teachers = $db->getTeachers();
 echo <<<_TABLEHEAD
