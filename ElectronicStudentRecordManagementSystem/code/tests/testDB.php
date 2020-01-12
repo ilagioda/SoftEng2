@@ -141,6 +141,7 @@ final class dbTest extends TestCase
         // add admins and teachers with privileges or not
         $this->assertTrue($db->insertOfficialAccount("Teachers", "TestA~", "a", "a", "a"));
         $this->assertFalse($db->insertOfficialAccount("Teachers", "TestB~", "a", "a", "a", 1)); // just one principal
+        $this->assertFalse($db->insertOfficialAccount("Teachers", "TestA~", "a", "a", "a")); // just one teacher with a given SSN
         $this->assertTrue($db->insertOfficialAccount("Admins", "TestC~", "a", "a", "a"));
         $this->assertTrue($db->insertOfficialAccount("Admins", "TestD~", "a", "a", "a", 1));
 

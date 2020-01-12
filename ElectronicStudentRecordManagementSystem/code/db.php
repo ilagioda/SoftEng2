@@ -264,7 +264,7 @@ class dbAdmin extends db
         }
     }
 
-    // NEEDS TO BE RE-TESTED
+    // TESTED
     function insertOfficialAccount($who, $SSN, $hashedPw, $name, $surname, $rights = 0)
     {
 
