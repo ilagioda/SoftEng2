@@ -107,6 +107,8 @@ $db = new dbAdmin();
       function(data, status) {
         if (data == 1) {
           var table = document.getElementById("classSubjectTable");
+          var tbody = document.getElementById("tbodyClassSubject");
+
           //console.log("lunghezza tabella " + table.rows.length); 
           //table.rows.length counts header too
           var lastChildIndex = table.rows.length - 1;
@@ -130,13 +132,76 @@ $db = new dbAdmin();
           document.getElementById('trashButtonClassSubject_' + whereToAdd).addEventListener("click", function() {
             trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject);
           });
-          table.append(lastRow);
+          tbody.append(lastRow);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! Tuple has been correctly added.</strong></div>';
 
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot add this element. </strong></div>';
         }
       });
+  }
+  function addTeacher(obj){
+    ssn = document.getElementById("newTeacherSSN").value;
+    name = document.getElementById("newTeacherName").value;
+    surname = document.getElementById("newTeacherSurname").value;
+
+    $.post("manageTeacherBackEnd.php", {
+        event: "add",
+        codFisc: ssn,
+        name: name,
+        surname: surname
+      },
+      function(data, status) {
+        if (data == 1) {
+          var table = document.getElementById("tableTeachers");
+          var tbody = document.getElementById("tbodyTeachers");
+          //console.log("lunghezza tabella " + table.rows.length); 
+          //table.rows.length counts header too
+          var lastChildIndex = table.rows.length - 1;
+          var lastRow = table.rows[lastChildIndex];
+          var whereToAdd = lastChildIndex;
+          table.deleteRow(lastChildIndex);
+          newRow = table.insertRow(whereToAdd);
+          newRow.id = "row_" + ssn;
+
+          var cell0 = newRow.insertCell(0); //SSN
+          var cell1 = newRow.insertCell(1); //name
+          var cell2 = newRow.insertCell(2); //surname
+          var cell3 = newRow.insertCell(3); //principal
+          var cell4 = newRow.insertCell(4); //modify
+          var cell5 = newRow.insertCell(5); //trash
+          cell0.className = "text-center";
+          cell0.innerHTML = ssn;
+
+          cell1.className = "text-center";
+          cell1.innerHTML = name;
+
+          cell2.className = "text-center";
+          cell2.innerHTML = surname;
+
+          cell3.className = "text-center";
+          cell3.innerHTML = "";
+
+          cell4.className = "text-center";
+          // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
+          cell4.innerHTML = '<td class="text-center"><button type="button" id="entranceButton_' + ssn+'" class="btn btn-default btn-lg" data-toggle="modal" data-target="#modal" data-name="'+ name+'" data-surname="'+surname+'" + data-ssn="' + ssn+'" data-princ="" onclick="fillModalFieldsENTRANCE(this)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button> </td>';
+          
+          cell5.className= "text-center";
+          cell5.innerHTML = '<td class="text-center"><button type="button" id="trashButton_' + ssn+'" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>';
+          document.getElementById('trashButton_' + ssn).addEventListener("click", function() {
+            trashButtonClicked("this", ssn);
+          });
+          tbody.append(lastRow);
+          document.getElementById("newTeacherSSN").value = "";
+          document.getElementById("newTeacherName").value = "";
+          document.getElementById("newTeacherSurname").value = "";
+          document.getElementById("answer").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! Teacher has been correctly added.</strong></div>';
+        } else {
+          // alert(data);
+          document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, this element cannot be added. </strong></div>';
+        }
+      });
+    
   }
 
   function trashButtonClassSubjectClicked(obj, ssn, classID, subject) {
@@ -193,7 +258,7 @@ echo <<<_TABLEHEAD
                 <th scope="col">PRINCIPAL</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbodyTeachers">
 _TABLEHEAD;
 $i = 1;
 foreach ($teachers as $teacher) {
@@ -215,6 +280,19 @@ foreach ($teachers as $teacher) {
 _ROWS;
   $i++;
 }
+
+echo <<<_PLUSROW
+<tr id="row_plusRow">
+    <td class="text-center"><input type="text" id="newTeacherSSN" class="text-center"/></td>
+    <td class="text-center"><input type="text" id="newTeacherName" class="text-center"/></td>
+    <td class="text-center"><input type="text" id="newTeacherSurname" class="text-center"/></td>
+    <td class="text-center"></td>
+    <td class="text-center"></td>
+    <td class="text-center"><button type="button" id="addTeacherId" class="btn btn-success btn-lg" onclick='addTeacher(this)'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
+</tr>
+
+_PLUSROW;
+
 echo "</tbody>
     </table>";
 

@@ -52,7 +52,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                                                 <th scope="col">SUBJECT</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbodyClassSubject">
 _MODAL;
                 $rowsClassSubject = $db->getClassSubject($ssn);
                 $j = 1;
@@ -117,6 +117,13 @@ _ENDMODAL;
                 if ($db->addSubjectTeachedInAClassByATeacher($codFisc, $classID, $subject))
                     echo 1;
                 else echo 0;
+                exit;
+            }
+        }
+        elseif($_POST["event"] == "add") {
+            //Delete a teacher
+            if (isset($_POST["codFisc"]) && isset($_POST["name"]) && isset($_POST["surname"])) {
+                echo 1;
                 exit;
             }
         }
