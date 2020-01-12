@@ -73,7 +73,6 @@ _COORDINATED_CLASSES;
                         $k++;
                     }
                 }
-                else echo "This teacher coordinates no class.<br>";
                 $classes = $db->getNotCoordinatedClasses();
                 if($classes->num_rows > 0){
                 echo <<<_LASTROW
@@ -96,7 +95,6 @@ _LASTROW;
                                                     </table>
 _ENDMODAL;
                 }
-                else echo "No class misses coordinator.";
                     echo <<<_MODAL
                     <table id="classSubjectTable" class="table">
                                             <thead>
@@ -198,9 +196,8 @@ _ENDMODAL;
         }
         elseif($_POST["event"] == "deleteCoordinatedClass") {
             //Delete a teacher
-            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "" ) {
-                $hashedPw = password_hash($_POST["codFisc"], PASSWORD_DEFAULT);
-                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0) )
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["classID"]) && $_POST["classID"] != "") {
+                if ($db->deleteClassCoordinator($_POST["codFisc"], $_POST["classID"]))
                     echo 1;
                 else echo 0;
                 exit;

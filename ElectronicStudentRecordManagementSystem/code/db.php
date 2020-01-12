@@ -514,7 +514,18 @@ class dbAdmin extends db
     //NEEDS TO BE TESTED 
     public function insertCoordinatedClass($ssn, $class)
     {
+        $ssn = $this->sanitizeString($ssn);
+        $class = $this->sanitizeString($class);
         return $this->query("UPDATE Classes SET coordinatorSSN= '$ssn' WHERE classID= '$class'");
+    }
+
+    //NEEDS TO BE TESTED
+    public function deleteClassCoordinator($ssn, $class)
+    {
+        $ssn = $this->sanitizeString($ssn);
+        $class = $this->sanitizeString($class);
+        return $this->query("UPDATE Classes SET coordinatorSSN= '' WHERE classID= '$class' and coordinatorSSN='$ssn' ");
+
     }
     
     //NEEDS TO BE TESTED
