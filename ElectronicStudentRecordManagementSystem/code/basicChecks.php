@@ -27,7 +27,7 @@ require_once("inactivity.php");
     </noscript>
 
     <!-- CHECKING COOKIES ENABLED -->
-    <script><!--
+    <script>
         try {
             document.cookie = 'cookietest=1';
             var cookiesEnabled = document.cookie.indexOf('cookietest=') !== -1;
@@ -36,5 +36,5 @@ require_once("inactivity.php");
         } catch (e) {
             window.location="cookiesDisabled.php";
         }
-    //--></script>
+    </script>
 </head>
