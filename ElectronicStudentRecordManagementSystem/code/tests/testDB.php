@@ -476,37 +476,40 @@ final class dbTest extends TestCase
         $db = new dbParent();
 
         $ssn = "WRONG";
-        //The following part of the test is disabled because the function uses the die() function and the tests would stop here.
-        //        //non existing parent or not associated to the child
-        //        $ssn="WRONG";
-        //        $result=$db->viewChildAssignments($ssn);
-        //        $this->>assertSame($result, null);
 
-
-
-        //No assignment for the child class -> expected empty array
+        //No assignment for the child class (1D) -> expected empty array
         $ssn = "ISAORA";
         $result = $db->viewChildAssignments($ssn);
         $array = array();
-        $this->assertSame($result, $array);
+        $this->assertSame($array,$result);
 
         //Assignment for the child class -> expected filled array
 
-        $db->queryForTesting("INSERT INTO `assignments` (`subject`, `date`, `classID`, `textAssignment`,`pathFilename`) VALUES ('History', '2019-12-11', '1D', 'Number one',''), ('Math', '2019-12-11', '1D', 'Second',''), ('Math', '2020-02-11', '1D', 'Second','')");
+        $db->queryForTesting("INSERT INTO `assignments` (`subject`, `date`, `classID`, `textAssignment`,`pathFilename`) VALUES ('History', '2019-12-11', '1D', 'Number one',''), 
+                                                                                                                               ('Math', '2019-12-11', '1D', 'Second','path/to/second/assignment/file'), 
+                                                                                                                               ('History', '2019-10-11', '1D', 'Another one',''), 
+                                                                                                                               ('Math', '2020-02-11', '1D', 'FirstSecondSemesterFile','path/for/second/semester/file'),
+                                                                                                                               ('History', '2020-02-11', '1D', 'SecondFile',''),
+                                                                                                                               ('History', '2020-05-25', '1D', 'Another one','')");
 
         $result = $db->viewChildAssignments($ssn);
 
         $month = intval(date("m"));
 
-        if($month==1 || $month>8)
-            $array["2019-12-11"] = "History:View assignments:Number one~Math:View assignments:Second";
-        else
-            $array["2020-02-11"] = "Math:View assignments:Second";
+        if($month==1 || $month>8){
+            $array["2019-12-11"] = "History:View assignments:Number one~Math:View assignments:Second:path/to/second/assignment/file";
+            $array["2019-10-11"] = "History:View assignments:Another one";
+        } else {
+            $array["2020-02-11"] = "Math:View assignments:FirstSecondSemesterFile~History:View Assignments:SecondFile";
+            $array["2020-05-25"] = "History:View assignments:Another one";
+        }
         $this->assertSame($array, $result);
 
         //restoring db
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2019-12-11' and `classID` = '1D'");
+        $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2019-10-11' and `classID` = '1D'");
         $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2020-02-11' and `classID` = '1D'");
+        $db->queryForTesting("DELETE FROM `assignments` WHERE `date` = '2020-05-25' and `classID` = '1D'");
     }
 
 

@@ -1167,13 +1167,13 @@ class dbParent extends db
     }
 
 
-    // CHANGED
+    // TESTED
     public function viewChildAssignments($codFisc)
     {
         /*Retrieves all assignment of the selected child
         @param $codFisc (String): CodFisc of the selected student
         @return (Array): An array containing the requested info, in a format usable by the calendar functions:
-                         $array['date'] = 'subject' : "View assignments:" 'assignment text' ~ 'subject' : "View assignments:" 'assignment text' ...
+                         $array['date'] = 'subject' ":View assignments:" 'assignment text' : ['link to material'] ~ 'subject' : "View assignments:" 'assignment text' ...
         */
 
         $codFisc = $this->sanitizeString($codFisc);
@@ -1192,7 +1192,7 @@ class dbParent extends db
         $endingDate = $dates[1];
         $class = $this->getChildClass($codFisc);
 
-        $result = $this->query("SELECT subject,date,textAssignment FROM Assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
+        $result = $this->query("SELECT subject,date,textAssignment, pathFilename FROM Assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
 
         if (!$result) {
             $this->rollback();
@@ -1209,11 +1209,15 @@ class dbParent extends db
              * "YYYY-MM-DD" => "" | "View assignments"
              * */
 
-            $value = "View assignments:" . $row["textAssignment"];
+            $value = $row["subject"] . ":View assignments:" . $row["textAssignment"];
+            if($row["pathFilename"]!=""){
+                $value .= ":" . $row["pathFilename"];
+            }
+
             if (array_key_exists($row["date"], $assignments))
-                $assignments[$row["date"]] = $assignments[$row["date"]] . "~" .  $row["subject"] . ":" . $value;
+                $assignments[$row["date"]] .= "~" . $value; // concatenate the new value
             else
-                $assignments[$row["date"]] = $row["subject"] . ":" . $value;
+                $assignments[$row["date"]] = $value; // add the value
         }
 
         $this->commit();

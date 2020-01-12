@@ -89,6 +89,7 @@ CREATE TABLE `Assignments` (
 INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`, `pathFilename`) VALUES
 ('History', '2019-12-03', '1A', 'WWII', ''),
 ('Maths', '2019-11-28', '1A', 'Equations', ''),
+('Maths', '2019-11-27', '1A', 'Vectors', 'path/to/linked/file'),
 ('Physics', '2019-11-27', '1A', 'Vectors', '');
 
 

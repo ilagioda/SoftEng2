@@ -159,9 +159,6 @@ require_once("db.php");
                 return;
             } else month += 1;
         }
-
-
-
         updateCalendar();
     }
 
@@ -186,12 +183,22 @@ require_once("db.php");
             row = rows[i].split(":");
             let subject = row[0];
             let assignment = row[2];
-
+            
             str += '<div class="card-index"><div class="card-header-index text-left"><strong>';
             str += subject;
-            str += '</strong></div><div class="card-body-index"><p>';
+            str += '</strong></div><div class="card-body-index">';
             str += assignment;
-            str += '</p></div></div>';
+
+            if(row.length==4){
+                // there is also a link to a file
+                let linkToFile = row[3];
+                str+='<a class="btn btn-warning pull-right" href="';
+                str+= linkToFile;
+                str+='" role="button">Download linked file</a>';
+                
+            } 
+
+            str += '</div></div>';
 
         }
         assignments.innerHTML = str;
@@ -202,17 +209,6 @@ require_once("db.php");
 </script>
 
 <?php
-
-
-$childName = $_SESSION['childName'];
-$childSurname = $_SESSION['childSurname'];
-
-$db = new dbParent();
-
-
-$assignments = $db->viewChildAssignments($_SESSION['child']);
-
-$subjects = $db->getSubjectTaughtInClass($_SESSION['class']);
 
 
 
