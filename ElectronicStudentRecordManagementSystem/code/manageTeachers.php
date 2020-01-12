@@ -271,16 +271,20 @@ $db = new dbAdmin();
           newRow.id = "tr_coordinate_" + selectedClass;
           var cell0 = newRow.insertCell(0);
           var cell1 = newRow.insertCell(1);
+          var cell2 = newRow.insertCell(2);
+
           cell0.className = "text-center";
-          cell0.innerHTML = selectedClass;
 
           cell1.className = "text-center";
-          cell1.innerHTML = '<button type="button" id="trashButtonCoordinatedClass_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+          cell1.innerHTML = selectedClass;
+
+          cell2.className = "text-center";
+          cell2.innerHTML = '<button type="button" id="trashButtonCoordinatedClass_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
           document.getElementById('trashButtonCoordinatedClass_' + whereToAdd).addEventListener("click", function() {
             trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject);
           });
           tbody.append(lastRow);
-          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' +classID+ ' has been correctly added to coordinated classes.</strong></div>';
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' +selectedClass+ ' has been correctly added to coordinated classes.</strong></div>';
 
         } else {
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot add this element. </strong></div>';

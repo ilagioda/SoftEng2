@@ -48,7 +48,6 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
 
                 $rowsCoordinatedClasses = $db->getCoordinatedClassesByATeacher($ssn);
                 $k = 1;
-                if($rowsCoordinatedClasses->num_rows){
                     echo <<<_MODALCOORDINATOR
                     <table id="coordinatedClassesTable" class="table">
                                             <thead>
@@ -59,6 +58,7 @@ if (isset($_SESSION['user']) && $_SESSION['role'] == "admin") {
                                             </thead>
                                             <tbody id="tbodyCoordinatedClasses">
     _MODALCOORDINATOR;
+                if($rowsCoordinatedClasses->num_rows){
                     foreach ($rowsCoordinatedClasses as $coordinatedClass) {
                         $class = $coordinatedClass['classID'];
 
@@ -187,9 +187,8 @@ _ENDMODAL;
         }
         elseif($_POST["event"] == "addCoordinatedClass") {
             //Delete a teacher
-            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["name"]) && $_POST["name"] != "" && isset($_POST["surname"]) && $_POST["surname"] != "" ) {
-                $hashedPw = password_hash($_POST["codFisc"], PASSWORD_DEFAULT);
-                if ($db->insertOfficialAccount("Teachers", $_POST["codFisc"], $hashedPw, $_POST["name"], $_POST["surname"], 0) )
+            if (isset($_POST["codFisc"]) && $_POST["codFisc"] != "" && isset($_POST["class"]) && $_POST["class"] != "" ) {
+                if ($db->insertCoordinatedClass($_POST["codFisc"], $_POST["class"] ))
                     echo 1;
                 else echo 0;
                 exit;
