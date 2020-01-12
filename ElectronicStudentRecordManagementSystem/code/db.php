@@ -1422,6 +1422,29 @@ class dbParent extends db
 
         return $color;
     }
+
+    // NEED TO BE TESTED !!!
+    public function getTeacherNameSurname($teacherSSN){
+        /** *
+        * This function, given a teacher SSN, retrieves his/her name and surname
+        * @param: $teacherSSN: SSN of the teacher
+        * @return: a string in the form "name surname" or "" in case of error
+        */
+
+        $teacherSSN = $this->sanitizeString($teacherSSN);
+
+        $result = $this->query("SELECT `name`, `surname` FROM Teachers WHERE codFisc='$teacherSSN'");
+        if (!$result)
+            die("Unable to select the teacher");
+
+        $teacher = "";
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_array(MYSQLI_ASSOC);
+            $teacher = $row['name'] . " " . $row['surname'];
+        }             
+
+        return $teacher;
+    }
 }
 
 class dbTeacher extends db
