@@ -377,7 +377,7 @@ class dbAdmin extends db
         return $this->query("INSERT INTO internalCommunications VALUES('$newID', '$class', CURRENT_TIMESTAMP, '$title', '$text') ");
     }
 
-    //NEEDS TO BE TESTED
+    //TESTED
     /**
      * This function has the aim of removing the information about a teacher in tables Teachers and TeacherClassSubjectTable
      * The remove is possible if:
@@ -436,7 +436,7 @@ class dbAdmin extends db
         } */
     }
 
-    //NEEDS TO BE TESTED
+    //TESTED
     /**
      * The aim of deleteSubjectTeachedInAClassByATeacher is to remove the information about the subject that is teached by a teacher in a particular class
      * 

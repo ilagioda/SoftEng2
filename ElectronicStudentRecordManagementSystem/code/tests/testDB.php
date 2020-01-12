@@ -250,6 +250,26 @@ final class dbTest extends TestCase
 
     }
 
+    public function testDeleteSubjectTeachedInAClassByATeacher(){
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        //No other teacher has such subject in the class -> expected false
+        $result=$db->deleteSubjectTeachedInAClassByATeacher("GNV", "1A", "Physics");
+        $this->assertFalse($result);
+
+        //teacher has subject -> expected true
+        $result=$db->queryForTesting("INSERT INTO `teacherclasssubjecttable` (`codFisc`, `classID`, `subject`) VALUES ('TEA', '1A', 'Physics')");
+        $result=$db->deleteSubjectTeachedInAClassByATeacher("GNV", "1A", "Physics");
+        $this->assertTrue($result);
+        $result=$db->queryForTesting("SELECT COUNT(*) AS CNT FROM Teacherclasssubjecttable WHERE codFisc='TEST' AND classId='1A' AND subject='Physics'");
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $this->assertSame('0', $row["CNT"]);
+
+
+    }
+
     public function testUpdateStudentsClass()
     {
         $_SESSION['role'] = "admin";
