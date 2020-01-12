@@ -84,6 +84,7 @@ $(document).ready(function(){
 	
 	$('[id^= "filteredTable-"]').hide();
 	$('[id^= "titleSelectDate-"]').hide();
+	$('[id^= "divPreviousNext-"]').hide();
 
 	$('[id^= "buttonCalendar-"]').click(function(){
 		$(this).hide();
@@ -95,7 +96,7 @@ $(document).ready(function(){
 		$('#lecturesTable-'+subject).hide();
 		$('#titleSelectDate-'+subject).show();
 		$("#inputCalendar-"+subject).prop("type", "date");
-		// $("#inputCalendar-"+subject).after("<ul class='pager'><li class='previous pr-"+subject+"'><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li><li class='next'><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li></ul>");
+		$("#divPreviousNext-"+subject).show();
 
 	});
 	
@@ -109,47 +110,81 @@ $(document).ready(function(){
 		$('#filteredTable-'+subject).hide();
 		$('#lecturesTable-'+subject).show();
 		$('#titleSelectDate-'+subject).hide();
+		$("#divPreviousNext-"+subject).hide();
 
 	});
 	
 	$('[id^= "inputCalendar-"]').change(function() {
-
 		var subject = $(this).attr("data-subject");
 		var date = $(this).val();
-				
-		var curr = new Date;
-		var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()-6));
-		var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+7));
-
-		var firstday = firstday.toISOString().split('T')[0];  
-		var lastday = lastday.toISOString().split('T')[0];  
 		
-		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
-		if(date >= firstday && date <= lastday) {
-			flag = 0;
-		}
-		
-		$.ajax({
-			type:		"POST",
-			dataType:	"json",
-			url:		"loadLectures.php",
-			data:		"date="+date+"&subject="+subject,
-			cache:		false,
-			success:	function(response){ // RESPONSE = hour,topic
-							$('#filteredTable-'+subject).empty();
-							if(response.length > 0) {
-								$('#filteredTable-'+subject).append(updateTableLectures(response, flag, subject, date));
-							} else {
-								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No lectures for the selected date </h4></div>");
-							}
-						},
-			error: 		function(){
-							alert("Error: assignments not loaded");
-						}
-		});
+		callAjaxLoadLectures(date, subject);
 	});
 
+	$(".previous").click(function() {
+		
+		var subject = $(this).attr("data-subject");
+		
+		var actualDay = $('#inputCalendar-'+subject).val();
+		actualDay = new Date(actualDay);
+		
+		var previousDay = actualDay.setDate(actualDay.getDate() - 1);
+		previousDay = new Date(previousDay).toISOString().split('T')[0];
+
+		callAjaxLoadLectures(previousDay, subject);
+	});
+	
+	$(".next").click(function() {
+		
+		var subject = $(this).attr("data-subject");
+		
+		var actualDay = $('#inputCalendar-'+subject).val();
+		actualDay = new Date(actualDay);
+		
+		var nextDay = actualDay.setDate(actualDay.getDate() + 1);
+		nextDay = new Date(nextDay).toISOString().split('T')[0];
+
+		callAjaxLoadLectures(nextDay, subject);
+	});
 });
+
+// global
+var curr = new Date;
+
+var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()-6));
+var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+7));
+
+firstday = firstday.toISOString().split('T')[0];  
+lastday = lastday.toISOString().split('T')[0]; 
+
+function callAjaxLoadLectures(date, subject) {
+	
+	$('#inputCalendar-'+subject).val(date); // set the date in the input field 
+
+	var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+	if(date >= firstday && date <= lastday) {
+		flag = 0;
+	}
+		
+	$.ajax({
+		type:		"POST",
+		dataType:	"json",
+		url:		"loadLectures.php",
+		data:		"date="+date+"&subject="+subject,
+		cache:		false,
+		success:	function(response){ // RESPONSE = hour,topic
+						$('#filteredTable-'+subject).empty();
+						if(response.length > 0) {
+							$('#filteredTable-'+subject).append(updateTableLectures(response, flag, subject, date));
+						} else {
+							$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No lectures for the selected date </h4></div>");
+						}
+					},
+		error: 		function(){
+						alert("Error: lectures not loaded");
+					}
+	});
+}
 
 
 function updateTableLectures(response, flag, subject, date) {
@@ -254,6 +289,13 @@ function modalEdit(obj) {
 
 	<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
 				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">
+	
+	<div id="divPreviousNext-<?php echo $subject; ?>">
+		<ul class='pager'>
+			<li class='previous' data-subject="<?php echo $subject; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
+			<li class='next' data-subject="<?php echo $subject; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
+		</ul>
+	</div>	
 	
 	<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
 	<table id="lecturesTable-<?php echo $subject; ?>" class="table table-hover text-center" style="border-collapse:collapse;">

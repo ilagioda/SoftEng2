@@ -175,11 +175,11 @@ $(document).ready(function(){
 
 });
 
+var today = new Date().toISOString().split('T')[0];  
+
 function callAjaxLoadAssignments(day, subject) {
 	
 	$('#inputCalendar-'+subject).val(day); // set the date in the input field 
-		
-	var today = new Date().toISOString().split('T')[0];  
 		
 	var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
 	if(day >= today) {
