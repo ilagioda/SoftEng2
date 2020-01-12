@@ -54,6 +54,7 @@ $db = new dbAdmin();
     document.getElementById("teacherSurname").value = teachSurname;
     document.getElementById("teacherSSN").value = teachSSN;
     document.getElementById("teacherPrincipal").checked = !isPrincipal;
+    document.getElementById("saveButton").value = teachSSN;
 
     $.post("manageTeacherBackEnd.php", {
         event: "insertTable",
@@ -140,7 +141,8 @@ $db = new dbAdmin();
         }
       });
   }
-  function addTeacher(obj){
+
+  function addTeacher(obj) {
     ssn = document.getElementById("newTeacherSSN").value;
     name = document.getElementById("newTeacherName").value;
     surname = document.getElementById("newTeacherSurname").value;
@@ -184,10 +186,10 @@ $db = new dbAdmin();
 
           cell4.className = "text-center";
           // onclick=\''+'trashButtonClassSubjectClicked(this,"' + ssn + '","' + selectedClass + '","'+ selectedSubject + '")\''+' dopo lg" e prima della chiusura >
-          cell4.innerHTML = '<td class="text-center"><button type="button" id="entranceButton_' + ssn+'" class="btn btn-default btn-lg" data-toggle="modal" data-target="#modal" data-name="'+ name+'" data-surname="'+surname+'" + data-ssn="' + ssn+'" data-princ="" onclick="fillModalFieldsENTRANCE(this)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button> </td>';
-          
-          cell5.className= "text-center";
-          cell5.innerHTML = '<td class="text-center"><button type="button" id="trashButton_' + ssn+'" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>';
+          cell4.innerHTML = '<td class="text-center"><button type="button" id="entranceButton_' + ssn + '" class="btn btn-default btn-lg" data-toggle="modal" data-target="#modal" data-name="' + name + '" data-surname="' + surname + '" + data-ssn="' + ssn + '" data-princ="" onclick="fillModalFieldsENTRANCE(this)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button> </td>';
+
+          cell5.className = "text-center";
+          cell5.innerHTML = '<td class="text-center"><button type="button" id="trashButton_' + ssn + '" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button> </td>';
           document.getElementById('trashButton_' + ssn).addEventListener("click", function() {
             trashButtonClicked("this", ssn);
           });
@@ -201,7 +203,7 @@ $db = new dbAdmin();
           document.getElementById("answer").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, this element cannot be added. </strong></div>';
         }
       });
-    
+
   }
 
   function trashButtonClassSubjectClicked(obj, ssn, classID, subject) {
@@ -306,12 +308,12 @@ if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST[
     $red = true;
   }
 
-  //echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " " . $_POST['teacherPrincipal'];
+  echo $_POST['teacherSSN'] . " " . $_POST['teacherName'] . " " . $_POST['teacherSurname'] . " "  . $_POST['saveButton'];
   $teacherSSN = $_POST['teacherSSN'];
   $teacherName = $_POST['teacherName'];
   $teacherSurname =  $_POST['teacherSurname'];
-
-  var_dump($db->updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red));
+  $oldTeacherSSN = $_POST['saveButton'];
+  $db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red);
 }
 
 
@@ -409,7 +411,7 @@ echo <<<_MODAL
                       </div>
                       <div class="modal-footer">
                           <button type="button" id="cancelButton" class="btn btn-danger col-xs-3 col-md-offset-3">Cancel</button>
-                          <button type="Submit" id="saveButton" class="btn btn-primary col-xs-3" style="margin-top: 0px">Save changes</button>
+                          <button type="Submit" id="saveButton"  name ='saveButton' class="btn btn-primary col-xs-3" style="margin-top: 0px" value="">Save changes</button>
                           </div> 
                       </form>
                   </div>

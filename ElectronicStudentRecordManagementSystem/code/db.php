@@ -309,7 +309,7 @@ class dbAdmin extends db
     //TESTED
     function insertCommunication($title, $text)
     {
-         
+
 
         /**
          * Inserts an official communication incrementing the ID.
@@ -522,33 +522,31 @@ class dbAdmin extends db
      * This function has the aim to update all the occurrences in the different tables of the information related to the teacher if they were modified. 
      */
 
-    public function updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)
+    public function updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)
     {
-        if ($codFisc !== $teacherSSN || $name !== $teacherName || $surname !== $teacherSurname) {
-            if ($this->query("UPDATE `Teachers` SET `codFisc`='$teacherSSN',`name`='$teacherName',`surname`='$teacherSurname' WHERE `codFisc`='$codFisc'")) {
+        if ($oldTeacherSSN != $teacherSSN || $name != $teacherName || $surname != $teacherSurname) {
+            if ($this->query("UPDATE `Teachers` SET `codFisc`='$teacherSSN',`name`='$teacherName',`surname`='$teacherSurname' WHERE `codFisc`='$oldTeacherSSN'")) {
 
                 // DEVO MODIFICARE LE INFORMAZIONI DEL PROFESSORE NELLE ALTRE TABELLE
-                $a = $this->query("UPDATE `TeacherClassSubjectTable` SET `codFisc`= '$teacherSSN' WHERE `codFisc`= '$codFisc'");
-                $b = $this->query("UPDATE `StudentNotes` SET `codFiscTeacher`='$teacherSSN' WHERE `codFiscTeacher`= '$codFisc'");
-                $c = $this->query("UPDATE `ParentMeetings` SET `teacherCodFisc`= '$teacherSSN' WHERE `teacherCodFisc`= '$codFisc'");
-                $d = $this->query("UPDATE `Lectures` SET `codFiscTeacher`= '$teacherSSN' WHERE `codFiscTeacher`= '$codFisc'");
-                $e = $this->query("UPDATE `Classes` SET `coordinatorSSN`= '$teacherSSN' WHERE `coordinatorSSN`= '$codFisc'");
-
-                if ($a && $b && $c && $d && $e) {
-                    return true;
-                } else {
-                    return false;
-                }
+                // VIENE TUTTO GESTITO COL MECCANISMO CASCADE nelle tabelle
+                /* 
+                $this->query("UPDATE `TeacherClassSubjectTable` SET `codFisc`= '$teacherSSN' WHERE `codFisc`= '$oldTeacherSSN'");
+                $this->query("UPDATE `StudentNotes` SET `codFiscTeacher`='$teacherSSN' WHERE `codFiscTeacher`= '$oldTeacherSSN'");
+                $this->query("UPDATE `ParentMeetings` SET `teacherCodFisc`= '$teacherSSN' WHERE `teacherCodFisc`= '$oldTeacherSSN'");
+                $this->query("UPDATE `Lectures` SET `codFiscTeacher`= '$teacherSSN' WHERE `codFiscTeacher`= '$oldTeacherSSN'");
+                $this->query("UPDATE `Classes` SET `coordinatorSSN`= '$teacherSSN' WHERE `coordinatorSSN`= '$oldTeacherSSN'");
+                */
+                return true;
             } else {
                 return false;
             }
         } else {
-            return false;
+            return true;
         }
     }
 
     //NEEDS TO BE TESTED
-    public function updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red)
+    public function updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red)
     {
         // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
         // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
@@ -559,14 +557,15 @@ class dbAdmin extends db
         $teacherSSN = $this->sanitizeString($teacherSSN);
         $teacherName = $this->sanitizeString($teacherName);
         $teacherSurname = $this->sanitizeString($teacherSurname);
-        $red = $this->sanitizeString($red);
+        $oldTeacherSSN = $this->sanitizeString($oldTeacherSSN);
+
+        //$red = $this->sanitizeString($red);
 
         $this->begin_transaction();
 
-        $result = $this->query("SELECT * FROM `Teachers` WHERE `codFisc` = '$teacherSSN'");
+        $result = $this->query("SELECT * FROM `Teachers` WHERE `codFisc` = '$oldTeacherSSN '");
         $result = $result->fetch_assoc();
         // CURRENT VALUES IN DB
-        $codFisc = $result['codFisc'];
         $name = $result['name'];
         $surname = $result['surname'];
         $isPrincipal = $result['principal'];
@@ -579,52 +578,52 @@ class dbAdmin extends db
                 // Non devo modificare la carica
                 // Verifico se c'è qualcosa da modificare 
                 // Confronto i campi: se diversi devo modificare, altrimenti non deve fare nulla.
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
                     $this->commit();
-                    return true;
+                    return 4;
                 } else {
                     $this->rollback();
-                    return false;
+                    return 4;
                 }
             } else {
                 // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
-                    if ($this->query("UPDATE `Teachers` SET `principal`= 1 WHERE `codFisc` ='$codFisc'")) {
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
+                    if ($this->query("UPDATE `Teachers` SET `principal`= 1 WHERE `codFisc` ='$teacherSSN'")) {
                         $this->commit();
-                        return true;
+                        return 3;
                     } else {
                         $this->rollback();
-                        return false;
+                        return 3;
                     }
                 } else {
                     $this->rollback();
-                    return false;
+                    return 3;
                 }
             }
         } else {
             //E' principal
             if ($red) {
                 // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
-                    if ($this->query("UPDATE `Teachers` SET `principal`= 0   WHERE `codFisc` ='$codFisc'")) {
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
+                    if ($this->query("UPDATE `Teachers` SET `principal`= 0   WHERE `codFisc` ='$teacherSSN'")) {
                         $this->commit();
-                        return true;
+                        return 2;
                     } else {
                         $this->rollback();
-                        return false;
+                        return 2;
                     }
                 } else {
                     $this->rollback();
-                    return false;
+                    return 2;
                 }
             } else {
                 // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)) {
+                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
                     $this->commit();
-                    return true;
+                    return 1;
                 } else {
                     $this->rollback();
-                    return false;
+                    return "Mimmo";
                 }
             }
         }
@@ -1171,11 +1170,12 @@ class dbParent extends db
         return $assignments;
     }
 
-	
-		// NEW 
-	public function viewChildLectures($codFisc) {
-		
-        /*Retrieves all lectures of the selected child
+
+    // NEW 
+    public function viewChildLectures($codFisc)
+    {
+
+        /*Retrieves all assignment of the selected child
         @param $codFisc (String): CodFisc of the selected student
         @return (Array): An array containing the requested info, in a format usable by the calendar functions:
                          $array['date'] = 'subject' : "View lectures:" 'lecture text' ~ 'subject' : "View lectures:" 'lecture text' ...
@@ -1486,12 +1486,13 @@ class dbParent extends db
     }
 
     //TESTED
-    public function getTeacherNameSurname($teacherSSN){
+    public function getTeacherNameSurname($teacherSSN)
+    {
         /** *
-        * This function, given a teacher SSN, retrieves his/her name and surname
-        * @param: $teacherSSN: SSN of the teacher
-        * @return: a string in the form "name surname" or "" in case of error
-        */
+         * This function, given a teacher SSN, retrieves his/her name and surname
+         * @param: $teacherSSN: SSN of the teacher
+         * @return: a string in the form "name surname" or "" in case of error
+         */
 
         $teacherSSN = $this->sanitizeString($teacherSSN);
 
@@ -1503,7 +1504,7 @@ class dbParent extends db
         if ($result->num_rows == 1) {
             $row = $result->fetch_array(MYSQLI_ASSOC);
             $teacher = $row['name'] . " " . $row['surname'];
-        }             
+        }
 
         return $teacher;
     }
