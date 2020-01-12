@@ -19,8 +19,7 @@ function generateRandomString($length = 10) {
 }
 
 if (!filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) {
-    // FIXME: change the action
-    die("invalid mail address");
+    die("$to_address is not a valid mail address");
 }
 
 $to_address = $_POST['mail'];
@@ -41,8 +40,8 @@ $pw = generateRandomString();
 $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 //echo "hashedPW vale: $hashed_pw";
 if(!$db->ChangePassword($to_address, $hashed_pw, "Parents")){
-    echo "TO ADDR: ". $to_address;
-    echo "HASHED PW: ". $hashed_pw;
+    //echo "TO ADDR: ". $to_address;
+    //echo "HASHED PW: ". $hashed_pw;
     die("Unable to change password for $to_address");
 }
 
