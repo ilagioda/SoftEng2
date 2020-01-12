@@ -1132,31 +1132,10 @@ class dbParent extends db
         $codFisc = $this->sanitizeString($codFisc);
         $this->begin_transaction();
 
-        /* Verify if the user logged in is actually allowed to see the assignments of the requested child */
-        $result = $this->query("SELECT * FROM Students WHERE codFisc='$codFisc';");
-        if (!$result)
-            die("Unable to select student $codFisc");
-        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
-            die("No student with ID $codFisc ");
-        }
-        $class = $this->getChildClass($codFisc);
-        $parent1 = $row['emailP1'];
-        $parent2 = $row['emailP2'];
-        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
-            die("You are not authorised to see this information.");
-
-
-        /* find the current semester in order to show only the required dates*/
-        $year = intval(date("Y"));
-        $month = intval(date("m"));
-        if ($month <= 7) {
-            // second semester
-            $year = $year - 1;
-        }
-        $beginningDate = $year . "-08-01";
-        $year = $year + 1;
-        $endingDate = $year . "-07-31";
-
+        $dates = $this->verifyStudentAndGetSemesterDates($codFisc);
+		$beginningDate = $dates[0];
+		$endingDate = $dates[1];
+		$class = $this->getChildClass($codFisc);
 
         $result = $this->query("SELECT subject,date,textAssignment FROM Assignments WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
 
@@ -1190,7 +1169,7 @@ class dbParent extends db
 		// NEW 
 	public function viewChildLectures($codFisc) {
 		
-        /*Retrieves all assignment of the selected child
+        /*Retrieves all lectures of the selected child
         @param $codFisc (String): CodFisc of the selected student
         @return (Array): An array containing the requested info, in a format usable by the calendar functions:
                          $array['date'] = 'subject' : "View lectures:" 'lecture text' ~ 'subject' : "View lectures:" 'lecture text' ...
@@ -1199,31 +1178,10 @@ class dbParent extends db
         $codFisc = $this->sanitizeString($codFisc);
         $this->begin_transaction();
 
-        /* Verify if the user logged in is actually allowed to see the lectures of the requested child */
-        $result = $this->query("SELECT * FROM Students WHERE codFisc='$codFisc';");
-        if (!$result)
-            die("Unable to select student $codFisc");
-        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
-            die("No student with ID $codFisc ");
-        }
-        $class = $this->getChildClass($codFisc);
-        $parent1 = $row['emailP1'];
-        $parent2 = $row['emailP2'];
-        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
-            die("You are not authorised to see this information.");
-
-
-        /* find the current semester in order to show only the required dates*/
-        $year = intval(date("Y"));
-        $month = intval(date("m"));
-        if ($month <= 7) {
-            // second semester
-            $year = $year - 1;
-        }
-        $beginningDate = $year . "-08-01";
-        $year = $year + 1;
-        $endingDate = $year . "-07-31";
-
+        $dates = $this->verifyStudentAndGetSemesterDates($codFisc);
+		$beginningDate = $dates[0];
+		$endingDate = $dates[1];
+		$class = $this->getChildClass($codFisc);
 
         $result = $this->query("SELECT subject,date,topic FROM Lectures WHERE classID='$class' AND date > '$beginningDate' AND date< '$endingDate' ORDER BY subject ASC, date DESC;");
 
@@ -1236,12 +1194,6 @@ class dbParent extends db
 
         while (($row = $result->fetch_array(MYSQLI_ASSOC)) != NULL) {
 
-            /*
-             * Modify data to simplify them
-             * Produces an array as
-             * "YYYY-MM-DD" => "" | "View lectures"
-             * */
-
             $value = "View lectures:" . $row["topic"];
             if (array_key_exists($row["date"], $lectures))
                 $lectures[$row["date"]] = $lectures[$row["date"]] . "~" .  $row["subject"] . ":" . $value;
@@ -1252,7 +1204,35 @@ class dbParent extends db
         $this->commit();
         return $lectures;
     }
+	
+	// NEW 
+	function verifyStudentAndGetSemesterDates($codFisc) {
+		
+		$result = $this->query("SELECT * FROM Students WHERE codFisc='$codFisc';");
+        if (!$result)
+            die("Unable to select student $codFisc");
+        if (($row = $result->fetch_array(MYSQLI_ASSOC)) == NULL) {
+            die("No student with ID $codFisc ");
+        }
+        $parent1 = $row['emailP1'];
+        $parent2 = $row['emailP2'];
+        if ($_SESSION['user'] != $parent1 && $_SESSION['user'] != $parent2)
+            die("You are not authorised to see this information.");
 
+        /* find the current semester in order to show only the required dates*/
+        $year = intval(date("Y"));
+        $month = intval(date("m"));
+        if ($month <= 7) {
+            // second semester
+            $year = $year - 1;
+        }
+        $beginningDate = $year . "-08-01";
+        $year = $year + 1;
+        $endingDate = $year . "-07-31";
+		
+		return array($beginningDate, $endingDate);
+	}
+	
     //tested
     public function getChildClass($codFisc)
     {
