@@ -28,6 +28,49 @@ if (!$loggedin) {
 		$beginSemester = $days[0];
 		$endSemester = $days[1];
 	} // else --> summer holidays 
+	
+		if(isset($_POST['yesDelete'])) {
+		if(!isset($_POST["assignments"]) || !isset($_POST["assignmentsDate"]) 
+			 || !isset($_POST["comboSubject"]) || empty("assignments")) {
+?>
+		<div class="alert alert-danger alert-dismissible">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
+		</div>
+<?php
+		} else {
+			$db->deleteAssignments($_POST['assignmentsDate'], $_POST['comboSubject'], $selectedClass);
+?>
+
+		<div class="alert alert-success alert-dismissible">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong><span class="glyphicon glyphicon-send"></span> Assignments successfully deleted!</strong>
+		</div>
+
+<?php	
+		} 
+	}
+		
+	if(isset($_POST['editButton'])) {
+		if(!isset($_POST["assignments"]) || !isset($_POST["assignmentsDate"]) || !isset($_POST["comboSubject"])) {
+?>
+		<div class="alert alert-danger alert-dismissible">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
+		</div>
+<?php
+		} else {		
+			$db->updateAssignments($_POST['assignmentsDate'], $selectedClass, $_POST['comboSubject'], $_POST['assignments']);
+?>
+
+		<div class="alert alert-success alert-dismissible">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong><span class="glyphicon glyphicon-send"></span> Assignments successfully updated!</strong>
+		</div>
+
+<?php	
+		} 
+	}
 ?>
 
 <script>
@@ -116,11 +159,9 @@ $(document).ready(function(){
 			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
 							$('#filteredTable-'+subject).empty();
 							if(response) {
-								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject));
+								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, date));
 							} else {
-								
 								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
-						
 							}
 						},
 			error: 		function(){
@@ -132,7 +173,7 @@ $(document).ready(function(){
 });
 
 
-function updateTableAssignments(response, flag, subject) {
+function updateTableAssignments(response, flag, subject, date) {
 
 	var output = "<thead><tr class='active'><th class='text-center col-xs-6 col-md-4'>Date</th><th class='text-center col-xs-6 col-md-4'>Assignment</th><th class='text-center col-xs-6 col-md-4'></th></tr></thead><tbody>";
 	var ass = "";
@@ -141,13 +182,13 @@ function updateTableAssignments(response, flag, subject) {
 	for(var i=0; i<Object.keys(response).length; i++) { // foreach daily assignment
 		res = response[i].split(",");
 		for(var j=1; j<(res.length-1); j++) {
-			ass += res[j];
+			ass += res[j]+",";
 		}
 		ass = ass.substr(0,ass.length-1);
 		
 		if(subject === res[0]) {
 
-			output += "<tr class='text-center'><td>"+subject+"</td><td>"+
+			output += "<tr class='text-center'><td>"+date+"</td><td>"+
 						"<textarea readonly='readonly' style='border:none; background: none; outline: none;' rows='2'>"+
 						ass+"</textarea>";
 										
@@ -165,10 +206,10 @@ function updateTableAssignments(response, flag, subject) {
 				// assignments editable/erasable
 				output += "<button type='button' class='btn btn-default btn-xs' style='width:20%'";
 				output += "data-toggle='modal' data-target='#modalEdit'";
-				output += "data-subject='"+res[0]+"' data-assignment='"+ass+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
+				output += "data-subject='"+res[0]+"' data-date='"+date+"' data-assignment='"+ass+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
 				output += "<button type='button' class='btn btn-danger btn-xs' style='width:20%'";
 				output += "data-toggle='modal' data-target='#modalDelete'";
-				output += "data-subject='"+res[0]+"' data-assignment='"+ass+"' onclick='modalDelete(this)'>Delete</button>";
+				output += "data-subject='"+res[0]+"' data-date='"+date+"' data-assignment='"+ass+"' onclick='modalDelete(this)'>Delete</button>";
 			} else {
 				output += "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true' title='Not editable/erasable as it relates to past weeks...'></span>";
 			}
@@ -179,7 +220,7 @@ function updateTableAssignments(response, flag, subject) {
 		}
 	}
 	if(flag2 != 1) {
-		output = "<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected day </h4></div>";
+		output = "<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected day </h4></div>";
 	} else {
 		output += "</tbody>";
 	}
@@ -197,49 +238,7 @@ function updateTableAssignments(response, flag, subject) {
 	<div class="panel-body">
 
 <?php 
-	if(isset($_POST['yesDelete'])) {
-		if(!isset($_POST["assignments"]) || !isset($_POST["assignmentsDate"]) 
-			 || !isset($_POST["comboSubject"]) || empty("assignments")) {
-?>
-		<div class="alert alert-danger alert-dismissible">
-			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-			<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
-		</div>
-<?php
-		} else {
-			$db->deleteAssignments($_POST['assignmentsDate'], $_POST['comboSubject'], $selectedClass);
-?>
-
-		<div class="alert alert-success alert-dismissible">
-			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-			<strong><span class="glyphicon glyphicon-send"></span> Assignments successfully deleted!</strong>
-		</div>
-
-<?php	
-		} 
-	}
-		
-	if(isset($_POST['editButton'])) {
-		if(!isset($_POST["assignments"]) || !isset($_POST["assignmentsDate"]) || !isset($_POST["comboSubject"])) {
-?>
-		<div class="alert alert-danger alert-dismissible">
-			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-			<strong><span class="glyphicon glyphicon-send"></span> Oh no! Something went wrong...</strong>
-		</div>
-<?php
-		} else {		
-			$db->updateAssignments($_POST['assignmentsDate'], $selectedClass, $_POST['comboSubject'], $_POST['assignments']);
-?>
-
-		<div class="alert alert-success alert-dismissible">
-			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-			<strong><span class="glyphicon glyphicon-send"></span> Assignments successfully updated!</strong>
-		</div>
-
-<?php	
-		} 
-	}
-		
+	
 	$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
 	if(count($subjects) > 0) { 
 		navSubjects($subjects);			

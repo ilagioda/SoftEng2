@@ -81,12 +81,116 @@ $(document).ready(function(){
 	$('a[data-toggle="tab"]').click(function(e) {
 		var target = $(e.target).attr("href"); // activated tab
 	});
+	
+	$('[id^= "filteredTable-"]').hide();
+	$('[id^= "titleSelectDate-"]').hide();
+
+	$('[id^= "buttonCalendar-"]').click(function(){
+		$(this).hide();
+		var subject = $(this).attr("data-subject");
+		$('#lecturesTitle-'+subject).hide();
+		$('#boxInfoToday-'+subject).hide();
+		$('#filteredTable-'+subject).show();
+		$('#btnShowAll-'+subject).prop("type", "button");
+		$('#lecturesTable-'+subject).hide();
+		$('#titleSelectDate-'+subject).show();
+		$("#inputCalendar-"+subject).prop("type", "date");
+		// $("#inputCalendar-"+subject).after("<ul class='pager'><li class='previous pr-"+subject+"'><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li><li class='next'><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li></ul>");
+
+	});
+	
+	$('[id^= "btnShowAll-"]').click(function(){
+		var subject = $(this).attr("data-subject");
+		$('#lecturesTitle-'+subject).show();
+		$('#boxInfoToday-'+subject).show();
+		$('#buttonCalendar-'+subject).show();
+		$('#btnShowAll-'+subject).prop("type", "hidden");
+		$("#inputCalendar-"+subject).prop("type", "hidden");
+		$('#filteredTable-'+subject).hide();
+		$('#lecturesTable-'+subject).show();
+		$('#titleSelectDate-'+subject).hide();
+
+	});
+	
+	$('[id^= "inputCalendar-"]').change(function() {
+
+		var subject = $(this).attr("data-subject");
+		var date = $(this).val();
+				
+		var curr = new Date;
+		var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()-6));
+		var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+7));
+
+		var firstday = firstday.toISOString().split('T')[0];  
+		var lastday = lastday.toISOString().split('T')[0];  
+		
+		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+		if(date >= firstday && date <= lastday) {
+			flag = 0;
+		}
+		
+		$.ajax({
+			type:		"POST",
+			dataType:	"json",
+			url:		"loadLectures.php",
+			data:		"date="+date+"&subject="+subject,
+			cache:		false,
+			success:	function(response){ // RESPONSE = hour,topic
+							$('#filteredTable-'+subject).empty();
+							if(response.length > 0) {
+								$('#filteredTable-'+subject).append(updateTableLectures(response, flag, subject, date));
+							} else {
+								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No lectures for the selected date </h4></div>");
+							}
+						},
+			error: 		function(){
+							alert("Error: assignments not loaded");
+						}
+		});
+	});
 
 });
-function modalDelete(obj) {
+
+
+function updateTableLectures(response, flag, subject, date) {
+
+	var output = "<thead><tr class='active'><th class='text-center col-xs-6 col-sm-3'>Date</th><th class='text-center col-xs-6 col-sm-3'>Hour</th><th class='col-xs-6 col-sm-3'>Topics</th><th class='text-center col-xs-6 col-sm-3'></th></tr></thead><tbody>";
+	var topics = "";
 	
-	var classID = obj.getAttribute("data-class");
-	document.getElementById("modalClassDelete").value = classID;
+	for(var i=0; i<Object.keys(response).length; i++) { // foreach daily lesson topics
+		res = response[i].split(",");
+		var hour = res[0];
+		
+		for(var j=1; j<(res.length); j++) {
+			topics += res[j]+",";
+		}
+		topics = topics.substr(0,topics.length-1);
+		
+		output += "<tr class='text-center'><td>"+date+"</td><td>"+hour+"</td><td>"+
+					"<textarea readonly='readonly' style='border:none; background: none; outline: none;' rows='2'>"+
+					topics+"</textarea></td><td>";
+			
+		if(flag === 0) {
+			// lecture editable/erasable
+			output += "<button type='button' class='btn btn-default btn-xs' style='width:20%'";
+			output += "data-toggle='modal' data-target='#modalEdit'";
+			output += "data-subject='"+subject+"' data-date='"+date+"' data-hour='"+hour+"' data-topics='"+topics+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
+			output += "<button type='button' class='btn btn-danger btn-xs' style='width:20%'";
+			output += "data-toggle='modal' data-target='#modalDelete'";
+			output += "data-subject='"+subject+"' data-date='"+date+"' data-hour='"+hour+"' data-topics='"+topics+"' onclick='modalDelete(this)'>Delete</button>";
+		} else {
+			output += "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true' title='Not editable/erasable as it relates to past weeks...'></span>";
+		}
+
+		output += "</td></tr>";
+	}
+
+	output += "</tbody>";
+	
+	return output;
+}
+
+function modalDelete(obj) {
 	
 	var subject = obj.getAttribute("data-subject");
 	document.getElementById("modalSubjectDelete").value = subject;
@@ -103,9 +207,6 @@ function modalDelete(obj) {
 }
 
 function modalEdit(obj) {
-	
-	var classID = obj.getAttribute("data-class");
-	document.getElementById("modalClassEdit").value = classID;
 	
 	var subject = obj.getAttribute("data-subject");
 	document.getElementById("modalSubjectEdit").value = subject;
@@ -131,19 +232,10 @@ function modalEdit(obj) {
 
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
-
-<h1> All lectures: </h1>
-
 <?php 
 	$subjects = $db->getSubjectsByTeacherAndClass2($_SESSION["user"], $class);
 	if(count($subjects) > 0) { 
-		echo "<ul id='myTab' class='nav nav-pills' style='justify-content: center; display: flex;'>";
-		echo "<li class='text-center active' style='width:20%;'><a href='#$subjects[0]' data-toggle='tab'>$subjects[0]</a></li>";
-		foreach($subjects as $subject) {
-			if($subject != $subjects[0])
-				echo "<li class='text-center' style='width:20%;'><a href='#$subject' data-toggle='tab'>$subject</a></li>";
-		}
-		echo "</ul><br>";				
+		navSubjects($subjects);							
 
 		echo "<div id='myTabContent' class='tab-content'>";
 		foreach($subjects as $subject) {
@@ -154,13 +246,21 @@ function modalEdit(obj) {
 			}
 
 ?>
+	<h2 id="lecturesTitle-<?php echo $subject; ?>">All lectures 
+		<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
+	</h2>
+	<p class='text-center' id="titleSelectDate-<?php echo $subject; ?>"><strong>Select a date</strong></p>
 
-	<table class="table table-hover text-center" style="border-collapse:collapse;">
+	<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
+				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">
+	
+	<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
+	<table id="lecturesTable-<?php echo $subject; ?>" class="table table-hover text-center" style="border-collapse:collapse;">
 		<thead><tr>
-			<th>Date</th>
-			<th>Hour</th>
-			<th>Topics</th>
-			<th></th>
+			<th class='text-center col-xs-6 col-sm-3'>Date</th>
+			<th class='text-center col-xs-6 col-sm-3'>Hour</th>
+			<th class='text-center col-xs-6 col-sm-3'>Topics</th>
+			<th class='text-center col-xs-6 col-sm-3'></th>
 		</tr></thead>
 		<tbody>
 <?php
@@ -169,26 +269,31 @@ function modalEdit(obj) {
 				
 			$args = explode(",",$value);
 			$date = $args[0];
-			$hour = $args[1];
-			$topics = $args[2];
-				
+			$hour = $args[1];	
+			$topics = "";
+			for($j=2; $j<(count($args)); $j++) {
+				// the text of the topic can contain the character ,
+				$topics .= $args[$j].",";
+			}
+			$topics = substr($topics, 0, -1); // remove the last ,
+			
 ?>	
 		<tr>
 			<td><?php echo $date;?></td>
 			<td><?php echo $hour;?></td>
-			<td><?php echo $topics;?></td>						
+			<td><textarea readonly='readonly' style='border:none; background: none; outline: none;' rows='2'><?php echo $topics;?></textarea></td>						
 			<td>
 			<?php
 				if($date >= date("Y-m-d", strtotime('monday this week')) && $date <= date("Y-m-d", strtotime('sunday this week'))) { 
 			?>
 				<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalEdit" style="width:20%"
-					<?php echo "data-class='$class' data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>
+					<?php echo "data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>
 					onclick="modalEdit(this)"> 
 					Edit
 				</button>
 							
 				<button type="button" class="btn btn-danger btn-xs"	data-toggle="modal" data-target="#modalDelete" style="width:20%"
-					<?php echo "data-class='$class' data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>	
+					<?php echo "data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>	
 					onclick="modalDelete(this)">
 					Delete
 				</button>
@@ -204,6 +309,7 @@ function modalEdit(obj) {
 		?>
 		</tbody>
 	</table>
+	<div class="text-center"><input type="hidden" class="btn btn-primary" value="Show all lectures" id="btnShowAll-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"></div>
 	<?php
 			echo "</div>";
 		}
@@ -226,7 +332,7 @@ function modalEdit(obj) {
 		<form method="POST" action="">
 			<table class="table table-hover text-center">
 				<tr><td><label> Class </label></td>
-					<td><input id="modalClassDelete" type="text" name="comboClass" readonly="readonly" style="border:none;  background:none; outline: none;"></td>
+					<td><input type="text" name="comboClass" value="<?php echo $class; ?>" readonly="readonly" style="border:none;  background:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Subject </label></td>
@@ -270,7 +376,7 @@ function modalEdit(obj) {
 		<form method="POST" action="">
 			<table class="table table-hover text-center">
 				<tr><td><label> Class </label></td>
-					<td><input id="modalClassEdit" type="text" name="comboClass" readonly="readonly" style="border:none;  background:none; outline: none;"></td>
+					<td><input type="text" name="comboClass" value="<?php echo $class; ?>" readonly="readonly" style="border:none;  background:none; outline: none;"></td>
 				</tr>
 				<tr>
 					<td><label> Subject </label></td>

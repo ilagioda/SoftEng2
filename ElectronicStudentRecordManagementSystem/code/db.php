@@ -2765,4 +2765,29 @@ class dbTeacher extends db
             return $lectures;
         }
     }
+	
+	// NEW 
+    function getLecturesByTeacherClassSubjectAndDate($codTeacher, $class, $subject, $date)
+    {
+        $codTeacher = $this->sanitizeString($codTeacher);
+        $class = $this->sanitizeString($class);
+        $subject = $this->sanitizeString($subject);
+        $date = $this->sanitizeString($date);
+
+        $result = $this->query("SELECT hour,topic FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class'
+				AND subject='$subject' AND date = '$date'");
+
+        if (!$result)
+            die("Unable to select lectures.");
+        
+		$lectures = array();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                array_push($lectures, $row['hour'].",".$row['topic']);
+            }
+        }
+		
+        return $lectures;
+    }
 }

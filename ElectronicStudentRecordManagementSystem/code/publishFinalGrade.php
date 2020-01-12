@@ -137,6 +137,7 @@ $(document).ready(function(){
 	<div class="panel-body">
 	
 	<?php 
+if($coordinator) {		
 	if(!isset($_POST["okPublish"])) {
 		if(!isset($_SESSION['okPublish'])) {
 			?>
@@ -164,7 +165,6 @@ $(document).ready(function(){
 		
 		$coordinator = $db->isCoordinator($_SESSION['user'], $selectedClass);
 		
-		if($coordinator) {		
 		
 			$i = 0; // for a student student
 			$idButton = 0;	
@@ -316,10 +316,10 @@ $(document).ready(function(){
 			</table>
 		</form>
 		<?php
-		} else {
-			echo "<div class='alert alert-danger' role='alert'><strong>You are not the coordinator teacher (and you cannot publish final grades) of the class $selectedClass. </strong></div>";
-		}
-	}
+	}	
+} else {
+	echo "<div class='alert alert-danger' role='alert'><strong>You are not the coordinator teacher (and you cannot publish final grades) of the class $selectedClass. </strong></div>";
+}
 		?>	
 
     </div>

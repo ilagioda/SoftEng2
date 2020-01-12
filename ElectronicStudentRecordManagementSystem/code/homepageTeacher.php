@@ -14,7 +14,8 @@ if (!$loggedin) {
 		exit;
 	}
     require_once "loggedTeacherNavbar.php";}
-
+	require_once "db.php";
+	$db = new dbTeacher();
 /* End lines to be changed*/
 ?>
 
@@ -69,13 +70,20 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
-		<a href="publishFinalGrade.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Publish final grades</a>
-	</div>
-	<br>
-	<div class="btn-group">
         <a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Timetables</a>
     </div>
 	<br>
+	<?php 
+	$coordinator = $db->isCoordinator($_SESSION["user"], $_SESSION["comboClass"]);
+	if($coordinator) {
+		echo <<<_COORDINATORBUTTON
+	<div class="btn-group">
+		<a href="publishFinalGrade.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;Publish final grades</a>
+	</div>
+	<br>
+_COORDINATORBUTTON;
+	}
+	?>
 </div>
 <?php
 require_once("defaultFooter.php")

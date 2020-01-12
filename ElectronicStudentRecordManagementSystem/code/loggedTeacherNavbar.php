@@ -67,7 +67,16 @@
 					<li><a href="attendance.php">Attendance</a></li>
                     <li><a href="publishSupportMaterial.php">Publish Material</a></li>
                     <li><a href="writeStudentNote.php">Discplinar note</a></li>
-					<li><a href='publishFinalGrade.php'>Publish final grades</a></li>
+				<?php 
+					require_once "db.php";
+					$db = new dbTeacher();
+					if(isset($_SESSION["comboClass"])) {
+						$coordinator = $db->isCoordinator($_SESSION["user"], $_SESSION["comboClass"]);
+						if($coordinator) {
+							echo "<li><a href='publishFinalGrade.php'>Publish final grades</a></li>";
+						}
+					}
+				?>
 
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
