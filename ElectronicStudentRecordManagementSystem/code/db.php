@@ -350,6 +350,7 @@ class dbAdmin extends db
         return $resultArray;
     }
 
+    //NO NEED TO BE TESTED
     public function getClasses()
     {
         return $this->query("SELECT classID FROM Classes ORDER BY classID");
@@ -468,7 +469,7 @@ class dbAdmin extends db
         }
     }
 
-    //NEED TO BE TESTED
+    //NO NEED TO BE TESTED
     function addSubjectTeachedInAClassByATeacher($codFisc, $classID, $subject)
     {
 
@@ -478,35 +479,38 @@ class dbAdmin extends db
 
         return $this->query("INSERT INTO `TeacherClassSubjectTable`(`codFisc`, `classID`, `subject`) VALUES ('$codFisc','$classID','$subject')");
     }
-    //NEEDS TO BE TESTED
+
+    //NO NEED TO BE TESTED
     public function getTeachers()
     {
         return $this->query('SELECT * FROM Teachers');
     }
-    //NEEDS TO BE TESTED
+
+    //NO NEED TO BE TESTED
     public function getClassSubject($ssn)
     {
         $ssn = $this->sanitizeString($ssn);
         $query = "SELECT * FROM TeacherClassSubjectTable WHERE codFisc='$ssn'";
         return $this->query($query);
     }
-    //NEEDS TO BE TESTED
+
+    //NO NEED TO BE TESTED
     public function getSubjects()
     {
         return $this->query("SELECT name FROM Subjects");
     }
 
-
-    //NEEDS TO BE TESTED
+    //NO NEED TO BE TESTED
     public function getCoordinatedClassesByATeacher($ssn)
     {
         return $this->query("SELECT `classID` FROM `Classes` WHERE `coordinatorSSN` = '$ssn'");
     }
 
-    //NEEDS TO BE TESTED
+    //NO NEED TO BE TESTED
     public function getNotCoordinatedClasses(){
         return $this->query("SELECT `classID` FROM `Classes` WHERE `coordinatorSSN` = '' ORDER BY classID");
     }
+    
     //NEEDS TO BE TESTED
     /**
      * This function has the aim to update all the occurrences in the different tables of the information related to the teacher if they were modified. 
@@ -620,7 +624,7 @@ class dbAdmin extends db
         }
     }
 
-
+    // TESTED
     /**
      * This function has the aim to update the class of the students for which the class composition has been accepted.
      * @param $vectorCodFiscNameSurnameClass vector in which two important values are recorded:
@@ -633,7 +637,6 @@ class dbAdmin extends db
     function updateStudentsClass($vectorCodFiscNameSurnameClass)
     {
 
-        // TESTED 
         $this->begin_transaction();
 
         $stmt = $this->prepareStatement("UPDATE `Students` SET `classID`= ? WHERE `codFisc` = ? ");
@@ -680,16 +683,16 @@ class dbAdmin extends db
         return true;
     }
 
-
+    // NO NEED TO BE TESTED
     public function TakeParentsMail()
     {
-        // NO NEED TO BE TESTED
         return $this->query("SELECT email, hashedPassword, firstLogin FROM Parents ORDER BY hashedPassword, email");
     }
 
+    // NO NEED TO BE TESTED
     public function insertStudent($name, $surname, $SSN, $email1, $email2)
     {
-        // NO NEED TO BE TESTED
+        
         $name = $this->sanitizeString($name);
         $surname = $this->sanitizeString($surname);
         $SSN = $this->sanitizeString($SSN);
@@ -699,9 +702,10 @@ class dbAdmin extends db
         return $this->query("INSERT INTO Students(codFisc, name, surname, emailP1, emailP2, classID) VALUES ('$SSN','$name','$surname','$email1','$email2', '')");
     }
 
+    // NO NEED TO BE TESTED
     public function insertParent($name, $surname, $SSN, $email)
     {
-        // NO NEED TO BE TESTED
+        
 
         $name = $this->sanitizeString($name);
         $surname = $this->sanitizeString($surname);
@@ -711,9 +715,10 @@ class dbAdmin extends db
         return $this->query("INSERT INTO Parents(email, hashedPassword, name, surname, codFisc, firstLogin) VALUES ('$email', '','$name','$surname','$SSN', 1)");
     }
 
+    // NO NEED TO BE TESTED
     public function insertLectures($date, $hour, $classID, $codFiscTeacher, $subject, $topic)
     {
-        // NO NEED TO BE TESTED
+        
 
         $date = $this->sanitizeString($date);
         $hour = $this->sanitizeString($hour);
