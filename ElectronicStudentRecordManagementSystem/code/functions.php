@@ -215,6 +215,7 @@ function build_html_calendar($year, $month, $events = null)
             $draw_event = true;
             $teacherMeetings = false;
             $assignment = false;
+			$lecture = false;
             $attendance = false; // to store the hour/hours
             $late = false; // to say if the user entered late or exited early
 
@@ -246,6 +247,10 @@ function build_html_calendar($year, $month, $events = null)
                 //assignment
                 $assignment = true;
                 $color = "orange";
+            } else if (strpos($event, 'View lectures:') !== false) {
+                //lecture
+                $lecture = true;
+                $color = "orange";
             } else if (strpos($event, 'teacherMeetings') !== false) {
                 // Parent meeting timeslots (Teacher's side)
                 $teacherMeetings = true;
@@ -260,6 +265,9 @@ function build_html_calendar($year, $month, $events = null)
             if ($assignment) {
                 $assText = ltrim($event, 'View assignments:');
                 $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showAssignment(this.id, '$assText')\">";
+            } else if ($lecture) {
+                $topic = ltrim($event, 'View lectures:');
+                $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showLectures(this.id, '$topic')\">";
             } else if ($teacherMeetings == true && !$past) {
                 // Day cell with parent meetings time slots (clickable)
                 $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showDaySlots(this.id)\">";
