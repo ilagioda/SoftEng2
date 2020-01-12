@@ -227,6 +227,66 @@ $db = new dbAdmin();
         }
       });
   }
+  function trashButtonCoordinatedClass(obj, ssn, classID){
+    buttonID = obj.id;
+    $.post("manageTeacherBackEnd.php", {
+        event: "deleteCoordinatedClass",
+        codFisc: ssn,
+        classID: classID
+      },
+      function(data, status) {
+        //TO BE IMPLEMENTED
+        // Front end modification:
+        // the table should be adjusted.
+        if (data == 1) {
+          //alert(ssn + " has been correctly deleted.")
+          var row = document.getElementById("tr_coordinate_" + classID);
+          row.parentNode.removeChild(row);
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + classID + ' has been correctly deleted from coordinated classes.</strong></div>';
+        } else {
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot delete this element. </strong></div>';
+        }
+      });
+  }
+  function addCoordinatedClassFunction(obj, ssn, classID){
+    var selectedClass = document.getElementById("selectedCoordinatedClass").value;
+
+    $.post("manageTeacherBackEnd.php", {
+        event: "addCoordinatedClass",
+        codFisc: ssn,
+        class: selectedClass
+      },
+      function(data, status) {
+        if (data == 1) {
+          var table = document.getElementById("coordinatedClassesTable");
+          var tbody = document.getElementById("tbodyCoordinatedClasses");
+
+          //console.log("lunghezza tabella " + table.rows.length); 
+          //table.rows.length counts header too
+          var lastChildIndex = table.rows.length - 1;
+          var lastRow = table.rows[lastChildIndex];
+          var whereToAdd = lastChildIndex;
+          table.deleteRow(lastChildIndex);
+          newRow = table.insertRow(whereToAdd);
+          newRow.id = "tr_coordinate_" + selectedClass;
+          var cell0 = newRow.insertCell(0);
+          var cell1 = newRow.insertCell(1);
+          cell0.className = "text-center";
+          cell0.innerHTML = selectedClass;
+
+          cell1.className = "text-center";
+          cell1.innerHTML = '<button type="button" id="trashButtonCoordinatedClass_' + whereToAdd + '" class="btn btn-danger btn-lg" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
+          document.getElementById('trashButtonCoordinatedClass_' + whereToAdd).addEventListener("click", function() {
+            trashButtonClassSubjectClicked("this", ssn, selectedClass, selectedSubject);
+          });
+          tbody.append(lastRow);
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' +classID+ ' has been correctly added to coordinated classes.</strong></div>';
+
+        } else {
+          document.getElementById("answerModal").innerHTML = '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span> Sorry, you cannot add this element. </strong></div>';
+        }
+      });
+  }
 </script>
 
 

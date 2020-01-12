@@ -502,6 +502,11 @@ class dbAdmin extends db
     {
         return $this->query("SELECT `classID` FROM `Classes` WHERE `coordinatorSSN` = '$ssn'");
     }
+
+    //NEEDS TO BE TESTED
+    public function getNotCoordinatedClasses(){
+        return $this->query("SELECT `classID` FROM `Classes` WHERE `coordinatorSSN` = '' ORDER BY classID");
+    }
     //NEEDS TO BE TESTED
     /**
      * This function has the aim to update all the occurrences in the different tables of the information related to the teacher if they were modified. 
