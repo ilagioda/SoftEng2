@@ -370,8 +370,6 @@ if(isset($_REQUEST["teacher"])){
         </h2>
     </div>
 
-    <p id="prova"></p> 
-
 _TITLE;
 
     echo "<div id='calendar'></div>";
@@ -379,9 +377,9 @@ _TITLE;
     echo <<<_storeCodFisc
 
     <script>
-    var parentMail="$_SESSION[user]"; 
-    var teacherSSN="$_REQUEST[teacher]";        
-    var childClass="$_SESSION[class]";
+        var parentMail="$_SESSION[user]"; 
+        var teacherSSN="$_REQUEST[teacher]";        
+        var childClass="$_SESSION[class]";
     </script>
 
 _storeCodFisc;
@@ -397,9 +395,9 @@ _COSE;
 } else {
     echo <<<_ALERTMSG
     <div class="container text-center">
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        Oh no, something went wrong! <strong>No teacher</strong> has been selected for the parent meetings!
-    </div> 
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            Oh no, something went wrong! <strong>No teacher</strong> has been selected for the parent meetings!
+        </div> 
     </div> 
 _ALERTMSG;
 }
