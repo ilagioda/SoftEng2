@@ -494,6 +494,46 @@ class dbAdmin extends db
         return $this->query("SELECT name FROM Subjects");
     }
 
+
+    //NEEDS TO BE TESTED
+    public function getCoordinatedClassesByATeacher($ssn)
+    {
+        return $this->query("SELECT `classID` FROM `Classes` WHERE `coordinatorSSN` = '$ssn'");
+    }
+    //NEEDS TO BE TESTED
+    /**
+     * This function has the aim to update all the occurrences in the different tables of the information related to the teacher if they were modified. 
+     */
+
+    public function updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname)
+    {
+        if ($codFisc !== $teacherSSN || $name !== $teacherName || $surname !== $teacherSurname) {
+            if ($this->query("UPDATE `Teachers` SET `codFisc`='$teacherSSN',`name`='$teacherName',`surname`='$teacherSurname' WHERE `codFisc`='$codFisc'")) {
+
+                // DEVO MODIFICARE LE INFORMAZIONI DEL PROFESSORE NELLE ALTRE TABELLE
+                $a = $this->query("UPDATE `TeacherClassSubjectTable` SET `codFisc`= '$teacherSSN' WHERE `codFisc`= '$codFisc'");
+                $b = $this->query("UPDATE `StudentNotes` SET `codFiscTeacher`='$teacherSSN' WHERE `codFiscTeacher`= '$codFisc'");
+                $c = $this->query("UPDATE `ParentMeetings` SET `teacherCodFisc`= '$teacherSSN' WHERE `teacherCodFisc`= '$codFisc'");
+                $d = $this->query("UPDATE `Lectures` SET `codFiscTeacher`= '$teacherSSN' WHERE `codFiscTeacher`= '$codFisc'");
+                $e = $this->query("UPDATE `Classes` SET `coordinatorSSN`= '$teacherSSN' WHERE `coordinatorSSN`= '$codFisc'");
+
+                if ($a && $b && $c && $d && $e) {
+                    $this->commit();
+                    return true;
+                } else {
+                    $this->rollback();
+                    return false;
+                }
+            } else {
+                $this->rollback();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    //NEEDS TO BE TESTED
     public function updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red)
     {
         // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
@@ -501,27 +541,43 @@ class dbAdmin extends db
         // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
         // CASE 4: !isPrincipal && checked (red): NON sto modificando la carica di un vecchio professore (che NON era preside)
 
+        // VALUES RECEIVED FROM THE FORM
         $teacherSSN = $this->sanitizeString($teacherSSN);
         $teacherName = $this->sanitizeString($teacherName);
         $teacherSurname = $this->sanitizeString($teacherSurname);
         $red = $this->sanitizeString($red);
 
-        $result = $this->query("SELECT `principal` FROM `Teachers` WHERE `codFisc` = '$teacherSSN'");
+        $this->begin_transaction();
+
+        $result = $this->query("SELECT * FROM `Teachers` WHERE `codFisc` = '$teacherSSN'");
         $result->fetch_assoc();
+
+
+        // CURRENT VALUES IN DB
+        $codFisc = $result['codFisc'];
+        $name = $result['name'];
+        $surname = $result['surname'];
         $isPrincipal = $result['principal'];
+
 
         if ($isPrincipal == 0) {
             // Non è principal
 
             if ($red) {
                 //CASE 4
+                // Non devo modificare la carica
+                // Verifico se c'è qualcosa da modificare 
+                // Confronto i campi: se diversi devo modificare, altrimenti non deve fare nulla.
 
+                if ($codFisc !== $teacherSSN || $name !== $teacherName || $surname !== $teacherSurname) {
+                    $this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc);
+                }
             } else {
-                //CASE 3
+                // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
+                $this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $codFisc, $name, $surname);
             }
         } else {
             //E' principal
-
 
             if ($red) {
                 //CASE 2
@@ -1296,17 +1352,18 @@ class dbParent extends db
     }
 
     //TESTED
-    public function bookSlot($teacher, $parentMail, $day, $slot, $quarter){
+    public function bookSlot($teacher, $parentMail, $day, $slot, $quarter)
+    {
         /** *
-        *This function return the status of a quarter of hour for a booking slot, 
-        *coded in color (red=full, yellow=booked, green=free) after a booking attempt
-        *@param $teacher: SSN of teacher
-        *@param $parentMail: mail of parent
-        *@param $day: day of booking slot
-        *@param $slot: booking slot number
-        *@param $quarter: quarter of hour of the slot
-        *@return: a string with the color of the status of the quarter after the (possible) booking
-        */
+         *This function return the status of a quarter of hour for a booking slot, 
+         *coded in color (red=full, yellow=booked, green=free) after a booking attempt
+         *@param $teacher: SSN of teacher
+         *@param $parentMail: mail of parent
+         *@param $day: day of booking slot
+         *@param $slot: booking slot number
+         *@param $quarter: quarter of hour of the slot
+         *@return: a string with the color of the status of the quarter after the (possible) booking
+         */
 
         $teacher = $this->sanitizeString($teacher);
         $day = $this->sanitizeString($day);
@@ -1315,29 +1372,27 @@ class dbParent extends db
         $quarter = $this->sanitizeString($quarter);
 
         $this->begin_transaction();
-        
 
-        $result=$this->query("SELECT emailParent FROM ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
+
+        $result = $this->query("SELECT emailParent FROM ParentMeetings WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
         if (!$result)
             return 'error';
 
-        $color='error';
-        
-        if(mysqli_num_rows($result)==1){
+        $color = 'error';
+
+        if (mysqli_num_rows($result) == 1) {
             $row = $result->fetch_array(MYSQLI_ASSOC);
-            if(empty($row['emailParent'])){
-                $color="yellow";
+            if (empty($row['emailParent'])) {
+                $color = "yellow";
                 $this->query("UPDATE ParentMeetings SET emailParent='$parentMail' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
-            }
-            elseif($row['emailParent']==$parentMail){
-                $color="lightgreen";
+            } elseif ($row['emailParent'] == $parentMail) {
+                $color = "lightgreen";
                 $this->query("UPDATE ParentMeetings SET emailParent='' WHERE day='$day' AND teacherCodFisc='$teacher' AND slotNb='$slot' AND quarter='$quarter'");
-            }
-            else{
-                $color="lightred";
+            } else {
+                $color = "lightred";
             }
         }
-        
+
         $this->commit();
 
         return $color;
@@ -1622,12 +1677,12 @@ class dbTeacher extends db
             return $assignments;
         }
     }
-	
-		// NEW
-	public function getAssignmentsByClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
+
+    // NEW
+    public function getAssignmentsByClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
     {
 
-		/* This function returns the assignments of a specific subject and class, within the current semester */
+        /* This function returns the assignments of a specific subject and class, within the current semester */
         $codTeacher = $this->sanitizeString($codTeacher);
         $class = $this->sanitizeString($class);
         $subject = $this->sanitizeString($subject);
@@ -2526,10 +2581,10 @@ class dbTeacher extends db
 	function getLecturesByTeacherClassAndSubject($codTeacher, $class, $subject, $beginSemester, $endSemester)
     {
         $codTeacher = $this->sanitizeString($codTeacher);
-		$class = $this->sanitizeString($class);
-		$subject = $this->sanitizeString($subject);
-		$beginSemester = $this->sanitizeString($beginSemester);
-		$endSemester = $this->sanitizeString($endSemester);
+        $class = $this->sanitizeString($class);
+        $subject = $this->sanitizeString($subject);
+        $beginSemester = $this->sanitizeString($beginSemester);
+        $endSemester = $this->sanitizeString($endSemester);
 
         $result = $this->query("SELECT * FROM Lectures WHERE codFiscTeacher='$codTeacher' AND classID='$class'
 				AND subject='$subject' AND date >= '$beginSemester' AND date <= '$endSemester'  ORDER BY date DESC");

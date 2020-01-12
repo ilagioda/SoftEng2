@@ -11,13 +11,7 @@ if (!$loggedin) {
 } else {
     require_once "loggedAdminNavbar.php";
 }
-    
-    /* FIXME remove the next lines when login is implemented */
-    
-/*     $_SESSION['user'] = 'GDILRI';
-    $_SESSION['role'] = 'admin'; */
-    
-    /* End lines to be changed*/
+
 ?>
 
 <script type='text/javascript'>
