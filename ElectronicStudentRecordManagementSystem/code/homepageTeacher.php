@@ -73,6 +73,10 @@ if (!$loggedin) {
         <a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;See timetables</a>
     </div>
 	<br>
+	<div class="btn-group">
+    <a href="changePassword.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Change Password</a>
+    </div>
+	<br>
 	<?php 
 	$coordinator = $db->isCoordinator($_SESSION["user"], $_SESSION["comboClass"]);
 	if($coordinator) {
