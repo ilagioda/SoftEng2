@@ -231,6 +231,10 @@ $db = new dbAdmin();
 
 
 <?php
+
+/*
+If the form was submitted you have to update the information about the particular 
+*/
 if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST["teacherSurname"])) {
 
   $red = false;
@@ -245,6 +249,9 @@ if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST[
 
   $db->updateTeacherMasterData($teacherSSN, $teacherName, $teacherSurname, $red);
 }
+
+
+
 echo '<div id="answer"> </div>';
 
 $teachers = $db->getTeachers();
