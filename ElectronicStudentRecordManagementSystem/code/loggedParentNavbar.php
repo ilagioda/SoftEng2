@@ -18,6 +18,7 @@
                     <li><a href="viewMarks.php">Marks</a></li>
                     <li><a href="studentAttendance.php">Attendance</a></li>
                     <li><a href="viewChildAssignment.php">Assignments</a></li>
+                    <li><a href="viewChildLessonTopics.php">Lectures</a></li>
                     <li><a href="viewSupportMaterial.php">Materials</a></li>
                     <li><a href="viewFinalGrades.php">Final grades</a></li>
                     <li><a href="viewStudentNote.php">Discplinar Notes</a></li>

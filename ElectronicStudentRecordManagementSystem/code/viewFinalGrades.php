@@ -34,12 +34,12 @@ $childSurname = $_SESSION['childSurname'];
 <?php
 	if ($finalGrades) {
 ?>	
-<table class="table table-striped" id="studentTable" style="border-collapse:collapse;">
+<table class="table table-striped" id="studentTable">
 
 	<thead>
-		<tr>
+		<tr class="active">
 			<th class="text-center"> Subject </th>
-			<th class="text-center"> Final grade </th>
+			<th class="text-center"> Grade </th>
 		</tr>
 	</thead>
 	<tbody>
