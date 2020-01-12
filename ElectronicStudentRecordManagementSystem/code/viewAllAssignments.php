@@ -143,32 +143,8 @@ $(document).ready(function(){
 
 		var subject = $(this).attr("data-subject");
 		var date = $(this).val();
-
-		var today = new Date().toISOString().split('T')[0];  
 		
-		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
-		if(date >= today) {
-			flag = 0;
-		}
-		
-		$.ajax({
-			type:		"POST",
-			dataType:	"json",
-			url:		"loadAssignments.php",
-			data:		"date="+date,
-			cache:		false,
-			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
-							$('#filteredTable-'+subject).empty();
-							if(response) {
-								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, date));
-							} else {
-								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
-							}
-						},
-			error: 		function(){
-							alert("Error: assignments not loaded");
-						}
-		});
+		callAjaxLoadAssignments(date, subject);
 	});
 	
 	$(".previous").click(function() {
@@ -180,36 +156,8 @@ $(document).ready(function(){
 		
 		var previousDay = actualDay.setDate(actualDay.getDate() - 1);
 		previousDay = new Date(previousDay).toISOString().split('T')[0];
-		
-		$('#inputCalendar-'+subject).val(previousDay); // set the date in the input field 
-		
-		var today = new Date().toISOString().split('T')[0];  
-		
-		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
-		if(previousDay >= today) {
-			flag = 0;
-		}
-		
-		$.ajax({
-			type:		"POST",
-			dataType:	"json",
-			url:		"loadAssignments.php",
-			data:		"date="+previousDay,
-			cache:		false,
-			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
-							$('#filteredTable-'+subject).empty();
-							if(response) {
-								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, previousDay));
-							} else {
-								
-								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
-						
-							}
-						},
-			error: 		function(){
-							alert("Error: assignments not loaded");
-						}
-		});
+				
+		callAjaxLoadAssignments(previousDay, subject);
 	});
 	
 	$(".next").click(function() {
@@ -221,39 +169,44 @@ $(document).ready(function(){
 		
 		var nextDay = actualDay.setDate(actualDay.getDate() + 1);
 		nextDay = new Date(nextDay).toISOString().split('T')[0];
-		
-		$('#inputCalendar-'+subject).val(nextDay); // set the date in the input field 
-		
-		var today = new Date().toISOString().split('T')[0];  
-		
-		var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
-		if(nextDay >= today) {
-			flag = 0;
-		}
-		
-		$.ajax({
-			type:		"POST",
-			dataType:	"json",
-			url:		"loadAssignments.php",
-			data:		"date="+nextDay,
-			cache:		false,
-			success:	function(response){ // RESPONSE = subject,assignment,pathfilename
-							$('#filteredTable-'+subject).empty();
-							if(response) {
-								$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, nextDay));
-							} else {
-								
-								$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
-						
-							}
-						},
-			error: 		function(){
-							alert("Error: assignments not loaded");
-						}
-		});
+
+		callAjaxLoadAssignments(nextDay, subject);
 	});
 
 });
+
+function callAjaxLoadAssignments(day, subject) {
+	
+	$('#inputCalendar-'+subject).val(day); // set the date in the input field 
+		
+	var today = new Date().toISOString().split('T')[0];  
+		
+	var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
+	if(day >= today) {
+		flag = 0;
+	}
+	
+	$.ajax({
+		type:		"POST",
+		dataType:	"json",
+		url:		"loadAssignments.php",
+		data:		"date="+day,
+		cache:		false,
+		success:	function(response){ // RESPONSE = subject,assignment,pathfilename
+						$('#filteredTable-'+subject).empty();
+						if(response) {
+							$('#filteredTable-'+subject).append(updateTableAssignments(response, flag, subject, day));
+						} else {
+							
+							$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4 id='assignmentsTitle'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No assignments for the selected date </h4></div>");
+					
+						}
+					},
+		error: 		function(){
+						alert("Error: assignments not loaded");
+					}
+	});	
+}
 
 
 function updateTableAssignments(response, flag, subject, date) {
