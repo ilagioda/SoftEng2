@@ -36,7 +36,7 @@ echo <<< _OPLIST
         <a href="viewChildAssignment.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-file pull-left" aria-hidden="true"></span>&emsp;Assignments</a>
     </div><br>
     <div class="btn-group">
-        <a href="viewChildLessonTopics.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-file pull-left" aria-hidden="true"></span>&emsp;Lectures</a>
+        <a href="viewChildLessonTopics.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-list pull-left" aria-hidden="true"></span>&emsp;Lectures</a>
     </div><br>
     <div class="btn-group">
         <a href="viewSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Materials</a>

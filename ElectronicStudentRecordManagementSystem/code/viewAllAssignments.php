@@ -250,7 +250,9 @@ function updateTableAssignments(response, flag, subject, date) {
 			} else {
 				echo "<div class='tab-pane fade' id='$subject'>";
 			}
-		
+			$assignments = $db->getAssignmentsByClassAndSubject($_SESSION["user"], $selectedClass, $subject, $beginSemester, $endSemester); // date,textAssignment,pathFilename
+			if(!empty($assignments)) {	
+			
 			$now = new DateTime('now');
 			$dailyAssignments = $db->getAssignmentsByClassAndDate($_SESSION["user"], $selectedClass, $now->format("Y-m-d")); // subject, textAssignment, pathFilename
 			$flag = 0; 
@@ -298,13 +300,7 @@ function updateTableAssignments(response, flag, subject, date) {
 		<p class='text-center' id="titleSelectDate-<?php echo $subject; ?>"><strong>Select a date</strong></p>
 
 		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
-				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">
-		
-<?php
-			$assignments = $db->getAssignmentsByClassAndSubject($_SESSION["user"], $selectedClass, $subject, $beginSemester, $endSemester); // date,textAssignment,pathFilename
-			if(!empty($assignments)) {
-
-?>				
+				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">			
 
 				<form method='POST' action='' class='form-group'>
 					<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
@@ -388,6 +384,7 @@ function updateTableAssignments(response, flag, subject, date) {
 						<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;
 						No assignments for this subject </h4></div>";
 			}
+			
 			echo "</div>";
 		}
 		echo "</div>";

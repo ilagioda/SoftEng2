@@ -244,7 +244,8 @@ function modalEdit(obj) {
 			} else {
 				echo "<div class='tab-pane fade' id='$subject'>";
 			}
-
+		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $subject, $beginSemester, $endSemester);
+		if(!empty($lectures)) {
 ?>
 	<h2 id="lecturesTitle-<?php echo $subject; ?>">All lectures 
 		<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
@@ -256,7 +257,7 @@ function modalEdit(obj) {
 	
 	<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
 	<table id="lecturesTable-<?php echo $subject; ?>" class="table table-hover text-center" style="border-collapse:collapse;">
-		<thead><tr>
+		<thead><tr class="active">
 			<th class='text-center col-xs-6 col-sm-3'>Date</th>
 			<th class='text-center col-xs-6 col-sm-3'>Hour</th>
 			<th class='text-center col-xs-6 col-sm-3'>Topics</th>
@@ -264,7 +265,6 @@ function modalEdit(obj) {
 		</tr></thead>
 		<tbody>
 <?php
-		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $subject, $beginSemester, $endSemester);
 		foreach((array)$lectures as $value) {
 				
 			$args = explode(",",$value);
@@ -311,6 +311,12 @@ function modalEdit(obj) {
 	</table>
 	<div class="text-center"><input type="hidden" class="btn btn-primary" value="Show all lectures" id="btnShowAll-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"></div>
 	<?php
+			} else {
+				echo "<div class='alert alert-warning'>
+						<h4 id='assignmentsTitle'>
+						<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;
+						No lectures for this subject </h4></div>";
+			}
 			echo "</div>";
 		}
 		echo "</div>";

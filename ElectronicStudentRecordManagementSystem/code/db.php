@@ -2348,7 +2348,7 @@ class dbTeacher extends db
     // NO NEED TO BE TESTED
     function insertAssignmentsMaterial($date, $filename, $class, $subject, $text)
     {
-        return $this->query("INSERT INTO Assignments VALUES('$subject', '$date', '$class', '$text', '$filename')");
+        return $this->query("INSERT INTO Assignments VALUES('$subject', '$date', '$class', CURRENT_TIMESTAMP, '$text', '$filename')");
     }
 
     //TESTED
