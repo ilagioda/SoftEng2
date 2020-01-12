@@ -11,8 +11,11 @@ if (!filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) {
 }
 
 $to_address = $_POST['mail'];
+$to_address = htmlspecialchars($to_address);
 $teacher = $_POST['teacher'];
+$teacher = htmlspecialchars($teacher);
 $day = $_POST['day'];
+$day = htmlspecialchars($day);
 
 $mail = new PHPMailer(); 
 
