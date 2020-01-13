@@ -149,16 +149,13 @@ $(document).ready(function(){
 });
 
 // global
-var curr = new Date;
-
-var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()-6));
-var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+7));
-
-firstday = firstday.toISOString().split('T')[0];  
-lastday = lastday.toISOString().split('T')[0]; 
+var curr = new Date();
+day = curr.getDay()-1;
+firstday = new Date(curr.getTime() - 60*60*24*day*1000).toISOString().split('T')[0]; //will return firstday (ie sunday) of the week
+lastday = new Date(curr.getTime() + 60*60*24*6*1000).toISOString().split('T')[0]; 
 
 function callAjaxLoadLectures(date, subject) {
-	
+
 	$('#inputCalendar-'+subject).val(date); // set the date in the input field 
 
 	var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise

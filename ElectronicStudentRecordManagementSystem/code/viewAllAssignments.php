@@ -313,7 +313,7 @@ function updateTableAssignments(response, flag, subject, date) {
 								$end = array_slice(explode('/', $path), -1)[0];
 							echo $end . "</a></span></div>";
 						}
-						echo "</div>";
+						echo "</div></div>";
 						$flag = 1;
 					}
 				}
