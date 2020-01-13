@@ -15,10 +15,6 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="homepageParent.php">Home</a></li>
-                    <li><a href="viewMarks.php">Marks</a></li>
-                    <li><a href="viewFinalGrades.php">Final grades</a></li>
-                    <li><a href="selectTeacherForBooking.php">Teacher Meetings</a></li>
-
                     <li role="presentation" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             Class <span class="caret"></span>
@@ -30,10 +26,32 @@
                             <li class="nav-item dropdown"><a class="dropdown-item" href="viewChildLessonTopics.php">Lectures</a></li>
                             <li class="nav-item dropdown"><a class="dropdown-item" href="studentAttendance.php">Attendance</a></li>
                             <li class="nav-item dropdown"><a class="dropdown-item" href="viewSupportMaterial.php">Materials</a></li>
+                            <li class="nav-item dropdown"><a class="dropdown-item" href="seeTimetable.php">Timetable</a></li>
                         </ul>
-                </ul>
-                </li>
+					</li>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            Marks <span class="caret"></span>
+                        </a>
 
+                        <ul class="dropdown-menu">
+                            <li class="nav-item dropdown"><a class="dropdown-item" href="viewMarks.php">View marks</a></li>
+                            <li class="nav-item dropdown"><a class="dropdown-item" href="viewFinalGrades.php">Final grades</a></li>
+                        </ul>
+					</li>
+					
+                    <li><a href="selectTeacherForBooking.php">Teacher Meetings</a></li>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            General <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li class="nav-item dropdown"><a class="dropdown-item" href="changePassword.php">Change password</a></li>
+                        </ul>
+					</li>
+
+				</ul>
                 <ul class="nav navbar-nav navbar-right">
 
                     <?php
