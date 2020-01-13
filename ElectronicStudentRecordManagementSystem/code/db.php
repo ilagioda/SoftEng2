@@ -622,8 +622,7 @@ class dbAdmin extends db
         $cnt = $cnt->fetch_assoc();
         $cnt = $cnt["CNT"];
 
-
-
+        $success = $this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname);
 
         if ($isPrincipal == 0) {
             // Non è principal
@@ -632,7 +631,7 @@ class dbAdmin extends db
                 // Non devo modificare la carica
                 // Verifico se c'è qualcosa da modificare 
                 // Confronto i campi: se diversi devo modificare, altrimenti non deve fare nulla.
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
+                if ($success) {
                     $this->commit();
                     return 4;
                 } else {
@@ -641,7 +640,7 @@ class dbAdmin extends db
                 }
             } else {
                 // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
+                if ($success) {
                     if ($cnt == 0) {
                         if ($this->query("UPDATE `Teachers` SET `principal`= 1 WHERE `codFisc` ='$teacherSSN'")) {
                             $this->commit();
@@ -663,7 +662,7 @@ class dbAdmin extends db
             //E' principal
             if ($red) {
                 // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
+                if ($success) {
                     if ($cnt == 1) {
                         if ($this->query("UPDATE `Teachers` SET `principal`= 0   WHERE `codFisc` ='$teacherSSN'")) {
                             $this->commit();
@@ -682,7 +681,7 @@ class dbAdmin extends db
                 }
             } else {
                 // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
-                if ($this->updateOccurencesFiscalCodeTeacher($teacherSSN, $teacherName, $teacherSurname, $oldTeacherSSN, $name, $surname)) {
+                if ($success) {
                     $this->commit();
                     return 1;
                 } else {
