@@ -5,9 +5,9 @@ if (!(isset($_SESSION['user']) && $_SESSION['role'] == "parent")) {
     // not logged in
     header("Location: login.php");
     exit;
-} 
+}
 
-if(!isset($_SESSION['childName'])){
+if (!isset($_SESSION['childName'])) {
     header("Location: chooseChild.php");
     exit;
 }
@@ -17,7 +17,7 @@ require_once("loggedParentNavbar.php");
 require_once("db.php");
 
 $childName = $_SESSION['childName'];
-$childSurname = $_SESSION['childSurname']; 
+$childSurname = $_SESSION['childSurname'];
 
 $db = new dbParent();
 
@@ -39,13 +39,12 @@ _STARTTABLE;
 
 // print the contents
 
-foreach($subjects as $subject) {     
+foreach ($subjects as $subject) {
 
     $subjectID = str_replace(' ', '_', $subject);
     $materials = $db->getMaterials($_SESSION['class'], "$subject");
-    $modifier="";
-
-    if($materials->num_rows!=0){
+    $modifier = "";
+    if ($materials->num_rows != 0) {
         echo <<<_ROW
             <tr data-toggle='collapse' data-target=".$subjectID" class="accordion-toggle visibleRowMaterial">
                 <td class="col-md-3" style="font-size:2.5vh;">$subject</td>
@@ -55,7 +54,7 @@ foreach($subjects as $subject) {
             </tr>
 _ROW;
 
-            echo <<<_HIDDENLEGEND
+        echo <<<_HIDDENLEGEND
             <tr>
                 <td class="hiddenRow legend"><div class="accordian-body collapse $subjectID text-right"> <strong>TIMESTAMP</strong> </div></td>
                 <td class="hiddenRow legend"> </td>
@@ -64,9 +63,9 @@ _ROW;
             </tr>
 _HIDDENLEGEND;
 
-            foreach($materials as $material){
-                $dimension = round($material["Dimension"]/1000, 0);
-                echo <<<_HIDDENROWS
+        foreach ($materials as $material) {
+            $dimension = round($material["Dimension"] / 1000, 0);
+            echo <<<_HIDDENROWS
                 <tr>
                     <td class="hiddenRow marks" > <div class="accordian-body collapse $subjectID text-right">$material[Timestamp]</div> </td>
                     <td class="hiddenRow marks" ><div class="accordian-body collapse $subjectID text-right"></div> </td>
@@ -74,9 +73,8 @@ _HIDDENLEGEND;
                     <td class="hiddenRow marks" > <div class="accordian-body collapse $subjectID text-right">$dimension</div> </td>
                 </tr>
 _HIDDENROWS;
-            }
-    }
-    else{
+        }
+    } else {
         echo <<<_ROW
         <tr data-toggle='collapse' data-target=".$subjectID" class="accordion-toggle">
             <td class="col-md-3" style="font-size:2.5vh;">$subject</td>
@@ -86,7 +84,6 @@ _HIDDENROWS;
         </tr>
 _ROW;
     }
-
 }
 
 echo <<<_ENDTABLE

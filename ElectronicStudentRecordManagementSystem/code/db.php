@@ -1436,7 +1436,7 @@ class dbParent extends db
         $class = $this->getChildClass($codFisc);
 
 
-        $query = "SELECT DISTINCT t.codFisc, t.surname, t.name FROM TeacherclassSubjectTable AS s, teachers AS t WHERE s.classID='$class' AND s.codFisc=t.codFisc";
+        $query = "SELECT DISTINCT t.codFisc, t.surname, t.name FROM TeacherClassSubjectTable AS s, Teachers AS t WHERE s.classID='$class' AND s.codFisc=t.codFisc";
         $result = $this->query($query);
         if (!$result)
             return false;
