@@ -81,6 +81,7 @@ _COORDINATED_CLASSES;
                                                 <td class='text-center'>
                                                 <select id='selectedCoordinatedClass'>
 _LASTROW;
+                $c="";
                 if ($classes->num_rows > 0) {
                     foreach ($classes as $c) {
                         $c = $c['classID'];
@@ -88,14 +89,13 @@ _LASTROW;
                     }
                 }
                 echo <<<_ENDMODAL
-                                                    </select>
-                                                    </td>
-                                                    
-                                                    <td class="text-center"><button type="button" id="addCoordinatedClass" class="btn btn-success btn-lg" onclick='addCoordinatedClassFunction(this, "$ssn","$c")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
-                                                    </tr>
-        
-                                                    </tbody>
-                                                    </table>
+                </select>
+                </td>
+                <td class="text-center"><button type="button" id="addCoordinatedClass" class="btn btn-success btn-lg" onclick='addCoordinatedClassFunction(this, "$ssn","$c")'><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button> </td>
+                </tr>
+
+                </tbody>
+                </table>
 _ENDMODAL;
 
                 echo <<<_MODAL
