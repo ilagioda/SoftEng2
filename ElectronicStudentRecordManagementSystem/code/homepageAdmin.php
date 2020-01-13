@@ -19,7 +19,7 @@ if (!$loggedin) {
         echo "<h1>Welcome to your homepage " . $_SESSION["user"] . "!</h1><br>";
     ?>
     <div class="btn-group">
-        <a href="enrollstudent.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>&emsp;Enroll new student</a>
+        <a href="enrollstudent.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>&emsp;Enroll student</a>
     </div><br>
     <div class="btn-group">
         <a href="mailInterface.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-envelope pull-left" aria-hidden="true"></span>&emsp;Enable access parents</a>

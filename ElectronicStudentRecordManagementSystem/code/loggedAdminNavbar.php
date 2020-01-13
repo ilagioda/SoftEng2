@@ -46,7 +46,7 @@
 					<ul class="dropdown-menu">
 					<?php
 						if ($_SESSION['sysAdmin'] == 1) {
-							echo '<li class="nav-item dropdown"><a class="dropdown-item" href="setupAccounts.php">Setup official accounts</a></li><li class="divider"></li>';
+							echo '<li class="nav-item dropdown"><a class="dropdown-item" href="setupAccounts.php">Official accounts</a></li><li class="divider"></li>';
 						}
 					?>
 						<li class="nav-item dropdown">
