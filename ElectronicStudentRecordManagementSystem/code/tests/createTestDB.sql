@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Dic 09, 2019 alle 20:10
+-- Creato il: Gen 13, 2020 alle 16:51
 -- Versione del server: 10.4.10-MariaDB
 -- Versione PHP: 7.3.12
 
@@ -88,10 +88,9 @@ CREATE TABLE `Assignments` (
 
 INSERT INTO `Assignments` (`subject`, `date`, `classID`, `textAssignment`, `pathFilename`) VALUES
 ('History', '2019-12-03', '1A', 'WWII', ''),
-('Maths', '2019-11-28', '1A', 'Equations', ''),
 ('Maths', '2019-11-27', '1A', 'Vectors', 'path/to/linked/file'),
+('Maths', '2019-11-28', '1A', 'Equations', ''),
 ('Physics', '2019-11-27', '1A', 'Vectors', '');
-
 
 -- --------------------------------------------------------
 
@@ -139,16 +138,33 @@ INSERT INTO `Attendance` (`date`, `codFisc`, `absence`, `lateEntry`, `earlyExit`
 -- Struttura della tabella `Classes`
 --
 
---
--- Struttura della tabella `Classes`
---
-
 CREATE TABLE `Classes` (
   `classID` varchar(32) NOT NULL,
   `coordinatorSSN` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
 
+--
+-- Struttura della tabella `FinalGrades`
+--
+
+CREATE TABLE `FinalGrades` (
+  `codFisc` varchar(64) NOT NULL,
+  `subject` varchar(32) NOT NULL,
+  `finalTerm` date NOT NULL,
+  `finalGrade` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `FinalGrades`
+--
+
+INSERT INTO `FinalGrades` (`codFisc`, `subject`, `finalTerm`, `finalGrade`) VALUES
+('MRC', 'History', '2019-11-19', '4'),
+('MRC', 'Maths', '2019-12-19', '10'),
+('MRC', 'History', '2020-06-19', '4'),
+('MRC', 'Maths', '2020-06-19', '10');
 
 -- --------------------------------------------------------
 
@@ -170,11 +186,10 @@ CREATE TABLE `Lectures` (
 --
 
 INSERT INTO `Lectures` (`date`, `hour`, `classID`, `codFiscTeacher`, `subject`, `topic`) VALUES
-('2019-11-11', 1, '1A', 'TEA', 'History', 'arg0'),
 ('2019-11-05', 1, '1A', 'TEA', 'History', 'arg0'),
 ('2019-11-05', 2, '1A', 'TEA', 'Maths', 'arg1'),
-('2019-11-05', 3, '1A', 'TEA', 'Italian', 'arg2');
-
+('2019-11-05', 3, '1A', 'TEA', 'Italian', 'arg2'),
+('2019-11-11', 1, '1A', 'TEA', 'History', 'arg0');
 
 -- --------------------------------------------------------
 
@@ -202,6 +217,20 @@ INSERT INTO `Marks` (`codFisc`, `subject`, `date`, `hour`, `mark`) VALUES
 ('FRCWTR', 'Physics', '2019-10-12', 1, '3+'),
 ('FRCWTR', 'Italian', '2019-10-14', 2, '9/10'),
 ('FRCWTR', 'Italian', '2019-10-15', 3, '9');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ParentMeetings`
+--
+
+CREATE TABLE `ParentMeetings` (
+  `teacherCodFisc` varchar(64) NOT NULL,
+  `day` date NOT NULL,
+  `slotNb` tinyint(1) NOT NULL,
+  `quarter` int(1) NOT NULL,
+  `emailParent` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -268,6 +297,29 @@ INSERT INTO `ProposedClasses` (`classID`, `codFisc`) VALUES
 ('1B', 'MRC'),
 ('1C', 'ANDR'),
 ('1C', 'SMN');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `StudentNotes`
+--
+
+CREATE TABLE `StudentNotes` (
+  `codFiscStudent` varchar(64) NOT NULL,
+  `codFiscTeacher` varchar(64) NOT NULL,
+  `date` date NOT NULL,
+  `hour` int(1) NOT NULL,
+  `subject` varchar(32) NOT NULL,
+  `Note` varchar(4096) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `StudentNotes`
+--
+
+INSERT INTO `StudentNotes` (`codFiscStudent`, `codFiscTeacher`, `date`, `hour`, `subject`, `Note`) VALUES
+('LILYCO', 'TEA', '2019-12-12', 1, 'History', 'The student behaved incorrectly.'),
+('LILYCO', 'TEA', '2019-12-12', 2, 'History', 'The student has thrown a rock to the window.');
 
 -- --------------------------------------------------------
 
@@ -399,53 +451,9 @@ CREATE TABLE `Timetable` (
   `subject` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
---
--- Struttura della tabella `ParentMeetings`
---
-
-CREATE TABLE `ParentMeetings` (
-  `teacherCodFisc` varchar(64) NOT NULL,
-  `day` date NOT NULL,
-  `slotNb` tinyint(1) NOT NULL,
-  `quarter` int(1) NOT NULL,
-  `emailParent` varchar(64) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
---
--- Struttura della tabella `FinalGrades`
---
-
-CREATE TABLE `FinalGrades` (
-  `codFisc` varchar(64) NOT NULL,
-  `subject` varchar(32) NOT NULL,
-  `finalTerm` date NOT NULL,
-  `finalGrade` varchar(16) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indici per le tabelle scaricate
 --
-
---
--- Indici per le tabelle `Timetable`
---
-ALTER TABLE `Timetable`
-  ADD PRIMARY KEY (`classID`,`day`,`hour`);
-
---
--- Indici per le tabelle `ParentMeetings`
---
-ALTER TABLE `ParentMeetings`
-  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`,`quarter`);
-
-
---
--- Indici per le tabelle `FinalGrades`
---
-ALTER TABLE `FinalGrades`
-  ADD PRIMARY KEY (`finalTerm`,`subject`,`codFisc`);
 
 --
 -- Indici per le tabelle `Admins`
@@ -466,10 +474,24 @@ ALTER TABLE `Attendance`
   ADD PRIMARY KEY (`date`,`codFisc`);
 
 --
+-- Indici per le tabelle `Classes`
+--
+ALTER TABLE `Classes`
+  ADD PRIMARY KEY (`classID`),
+  ADD KEY `codFiscTeacherForeignKey4` (`coordinatorSSN`);
+
+--
+-- Indici per le tabelle `FinalGrades`
+--
+ALTER TABLE `FinalGrades`
+  ADD PRIMARY KEY (`finalTerm`,`subject`,`codFisc`);
+
+--
 -- Indici per le tabelle `Lectures`
 --
 ALTER TABLE `Lectures`
-  ADD PRIMARY KEY (`date`,`hour`,`classID`);
+  ADD PRIMARY KEY (`date`,`hour`,`classID`),
+  ADD KEY `codFiscTeacherForeignKey3` (`codFiscTeacher`);
 
 --
 -- Indici per le tabelle `Marks`
@@ -477,6 +499,12 @@ ALTER TABLE `Lectures`
 ALTER TABLE `Marks`
   ADD PRIMARY KEY (`codFisc`,`date`,`hour`),
   ADD KEY `subjectForeignKey` (`subject`);
+
+--
+-- Indici per le tabelle `ParentMeetings`
+--
+ALTER TABLE `ParentMeetings`
+  ADD PRIMARY KEY (`teacherCodFisc`,`day`,`slotNb`,`quarter`);
 
 --
 -- Indici per le tabelle `Parents`
@@ -496,6 +524,13 @@ ALTER TABLE `Principals`
 ALTER TABLE `ProposedClasses`
   ADD PRIMARY KEY (`classID`,`codFisc`),
   ADD KEY `studentIDForeignKey` (`codFisc`);
+
+--
+-- Indici per le tabelle `StudentNotes`
+--
+ALTER TABLE `StudentNotes`
+  ADD PRIMARY KEY (`codFiscStudent`,`codFiscTeacher`,`date`,`hour`),
+  ADD KEY `codFiscTeacherForeignKey1` (`codFiscTeacher`);
 
 --
 -- Indici per le tabelle `Students`
@@ -523,14 +558,20 @@ ALTER TABLE `Teachers`
   ADD PRIMARY KEY (`codFisc`);
 
 --
--- Indici per le tabelle `Classes`
+-- Indici per le tabelle `Timetable`
 --
-ALTER TABLE `Classes`
-  ADD PRIMARY KEY (`classID`);
+ALTER TABLE `Timetable`
+  ADD PRIMARY KEY (`classID`,`day`,`hour`);
 
 --
 -- Limiti per le tabelle scaricate
 --
+
+--
+-- Limiti per la tabella `Lectures`
+--
+ALTER TABLE `Lectures`
+  ADD CONSTRAINT `codFiscTeacherForeignKey3` FOREIGN KEY (`codFiscTeacher`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `Marks`
@@ -540,16 +581,28 @@ ALTER TABLE `Marks`
   ADD CONSTRAINT `subjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
 
 --
+-- Limiti per la tabella `ParentMeetings`
+--
+ALTER TABLE `ParentMeetings`
+  ADD CONSTRAINT `EXTERNAL KEY` FOREIGN KEY (`teacherCodFisc`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE;
+
+--
 -- Limiti per la tabella `ProposedClasses`
 --
 ALTER TABLE `ProposedClasses`
   ADD CONSTRAINT `studentIDForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Students` (`codFisc`);
 
 --
+-- Limiti per la tabella `StudentNotes`
+--
+ALTER TABLE `StudentNotes`
+  ADD CONSTRAINT `codFiscTeacherForeignKey1` FOREIGN KEY (`codFiscTeacher`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE;
+
+--
 -- Limiti per la tabella `TeacherClassSubjectTable`
 --
 ALTER TABLE `TeacherClassSubjectTable`
-  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Teachers` (`codFisc`),
+  ADD CONSTRAINT `codFiscTeacherForeignKey` FOREIGN KEY (`codFisc`) REFERENCES `Teachers` (`codFisc`) ON UPDATE CASCADE,
   ADD CONSTRAINT `subjectTeacherClassSubjectForeignKey` FOREIGN KEY (`subject`) REFERENCES `Subjects` (`name`);
 COMMIT;
 
