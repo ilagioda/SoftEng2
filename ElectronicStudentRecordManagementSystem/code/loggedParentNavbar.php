@@ -40,7 +40,7 @@
                         </ul>
 					</li>
 					
-                    <li><a href="selectTeacherForBooking.php">Teacher Meetings</a></li>
+                    <li><a href="selectTeacherForBooking.php">Parent Meetings</a></li>
                     <li role="presentation" class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             General <span class="caret"></span>

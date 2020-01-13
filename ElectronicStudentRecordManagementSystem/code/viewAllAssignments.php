@@ -330,23 +330,23 @@ function updateTableAssignments(response, flag, subject, date) {
 			//echo "</div>";
 ?>		
 	
-		<h2 id="assignmentTitle-<?php echo $subject; ?>">All assignments 
-			<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
+		<h2 id="assignmentTitle-<?php echo "'$subject'"; ?>">All assignments 
+			<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo "$subject"; ?>" data-subject="<?php echo "$subject"; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
 		</h2>
-		<p class='text-center' id="titleSelectDate-<?php echo $subject; ?>"><strong>Select a date</strong></p>
+		<p class='text-center' id="titleSelectDate-<?php echo "$subject"; ?>"><strong>Select a date</strong></p>
 
-		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
+		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo "$subject"; ?>" data-subject="<?php echo "$subject"; ?>"
 				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">			
 				
-		<div id="divPreviousNext-<?php echo $subject; ?>">
+		<div id="divPreviousNext-<?php echo "$subject"; ?>">
 			<ul class='pager'>
-				<li class='previous' data-subject="<?php echo $subject; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
-				<li class='next' data-subject="<?php echo $subject; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
+				<li class='previous' data-subject="<?php echo "$subject"; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
+				<li class='next' data-subject="<?php echo "$subject"; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
 			</ul>
 		</div>
 				<form method='POST' action='' class='form-group'>
-					<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
-					<table id="assignmentsTable-<?php echo $subject; ?>" class="table table-hover">
+					<table id="filteredTable-<?php echo "$subject"; ?>" class="table table-hover"></table>
+					<table id="assignmentsTable-<?php echo "$subject"; ?>" class="table table-hover">
 						<thead>
 						<tr class="active">
 							<th class="text-center col-xs-6 col-md-4">Date </th>
@@ -417,7 +417,7 @@ function updateTableAssignments(response, flag, subject, date) {
 					?>
 						</tbody>
 					</table>
-					<div class="text-center"><input type="hidden" class="btn btn-primary" value="Show all assignments" id="btnShowAll-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"></div>
+					<div class="text-center"><input type="hidden" class="btn btn-primary" value="Show all assignments" id="btnShowAll-<?php echo "'$subject'"; ?>" data-subject="<?php echo "'$subject'"; ?>"></div>
 				</form>
 <?php
 			} else {

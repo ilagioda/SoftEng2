@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Gen 13, 2020 alle 18:23
+-- Creato il: Gen 13, 2020 alle 18:59
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -91,8 +91,7 @@ INSERT INTO `Assignments` (`subject`, `date`, `classID`, `timestamp`, `textAssig
 ('History', '2019-12-03', '1A', '2020-01-10 11:27:52', 'WWII', ''),
 ('History', '2019-12-17', '1A', '2020-01-10 11:27:52', 'ciao', 'assignmentsMaterial/1A/History/Schema Generale.png'),
 ('Maths', '2019-11-28', '1A', '2020-01-10 11:27:52', 'Equations', ''),
-('Maths', '2019-12-17', '1A', '2020-01-10 11:27:52', 'WWII', 'assignmentsMaterial/1A/Maths/Schema Generale.png'),
-('Maths', '2019-12-18', '1A', '2020-01-10 11:27:52', 'pd', 'assignmentsMaterial/1A/Maths/FirstSprintDBStructure.md'),
+('Maths', '2019-12-17', '1A', '2020-01-13 17:59:01', 'Differentials', 'assignmentsMaterial/1A/Maths/Schema Generale.png'),
 ('Physics', '2019-11-27', '1A', '2020-01-10 11:27:52', 'Vectors', '');
 
 -- --------------------------------------------------------
@@ -432,11 +431,11 @@ CREATE TABLE `TeacherClassSubjectTable` (
 --
 
 INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
-('FLCM', '1A', 'Biology and Chemistry'),
 ('FLCM', '1A', 'Philosophy'),
 ('FLCM', '1D', 'History'),
 ('GNV', '1A', 'Latin'),
 ('GNV', '1A', 'Physics'),
+('TEA', '1A', 'Biology and Chemistry'),
 ('TEA', '1A', 'History'),
 ('TEA', '1A', 'Maths'),
 ('TEA', '1B', 'Italian');
