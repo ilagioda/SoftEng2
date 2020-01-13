@@ -33,6 +33,9 @@ $parent = new dbParent();
 
     $teachers=$parent->getTeachersByChild($_SESSION["child"]);
 
+    if($teachers==null)
+        echo "There are no teachers for this child.";
+
     foreach($teachers as $t){
         
         echo "<tr>";

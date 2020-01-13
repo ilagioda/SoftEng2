@@ -48,8 +48,8 @@ _SETUPACCOUNTSBUTTON;
         <a href="manageTeachers.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-cog pull-left" aria-hidden="true"></span>&emsp;Manage Teachers</a>
     </div><br>
     <div class="btn-group">
-    <a href="changePassword.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;Change Password</a>
-    </div><br>
+    <a href="changePassword.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-sunglasses pull-left" aria-hidden="true"></span>&emsp;Change Password</a>
+    </div><br><br>
 </div>
 
 <?php
