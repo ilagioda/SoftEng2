@@ -320,14 +320,14 @@ function updateTableAssignments(response, flag, subject, date) {
 				if($flag == 0) {
 					echo "<div class='panel panel-warning text-center' id='boxInfoToday-$subject'>
 					<div class='panel-heading '><strong> For today... </strong></div>";
-					echo "<div class='panel-body'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;There are no assignments.</div>";
+					echo "<div class='panel-body'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;There are no assignments.</div></div>";
 				}
 			} else {
 				echo "<div class='panel panel-warning text-center' id='boxInfoToday-$subject'>
 				<div class='panel-heading '><strong> For today... </strong></div>";
-				echo "<div class='panel-body'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;There are no assignments.</div>";
+				echo "<div class='panel-body'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;There are no assignments.</div></div>";
 			}
-			echo "</div>";
+			//echo "</div>";
 ?>		
 	
 		<h2 id="assignmentTitle-<?php echo $subject; ?>">All assignments 
