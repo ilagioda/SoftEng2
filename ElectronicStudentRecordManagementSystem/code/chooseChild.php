@@ -86,7 +86,7 @@ require_once "loggedParentNavbar.php";
 <div>
     <h2 class="text-center"> Choose a child</h2>
     <form action="chooseChild.php" method="POST">
-        <table class="table table-striped">
+        <table class="table table-striped text-center">
             <tr>
                 <th>Name</th>
                 <th>Surname</th>
