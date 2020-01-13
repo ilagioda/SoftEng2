@@ -657,7 +657,7 @@ final class dbTest extends TestCase
         $this->assertSame($result, $array);
 
         //inserting grades -> expecting filled array
-        $db->queryForTesting("INSERT INTO `finalgrades` (`codFisc`, `subject`, `finalTerm`, `finalGrade`) VALUES ('MRC', 'History', '2019-11-19', '4'), ('MRC', 'History', '2020-06-19', '4'), ('MRC', 'Maths', '2019-12-19', '10'), ('MRC', 'Maths', '2020-06-19', '10')");
+        $db->queryForTesting("INSERT INTO `FinalGrades` (`codFisc`, `subject`, `finalTerm`, `finalGrade`) VALUES ('MRC', 'History', '2019-11-19', '4'), ('MRC', 'History', '2020-06-19', '4'), ('MRC', 'Maths', '2019-12-19', '10'), ('MRC', 'Maths', '2020-06-19', '10')");
         $result = $db->viewChildFinalGrades($codFisc);
 
         $this->assertNotEmpty($result);
@@ -680,7 +680,7 @@ final class dbTest extends TestCase
         $this->assertSame($array, $result);
 
         //slots inserted -> expected filled array
-        $db->queryForTesting("INSERT INTO `parentmeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-13', '1', '3', NULL), ('PIPPO', '2020-01-14', '2', '2', NULL)");
+        $db->queryForTesting("INSERT INTO `ParentMeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-13', '1', '3', ''), ('FLCM', '2020-01-14', '2', '2', '')");
         $array["2020-01-13"] = "teacherMeetings";
         $result=$db->viewTeacherSlots($codFisc);
         $this->assertSame($array, $result);
@@ -744,7 +744,7 @@ final class dbTest extends TestCase
         $this->assertSame($res, $result);
 
         //inserting meetings
-        $db->queryForTesting("INSERT INTO `ParentMeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-07', '1', '1', 'parent@parent.it'), ('GNV', '2020-01-07', '1', '2', 'wrong'), ('GNV', '2020-01-07', '1', '3', ''), ('GNV', '2020-01-08', '1', '2', ''), ('PIPPO', '2020-01-07', '1', '1', 'parent@parent.it')");
+        $db->queryForTesting("INSERT INTO `ParentMeetings` (`teacherCodFisc`, `day`, `slotNb`, `quarter`, `emailParent`) VALUES ('GNV', '2020-01-07', '1', '1', 'parent@parent.it'), ('GNV', '2020-01-07', '1', '2', 'wrong'), ('GNV', '2020-01-07', '1', '3', ''), ('GNV', '2020-01-08', '1', '2', ''), ('FLCM', '2020-01-07', '1', '1', 'parent@parent.it')");
 
 
         $array[1][1]="selected";
