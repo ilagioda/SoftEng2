@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Gen 12, 2020 alle 18:38
+-- Creato il: Gen 13, 2020 alle 18:23
 -- Versione del server: 10.4.8-MariaDB
 -- Versione PHP: 7.1.32
 
@@ -182,6 +182,13 @@ CREATE TABLE `InternalCommunications` (
   `text` varchar(4096) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `InternalCommunications`
+--
+
+INSERT INTO `InternalCommunications` (`ID`, `classID`, `timestamp`, `title`, `text`) VALUES
+(1, '1A', '2020-01-13 17:18:41', 'This is an announcement!', 'Hello :)');
+
 -- --------------------------------------------------------
 
 --
@@ -271,25 +278,13 @@ INSERT INTO `Parents` (`email`, `hashedPassword`, `name`, `surname`, `codFisc`, 
 ('gian_9_6@hotmail.it', '', 'Gian', 'Giacomo', 'GNGCM', 0),
 ('gigimarzullo@genitore1.it', '', 'Gigi', 'Marzullo', 'MZRGG65', 1),
 ('hot_9_6@hotmail.it', '', 'Pippo', 'Franco', 'PPPFRNC', 1),
+('ilaria.gioda@gmail.com', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Ila', 'Gioda', 'ILAGD', 0),
 ('miiiimmo_9_6@hotmail.it', 'provaProvina', 'Mimmo', 'Secondino', 'MMMSCNDN', 1),
 ('p1@p1.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Silvia', 'Gertrude', 'SLVGRTD', 0),
 ('padre@hotmail.it', '', 'Pio', 'Amadeo', 'PMD', 0),
 ('parent@parent.it', '$2y$10$GyIznxAh8Wdk01oelidrQOm.XBSxZNnyDxclIiG9cqdkgoGjQTc.m', 'Gianni', 'Morandi', 'GNNMRN', 0),
 ('toro_9_6@hotmail.it', '', 'Tor', 'Ino', 'TRN', 1),
 ('volley.champions@hotmail.it', '', 'Mila', 'Shiro', 'MLSHR', 1);
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `Principals`
---
-
-CREATE TABLE `Principals` (
-  `codFisc` varchar(50) NOT NULL,
-  `hashedPassword` varchar(512) DEFAULT NULL,
-  `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -358,7 +353,7 @@ INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `cla
 ('ANDR', 'Andrew', 'Cristen', 'pippo@gmail.it', '', ''),
 ('BOB', 'Bob', 'Silver', 'cla_9_6@hotmail.it', '', '1A'),
 ('CHAPIN', 'Charlotte', 'Pink', 'miiiimmo_9_6@hotmail.it', '', '1B'),
-('CHARED', 'Charlie', 'Red', 'cla_9_6@hotmail.it', '', '1A'),
+('CHARED', 'Charlie', 'Red', 'cla_9_6@hotmail.it', 'ilaria.gioda@gmail.com', '1A'),
 ('CLDFLCM', 'Claudio', 'Filocamo', 'cld@gmail.com', '', ''),
 ('CRS', 'Cristian', 'Mins', 'cris@gmail.it', 'parent@parent.it', '1D'),
 ('DANBROWN', 'Daniel', 'Brown', 'parent@parent.it', '', '1A'),
@@ -369,7 +364,7 @@ INSERT INTO `Students` (`codFisc`, `name`, `surname`, `emailP1`, `emailP2`, `cla
 ('ISAORA', 'Isabella', 'Orange', 'padre@hotmail.it', '', '1D'),
 ('JAMBCK', 'James', 'Black', 'padre@hotmail.it', '', '1D'),
 ('JEPPL', 'Jessica', 'Purple', 'gigimarzullo@genitore1.it', '', '1D'),
-('LILYCO', 'Lily', 'Coral', 'parent@parent.it', '', '1A'),
+('LILYCO', 'Lily', 'Coral', 'parent@parent.it', 'p1@p1.it', '1A'),
 ('MARYG', 'Mary', 'Golden', 'volley.champions@hotmail.it', '', '1B'),
 ('MRC', 'Marco', 'Cipriano', 'mrc@gmail.it', '', ''),
 ('OSCGRA', 'Oscar', 'Gray', 'volley.champions@hotmail.it', '', '1B'),
@@ -412,12 +407,12 @@ INSERT INTO `Subjects` (`name`, `year`, `hours`) VALUES
 --
 
 CREATE TABLE `SupportMaterials` (
-  `Timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `Title` varchar(64) NOT NULL,
-  `Filename` varchar(256) NOT NULL,
-  `Dimension` double NOT NULL,
-  `Class` varchar(2) NOT NULL,
-  `Subject` varchar(64) NOT NULL
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `title` varchar(64) NOT NULL,
+  `filename` varchar(256) NOT NULL,
+  `dimension` double NOT NULL,
+  `class` varchar(2) NOT NULL,
+  `subject` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -438,8 +433,8 @@ CREATE TABLE `TeacherClassSubjectTable` (
 
 INSERT INTO `TeacherClassSubjectTable` (`codFisc`, `classID`, `subject`) VALUES
 ('FLCM', '1A', 'Biology and Chemistry'),
-('FLCM', '1A', 'History'),
 ('FLCM', '1A', 'Philosophy'),
+('FLCM', '1D', 'History'),
 ('GNV', '1A', 'Latin'),
 ('GNV', '1A', 'Physics'),
 ('TEA', '1A', 'History'),
@@ -481,6 +476,42 @@ CREATE TABLE `Timetable` (
   `hour` int(1) NOT NULL,
   `subject` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `Timetable`
+--
+
+INSERT INTO `Timetable` (`classID`, `day`, `hour`, `subject`) VALUES
+('1A', 'fri', 1, 'Physics'),
+('1A', 'fri', 2, 'Philosophy'),
+('1A', 'fri', 3, 'Physics'),
+('1A', 'fri', 4, 'Philosophy'),
+('1A', 'fri', 5, 'Physics'),
+('1A', 'fri', 6, 'Philosophy'),
+('1A', 'mon', 1, 'Maths'),
+('1A', 'mon', 2, 'Maths'),
+('1A', 'mon', 3, 'Physics'),
+('1A', 'mon', 4, 'Physics'),
+('1A', 'mon', 5, 'Physics'),
+('1A', 'mon', 6, '-'),
+('1A', 'thu', 1, 'History'),
+('1A', 'thu', 2, 'History'),
+('1A', 'thu', 3, 'History'),
+('1A', 'thu', 4, 'History'),
+('1A', 'thu', 5, 'History'),
+('1A', 'thu', 6, 'History'),
+('1A', 'tue', 1, 'History'),
+('1A', 'tue', 2, 'History'),
+('1A', 'tue', 3, 'History'),
+('1A', 'tue', 4, 'Philosophy'),
+('1A', 'tue', 5, 'Philosophy'),
+('1A', 'tue', 6, 'Philosophy'),
+('1A', 'wed', 1, '-'),
+('1A', 'wed', 2, '-'),
+('1A', 'wed', 3, 'Maths'),
+('1A', 'wed', 4, 'Maths'),
+('1A', 'wed', 5, 'Maths'),
+('1A', 'wed', 6, 'Maths');
 
 --
 -- Indici per le tabelle scaricate
@@ -550,12 +581,6 @@ ALTER TABLE `Parents`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indici per le tabelle `Principals`
---
-ALTER TABLE `Principals`
-  ADD PRIMARY KEY (`codFisc`);
-
---
 -- Indici per le tabelle `ProposedClasses`
 --
 ALTER TABLE `ProposedClasses`
@@ -585,7 +610,7 @@ ALTER TABLE `Subjects`
 -- Indici per le tabelle `SupportMaterials`
 --
 ALTER TABLE `SupportMaterials`
-  ADD PRIMARY KEY (`Timestamp`,`Title`);
+  ADD PRIMARY KEY (`timestamp`,`title`);
 
 --
 -- Indici per le tabelle `TeacherClassSubjectTable`
