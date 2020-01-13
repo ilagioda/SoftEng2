@@ -178,7 +178,8 @@ class db
 
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE email='$user'");
     }
-    //NEEDS TO BE TESTED
+
+    // NO NEED TO BE TESTED
     public function ChangePasswordOfficial($user, $hashed_pw, $table)
     {
         /**
@@ -186,11 +187,11 @@ class db
          * @param $user (String) CodFisc in case of Teacher (Principal or not) or Admin (sysAdmin or not)
          * @param $hashedPassword (String) hashed password of a certain user 
          * @param $table (String) table in which user password should be updated
-         * @param $first_time (bool) value used to know if the password is being changed by the "sendmail.php"(false) file or when logging in for the first time (true)
-         * @return (bool) 
+         * @return (bool)
          */
 
         $user = $this->sanitizeString($user);
+        $table = $this->sanitizeString($table);
 
         return $this->query("UPDATE $table SET hashedPassword = '$hashed_pw' WHERE codFisc='$user'");
     }
@@ -1122,7 +1123,7 @@ class dbParent extends db
 
     public function getMaterials($class, $subject)
     {
-        return $this->query("SELECT * FROM supportMaterials WHERE Class='$class' and Subject='$subject'");
+        return $this->query("SELECT * FROM supportMaterials WHERE class='$class' and subject='$subject'");
     }
 
 
