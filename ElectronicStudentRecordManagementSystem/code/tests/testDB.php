@@ -271,6 +271,63 @@ final class dbTest extends TestCase
 
     }
 
+    public function testUpdateTeacherMasterData(){
+
+        $_SESSION['role'] = "admin";
+        $_SESSION['user'] = "test";
+        $db = new dbAdmin();
+
+        //updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red)
+
+        // non existing teacher
+        $this->assertFalse($db->updateTeacherMasterData("NOT_EXISTING","","","",false));
+        $this->assertFalse($db->updateTeacherMasterData("NOT_EXISTING","","","",null));
+        $this->assertFalse($db->updateTeacherMasterData(null,"","","",false));
+
+        // unchanged teacher
+        $this->assertSame(1,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","Claudio",false)); // nothing to do
+        $this->assertSame(2,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","Claudio",true)); // remove principal
+
+        // test name without principal
+        $this->assertSame(4,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","NEWSURNAME",true)); // change the SSN
+        $this->assertSame(1,$db->queryForTesting("SELECT * FROM Teachers WHERE surname='NEWSURNAME'")->num_rows);
+        $this->assertSame(4,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","Claudio",true)); // change the SSN
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Teachers WHERE surname='NEWSURNAME'")->num_rows);
+
+        // recover principal
+        $this->assertSame(3,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","Claudio",false)); // set principal
+
+        // change SSN
+        $this->assertSame(1,$db->updateTeacherMasterData("TEST","FLCM","Filocamo","Claudio",false)); // change the SSN
+
+        $this->assertSame(1,$db->queryForTesting("SELECT * FROM TeacherClassSubjectTable WHERE codFisc='TEST'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM StudentNotes WHERE codFiscTeacher='FLCM'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM ParentMeetings WHERE teacherCodFisc='FLCM'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Lectures WHERE codFiscTeacher='FLCM'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Classes WHERE coordinatorSSN='FLCM'")->num_rows);
+
+        $this->assertSame(1,$db->updateTeacherMasterData("FLCM","TEST","Filocamo","Claudio",false)); // change the SSN back to the initial value
+
+        $this->assertSame(1,$db->queryForTesting("SELECT * FROM TeacherClassSubjectTable WHERE codFisc='FLCM'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM StudentNotes WHERE codFiscTeacher='TEST'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM ParentMeetings WHERE teacherCodFisc='TEST'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Lectures WHERE codFiscTeacher='TEST'")->num_rows);
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Classes WHERE coordinatorSSN='TEST'")->num_rows);
+
+        // change name
+        $this->assertSame(1,$db->updateTeacherMasterData("FLCM","FLCM","NEWNAME","Claudio",false)); // change the SSN
+        $this->assertSame(1,$db->queryForTesting("SELECT * FROM Teachers WHERE name='NEWNAME'")->num_rows);
+        $this->assertSame(1,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","Claudio",false)); // change the SSN
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Teachers WHERE name='NEWNAME'")->num_rows);
+
+        // change surname
+        $this->assertSame(1,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","NEWSURNAME",false)); // change the SSN
+        $this->assertSame(1,$db->queryForTesting("SELECT * FROM Teachers WHERE surname='NEWSURNAME'")->num_rows);
+        $this->assertSame(1,$db->updateTeacherMasterData("FLCM","FLCM","Filocamo","Claudio",false)); // change the SSN
+        $this->assertSame(0,$db->queryForTesting("SELECT * FROM Teachers WHERE surname='NEWSURNAME'")->num_rows);
+
+    }
+
     public function testUpdateStudentsClass()
     {
         $_SESSION['role'] = "admin";

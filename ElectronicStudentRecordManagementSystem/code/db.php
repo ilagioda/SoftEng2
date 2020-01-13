@@ -593,9 +593,13 @@ class dbAdmin extends db
         }
     }
 
-    //NEEDS TO BE TESTED
+    // TESTED
     public function updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red)
     {
+        /**
+         * Updates teacher data 
+         */
+
         // CASE 1: isPrincipal && not checked (green): NON sto modificando la carica di un vecchio professore (che era preside)
         // CASE 2: isPrincipal && checked (red): sto togliendo la carica di preside al vecchio preside
         // CASE 3: !isPrincipal && not checked (green): sto cercando di nominare un nuovo preside
