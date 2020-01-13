@@ -286,7 +286,7 @@ function build_html_calendar($year, $month, $events = null)
                         }
                     } else {
                         // the student exited early
-                        $assText = 'The student exited at ' . strval($hours[0]);
+                        $assText = 'The student exited at ' . strval($hours[0]) . '°hour';
                     }
                     $calendar .= "<td class='{$css_cal_day} {$css_cal_day_event} $color $pressableClass' id='$cur_date' onclick=\"showAttendance(this.id, '$assText')\">";
                 }
