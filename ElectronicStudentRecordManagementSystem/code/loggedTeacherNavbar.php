@@ -15,68 +15,86 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li><a href="homepageTeacher.php">Home</a></li>
+					
                     <li role="presentation" class="dropdown">
+
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            Lectures <span class="caret"></span>
+                            General <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu">
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href=" recordLesson.php">New record</a>
+                                <a class="dropdown-item" href="provideParentMeetingSlots.php"> Parent meetings </a>
                             </li>
                             <li class="divider"></li>
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="viewAllLessonTopics.php">View all records</a>
+                                <a class="dropdown-item" href="seeTimetableTeacher.php">Timetables</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item" href="changePassword.php">Change Password</a>
                             </li>
                         </ul>
-
+                    </li>					
+					
                     <li role="presentation" class="dropdown">
 
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            Assignments <span class="caret"></span>
+                            Classes <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu">
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="recordAssignments.php">New record</a>
+                                <a class="dropdown-item" href="recordLesson.php"> New lecture </a>
                             </li>
                             <li class="divider"></li>
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="viewAllAssignments.php">View all records</a>
+                                <a class="dropdown-item" href="viewAllLessonTopics.php">All lectures</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item" href="recordAssignments.php">New assignment</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item" href="viewAllAssignments.php">All assignments</a>
+                            </li>
+							<li class="divider"></li>
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-item" href="publishSupportMaterial.php">Publish material</a>
                             </li>
                         </ul>
-                    </li>
-
+                    </li>						
+					
                     <li role="presentation" class="dropdown">
-
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             Marks <span class="caret"></span>
                         </a>
 
                         <ul class="dropdown-menu">
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="submitMarks.php">New record</a>
+                                <a class="dropdown-item" href="submitMarks.php">Add marks</a>
                             </li>
                             <li class="divider"></li>
                             <li class="nav-item dropdown">
-                                <a class="dropdown-item" href="viewAllMarks.php">View all records</a>
+                                <a class="dropdown-item" href="viewAllMarks.php">All marks</a>
                             </li>
+							<?php
+								require_once "db.php";
+								$db = new dbTeacher();
+								if (isset($_SESSION["comboClass"])) {
+									$coordinator = $db->isCoordinator($_SESSION["user"], $_SESSION["comboClass"]);
+									if ($coordinator) {
+										echo "<li class='divider'></li><li class='nav-item dropdown'><a class='dropdown-item' href='publishFinalGrade.php'>Final grades</a></li>";
+									}
+								}
+							?>
                         </ul>
-                    </li>
-
-                    <li><a href="attendance.php">Attendance</a></li>
-                    <li><a href="publishSupportMaterial.php">Publish Material</a></li>
+					</li>
+		            
+					<li><a href="attendance.php">Attendance</a></li>
                     <li><a href="writeStudentNote.php">Discplinar note</a></li>
-                    <?php
-                    require_once "db.php";
-                    $db = new dbTeacher();
-                    if (isset($_SESSION["comboClass"])) {
-                        $coordinator = $db->isCoordinator($_SESSION["user"], $_SESSION["comboClass"]);
-                        if ($coordinator) {
-                            echo "<li><a href='publishFinalGrade.php'>Publish final grades</a></li>";
-                        }
-                    }
-                    ?>
+					
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

@@ -26,7 +26,7 @@ if (!$loggedin) {
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<span class="glyphicon glyphicon-list pull-left" aria-hidden="true"></span>&emsp;
-			Daily lesson topics <span class="caret"></span>
+			Lectures <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
 			<li><a href="recordLesson.php">New record</a></li>
@@ -37,7 +37,7 @@ if (!$loggedin) {
 	<div class="btn-group">
 		<button type="button" class="btn btn-primary main dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<span class="glyphicon glyphicon-education pull-left" aria-hidden="true"></span>&emsp;
-			Insert mark <span class="caret"></span>
+			Marks <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
 			<li><a href="submitMarks.php">New record</a></li>
@@ -62,20 +62,12 @@ if (!$loggedin) {
 	</div>
 	<br>
 	<div class="btn-group">
+    <a href="writeStudentNote.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-bookmark pull-left" aria-hidden="true"></span>&emsp;Disciplinar Note</a>
+    </div>
+	<br>
+	<div class="btn-group">
 		<a href="publishSupportMaterial.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-book pull-left" aria-hidden="true"></span>&emsp;Publish material</a>
 	</div>
-	<br>
-	<div class="btn-group">
-		<a href="provideParentMeetingSlots.php" class="btn btn-primary main btn-lg" role="button"><span class=" glyphicon glyphicon-comment pull-left" aria-hidden="true"></span>&emsp;Provide parent meetings</a>
-	</div>
-	<br>
-	<div class="btn-group">
-        <a href="seeTimetableTeacher.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>&emsp;See timetables</a>
-    </div>
-	<br>
-	<div class="btn-group">
-    <a href="changePassword.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-sunglasses pull-left" aria-hidden="true"></span>&emsp;Change Password</a>
-    </div>
 	<br>
 	<?php 
 	$coordinator = $db->isCoordinator($_SESSION["user"], $_SESSION["comboClass"]);
