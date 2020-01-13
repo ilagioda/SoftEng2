@@ -163,7 +163,6 @@ $(document).ready(function(){
 	$(".next").click(function() {
 		
 		var subject = $(this).attr("data-subject");
-		
 		var actualDay = $('#inputCalendar-'+subject).val();
 		actualDay = new Date(actualDay);
 		
@@ -210,6 +209,8 @@ function callAjaxLoadAssignments(day, subject) {
 
 
 function updateTableAssignments(response, flag, subject, date) {
+	
+	// the subject variable is the subject without spaces 
 
 	var output = "<thead><tr class='active'><th class='text-center col-xs-6 col-md-4'>Date</th><th class='text-center col-xs-6 col-md-4'>Assignment</th><th class='text-center col-xs-6 col-md-4'></th></tr></thead><tbody>";
 	var flag2 = 0; 
@@ -217,12 +218,19 @@ function updateTableAssignments(response, flag, subject, date) {
 	for(var i=0; i<Object.keys(response).length; i++) { // foreach daily assignment
 		var ass = "";
 		res = response[i].split(",");
+		subjectReturned = res[0]; // this is the subject variable returned by the db and can include spaces --> remove them
+		var parts = subjectReturned.split(" ");
+		var clearSubject = "";
+		for(var j=0; j<parts.length; j++) {
+			clearSubject += parts[j]; // subject returned by the db without spaces
+		}
 		for(var j=1; j<(res.length-1); j++) {
 			ass += res[j]+",";
 		}
 		ass = ass.substr(0,ass.length-1);
-		
-		if(subject === res[0]) {
+
+		if(subject === clearSubject) {
+			
 
 			output += "<tr class='text-center'><td>"+date+"</td><td>"+
 						"<textarea readonly='readonly' style='border:none; background: none; outline: none;' rows='2'>"+
@@ -242,10 +250,10 @@ function updateTableAssignments(response, flag, subject, date) {
 				// assignments editable/erasable
 				output += "<button type='button' class='btn btn-default btn-xs' style='width:20%'";
 				output += "data-toggle='modal' data-target='#modalEdit'";
-				output += "data-subject='"+res[0]+"' data-date='"+date+"' data-assignment='"+ass+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
+				output += "data-subject='"+subjectReturned+"' data-date='"+date+"' data-assignment='"+ass+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
 				output += "<button type='button' class='btn btn-danger btn-xs' style='width:20%'";
 				output += "data-toggle='modal' data-target='#modalDelete'";
-				output += "data-subject='"+res[0]+"' data-date='"+date+"' data-assignment='"+ass+"' onclick='modalDelete(this)'>Delete</button>";
+				output += "data-subject='"+subjectReturned+"' data-date='"+date+"' data-assignment='"+ass+"' onclick='modalDelete(this)'>Delete</button>";
 			} else {
 				output += "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true' title='Not editable/erasable as it relates to past weeks...'></span>";
 			}
@@ -277,16 +285,21 @@ function updateTableAssignments(response, flag, subject, date) {
 	
 	$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
 	if(count($subjects) > 0) { 
-		navSubjects($subjects);			
-
+		navSubjects($subjects);	
+		
 		echo "<div id='myTabContent' class='tab-content'>";
-		foreach($subjects as $subject) {
-			if($subject == $subjects[0]) {
-				echo "<div class='tab-pane fade active in' id='$subject'>";
+		foreach($subjects as $sub) {
+			$subject = "";
+			$parts = explode(" ", $sub);
+			foreach($parts as $part) {
+				$subject .= $part;
+			}
+			if($sub == $subjects[0]) {
+				echo "<div class='tab-pane fade active in' id='$subject'>"; // 	$('a[data-toggle="tab"]').click(function(e) {} attiva il div che ha id corrispondente ad href
 			} else {
 				echo "<div class='tab-pane fade' id='$subject'>";
 			}
-			$assignments = $db->getAssignmentsByClassAndSubject($_SESSION["user"], $selectedClass, $subject, $beginSemester, $endSemester); // date,textAssignment,pathFilename
+			$assignments = $db->getAssignmentsByClassAndSubject($_SESSION["user"], $selectedClass, $sub, $beginSemester, $endSemester); // date,textAssignment,pathFilename
 			if(!empty($assignments)) {	
 			
 			$now = new DateTime('now');
@@ -304,7 +317,7 @@ function updateTableAssignments(response, flag, subject, date) {
 						$text .= $args_a[$j].",";
 					}
 					$text = substr($text, 0, -1);
-					if($subject == $args_a[0]) {
+					if($sub == $args_a[0]) {
 						echo "<div class='panel panel-info text-center' id='boxInfoToday-$subject'><div class='panel-heading'> <strong>For today... </strong></div>";
 						// print textAssignment and file if it exists
 						echo "<div class='panel-body'><textarea readonly='readonly' style='border:none; background: none; outline: none;' rows='2'>$text</textarea>";
@@ -330,23 +343,23 @@ function updateTableAssignments(response, flag, subject, date) {
 			//echo "</div>";
 ?>		
 	
-		<h2 id="assignmentTitle-<?php echo "'$subject'"; ?>">All assignments 
-			<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo "$subject"; ?>" data-subject="<?php echo "$subject"; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
+		<h2 id="assignmentTitle-<?php echo $subject; ?>">All assignments
+			<button class="btn btn-default pull-right" id="buttonCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Select a date</button>
 		</h2>
-		<p class='text-center' id="titleSelectDate-<?php echo "$subject"; ?>"><strong>Select a date</strong></p>
+		<p class='text-center' id="titleSelectDate-<?php echo $subject; ?>"><strong>Select a date</strong></p>
 
-		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo "$subject"; ?>" data-subject="<?php echo "$subject"; ?>"
+		<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
 				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">			
 				
-		<div id="divPreviousNext-<?php echo "$subject"; ?>">
+		<div id="divPreviousNext-<?php echo $subject; ?>">
 			<ul class='pager'>
-				<li class='previous' data-subject="<?php echo "$subject"; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
-				<li class='next' data-subject="<?php echo "$subject"; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
+				<li class='previous' data-subject="<?php echo $subject; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
+				<li class='next' data-subject="<?php echo $subject; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
 			</ul>
 		</div>
 				<form method='POST' action='' class='form-group'>
-					<table id="filteredTable-<?php echo "$subject"; ?>" class="table table-hover"></table>
-					<table id="assignmentsTable-<?php echo "$subject"; ?>" class="table table-hover">
+					<table id="filteredTable-<?php echo $subject; ?>" class="table table-hover"></table>
+					<table id="assignmentsTable-<?php echo $subject; ?>" class="table table-hover">
 						<thead>
 						<tr class="active">
 							<th class="text-center col-xs-6 col-md-4">Date </th>
@@ -394,14 +407,14 @@ function updateTableAssignments(response, flag, subject, date) {
 									?>
 									<button type="button" class="btn btn-default btn-xs" style='width:20%'
 										data-toggle="modal" data-target="#modalEdit"
-										<?php echo "data-subject='$subject' data-assignment='$textAssignment' data-date='$date'";?>
+										<?php echo "data-subject='$sub' data-assignment='$textAssignment' data-date='$date'";?>
 										onclick="modalEdit(this)">
 										Edit
 									</button>
 										
 									<button type="button" class="btn btn-danger btn-xs" style='width:20%'
 										data-toggle="modal" data-target="#modalDelete"
-										<?php echo "data-subject='$subject' data-assignment='$textAssignment' data-date='$date'"; ?>
+										<?php echo "data-subject='$sub' data-assignment='$textAssignment' data-date='$date'"; ?>
 										onclick="modalDelete(this)">
 										Delete
 									</button>
@@ -417,7 +430,7 @@ function updateTableAssignments(response, flag, subject, date) {
 					?>
 						</tbody>
 					</table>
-					<div class="text-center"><input type="hidden" class="btn btn-primary" value="Show all assignments" id="btnShowAll-<?php echo "'$subject'"; ?>" data-subject="<?php echo "'$subject'"; ?>"></div>
+					<div class="text-center"><input type="hidden" class="btn btn-primary" value="Show all assignments" id="btnShowAll-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"></div>
 				</form>
 <?php
 			} else {

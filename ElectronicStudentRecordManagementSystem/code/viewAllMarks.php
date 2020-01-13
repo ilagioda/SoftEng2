@@ -145,14 +145,19 @@ function modalEdit(obj) {
 		navSubjects($subjects);						
 		
 		echo "<div id='myTabContent' class='tab-content'>";
-	
-		foreach($subjects as $subject) {
-			if($subject == $subjects[0]) {
-				echo "<div class='tab-pane fade active in' id='$subject'>";
+		foreach($subjects as $sub) {
+			$subject = "";
+			$parts = explode(" ", $sub);
+			foreach($parts as $part) {
+				$subject .= $part;
+			}
+			if($sub == $subjects[0]) {
+				echo "<div class='tab-pane fade active in' id='$subject'>"; 
 			} else {
 				echo "<div class='tab-pane fade' id='$subject'>";
 			}
-
+			// $subject = subject without spaces needed for the IDs
+			// $sub = subject with spaces needed for printing 
 ?>
 			<form method='POST' action='' class='form-group'>
 			<h2> Students list </h2>
@@ -181,7 +186,7 @@ function modalEdit(obj) {
 				</tr>
 			
 			<?php 
-				$marks = $teacher->viewStudentMarks($args[2], $subject);
+				$marks = $teacher->viewStudentMarks($args[2], $sub);
 				if ($marks) {
 			?>
 				<tr class="child-<?php echo $args[2]."-".$subject; ?>">
@@ -207,12 +212,12 @@ function modalEdit(obj) {
 						?>
 						<button type="button" class="btn btn-default btn-xs" style="width:20%"
 							data-toggle="modal" data-target="#modalEdit"
-							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$subject'"; ?>
+							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$sub'"; ?>
 							onclick="modalEdit(this)">Edit</button>
 							
 						<button type="button" class="btn btn-danger btn-xs" style="width:20%"
 							data-toggle="modal" data-target="#modalDelete"
-							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$subject'"; ?>
+							<?php echo "data-student = '$studentInfo[$i]' data-date='$date[$j]' data-hour='$hour[$j]' data-mark='$specificMark[$j]' data-subject='$sub'"; ?>
 							onclick="modalDelete(this)">Delete</button>
 						<?php 
 							}

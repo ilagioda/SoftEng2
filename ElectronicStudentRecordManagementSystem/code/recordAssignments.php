@@ -231,7 +231,7 @@ $(function() {
 					<?php
 						$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
 						foreach($subjects as $subject) {
-							echo "<option value=".$subject.">".$subject."</option>";
+							echo "<option value='$subject'>".$subject."</option>";
 						}
 					?>
 					</select></td></tr>

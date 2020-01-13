@@ -116,27 +116,30 @@ $(document).ready(function(){
 	
 	$('[id^= "inputCalendar-"]').change(function() {
 		var subject = $(this).attr("data-subject");
+		var subWithSpaces = $(this).attr("data-spaces");
 		var date = $(this).val();
 		
-		callAjaxLoadLectures(date, subject);
+		callAjaxLoadLectures(date, subject, subWithSpaces);
 	});
 
 	$(".previous").click(function() {
 		
 		var subject = $(this).attr("data-subject");
-		
+		var subWithSpaces = $(this).attr("data-spaces");
+
 		var actualDay = $('#inputCalendar-'+subject).val();
 		actualDay = new Date(actualDay);
 		
 		var previousDay = actualDay.setDate(actualDay.getDate() - 1);
 		previousDay = new Date(previousDay).toISOString().split('T')[0];
 
-		callAjaxLoadLectures(previousDay, subject);
+		callAjaxLoadLectures(previousDay, subject, subWithSpaces);
 	});
 	
 	$(".next").click(function() {
 		
 		var subject = $(this).attr("data-subject");
+		var subWithSpaces = $(this).attr("data-spaces");
 		
 		var actualDay = $('#inputCalendar-'+subject).val();
 		actualDay = new Date(actualDay);
@@ -144,7 +147,7 @@ $(document).ready(function(){
 		var nextDay = actualDay.setDate(actualDay.getDate() + 1);
 		nextDay = new Date(nextDay).toISOString().split('T')[0];
 
-		callAjaxLoadLectures(nextDay, subject);
+		callAjaxLoadLectures(nextDay, subject, subWithSpaces);
 	});
 });
 
@@ -154,8 +157,12 @@ day = curr.getDay()-1;
 firstday = new Date(curr.getTime() - 60*60*24*day*1000).toISOString().split('T')[0]; //will return firstday (ie sunday) of the week
 lastday = new Date(curr.getTime() + 60*60*24*6*1000).toISOString().split('T')[0]; 
 
-function callAjaxLoadLectures(date, subject) {
-
+function callAjaxLoadLectures(date, subject, subWithSpaces) {
+	
+	// VARIABLES:
+	// subject = subject without spaces needed for the IDs
+	// subWithSpaces = subject with spaces (if present) needed for the query to the db
+	
 	$('#inputCalendar-'+subject).val(date); // set the date in the input field 
 
 	var flag = 1; // flag to incate if the assignment is editable/erasable: 0 if it is editable/erasable, 1 otherwise
@@ -167,12 +174,12 @@ function callAjaxLoadLectures(date, subject) {
 		type:		"POST",
 		dataType:	"json",
 		url:		"loadLectures.php",
-		data:		"date="+date+"&subject="+subject,
+		data:		"date="+date+"&subject="+subWithSpaces,
 		cache:		false,
 		success:	function(response){ // RESPONSE = hour,topic
 						$('#filteredTable-'+subject).empty();
 						if(response.length > 0) {
-							$('#filteredTable-'+subject).append(updateTableLectures(response, flag, subject, date));
+							$('#filteredTable-'+subject).append(updateTableLectures(response, flag, subject, date, subWithSpaces));
 						} else {
 							$('#filteredTable-'+subject).append("<div class='alert alert-warning'><h4><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>&emsp;No lectures for the selected date </h4></div>");
 						}
@@ -184,7 +191,7 @@ function callAjaxLoadLectures(date, subject) {
 }
 
 
-function updateTableLectures(response, flag, subject, date) {
+function updateTableLectures(response, flag, subject, date, subWithSpaces) {
 
 	var output = "<thead><tr class='active'><th class='text-center col-xs-6 col-sm-3'>Date</th><th class='text-center col-xs-6 col-sm-3'>Hour</th><th class='col-xs-6 col-sm-3'>Topics</th><th class='text-center col-xs-6 col-sm-3'></th></tr></thead><tbody>";
 	
@@ -207,10 +214,10 @@ function updateTableLectures(response, flag, subject, date) {
 			// lecture editable/erasable
 			output += "<button type='button' class='btn btn-default btn-xs' style='width:20%'";
 			output += "data-toggle='modal' data-target='#modalEdit'";
-			output += "data-subject='"+subject+"' data-date='"+date+"' data-hour='"+hour+"' data-topics='"+topics+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
+			output += "data-subject='"+subWithSpaces+"' data-date='"+date+"' data-hour='"+hour+"' data-topics='"+topics+"' onclick='modalEdit(this)'>Edit</button>&emsp;";
 			output += "<button type='button' class='btn btn-danger btn-xs' style='width:20%'";
 			output += "data-toggle='modal' data-target='#modalDelete'";
-			output += "data-subject='"+subject+"' data-date='"+date+"' data-hour='"+hour+"' data-topics='"+topics+"' onclick='modalDelete(this)'>Delete</button>";
+			output += "data-subject='"+subWithSpaces+"' data-date='"+date+"' data-hour='"+hour+"' data-topics='"+topics+"' onclick='modalDelete(this)'>Delete</button>";
 		} else {
 			output += "<span class='glyphicon glyphicon-ban-circle' aria-hidden='true' title='Not editable/erasable as it relates to past weeks...'></span>";
 		}
@@ -266,18 +273,27 @@ function modalEdit(obj) {
 <div class="panel panel-default" id="container">
 	<div class="panel-body">
 <?php 
-	$subjects = $db->getSubjectsByTeacherAndClass2($_SESSION["user"], $class);
-	if(count($subjects) > 0) { 
-		navSubjects($subjects);							
+$subjects = $db->getSubjectsByTeacherAndClass2($_SESSION["user"], $class);
+if(count($subjects) > 0) { 
+	navSubjects($subjects);							
 
-		echo "<div id='myTabContent' class='tab-content'>";
-		foreach($subjects as $subject) {
-			if($subject == $subjects[0]) {
-				echo "<div class='tab-pane fade active in' id='$subject'>";
-			} else {
-				echo "<div class='tab-pane fade' id='$subject'>";
-			}
-		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $subject, $beginSemester, $endSemester);
+	echo "<div id='myTabContent' class='tab-content'>";
+	foreach($subjects as $sub) {
+		/*
+		sub = subject with spaces
+		subject = subject without spaces (needed fo the IDs)
+		*/
+		$subject = "";
+		$parts = explode(" ", $sub); // the subject can include spaces --> remove them
+		foreach($parts as $part) {
+			$subject .= $part;
+		}
+		if($sub == $subjects[0]) {
+			echo "<div class='tab-pane fade active in' id='$subject'>"; // 	$('a[data-toggle="tab"]').click(function(e) {} attiva il div che ha id corrispondente ad href
+		} else {
+			echo "<div class='tab-pane fade' id='$subject'>";
+		}
+		$lectures = $db->getLecturesByTeacherClassAndSubject($_SESSION["user"], $class, $sub, $beginSemester, $endSemester);
 		if(!empty($lectures)) {
 ?>
 	<h2 id="lecturesTitle-<?php echo $subject; ?>">All lectures 
@@ -285,13 +301,13 @@ function modalEdit(obj) {
 	</h2>
 	<p class='text-center' id="titleSelectDate-<?php echo $subject; ?>"><strong>Select a date</strong></p>
 
-	<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>"
+	<input class="form-control" name="inputCalendar" id="inputCalendar-<?php echo $subject; ?>" data-subject="<?php echo $subject; ?>" data-spaces="<?php echo $sub; ?>"
 				type="hidden" min="<?php echo $beginSemester; ?>" max="<?php echo $endSemester ?>">
 	
 	<div id="divPreviousNext-<?php echo $subject; ?>">
 		<ul class='pager'>
-			<li class='previous' data-subject="<?php echo $subject; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
-			<li class='next' data-subject="<?php echo $subject; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
+			<li class='previous' data-subject="<?php echo $subject; ?>" data-spaces="<?php echo $sub; ?>"><a href='#'><span aria-hidden='true'>&larr;</span> Older</a></li>
+			<li class='next' data-subject="<?php echo $subject; ?>" data-spaces="<?php echo $sub; ?>"><a href='#'>Newer <span aria-hidden='true'>&rarr;</span></a></li>
 		</ul>
 	</div>	
 	
@@ -327,13 +343,13 @@ function modalEdit(obj) {
 				if($date >= date("Y-m-d", strtotime('monday this week')) && $date <= date("Y-m-d", strtotime('sunday this week'))) { 
 			?>
 				<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalEdit" style="width:20%"
-					<?php echo "data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>
+					<?php echo "data-subject='$sub' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>
 					onclick="modalEdit(this)"> 
 					Edit
 				</button>
 							
 				<button type="button" class="btn btn-danger btn-xs"	data-toggle="modal" data-target="#modalDelete" style="width:20%"
-					<?php echo "data-subject='$subject' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>	
+					<?php echo "data-subject='$sub' data-date='$date' data-hour='$hour' data-topics='$topics'"; ?>	
 					onclick="modalDelete(this)">
 					Delete
 				</button>

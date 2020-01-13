@@ -89,7 +89,7 @@ _MSG;
 						<?php
 						$subjects = $teacher->getSubjectByClassAndTeacher($_SESSION['comboClass']);
 						foreach($subjects as $subject) {
-							echo "<option value=".$subject.">".$subject."</option>";
+							echo "<option value='$subject'>".$subject."</option>";
 						}
 					?>
 					</select></td>
@@ -100,7 +100,7 @@ _MSG;
 						<option value="" disabled selected>Select hour...</option>
 						<?php
 							for($i=1; $i<=6; $i++) 
-								echo "<option value=" . $i . ">" . $i . "</option>";
+								echo "<option value='$i'>" . $i . "</option>";
 						?>	
 					</select></td>
 				</tr>
