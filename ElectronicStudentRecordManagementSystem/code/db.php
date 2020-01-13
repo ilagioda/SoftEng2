@@ -1123,7 +1123,7 @@ class dbParent extends db
 
     public function getMaterials($class, $subject)
     {
-        return $this->query("SELECT * FROM supportMaterials WHERE class='$class' and subject='$subject'");
+        return $this->query("SELECT * FROM SupportMaterials WHERE class='$class' and subject='$subject'");
     }
 
 
