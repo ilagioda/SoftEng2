@@ -46,7 +46,7 @@ if(isset($_POST['oldPw']) && $_POST['oldPw'] != "" && isset($_POST['newPw']) && 
             break;
         case "admin":
             if($db->checkOldPw($_SESSION['user'],$_POST['oldPw'],'Admins')){
-                if($db->changePasswordOfficial($_SESSION['user'], $hashedPw, 'Teachers')){
+                if($db->changePasswordOfficial($_SESSION['user'], $hashedPw, 'Admins')){
                     $msg = "Password correctly changed.";
                 }
                 else $msg = "Some error occurred, please retry.";
