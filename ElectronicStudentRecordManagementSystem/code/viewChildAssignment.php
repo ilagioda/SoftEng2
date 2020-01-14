@@ -192,7 +192,7 @@ require_once("db.php");
             if(row.length==4){
                 // there is also a link to a file
                 let linkToFile = row[3];
-                str+='<a class="btn btn-warning pull-right" href="';
+                str+='<a class="btn btn-primary pull-right" href="';
                 str+= linkToFile;
                 str+='" role="button">Download linked file</a>';
                 
@@ -226,7 +226,7 @@ echo <<<_TITLE
                     Here you can see...<br><br>
                     <table class='table table-bordered text-center'>
                     <tr><td></td><td>No assignments!</td></tr>
-                    <tr><td class='orange'></td><td>Assignments due for that day! </br>Press on it for more informations!</td></tr>
+                    <tr><td class='lightblue'></td><td>Assignments due for that day! </br>Press on it for more informations!</td></tr>
                     </table>
                 </div>
                 </div>

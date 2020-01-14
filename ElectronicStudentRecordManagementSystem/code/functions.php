@@ -246,7 +246,7 @@ function build_html_calendar($year, $month, $events = null)
             } else if (strpos($event, 'View assignments:') !== false) {
                 //assignment
                 $assignment = true;
-                $color = "orange";
+                $color = "lightblue";
             } else if (strpos($event, 'View lectures:') !== false) {
                 //lecture
                 $lecture = true;
