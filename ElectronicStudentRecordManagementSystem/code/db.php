@@ -1067,7 +1067,7 @@ class dbParent extends db
 
     public function getInternalAnnouncements($classID)
     {
-        $sql = "SELECT * FROM internalCommunications WHERE classID='$classID' ORDER BY Timestamp DESC";
+        $sql = "SELECT * FROM InternalCommunications WHERE classID='$classID' ORDER BY Timestamp DESC";
         $res = $this->query($sql);
         return $res;
     }
