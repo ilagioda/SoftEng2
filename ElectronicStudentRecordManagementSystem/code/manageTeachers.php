@@ -117,7 +117,7 @@ $db = new dbAdmin();
           var whereToAdd = lastChildIndex;
           table.deleteRow(-1);
           newRow = table.insertRow(-1);
-          newRow.id = "tr_" + selectedClass + "_" + selectedSubject;
+          newRow.id = "tr_" + selectedClass + "-" + selectedSubject;
           var cell0 = newRow.insertCell(0);
           var cell1 = newRow.insertCell(1);
           var cell2 = newRow.insertCell(2);
