@@ -221,7 +221,7 @@ $db = new dbAdmin();
         // the table should be adjusted.
         if (data == 1) {
           //alert(ssn + " has been correctly deleted.")
-          var row = document.getElementById("tr_" + classID + "_" + subject);
+          var row = document.getElementById("tr_" + classID + "-" + subject);
           row.parentNode.removeChild(row);
           document.getElementById("answerModal").innerHTML = '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong><span class="glyphicon glyphicon-send"></span>  Success! ' + subject + ' has been correctly deleted.</strong></div>';
         } else {
