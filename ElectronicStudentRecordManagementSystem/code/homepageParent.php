@@ -51,7 +51,7 @@ echo <<< _OPLIST
         <a href="selectTeacherForBooking.php" class="btn btn-primary main btn-lg" role="button"><span class="glyphicon glyphicon-comment pull-left" aria-hidden="true"></span>&emsp;Parent meetings</a>
     </div><br>
 	<div class="btn-group">
-    <a href="writeStudentNote.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-bookmark pull-left" aria-hidden="true"></span>&emsp;Disciplinar Note</a>
+    <a href="viewStudentNote.php" class="btn btn-primary btn-lg main" role="button"><span class="glyphicon glyphicon-bookmark pull-left" aria-hidden="true"></span>&emsp;Disciplinar Note</a>
     </div>
 	<br>
     <div class="btn-group">
