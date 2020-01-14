@@ -197,7 +197,7 @@ echo <<<_TITLE
                     <h3>Need some help?</h3>
                     Here you can see...<br><br>
                     <table class='table table-bordered text-center'>
-                    <tr><td></td><td>No assignments!</td></tr>
+                    <tr><td></td><td>The student was present</td></tr>
                     <tr><td class='darkred'></td><td>The student was absent! </td></tr>
                     <tr><td class='yellow'></td><td>The student entered late </td></tr>
                     <tr><td class='lightblue'></td><td>The student exited early </td></tr>
