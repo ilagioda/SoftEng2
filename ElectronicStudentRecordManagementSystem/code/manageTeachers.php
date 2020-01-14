@@ -347,7 +347,6 @@ if (isset($_POST["teacherSSN"]) && isset($_POST["teacherName"]) && isset($_POST[
   $teacherName = $_POST['teacherName'];
   $teacherSurname =  $_POST['teacherSurname'];
   $oldTeacherSSN = $_POST['saveButton'];
-  $db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red);
   if ($db->updateTeacherMasterData($teacherSSN, $oldTeacherSSN, $teacherName, $teacherSurname, $red) == false) {
     echo <<<_SCRIPTOK
       <script>
